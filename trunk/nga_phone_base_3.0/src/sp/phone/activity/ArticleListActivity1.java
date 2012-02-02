@@ -143,7 +143,6 @@ public class ArticleListActivity1 extends Activity {
 	}
 
 	OnTabChangeListener changeListener = new OnTabChangeListener() {
-		@Override
 		public void onTabChanged(String tabId) {
 
 			soundPool.play(hitOkSfx, 1, 1, 0, 0, 1);
@@ -209,7 +208,10 @@ public class ArticleListActivity1 extends Activity {
 
 							// activityUtil.notice("INFO",
 							// "连接策略:P-N,将模拟浏览器显示方式");
-							ap = HttpUtil.getArticlePage(s);
+							
+							String cookie = "ngaPassportUid=" + ArticleListActivity1.this.app.getUid()
+								+"; ngaPassportCid=" + ArticleListActivity1.this.app.getCid();
+							ap = HttpUtil.getArticlePage(s,cookie);
 						}
 						if (ap != null) {
 							app.setArticlePage(ap);// 设置当前page
@@ -247,7 +249,6 @@ public class ArticleListActivity1 extends Activity {
 	}
 
 	class tabFactory2 implements TabContentFactory {
-		@Override
 		public View createTabContent(String tag) {
 			TextView view = new TextView(ArticleListActivity1.this);
 			return view;
@@ -256,7 +257,6 @@ public class ArticleListActivity1 extends Activity {
 
 	class tabFactory implements TabContentFactory {
 
-		@Override
 		public View createTabContent(String tag) {
 			if (!"tab_f".equals(tag)) {
 				ListView listView = new ListView(ArticleListActivity1.this);

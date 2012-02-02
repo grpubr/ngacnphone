@@ -303,16 +303,21 @@ public class StringUtil {
 	};
 
 	public static int getNowPageNum(String link) {
-		// link: http://bbs.ngacn.cc/thread.php?fid=7&page=1&rss=1
-
+		// link: http://bbs.ngacn.cc/thread.php?fid=7&page=1&rss=1&OOXX=
+		int ret = 1;
 		if (link.indexOf("\n") != -1) {
 			link = link.substring(0, link.length() - 1);
 		}
 		if (link.indexOf("&") == -1) {
-			return 1;
+			return ret;
 		} else {
-			return Integer.parseInt(link.substring(link.indexOf("page=") + 5,
+			try{
+			ret = Integer.parseInt(link.substring(link.indexOf("page=") + 5,
 					link.length()));
+			}catch(Exception E){
+				
+			}
 		}
+		return ret;
 	}
 }

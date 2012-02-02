@@ -13,6 +13,7 @@ import org.htmlparser.filters.OrFilter;
 import org.htmlparser.filters.TagNameFilter;
 import org.htmlparser.lexer.PageAttribute;
 import org.htmlparser.tags.Div;
+import org.htmlparser.tags.HeadingTag;
 import org.htmlparser.tags.ImageTag;
 import org.htmlparser.tags.LinkTag;
 import org.htmlparser.tags.Span;
@@ -54,23 +55,34 @@ public class ArticleUtil {
 			if (node instanceof TableTag) {
 				TableTag table = (TableTag) node;
 				TableRow[] rows = table.getRows();
-				if (rows.length == 2) {
+				if (rows.length == 1) {
 					Article article = new Article();
 					User user = new User();
 					TableRow tr0 = (TableRow) rows[0];
 					TableColumn[] tds0 = tr0.getColumns();
 					TableColumn td0 = tds0[0];
-					LinkTag lt = (LinkTag) td0.getChild(1);
-					String url = ((PageAttribute) lt.getAttributesEx().get(4))
-							.getValue();
+					Div div0 = null;
+					LinkTag lt = null;
+					if( td0.getChild(1) instanceof Div)
+					{
+						div0 = (Div)td0.getChild(1);
+						lt = (LinkTag) div0.getChild(1);
+					}else{//XXX's reply
+						continue;
+						//lt = (LinkTag)td0.getChild(1);
+					}
+						
+					String url = lt.getLink();
+					
 					article.setUrl(url);
-					String floor = td0.getChild(1).getChildren().toNodeArray()[0]
-							.getText();
+					//String floor = td0.getChild(1).getChildren().toNodeArray()[0].getText();
+					
+					//floor = lt.getStringText();
+					String floor=  lt.getChild(0).getText();
 					floor = floor.substring(1, floor.length() - 3);
 					article.setFloor(Integer.parseInt(floor));
-					LinkTag l = (LinkTag) td0.getChild(3);
-					String nickName = l.getChildren().toNodeArray()[1]
-							.getText();
+					LinkTag l = (LinkTag) div0.getChild(3);
+					String nickName = l.getChild(1).getText();
 					user.setNickName(nickName);
 
 					String userId = l.getLink().split("uid=")[1];
@@ -79,30 +91,59 @@ public class ArticleUtil {
 
 					TableColumn td1 = tds0[1];
 					String lastPostTime = "";
-					for (Node node3 : td1.getChildrenAsNodeArray()) {
+					/*Div avastarDiv = (Div)((Span)td0.getChild(2)).getChild(0);
+					String avatarImage = avastarDiv.getChild(0).getText();
+					avatarImage = avatarImage.substring(avatarImage.indexOf("urlc("+4),avatarImage.indexOf(")"));*/
+					
+					String content ="" ;
+					Node td1Children[] = td1.getChildrenAsNodeArray();
+					for (Node node3 : td1Children) {
 						if (node3 instanceof Span) {
 							Span sss = (Span) node3;
-							if (sss.getAttribute("id") != null
+							/*if (sss.getAttribute("id") != null
 									&& sss.getAttribute("id").startsWith(
 											"postdate")) {
 								lastPostTime = sss.getFirstChild().getText();
 								article.setLastTime(lastPostTime);
+							}*/
+							if(sss.getAttribute("id") != null && sss.getAttribute("id").startsWith("postcontent") )
+							{
+								content = content + sss.getStringText();//sss.getFirstChild().getText();
+								//break;
+							}
+						}else if( node3 instanceof HeadingTag){
+							HeadingTag ht = (HeadingTag)node3;
+							if(ht.getAttribute("id")!= null && ht.getChildCount() >2){
+								//content =ht.getChild(2).getText() + "\n";
+							}
+								
+						}else if ( node3 instanceof ImageTag){
+							ImageTag imgtag = (ImageTag)node3;
+							String avatarStr = imgtag.getAttribute("onerror");
+							String avatarImage = "";
+							if (avatarStr != null &avatarStr.startsWith("commonui.postDisp") && avatarStr.indexOf("http://") != -1)
+							{
+								avatarStr = avatarStr.substring(avatarStr.indexOf("http://"));
+								avatarImage = avatarStr.substring(0,avatarStr.indexOf("\""));
+								user.setAvatarImage(avatarImage);
 							}
 						}
 					}
-					TableRow tr1 = (TableRow) rows[1];
+					
+					article.setContent(content);
+					/*TableRow tr1 = (TableRow) rows[1];
 					TableColumn[] tds1 = tr1.getColumns();
 					// System.out.println(tds1.length);
 					TableColumn td3 = tds1[0];
 					ImageTag it = (ImageTag) td3.getChild(2);
 					Object onerror = it.getAttributesEx().get(6);
 					if (onerror != null) {
-						String avatarImage = onerror.toString().split("'")[1];
+						avatarImage = onerror.toString().split("'")[1];
 						user.setAvatarImage(avatarImage);
 
-					}
+					}*/
 
-					TableColumn td4 = tds1[1];
+					/*TableColumn td4 = tds1[1];
 
 					for (Node node2 : td4.getChildren().toNodeArray()) {
 						if (node2 instanceof Span) {
@@ -115,7 +156,7 @@ public class ArticleUtil {
 
 							}
 						}
-					}
+					}*/
 
 					article.setUser(user);
 					listArticle.add(article);
