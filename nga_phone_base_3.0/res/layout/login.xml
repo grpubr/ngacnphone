@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent" android:background="@drawable/bg_wood">
+    <TextView android:layout_height="wrap_content" android:layout_alignParentLeft="true" android:layout_width="fill_parent" android:layout_alignParentTop="true" android:layout_marginLeft="10dp" android:id="@+id/login_user_text" android:text="@string/username" android:layout_marginTop="5dp"></TextView>
+    <EditText android:layout_height="wrap_content" android:text="" android:layout_width="fill_parent" android:layout_marginLeft="10dp" android:layout_alignParentLeft="true" android:layout_below="@+id/login_user_text" android:id="@+id/login_user_edittext" android:hint="@string/login_user_hint" android:singleLine="true" android:layout_marginTop="5dp"></EditText>
+    <TextView android:layout_height="wrap_content" android:layout_below="@+id/login_user_edittext" android:layout_alignLeft="@+id/login_user_edittext" android:id="@+id/login_password_text" android:layout_width="fill_parent" android:text="@string/password" android:layout_marginTop="5dp"></TextView>
+    <EditText android:layout_height="wrap_content" android:layout_below="@+id/login_password_text" android:layout_alignLeft="@+id/login_password_text" android:id="@+id/login_password_edittext" android:layout_width="fill_parent" android:singleLine="true" android:layout_marginTop="5dp" android:inputType="textPassword"></EditText>
+    <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_below="@+id/login_password_edittext" android:layout_alignRight="@+id/login_password_edittext" android:id="@+id/login_button" android:text="@string/login" android:layout_marginRight="20dp" android:layout_marginTop="5dp"></Button>
+</RelativeLayout>

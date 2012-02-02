@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">nga_phone3.0</string>
+    <string name="menu_login">登录</string>
+    <string name="menu_setting">设置</string>
+    <string name="menu_exit">退出</string>
+    <string name="username">用户名</string>
+    <string name="login_user_hint">邮箱或者NGA昵称</string>
+    <string name="password">密码</string>
+    <string name="login">登录</string>
+    <string name="login_successfully">登录成功</string>
+    <string name="login_failed">登录失败</string>
+    <string name="login_post_url">http://account.178.com/q_account.php?_act=login</string>
 </resources>
