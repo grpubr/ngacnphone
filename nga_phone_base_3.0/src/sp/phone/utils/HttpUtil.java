@@ -26,9 +26,10 @@ public class HttpUtil {
 
 	public final static String Server = "http://bbs.ngacn.cc";
 
-	private static String[] host_arr = { "http://aa121077313.gicp.net:8099",
+	/*private static String[] host_arr = { "http://aa121077313.gicp.net:8099",
 			"http://aa121077313.gicp.net:8098", "http://10.0.2.2:8099",
-			"http://10.0.2.2:8098" };
+			"http://10.0.2.2:8098" };*/
+	private static String[] host_arr = {};
 
 	public static String HOST = "";
 	public static String Servlet_phone = "/servlet/PhoneServlet";
@@ -157,6 +158,7 @@ public class HttpUtil {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private static void writeFile(URL url, String fileName) {
 		try {
 			FileUtils.copyURLToFile(url, new File(fileName), 4000, 3000);
@@ -165,11 +167,16 @@ public class HttpUtil {
 		}
 	}
 
-	public static String getHtml(String uri) {
+	public static String getHtml(String uri, String cookie) {
 		InputStream is = null;
 		try {
 			URL url = new URL(uri);
-			is = url.openStream();
+			String firefox_ua = "Mozilla/5.0 (Windows NT 6.1; rv:6.0.1) Gecko/20100101 Firefox/6.0.1";
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestProperty("Cookie", cookie);
+			conn.setRequestProperty("User-Agent", firefox_ua);
+			is = conn.getInputStream();
+			//is = url.openStream();
 			return IOUtils.toString(is, "gbk");
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -181,9 +188,9 @@ public class HttpUtil {
 		return null;
 	}
 
-	public static ArticlePage getArticlePage(String uri) {
+	public static ArticlePage getArticlePage(String uri, String cookie) {
 		try {
-			String html = getHtml(uri);
+			String html = getHtml(uri,cookie);
 			return ArticleUtil.parserArticleList(html);
 		} catch (ParserException e) {
 			e.printStackTrace();
@@ -193,7 +200,8 @@ public class HttpUtil {
 
 	public static ArticlePage getArticlePageByJson(String uri) {
 		System.out.println("from this");
-		String json = getHtml(uri);
+		//TODO
+		String json = getHtml(uri,"");
 		long t = System.currentTimeMillis();
 		ArticlePage ap = JSON.parseObject(json, ArticlePage.class);
 		System.out.println(System.currentTimeMillis() - t);

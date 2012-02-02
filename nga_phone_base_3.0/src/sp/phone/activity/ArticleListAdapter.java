@@ -150,7 +150,6 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			TextView contentTV = (TextView) rowView.findViewById(R.id.content);
 			String ngaHtml = StringUtil.parseHTML3(map.get("content"));
 			ImageGetter imgGetter = new ImageGetter() {
-				@Override
 				public Drawable getDrawable(String source) {
 					return ImageUtil.reSetDrawable(activity, source);
 				}

@@ -16,7 +16,7 @@ public class ActivityUtil {
 			R.drawable.bg_black_thread };
 
 	public void setBG() {
-		int r = new Random().nextInt(bgs.length);
+		int r = 1;// new Random().nextInt(bgs.length);
 		bg = bgs[r];
 		System.out.println("set bg:" + r);
 	}

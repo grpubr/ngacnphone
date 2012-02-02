@@ -15,6 +15,9 @@ public class MyApp extends Application {
 	private HashMap<Object, ArticlePage> map_article;
 
 	private ZipFile zf;
+	
+	private String uid;
+	private String cid;
 
 	public ZipFile getZf() {
 		return zf;
@@ -57,5 +60,33 @@ public class MyApp extends Application {
 
 	public void setRssFeed(RSSFeed rssFeed) {
 		this.rssFeed = rssFeed;
+	}
+
+	/**
+	 * @return the uid
+	 */
+	public String getUid() {
+		return uid;
+	}
+
+	/**
+	 * @param uid the uid to set
+	 */
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	/**
+	 * @return the cid
+	 */
+	public String getCid() {
+		return cid;
+	}
+
+	/**
+	 * @param cid the cid to set
+	 */
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 }

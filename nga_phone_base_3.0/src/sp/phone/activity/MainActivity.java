@@ -15,6 +15,8 @@ import sp.phone.utils.StringUtil;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -22,6 +24,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -30,6 +35,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+@SuppressWarnings("unused")
 public class MainActivity extends Activity {
 
 	TextView tv_pre;
@@ -49,11 +55,90 @@ public class MainActivity extends Activity {
 		View view = LayoutInflater.from(this).inflate(R.layout.main, null);
 		// setContentView(R.layout.main);
 		view.setBackgroundResource(ActivityUtil.bg);
-
+		Intent intent = getIntent();
 		setContentView(view);
+		initUserInfo(intent);
 		initDate();
 		initView();
 
+	}
+
+	private void initUserInfo(Intent intent) {
+		app = ((MyApp) getApplication());
+		String uid = null;// intent.getStringExtra("uid");
+		String cid = null;//intent.getStringExtra("cid");
+		String userName = null;//intent.getStringExtra("User");
+		
+		SharedPreferences  share = 
+			this.getSharedPreferences("perference", MODE_PRIVATE);
+		
+		if( uid != null && cid !=null && uid != "" && cid != ""){
+			app.setUid(uid);
+			app.setCid(cid);
+
+			Editor editor = share.edit();
+			editor.putString("uid", uid);
+			editor.putString("cid", cid);
+			editor.putString("username", userName);
+			editor.commit();
+		}else{
+			uid = share.getString("uid","");
+			cid = share.getString("cid","");
+			if( uid != null && cid !=null && uid != "" && cid != ""){
+				app.setUid(uid);
+				app.setCid(cid);
+			}
+		}
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_menu, menu);
+		return true;
+	}
+
+	private void jumpToLogin(){
+		Intent intent = new Intent();
+		intent.setClass(MainActivity.this, LoginActivity.class);
+		try{
+			startActivity(intent);
+			//MainActivity.this.finish();
+		}catch(Exception e){
+			
+			///System.out.print("123");
+		}
+		
+	}
+	
+	private void jumpToSetting()
+	{
+		
+	}
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch( item.getItemId())
+		{
+			case R.id.mainmenu_login :
+				this.jumpToLogin();
+				break;
+			case R.id.mainmenu_setting :
+				this.jumpToSetting();
+				break;
+			case R.id.mainmenu_exit :
+				this.finish();
+				break;
+		}
+		return true;
 	}
 
 	private void initView() {
@@ -243,13 +328,13 @@ public class MainActivity extends Activity {
 		}.start();
 	}
 
-	int[] image = { R.drawable.hana, R.drawable.tf, R.drawable.dk,
+	int[] image = { R.drawable.hana,R.drawable.dxw, /*R.drawable.tf,*/ R.drawable.dk,
 			R.drawable.zs, R.drawable.lr, R.drawable.sm, R.drawable.dz,
 			R.drawable.fs, R.drawable.xd, R.drawable.qs, R.drawable.ms,
 			R.drawable.ss, };
-	String[] urls = { "7", "323", "320", "181", "187", "185", "189", "182",
+	String[] urls = { "7","-7", /*"323",*/ "320", "181", "187", "185", "189", "182",
 			"186", "184", "183", "188" };
-	String[] names = { "艾泽拉斯议事厅", "台服讨论区", "黑锋要塞", "铁血沙场", "猎手大厅", "风暴祭坛",
+	String[] names = { "艾泽拉斯议事厅", "大漩涡", /*"台服讨论区",*/ "黑锋要塞", "铁血沙场", "猎手大厅", "风暴祭坛",
 			"暗影裂口", "魔法圣堂", "翡翠梦境", "圣光之力", "信仰神殿", "恶魔深渊" };
 
 	class ImageList extends BaseAdapter {
@@ -259,22 +344,18 @@ public class MainActivity extends Activity {
 			activity = a;
 		}
 
-		@Override
 		public int getCount() {
 			return image.length;
 		}
 
-		@Override
 		public Object getItem(int position) {
 			return image[position];
 		}
 
-		@Override
 		public long getItemId(int position) {
 			return position;
 		}
 
-		@Override
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
 
@@ -285,7 +366,6 @@ public class MainActivity extends Activity {
 			iv.setGravity(Gravity.CENTER_HORIZONTAL);
 			if (error_level == 0) {
 				iv.setOnClickListener(new OnClickListener() {
-					@Override
 					public void onClick(View v) {
 
 						if (position != 0 && !HttpUtil.HOST_PORT.equals("")) {
@@ -297,6 +377,14 @@ public class MainActivity extends Activity {
 
 						String url = HttpUtil.Server + "/thread.php?fid="
 								+ urls[position] + "&rss=1";
+						int fid = 0;
+						fid = Integer.parseInt( urls[position]);
+						if(fid < 0 && app.getUid() != null && app.getCid() != null){
+							
+							url = url + "&ngaPassportUid=" + app.getUid()
+								+ "&ngaPassportCid=" + app.getCid();
+						}
+							
 						if (!StringUtil.isEmpty(url)) {
 							getData(url);
 						}

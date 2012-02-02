@@ -120,7 +120,6 @@ public class TopicListActivity1 extends Activity {
 	private void setListener() {
 		tabHost.setOnTabChangedListener(new OnTabChangeListener() {
 
-			@Override
 			public void onTabChanged(final String tabId) {
 
 				soundPool.play(hitOkSfx, 1, 1, 0, 0, 1);
@@ -202,7 +201,6 @@ public class TopicListActivity1 extends Activity {
 	}
 
 	class tabFactory implements TabContentFactory {
-		@Override
 		public View createTabContent(String tag) {
 
 			ListView listView = new ListView(TopicListActivity1.this);
@@ -218,7 +216,6 @@ public class TopicListActivity1 extends Activity {
 	}
 
 	class tabFactory2 implements TabContentFactory {
-		@Override
 		public View createTabContent(String tag) {
 			TextView view = new TextView(TopicListActivity1.this);
 			return view;
@@ -233,22 +230,18 @@ public class TopicListActivity1 extends Activity {
 			this.inflater = LayoutInflater.from(context);
 		}
 
-		@Override
 		public Object getItem(int arg0) {
 			return arg0;
 		}
 
-		@Override
 		public int getCount() {
 			return rssFeed.getItems().size();
 		}
 
-		@Override
 		public long getItemId(int arg0) {
 			return arg0;
 		}
 
-		@Override
 		public View getView(int position, View view, ViewGroup parent) {
 
 			View convertView = m.get(position);
@@ -284,7 +277,6 @@ public class TopicListActivity1 extends Activity {
 				}
 
 				title.setOnClickListener(new OnClickListener() {
-					@Override
 					public void onClick(View v) {
 						ArticlePage ap = map_article.get(url + "&page=1");
 						if (ap != null) {
@@ -330,9 +322,13 @@ public class TopicListActivity1 extends Activity {
 										} else {
 											activityUtil.notice("普通模式", str);
 										}
-
+										String cookie = "";
+										if(TopicListActivity1.this.app.getUid() != null && 
+												TopicListActivity1.this.app.getUid()!= "")
+										cookie= "ngaPassportUid=" + TopicListActivity1.this.app.getUid()
+										+"; ngaPassportCid=" + TopicListActivity1.this.app.getCid();
 										articlePage = HttpUtil
-												.getArticlePage(url + "&page=1");
+												.getArticlePage(url + "&page=1",cookie);
 									}
 									if (articlePage != null) {
 										app.setArticlePage(articlePage);// 设置当前page
