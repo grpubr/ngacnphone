@@ -6,6 +6,8 @@ import java.net.URL;
 
 
 
+
+
 import android.util.Log;
 
 public class HttpPostClient {
@@ -39,15 +41,19 @@ public class HttpPostClient {
 		HttpURLConnection conn;
 		try
 		{
+			
+		    
 			URL url = new URL(this.urlString);
 			conn = (HttpURLConnection) url.openConnection();
 			if(cookie != null)
 				conn.setRequestProperty("Cookie", cookie);
-			
 			conn.setInstanceFollowRedirects(false);
 			
 			conn.setRequestProperty("User-Agent", "3rd_part_android_app");
+			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded"); 
+			conn.setRequestProperty("Content-Length", String.valueOf(body.length())); 
 			conn.setRequestProperty("Accept-Charset", "GBK");
+			conn.setRequestMethod("POST");
 			conn.setDoOutput(true);
 	
 			conn.connect();
@@ -57,6 +63,7 @@ public class HttpPostClient {
 			out.write(body);
 			out.flush();
 			out.close();
+
 	
 			
 			Log.i(LOG_TAG, conn.getResponseMessage());
