@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent" android:background="@drawable/bg_wood">
+    <RelativeLayout android:id="@+id/relativeLayout1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentLeft="true">
+        <TextView android:id="@+id/reply_tilte_textView" android:layout_width="wrap_content" android:text="@string/title" android:layout_height="wrap_content"></TextView>
+        <EditText android:layout_width="fill_parent" android:layout_below="@+id/reply_tilte_textView" android:id="@+id/reply_titile_edittext" android:layout_height="wrap_content"></EditText>
+    </RelativeLayout>
+    <RelativeLayout android:id="@+id/relativeLayout2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@+id/relativeLayout1" android:layout_alignParentBottom="true">
+        <EditText android:gravity="top|left" android:layout_width="fill_parent" android:id="@+id/reply_body_edittext" android:layout_height="wrap_content" android:layout_above="@+id/reply_commit_button" android:layout_alignParentTop="true"></EditText>
+        <Button android:layout_marginLeft="10dp" android:layout_marginTop="5dp" android:layout_marginBottom="5dp" android:id="@+id/reply_commit_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/commit" android:layout_alignLeft="@+id/reply_body_edittext" android:layout_alignParentBottom="true"></Button>
+        <Button android:layout_width="wrap_content" android:layout_marginTop="5dp" android:id="@+id/reply_cancel_button" android:layout_height="wrap_content" android:layout_marginLeft="25dp" android:text="@string/cancel" android:layout_alignParentBottom="true" android:layout_toRightOf="@+id/reply_commit_button" android:layout_marginBottom="5dp"></Button>
+    </RelativeLayout>
+</RelativeLayout>
