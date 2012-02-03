@@ -126,7 +126,7 @@ public class TopicListActivity1 extends Activity {
 
 		soundPool = new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);
 		// 载入音频流
-		hitOkSfx = soundPool.load(this, R.raw.tweet, 0);
+		//hitOkSfx = soundPool.load(this, R.raw.tweet, 0);
 
 		setTitle(rssFeed.getTitle());
 		tabHost = (TabHost) findViewById(android.R.id.tabhost);
@@ -179,7 +179,7 @@ public class TopicListActivity1 extends Activity {
 
 			public void onTabChanged(final String tabId) {
 
-				soundPool.play(hitOkSfx, 1, 1, 0, 0, 1);
+				//soundPool.play(hitOkSfx, 1, 1, 0, 0, 1);
 
 				String link = rssFeed.getLink();
 				final int num;
@@ -318,10 +318,14 @@ public class TopicListActivity1 extends Activity {
 
 				String description = item.getDescription();
 				String[] arr = description.split("\n");
-
+				
 				nickName.setText(item.getAuthor());
-				replies.setText("[" + arr[1].substring(0, arr[1].indexOf("个"))
-						+ " RE]");
+				int last_index = arr.length -1;
+				String reply_count = "0";
+				int count_in_desc = arr[last_index].indexOf("个");
+				if( count_in_desc !=-1)
+					reply_count = arr[last_index].substring(0, arr[last_index].indexOf("个"));
+					replies.setText("[" + reply_count + " RE]");
 
 				title.setText(Html.fromHtml(arr[0]));
 
