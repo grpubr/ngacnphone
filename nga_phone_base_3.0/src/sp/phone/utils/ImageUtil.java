@@ -2,6 +2,7 @@ package sp.phone.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -15,9 +16,10 @@ import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 public class ImageUtil {
-
+	static final String LOG_TAG = ImageUtil.class.getSimpleName();
 	public static Bitmap zoomImageByWidth(Bitmap bitmap, int bookWidth) {
 		int width = bitmap.getWidth();
 		int height = bitmap.getHeight();
@@ -102,7 +104,19 @@ public class ImageUtil {
 	public static Drawable reSetDrawable(Activity activity, String source) {
 		// System.out.println("source:" + source);
 		Drawable drawable = null;
-		if (source.equals("[s:1]")) {
+		if (source.startsWith("http://")) {
+			try {
+				Log.i(LOG_TAG, "fetch from " + source);
+				URL url = new URL(source);
+				drawable = Drawable.createFromStream(url.openStream(), "");
+			} catch (Exception e) {
+				return null;
+			}
+
+			if (drawable == null)
+				drawable = activity.getResources().getDrawable(
+						R.drawable.question);
+		}else if (source.equals("[s:1]")) {
 			drawable = activity.getResources().getDrawable(R.drawable.smile);
 		} else if (source.equals("[s:2]")) {
 			drawable = activity.getResources().getDrawable(R.drawable.mrgreen);
