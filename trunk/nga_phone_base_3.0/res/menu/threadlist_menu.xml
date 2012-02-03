@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="发帖" android:id="@+id/threadlist_menu_newthread"></item>
+    <item android:id="@+id/threadlist_menu_item2" android:title="刷新点下面"></item>
+    <item android:id="@+id/threadlist_menu_item3" android:title="最左边的箭头"></item>
+</menu>

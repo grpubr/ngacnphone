@@ -118,6 +118,15 @@ public class MainActivity extends Activity {
 	
 	private void jumpToSetting()
 	{
+		Intent intent = new Intent();
+		intent.setClass(MainActivity.this, SettingsActivity.class);
+		try{
+			startActivity(intent);
+			//MainActivity.this.finish();
+		}catch(Exception e){
+			
+			///System.out.print("123");
+		}
 		
 	}
 	/* (non-Javadoc)

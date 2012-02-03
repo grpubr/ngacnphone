@@ -156,7 +156,7 @@ public class ArticleListActivity1 extends Activity {
 		ArticleListAdapter currentAdapter = (ArticleListAdapter) currentView.getAdapter();
 		StringBuffer postPrefix = new StringBuffer();
 		String tid = null;
-		tid = currentAdapter.getItem(0).get("url");
+		tid = articlePage.getNow().get("link");
 		tid = tid.substring(tid.indexOf("tid=")+4);
 		int end = tid.indexOf("&");
 		if(end == -1)
