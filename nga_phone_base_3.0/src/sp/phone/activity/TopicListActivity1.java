@@ -21,6 +21,9 @@ import android.os.Message;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -28,6 +31,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
@@ -52,6 +56,59 @@ public class TopicListActivity1 extends Activity {
 		initDate();
 		initView();
 		setListener();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.threadlist_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch( item.getItemId())
+		{
+			case R.id.threadlist_menu_newthread :
+				handlePostThread(item);
+				break;
+			case R.id.threadlist_menu_item2 :
+				Toast.makeText(this, "点下面",
+						Toast.LENGTH_LONG).show();
+				break;
+			case R.id.threadlist_menu_item3 :
+				Toast.makeText(this, "点这个没用",
+						Toast.LENGTH_LONG).show();
+				break;
+		}
+		return true;
+	}
+	private boolean handlePostThread(MenuItem item){
+		final String fid_start_tag = "fid=";
+		final String fid_end_tag = "&";
+		String fid = rssFeed.getLink();
+		int start = fid.indexOf(fid_start_tag);
+		if(start == -1)
+		{
+			Toast.makeText(this, R.string.error,
+					Toast.LENGTH_LONG).show();
+			return false;
+		}
+		start += fid_start_tag.length();
+		int end= fid.indexOf(fid_end_tag, start) ;
+		if(end ==-1)
+			end = fid.length();
+		fid = fid.substring(start,end);
+		
+		
+		Intent intent = new Intent();
+		//intent.putExtra("prefix",postPrefix.toString());
+		intent.putExtra("fid", fid);
+		intent.putExtra("action", "new");
+		
+		intent.setClass(this, PostActivity.class);
+		startActivity(intent);
+		return true;
 	}
 
 	private void initDate() {

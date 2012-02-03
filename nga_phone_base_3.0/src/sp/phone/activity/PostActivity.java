@@ -10,24 +10,29 @@ import sp.phone.forumoperation.ThreadPostAction;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class PostActivity extends Activity {
 
+	private final String LOG_TAG = Activity.class.getSimpleName();
 	private String prefix;
 	private EditText titleText;
 	private EditText bodyText;
 	private ThreadPostAction act; 
 	private String action;
 	private String tid;
+	private int fid;
 	private Button button_commit;
 	private Button button_cancel;
 	private MyApp app;
 	private String REPLY_URL="http://bbs.ngacn.cc/post.php?";
-	private String sig ="\n----sent from my android app";
+	private String sig ="\n----sent from my android app" +
+				"\nhttp://code.google.com/p/ngacnphone/downloads/list";
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -40,10 +45,15 @@ public class PostActivity extends Activity {
 		prefix = intent.getStringExtra("prefix");
 		action = intent.getStringExtra("action");
 		tid = intent.getStringExtra("tid");
+		fid = intent.getIntExtra("fid", -7);
+		if(tid == null)
+			tid = "";
+
 		app = (MyApp)getApplication();
 		
 		act = new ThreadPostAction(tid, "", "");
 		act.setAction_(action);
+		act.setFid_(fid);
 		
 		titleText = (EditText) findViewById(R.id.reply_titile_edittext);
 		bodyText = (EditText) findViewById(R.id.reply_body_edittext);
@@ -62,13 +72,26 @@ public class PostActivity extends Activity {
 		
 	}
 	class ButtonCommitListener implements OnClickListener{
+		private final String result_start_tag = "<span style='color:#aaa'>&gt;</span>";
+		private final String result_end_tag = "<br/>";
 		private final String url;
 		ButtonCommitListener(String url){
 			this.url = url;
 		}
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
+			if(action.equals("reply")){
+				handleReply(v);
+			}else if(action.equals("new")){
+				handleNewThread(v);
+			}
+		}
+		public void handleNewThread(View v){
+			handleReply(v);
+			
+		}
+		
+		public void handleReply(View v) {
 			HttpPostClient c = 
 				new HttpPostClient(url);
 			String cookie = "ngaPassportUid="+ app.getUid()+
@@ -79,13 +102,27 @@ public class PostActivity extends Activity {
 			try {
 				InputStream input = c.post_body(act.toString()).getInputStream();
 				String html = IOUtils.toString(input, "gbk");
-				System.out.print(html);
+				String result = getReplyResult(html);
+				Toast.makeText(v.getContext(), result,
+						Toast.LENGTH_LONG).show();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.e(LOG_TAG, Log.getStackTraceString(e));
+				
 			}
 			
 			PostActivity.this.finish();
+		}
+		private String getReplyResult(String html){
+			int start = html.indexOf(result_start_tag);
+			if(start == -1)
+				return "·¢ÌûÊ§°Ü";
+			start += result_start_tag.length();
+			int end = html.indexOf(result_end_tag, start);
+			if(start == -1)
+				return "·¢ÌûÊ§°Ü";
+			return html.substring(start, end);
+			
+			
 		}
 		
 	}
