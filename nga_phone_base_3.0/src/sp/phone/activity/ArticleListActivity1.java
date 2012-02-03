@@ -211,7 +211,7 @@ public class ArticleListActivity1 extends Activity {
 			postPrefix.append("]\n");
 		}
 		Intent intent = new Intent();
-		intent.putExtra("prefix",postPrefix.toString());
+		intent.putExtra("prefix", StringUtil.removeHtmlTag(postPrefix.toString()) );
 		intent.putExtra("tid", tid);
 		intent.putExtra("action", "reply");
 		
@@ -229,7 +229,7 @@ public class ArticleListActivity1 extends Activity {
 	OnTabChangeListener changeListener = new OnTabChangeListener() {
 		public void onTabChanged(String tabId) {
 
-			soundPool.play(hitOkSfx, 1, 1, 0, 0, 1);
+			//soundPool.play(hitOkSfx, 1, 1, 0, 0, 1);
 
 			// 重新加载 数据
 			HashMap<String, String> page = articlePage.getPage();
