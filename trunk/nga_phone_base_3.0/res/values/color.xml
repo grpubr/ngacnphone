@@ -13,7 +13,8 @@
 	<color name="font_nick_name">#1d2a63</color>
 	<color name="font_post_num">#555555</color>
 
-	<color name="page">#ffeebb</color>
+	<color name="page">#0000CD</color>
 	<color name="font_page_now">#314396</color>
 	<color name="white">#FFFFFF</color>
+	<color name="black">#000000</color>
 </resources>

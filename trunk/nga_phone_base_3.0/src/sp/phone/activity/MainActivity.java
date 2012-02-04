@@ -378,6 +378,7 @@ public class MainActivity extends Activity {
 			iv.setCompoundDrawablesWithIntrinsicBounds(null, draw, null, null);
 			iv.setText(names[position]);
 			iv.setGravity(Gravity.CENTER_HORIZONTAL);
+			iv.setTextColor(android.graphics.Color.BLACK);
 			if (error_level == 0) {
 				iv.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
