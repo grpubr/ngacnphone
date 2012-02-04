@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
+import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -67,7 +68,8 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			return rowView;
 		} else {
 			final MyApp app = (MyApp) activity.getApplication();
-			rowView = inflater.inflate(R.layout.article_list_2, null);
+			//rowView = inflater.inflate(R.layout.article_list_2, null);
+			rowView = inflater.inflate(R.layout.relative_aritclelist, null);
 			HashMap<String, String> map = getItem(position);
 			final String floor = map.get("floor");// Â¥²ã
 			// Í·Ïñ´¦Àí
@@ -167,9 +169,10 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 					.findViewById(R.id.nickName);
 			nickNameTV.setText(map.get("nickName"));
 
-			TextView contentTV = (TextView) rowView.findViewById(R.id.content);
+			WebView contentTV = (WebView) rowView.findViewById(R.id.content);
+			
 			String ngaHtml = StringUtil.parseHTML3(map.get("content"));
-			ImageGetter imgGetter = new ImageGetter() {
+			/*ImageGetter imgGetter = new ImageGetter() {
 				public Drawable getDrawable(String source) {
 					
 					Drawable drawable = null;
@@ -184,8 +187,10 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 				}
 			};
 			Spanned html = Html.fromHtml(ngaHtml, imgGetter, null);
-			contentTV.setText(html);
-
+			//contentTV.setText(html);
+			html.toString();*/
+			ngaHtml = "<span>" + ngaHtml + "</span>";
+			contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
 			TextView floorTV = (TextView) rowView.findViewById(R.id.floor);
 
 			floorTV.setText("[" + floor + " Â¥]");
