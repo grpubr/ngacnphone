@@ -129,7 +129,7 @@ public class StringUtil {
 		// 转换字体
 		if (s.indexOf("[quote]") != -1) {
 			s = s.replace("[quote]", "");
-			s = s.replace("[/quote]", "</font><font color='green' size='10'>");
+			s = s.replace("[/quote]", "</font><font color='green' size='2'>");
 
 			s = s.replace("[b]", "<font color='red' size='1'>");
 			s = s.replace("[/b]", "</font>");
@@ -139,19 +139,22 @@ public class StringUtil {
 			s = s.replace("[/pid]", "<font color='blue' size='2'>");
 			s = s + "</font>";
 		} else {
-			s = "<font color='green' size='10'>" + s;
+			s = "<font color='green' size='2'>" + s;
 			s = s + "</font>";
 		}
 		// 转换 表情
 
 		s = s.replaceAll("(\\[s:\\d+\\])", "<img src='$1'>");
 		//[url][/url]
-		s = s.replaceAll("\\[url\\](http[^\\[|\\]]+)\\[/url\\]", "$1");
+		s = s.replaceAll("\\[url\\](http[^\\[|\\]]+)\\[/url\\]",
+				"<a href=\"$1\">$1</a>");
 		//[img]./111.jpg[/img]
 		
-		s = s.replaceAll("\\[img\\]\\s*\\.(/[^\\[|\\]]+[png|gif|jpg|bmp])\\s*\\[/img\\]", "<img src=\"http://img.ngacn.cc/attachments$1\">");
+		s = s.replaceAll("\\[img\\]\\s*\\.(/[^\\[|\\]]+[png|gif|jpg|bmp])\\s*\\[/img\\]", 
+				"<img src=\"http://img.ngacn.cc/attachments$1\" width=\"100%\">");
 		//[img]http://[/img]
-		s = s.replaceAll("\\[img\\]\\s*(http[^\\[|\\]]+[png|gif|jpg|bmp])\\s*\\[/img\\]", "<img src='$1'>");
+		s = s.replaceAll("\\[img\\]\\s*(http[^\\[|\\]]+[png|gif|jpg|bmp])\\s*\\[/img\\]", 
+				"<img src='$1' width=\"100%\">");
 		return s;
 	}
 
