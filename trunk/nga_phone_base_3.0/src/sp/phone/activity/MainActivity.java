@@ -342,13 +342,13 @@ public class MainActivity extends Activity {
 		}.start();
 	}
 
-	int[] image = { R.drawable.hana,R.drawable.dxw, /*R.drawable.tf,*/ R.drawable.dk,
-			R.drawable.zs, R.drawable.lr, R.drawable.sm, R.drawable.dz,
-			R.drawable.fs, R.drawable.xd, R.drawable.qs, R.drawable.ms,
-			R.drawable.ss, };
+	int[] image = { R.drawable.p7,R.drawable.p354, /*R.drawable.tf,*/ R.drawable.p320,
+			R.drawable.p181, R.drawable.p187, R.drawable.p185, R.drawable.p189,
+			R.drawable.p182, R.drawable.p186, R.drawable.p184, R.drawable.p183,
+			R.drawable.p188 };
 	String[] urls = { "7","-7", /*"323",*/ "320", "181", "187", "185", "189", "182",
 			"186", "184", "183", "188" };
-	String[] names = { "艾泽拉斯议事厅", "大漩涡", /*"台服讨论区",*/ "黑锋要塞", "铁血沙场", "猎手大厅", "风暴祭坛",
+	String[] names = { "议事厅", "大漩涡", /*"台服讨论区",*/ "黑锋要塞", "铁血沙场", "猎手大厅", "风暴祭坛",
 			"暗影裂口", "魔法圣堂", "翡翠梦境", "圣光之力", "信仰神殿", "恶魔深渊" };
 
 	class ImageList extends BaseAdapter {
