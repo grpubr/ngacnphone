@@ -13,18 +13,20 @@ import sp.phone.utils.StringUtil;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
+import android.view.View.OnTouchListener;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -66,14 +68,14 @@ public class ArticleListActivity1 extends Activity {
 		zf = app.getZf();
 	}
 
-	SoundPool soundPool = null;
-	private int hitOkSfx;
+	//SoundPool soundPool = null;
+	//private int hitOkSfx;
 
 	private void initView() {
 
-		soundPool = new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);
+		//soundPool = new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);
 		// 载入音频流
-		hitOkSfx = soundPool.load(this, R.raw.shake, 0);
+		//hitOkSfx = soundPool.load(this, R.raw.shake, 0);
 
 		TextView titleTV = (TextView) findViewById(R.id.title);
 		titleTV.setText(articlePage.getNow().get("title"));
@@ -87,9 +89,23 @@ public class ArticleListActivity1 extends Activity {
 			TextView tv = new TextView(ArticleListActivity1.this);
 			tv.setText("首页");
 			tv.setTextSize(20);
+			
+			final String url = HttpUtil.Server + articlePage.getNow().get("link");
 			spec.setIndicator(tv);
 			spec.setContent(new tabFactory());
 			tabHost.addTab(spec);
+			tabHost.getTabWidget().getChildAt(0).setOnClickListener(
+					new OnClickListener(){
+
+						@Override
+						public void onClick(View v) {
+							//Log.e(this.getClass().getCanonicalName(), "click?");
+							new LoadArticleThread(url).start();
+						}
+						
+						
+					}
+			);
 		} else {
 			// 第一页
 			TabSpec ts_first = tabHost.newTabSpec("tab_first");
@@ -150,7 +166,6 @@ public class ArticleListActivity1 extends Activity {
 	 */
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		ListView currentView = (ListView) tabHost.getCurrentView();
 		ArticleListAdapter currentAdapter = (ArticleListAdapter) currentView.getAdapter();
@@ -234,6 +249,7 @@ public class ArticleListActivity1 extends Activity {
 			// 重新加载 数据
 			HashMap<String, String> page = articlePage.getPage();
 			String urls = HttpUtil.Server;
+			final String url_last = urls + page.get("last");
 			if (tabId.equals("tab_first")) {
 				urls += page.get("first");
 			} else if (tabId.equals("tab_next")) {
@@ -257,13 +273,15 @@ public class ArticleListActivity1 extends Activity {
 			final String s = urls;
 
 			ArticlePage ap2 = map_article.get(s);
-			if (ap2 != null) {
+			if (ap2 != null && !url_last.trim().equals(urls) ) {
 				articlePage = ap2;
 				// Message message = new Message();
 				// handler_rebuild.sendMessage(message);
 				System.gc();
 				reBuild();
 			} else {
+				new LoadArticleThread(s).start();
+				/*
 				new Thread() {
 					@Override
 					public void run() {
@@ -310,12 +328,67 @@ public class ArticleListActivity1 extends Activity {
 						activityUtil.dismiss();
 
 					}
-				}.start();
+				}.start();*/
+				
+				
 			}
 
 		}
 	};
 
+	class LoadArticleThread extends Thread {
+		private final String url;
+		public LoadArticleThread(String url) {
+			super();
+			this.url = url;
+		}
+		@Override
+		public void run() {
+			ArticlePage ap = null;
+			if (!HttpUtil.HOST_PORT.equals("")) {
+				String str = StringUtil.getSaying();
+				if (str.indexOf(";") != -1) {
+					activityUtil.notice("加速模式", str.split(";")[0]
+							+ "-----" + str.split(";")[1]);
+				} else {
+					activityUtil.notice("加速模式", str);
+				}
+				String a = url.replace("&", "@");
+				ap = HttpUtil.getArticlePageByJson(HttpUtil.HOST
+						+ "?uri=" + a);
+
+			}
+			if (ap == null) {
+				String str = StringUtil.getSaying();
+				if (str.indexOf(";") != -1) {
+					activityUtil.notice("普通模式", str.split(";")[0]
+							+ "-----" + str.split(";")[1]);
+				} else {
+					activityUtil.notice("普通模式", str);
+				}
+
+				// activityUtil.notice("INFO",
+				// "连接策略:P-N,将模拟浏览器显示方式");
+				
+				String cookie = "ngaPassportUid=" + ArticleListActivity1.this.app.getUid()
+					+"; ngaPassportCid=" + ArticleListActivity1.this.app.getCid();
+				ap = HttpUtil.getArticlePage(url,cookie);
+			}
+			if (ap != null) {
+				app.setArticlePage(ap);// 设置当前page
+				map_article.put(url, ap);// 添加新的数据
+				app.setMap_article(map_article);
+				articlePage = ap;
+				Message message = new Message();
+				handler_rebuild.sendMessage(message);
+			} else {
+				activityUtil.notice("ERROR", "可能遇到了一个广告或者帖子被删除");
+			}
+			activityUtil.dismiss();
+
+		}
+	}
+	
 	Handler handler_rebuild = new Handler() {
 		public void handleMessage(final Message msg) {
 			System.gc();
