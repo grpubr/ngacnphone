@@ -13,8 +13,6 @@ import sp.phone.activity.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,12 +24,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
@@ -119,12 +118,12 @@ public class TopicListActivity1 extends Activity {
 
 	}
 
-	SoundPool soundPool = null;
-	private int hitOkSfx;
+	//SoundPool soundPool = null;
+	//private int hitOkSfx;
 
 	private void initView() {
 
-		soundPool = new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);
+		//soundPool = new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);
 		// 载入音频流
 		//hitOkSfx = soundPool.load(this, R.raw.tweet, 0);
 
@@ -227,7 +226,7 @@ public class TopicListActivity1 extends Activity {
 							RSSUtil rssUtil = new RSSUtil();
 							rssUtil.parseXml(newURL);
 							rssFeed = rssUtil.getFeed();
-							map.put(num, rssFeed);
+							//map.put(num, rssFeed);
 							Message message = new Message();
 							handler_rebuild.sendMessage(message);
 						}
@@ -267,10 +266,108 @@ public class TopicListActivity1 extends Activity {
 			listView.setVerticalScrollBarEnabled(false);
 			MyAdapter adapter = new MyAdapter(TopicListActivity1.this);
 			listView.setAdapter(adapter);
-
+			listView.setOnItemClickListener(new ArticlelistItemClickListener());
 			return listView;
 		}
+		
+		
 	}
+
+	class ArticlelistItemClickListener implements OnItemClickListener{
+		
+		
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+				long arg3) {
+			// TODO Auto-generated method stub
+			RSSItem item = rssFeed.getItems().get(arg2);
+			String guid = item.getGuid();
+			 String url;
+			if (guid.indexOf("\n") != -1) {
+				url = guid.substring(0, guid.length() - 1);
+			} else {
+				url = guid;
+			}
+			handleFloor(url);
+		}
+		
+		private void handleFloor(String floorUrl) {
+			final String url = floorUrl;
+			ArticlePage ap = map_article.get(url + "&page=1");
+			if (ap != null) {
+				app.setArticlePage(ap);
+				Intent intent = new Intent();
+				intent.setClass(TopicListActivity1.this,
+						ArticleListActivity1.class);
+				startActivity(intent);
+			} else {
+				new Thread() {
+					@Override
+					public void run() {
+						ArticlePage articlePage = null;
+
+						System.out.println("host:" + HttpUtil.HOST);
+						if (!HttpUtil.HOST_PORT.equals("")) {
+
+							String str = StringUtil.getSaying();
+							if (str.indexOf(";") != -1) {
+								activityUtil.notice("加速模式", str
+										.split(";")[0]
+										+ "-----"
+										+ str.split(";")[1]);
+							} else {
+								activityUtil.notice("加速模式", str);
+							}
+							articlePage = HttpUtil
+									.getArticlePageByJson(HttpUtil.HOST
+											+ "?uri="
+											+ url
+											+ "@page=1");
+						}
+						if (articlePage == null) {
+							// activityUtil.notice("INFO",
+							// "连接策略:P-N,这种策略将模拟浏览器显示方式");
+
+							String str = StringUtil.getSaying();
+							if (str.indexOf(";") != -1) {
+								activityUtil.notice("普通模式", str
+										.split(";")[0]
+										+ "-----"
+										+ str.split(";")[1]);
+							} else {
+								activityUtil.notice("普通模式", str);
+							}
+							String cookie = "";
+							if(TopicListActivity1.this.app.getUid() != null && 
+									TopicListActivity1.this.app.getUid()!= "")
+							cookie= "ngaPassportUid=" + TopicListActivity1.this.app.getUid()
+							+"; ngaPassportCid=" + TopicListActivity1.this.app.getCid();
+							articlePage = HttpUtil
+									.getArticlePage(url + "&page=1",cookie);
+						}
+						if (articlePage != null) {
+							app.setArticlePage(articlePage);// 设置当前page
+							map_article.put(url + "&page=1",
+									articlePage);// 添加新的数据
+							app.setMap_article(map_article);
+							Intent intent = new Intent();
+							intent.setClass(
+									TopicListActivity1.this,
+									ArticleListActivity1.class);
+							startActivity(intent);
+						} else {
+							activityUtil.notice("ERROR",
+									"可能遇到了一个广告或者帖子被删除");
+						}
+						activityUtil.dismiss();
+					}
+				}.start();
+			}
+		}
+		
+		
+	}
+	
 
 	class tabFactory2 implements TabContentFactory {
 		public View createTabContent(String tag) {
@@ -329,91 +426,25 @@ public class TopicListActivity1 extends Activity {
 
 				title.setText(Html.fromHtml(arr[0]));
 
-				String guid = item.getGuid();
+				/*String guid = item.getGuid();
 				final String url;
 				if (guid.indexOf("\n") != -1) {
 					url = guid.substring(0, guid.length() - 1);
 				} else {
 					url = guid;
-				}
-
-				title.setOnClickListener(new OnClickListener() {
-					public void onClick(View v) {
-						ArticlePage ap = map_article.get(url + "&page=1");
-						if (ap != null) {
-							app.setArticlePage(ap);
-							Intent intent = new Intent();
-							intent.setClass(TopicListActivity1.this,
-									ArticleListActivity1.class);
-							startActivity(intent);
-						} else {
-							new Thread() {
-								@Override
-								public void run() {
-									ArticlePage articlePage = null;
-
-									System.out.println("host:" + HttpUtil.HOST);
-									if (!HttpUtil.HOST_PORT.equals("")) {
-
-										String str = StringUtil.getSaying();
-										if (str.indexOf(";") != -1) {
-											activityUtil.notice("加速模式", str
-													.split(";")[0]
-													+ "-----"
-													+ str.split(";")[1]);
-										} else {
-											activityUtil.notice("加速模式", str);
-										}
-										articlePage = HttpUtil
-												.getArticlePageByJson(HttpUtil.HOST
-														+ "?uri="
-														+ url
-														+ "@page=1");
-									}
-									if (articlePage == null) {
-										// activityUtil.notice("INFO",
-										// "连接策略:P-N,这种策略将模拟浏览器显示方式");
-
-										String str = StringUtil.getSaying();
-										if (str.indexOf(";") != -1) {
-											activityUtil.notice("普通模式", str
-													.split(";")[0]
-													+ "-----"
-													+ str.split(";")[1]);
-										} else {
-											activityUtil.notice("普通模式", str);
-										}
-										String cookie = "";
-										if(TopicListActivity1.this.app.getUid() != null && 
-												TopicListActivity1.this.app.getUid()!= "")
-										cookie= "ngaPassportUid=" + TopicListActivity1.this.app.getUid()
-										+"; ngaPassportCid=" + TopicListActivity1.this.app.getCid();
-										articlePage = HttpUtil
-												.getArticlePage(url + "&page=1",cookie);
-									}
-									if (articlePage != null) {
-										app.setArticlePage(articlePage);// 设置当前page
-										map_article.put(url + "&page=1",
-												articlePage);// 添加新的数据
-										app.setMap_article(map_article);
-										Intent intent = new Intent();
-										intent.setClass(
-												TopicListActivity1.this,
-												ArticleListActivity1.class);
-										startActivity(intent);
-									} else {
-										activityUtil.notice("ERROR",
-												"可能遇到了一个广告或者帖子被删除");
-									}
-									activityUtil.dismiss();
-								}
-							}.start();
-						}
-					}
-				});
+				}*/
+				
+				
+				//if(false)// no cache
 				m.put(position, convertView);
 			}
 			return convertView;
 		}
+		
+
+		
+
+
 	}
+
 }
