@@ -3,5 +3,5 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent" android:background="@drawable/bg_wood">
-    <CheckBox android:layout_height="wrap_content" android:layout_alignParentLeft="true" android:id="@+id/checkBox_down_img_no_wifi" android:text="@string/nowifi_downimg" android:layout_width="fill_parent"></CheckBox>
+    <CheckBox android:layout_height="wrap_content" android:layout_alignParentLeft="true" android:id="@+id/checkBox_down_img_no_wifi" android:text="@string/nowifi_downimg" android:layout_width="fill_parent" android:textColor="@color/black"></CheckBox>
 </RelativeLayout>
