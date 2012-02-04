@@ -144,7 +144,7 @@ public class StringUtil {
 		}
 		// ×ª»» ±íÇé
 
-		s = s.replaceAll("(\\[s:\\d\\])", "<img src='$1'>");
+		s = s.replaceAll("(\\[s:\\d+\\])", "<img src='$1'>");
 		//[url][/url]
 		s = s.replaceAll("\\[url\\](http[^\\[|\\]]+)\\[/url\\]", "$1");
 		//[img]./111.jpg[/img]
