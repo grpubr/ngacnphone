@@ -146,12 +146,12 @@ public class StringUtil {
 
 		s = s.replaceAll("(\\[s:\\d\\])", "<img src='$1'>");
 		//[url][/url]
-		s = s.replaceAll("\\[url\\](http\\S+)\\[/url\\]", "$1");
+		s = s.replaceAll("\\[url\\](http[^\\[|\\]]+)\\[/url\\]", "$1");
 		//[img]./111.jpg[/img]
 		
 		s = s.replaceAll("\\[img\\]\\.(/[^\\[|\\]]+[png|gif|jpg|bmp])\\[/img\\]", "<img src=\"http://img.ngacn.cc/attachments$1\">");
 		//[img]http://[/img]
-		s = s.replaceAll("\\[img\\](http[^\\[|\\]]++[png|gif|jpg|bmp])\\[/img\\]", "<img src='$1'>");
+		s = s.replaceAll("\\[img\\](http[^\\[|\\]]+[png|gif|jpg|bmp])\\[/img\\]", "<img src='$1'>");
 		return s;
 	}
 
