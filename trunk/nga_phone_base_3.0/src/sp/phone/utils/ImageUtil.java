@@ -118,7 +118,7 @@ public class ImageUtil {
 
 			if (drawable == null)
 				drawable = activity.getResources().getDrawable(
-						R.drawable.question);
+						R.drawable.defult_img);
 		}else if (source.equals("[s:1]")) {
 			drawable = activity.getResources().getDrawable(R.drawable.smile);
 		} else if (source.equals("[s:2]")) {

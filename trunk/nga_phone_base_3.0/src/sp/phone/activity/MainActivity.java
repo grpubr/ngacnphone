@@ -32,10 +32,9 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-@SuppressWarnings("unused")
+
 public class MainActivity extends Activity {
 
 	TextView tv_pre;
@@ -62,7 +61,10 @@ public class MainActivity extends Activity {
 		initView();
 
 	}
-
+	private void  loadConfig(Intent intent){
+		
+		initUserInfo(intent);
+	}
 	private void initUserInfo(Intent intent) {
 		app = ((MyApp) getApplication());
 		String uid = null;// intent.getStringExtra("uid");
@@ -88,6 +90,8 @@ public class MainActivity extends Activity {
 				app.setUid(uid);
 				app.setCid(cid);
 			}
+			boolean downImgWithoutWifi = share.getBoolean("down_load_without_wifi", true);
+			app.setDownImgWithoutWifi(downImgWithoutWifi);
 		}
 		
 	}
@@ -320,7 +324,8 @@ public class MainActivity extends Activity {
 					app.setRssFeed(rssFeed);
 
 					HashMap<Object, RSSFeed> map = new HashMap<Object, RSSFeed>();
-					map.put(StringUtil.getNowPageNum(rssFeed.getLink()),
+					if(false)
+						map.put(StringUtil.getNowPageNum(rssFeed.getLink()),
 							rssFeed);
 					app.setMap(map);
 					Intent intent = new Intent();
