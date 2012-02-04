@@ -3,6 +3,7 @@ package sp.phone.utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -108,7 +109,9 @@ public class ImageUtil {
 			try {
 				Log.i(LOG_TAG, "fetch from " + source);
 				URL url = new URL(source);
-				drawable = Drawable.createFromStream(url.openStream(), "");
+				URLConnection conn = url.openConnection();
+				conn.setConnectTimeout(1*1000);
+				drawable = Drawable.createFromStream(conn.getInputStream(), "");
 			} catch (Exception e) {
 				return null;
 			}
