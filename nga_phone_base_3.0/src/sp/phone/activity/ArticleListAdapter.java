@@ -13,9 +13,12 @@ import sp.phone.utils.ImageUtil;
 import sp.phone.utils.StringUtil;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo.State;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
@@ -52,13 +55,18 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 
 
 	}
-
+	private boolean isInWifi(){
+		ConnectivityManager conMan = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+		State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+		return wifi == State.CONNECTED;
+	}
 	public View getView(int position, View view, ViewGroup parent) {
 
 		View rowView = m.get(position);
 		if (rowView != null) {
 			return rowView;
 		} else {
+			final MyApp app = (MyApp) activity.getApplication();
 			rowView = inflater.inflate(R.layout.article_list_2, null);
 			HashMap<String, String> map = getItem(position);
 			final String floor = map.get("floor");// Â¥²ã
@@ -114,18 +122,25 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 								if (is == null) {
 									System.out.println("from net" + floor);
 									// ÏÂÔØ
-									HttpUtil.downImage(avatarImage, newImage);
-									if (file.exists()) {
-										Bitmap bitmap = BitmapFactory
-												.decodeFile(newImage);
-										if (bitmap != null) {
-											Message message = handler2
-													.obtainMessage(0, bitmap);
-											handler2.sendMessage(message);
-										} else {
-											System.out
-													.println("decodeStream fall"
-															+ floor);
+									if(!app.isDownImgWithoutWifi() && !isInWifi() ){
+										Bitmap bitmap = BitmapFactory.decodeResource(app.getResources(), R.id.avatarImage);
+										Message message = handler2.obtainMessage(0, bitmap);
+										handler2.sendMessage(message);
+									}else
+									{
+										HttpUtil.downImage(avatarImage, newImage);
+										if (file.exists()) {
+											Bitmap bitmap = BitmapFactory
+													.decodeFile(newImage);
+											if (bitmap != null) {
+												Message message = handler2
+														.obtainMessage(0, bitmap);
+												handler2.sendMessage(message);
+											} else {
+												System.out
+														.println("decodeStream fall"
+																+ floor);
+											}
 										}
 									}
 								} else {
@@ -156,7 +171,12 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			String ngaHtml = StringUtil.parseHTML3(map.get("content"));
 			ImageGetter imgGetter = new ImageGetter() {
 				public Drawable getDrawable(String source) {
-					return ImageUtil.reSetDrawable(activity, source);
+					
+					
+					if(!app.isDownImgWithoutWifi() && !isInWifi() )
+						return activity.getResources().getDrawable(R.drawable.defult_img);
+					else
+						return ImageUtil.reSetDrawable(activity, source);
 				}
 			};
 			Spanned html = Html.fromHtml(ngaHtml, imgGetter, null);
@@ -187,25 +207,5 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 	}
 	
 
-		
-	/*class FloorLongClickListen implements OnLongClickListener{
-		private final String uid;
-		private final String content;
-		private final String name;
-		private final String dateTime;
-		public FloorLongClickListen(String uid,String content,String name,String dateTime){
-			this.uid = uid;
-			this.content = content;
-			this.name = name;
-			this.dateTime = "1970-01-01 00:00";
-		}
-		@Override
-		public boolean onLongClick(View arg0) {
-			// TODO Auto-generated method stub
-			//arg0.getContext()
-			//arg0.get
-			return false;
-		}
-		
-	}*/
+
 }

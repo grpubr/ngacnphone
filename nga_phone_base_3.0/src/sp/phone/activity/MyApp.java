@@ -18,6 +18,7 @@ public class MyApp extends Application {
 	
 	private String uid;
 	private String cid;
+	private boolean downImgWithoutWifi;
 
 	public ZipFile getZf() {
 		return zf;
@@ -89,4 +90,14 @@ public class MyApp extends Application {
 	public void setCid(String cid) {
 		this.cid = cid;
 	}
+
+	public void setDownImgWithoutWifi(boolean downImgWithoutWifi) {
+		this.downImgWithoutWifi = downImgWithoutWifi;
+	}
+
+	public boolean isDownImgWithoutWifi() {
+		return downImgWithoutWifi;
+	}
+
+
 }
