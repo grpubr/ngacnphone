@@ -64,7 +64,7 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 	public View getView(int position, View view, ViewGroup parent) {
 
 		View rowView = m.get(position);
-		if (rowView != null) {
+		if (rowView != null && m.size() > 1) {
 			return rowView;
 		} else {
 			final MyApp app = (MyApp) activity.getApplication();
@@ -170,29 +170,17 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			nickNameTV.setText(map.get("nickName"));
 
 			WebView contentTV = (WebView) rowView.findViewById(R.id.content);
-			
+			contentTV.setFocusable(false);
 			String ngaHtml = StringUtil.parseHTML3(map.get("content"));
-			/*ImageGetter imgGetter = new ImageGetter() {
-				public Drawable getDrawable(String source) {
-					
-					Drawable drawable = null;
-					if(!app.isDownImgWithoutWifi() && !isInWifi() )
-					{
-						drawable = activity.getResources().getDrawable(R.drawable.defult_img);
-						drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable
-							.getIntrinsicHeight());	
-					}else
-						drawable = ImageUtil.reSetDrawable(activity, source);
-					return drawable;
-				}
-			};
-			Spanned html = Html.fromHtml(ngaHtml, imgGetter, null);
-			//contentTV.setText(html);
-			html.toString();*/
 			ngaHtml = "<span>" + ngaHtml + "</span>";
+			if(!app.isDownImgWithoutWifi() && !isInWifi() )
+				contentTV.getSettings().setBlockNetworkImage(true);
+			else
+				contentTV.getSettings().setBlockNetworkImage(true);
 			contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
+			
+			
 			TextView floorTV = (TextView) rowView.findViewById(R.id.floor);
-
 			floorTV.setText("[" + floor + " ¥]");
 
 			TextView postTimeTV = (TextView) rowView
@@ -208,6 +196,7 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			//rowView.setOnLongClickListener(new FloorLongClickListen() );
 			//rowView.setOnCreateContextMenuListener( new FloorCreateContextMenuListener() );
 			//rowView.set
+			
 			m.put(position, rowView);
 		}
 		
