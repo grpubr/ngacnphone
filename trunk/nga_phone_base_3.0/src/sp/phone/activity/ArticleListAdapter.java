@@ -123,7 +123,7 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 									System.out.println("from net" + floor);
 									// обть
 									if(!app.isDownImgWithoutWifi() && !isInWifi() ){
-										Bitmap bitmap = BitmapFactory.decodeResource(app.getResources(), R.id.avatarImage);
+										Bitmap bitmap = BitmapFactory.decodeResource(app.getResources(), R.drawable.default_avatar);
 										Message message = handler2.obtainMessage(0, bitmap);
 										handler2.sendMessage(message);
 									}else
@@ -172,11 +172,15 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			ImageGetter imgGetter = new ImageGetter() {
 				public Drawable getDrawable(String source) {
 					
-					
+					Drawable drawable = null;
 					if(!app.isDownImgWithoutWifi() && !isInWifi() )
-						return activity.getResources().getDrawable(R.drawable.defult_img);
-					else
-						return ImageUtil.reSetDrawable(activity, source);
+					{
+						drawable = activity.getResources().getDrawable(R.drawable.defult_img);
+						drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable
+							.getIntrinsicHeight());	
+					}else
+						drawable = ImageUtil.reSetDrawable(activity, source);
+					return drawable;
 				}
 			};
 			Spanned html = Html.fromHtml(ngaHtml, imgGetter, null);
