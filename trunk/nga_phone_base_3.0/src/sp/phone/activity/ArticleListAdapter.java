@@ -176,7 +176,7 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			if(!app.isDownImgWithoutWifi() && !isInWifi() )
 				contentTV.getSettings().setBlockNetworkImage(true);
 			else
-				contentTV.getSettings().setBlockNetworkImage(true);
+				contentTV.getSettings().setBlockNetworkImage(false);
 			contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
 			
 			
