@@ -150,10 +150,10 @@ public class StringUtil {
 				"<a href=\"$1\">$1</a>");
 		//[img]./111.jpg[/img]
 		
-		s = s.replaceAll("\\[img\\]\\s*\\.(/[^\\[|\\]]+[png|gif|jpg|bmp])\\s*\\[/img\\]", 
+		s = s.replaceAll("\\[img\\]\\s*\\.(/[^\\[|\\]]+)\\s*\\[/img\\]", 
 				"<img src=\"http://img.ngacn.cc/attachments$1\" width=\"100%\">");
 		//[img]http://[/img]
-		s = s.replaceAll("\\[img\\]\\s*(http[^\\[|\\]]+[png|gif|jpg|bmp])\\s*\\[/img\\]", 
+		s = s.replaceAll("\\[img\\]\\s*(http[^\\[|\\]]+)\\s*\\[/img\\]", 
 				"<img src='$1' width=\"100%\">");
 		return s;
 	}
