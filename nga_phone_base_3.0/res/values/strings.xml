@@ -18,4 +18,5 @@
     <string name="thread_reply_url">http://bbs.ngacn.cc/post.php?</string>
     <string name="error">出错了</string>
     <string name="nowifi_downimg">没wifi也下载图片</string>
+    <string name="nightmode">夜间模式</string>
 </resources>
