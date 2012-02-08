@@ -1,10 +1,18 @@
 package sp.phone.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipFile;
 
 import sp.phone.bean.RSSFeed;
@@ -12,16 +20,24 @@ import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.RSSUtil;
 import sp.phone.utils.StringUtil;
+import sp.phone.utils.ThemeManager;
+import sp.phone.bean.BoardInfo;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,11 +45,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 
+import com.alibaba.fastjson.JSON;
 
 public class MainActivity extends Activity {
 
@@ -42,7 +66,7 @@ public class MainActivity extends Activity {
 	TextView tv_error;
 	ActivityUtil activityUtil = new ActivityUtil(this);
 	private MyApp app;
-
+	View view;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
@@ -51,30 +75,36 @@ public class MainActivity extends Activity {
 		// getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 		// R.layout.title_bar);
 		activityUtil.setBG();
-		View view = LayoutInflater.from(this).inflate(R.layout.main, null);
-		// setContentView(R.layout.main);
-		view.setBackgroundResource(ActivityUtil.bg);
+		
 		Intent intent = getIntent();
-		setContentView(view);
-		initUserInfo(intent);
+		
+		loadConfig(intent);
 		initDate();
 		initView();
 
 	}
-	private void  loadConfig(Intent intent){
-		
+
+	private void loadConfig(Intent intent) {
+
 		initUserInfo(intent);
+		this.loadBoardInfo();
+		SharedPreferences share = this.getSharedPreferences("perference",
+				MODE_PRIVATE);
+		if(share.getBoolean("nightmode", false))
+			ThemeManager.getInstance().setMode(1);
+		
 	}
+
 	private void initUserInfo(Intent intent) {
 		app = ((MyApp) getApplication());
 		String uid = null;// intent.getStringExtra("uid");
-		String cid = null;//intent.getStringExtra("cid");
-		String userName = null;//intent.getStringExtra("User");
-		
-		SharedPreferences  share = 
-			this.getSharedPreferences("perference", MODE_PRIVATE);
-		
-		if( uid != null && cid !=null && uid != "" && cid != ""){
+		String cid = null;// intent.getStringExtra("cid");
+		String userName = null;// intent.getStringExtra("User");
+
+		SharedPreferences share = this.getSharedPreferences("perference",
+				MODE_PRIVATE);
+
+		if (uid != null && cid != null && uid != "" && cid != "") {
 			app.setUid(uid);
 			app.setCid(cid);
 
@@ -83,73 +113,91 @@ public class MainActivity extends Activity {
 			editor.putString("cid", cid);
 			editor.putString("username", userName);
 			editor.commit();
-		}else{
-			uid = share.getString("uid","");
-			cid = share.getString("cid","");
-			if( uid != null && cid !=null && uid != "" && cid != ""){
+		} else {
+			uid = share.getString("uid", "");
+			cid = share.getString("cid", "");
+			if (uid != null && cid != null && uid != "" && cid != "") {
 				app.setUid(uid);
 				app.setCid(cid);
 			}
-			boolean downImgWithoutWifi = share.getBoolean("down_load_without_wifi", true);
+			boolean downImgWithoutWifi = share.getBoolean(
+					"down_load_without_wifi", true);
 			app.setDownImgWithoutWifi(downImgWithoutWifi);
 		}
-		
+
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
 		return true;
 	}
+	
 
-	private void jumpToLogin(){
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		view.setBackgroundResource(
+				ThemeManager.getInstance().getBackgroundColor());
+		GridView gv = (GridView) findViewById(R.id.gride);
+		if(gv != null)
+			((BaseAdapter) gv.getAdapter()).notifyDataSetChanged();
+		super.onResume();
+	}
+
+	private void jumpToLogin() {
 		Intent intent = new Intent();
 		intent.setClass(MainActivity.this, LoginActivity.class);
-		try{
+		try {
 			startActivity(intent);
-			//MainActivity.this.finish();
-		}catch(Exception e){
-			
-			///System.out.print("123");
+			// MainActivity.this.finish();
+		} catch (Exception e) {
+
+			// /System.out.print("123");
 		}
-		
+
 	}
-	
-	private void jumpToSetting()
-	{
+
+	private void jumpToSetting() {
 		Intent intent = new Intent();
 		intent.setClass(MainActivity.this, SettingsActivity.class);
-		try{
+		try {
 			startActivity(intent);
-			//MainActivity.this.finish();
-		}catch(Exception e){
-			
-			///System.out.print("123");
+			// MainActivity.this.finish();
+		} catch (Exception e) {
+
+			// /System.out.print("123");
 		}
-		
+
 	}
-	/* (non-Javadoc)
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
-		switch( item.getItemId())
-		{
-			case R.id.mainmenu_login :
-				this.jumpToLogin();
-				break;
-			case R.id.mainmenu_setting :
-				this.jumpToSetting();
-				break;
-			case R.id.mainmenu_exit :
-				this.finish();
-				break;
+		switch (item.getItemId()) {
+		case R.id.mainmenu_login:
+			this.jumpToLogin();
+			break;
+		case R.id.mainmenu_setting:
+			this.jumpToSetting();
+			break;
+		case R.id.mainmenu_exit:
+			this.finish();
+			break;
+		
 		}
 		return true;
 	}
@@ -158,20 +206,131 @@ public class MainActivity extends Activity {
 		// TextView titleTV = (TextView) findViewById(R.id.title);
 		// titleTV.setText("源于一个简单的想法");
 		setTitle("源于一个简单的想法");
+		
+		view = LayoutInflater.from(this).inflate(R.layout.main, null);
+		// setContentView(R.layout.main);
+		view.setBackgroundResource(
+			ThemeManager.getInstance().getBackgroundColor());
+		setContentView(view);
 
-		tv_pre = (TextView) findViewById(R.id.tv_pre);
-		tv_now = (TextView) findViewById(R.id.tv_now);
-		tv_error = (TextView) findViewById(R.id.tv_error);
+		tv_pre = new TextView(this);//(TextView) findViewById(R.id.tv_pre);
+		tv_now = new TextView(this);//(TextView) findViewById(R.id.tv_now);
+		tv_error = new TextView(this);//(TextView) findViewById(R.id.tv_error);
+
 		GridView gv = (GridView) findViewById(R.id.gride);
-		ImageList adapter = new ImageList(this);
+		ImageGridList adapter = new ImageGridList(this);	
 		gv.setAdapter(adapter);
+		gv.setOnItemClickListener(new EnterToplistLintener());
+		MainActivity.this.registerForContextMenu(gv);
+		/*ListView textListView = (ListView) findViewById(R.id.text_topics_listview);
+		TextListAdapter textAdapter = new TextListAdapter(this);
+		textListView.setAdapter(textAdapter);*/
+
 	}
+	
+	
+	
+	//AdapterContextMenuInfo lastMenuInfo = null;
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		// TODO Auto-generated method stub
+		super.onCreateContextMenu(menu, v, menuInfo);
+		//GridView gv; gv.getChildAt(1);
+		//TextView clicked = (TextView)((AdapterContextMenuInfo)menuInfo).targetView;
+		menu.add(0,ADD_BOARD_INDEX,0, "加新板块");
+		menu.add(0,ADD_BOARD_INDEX+ 1,0, "删除板块"/*+clicked.getText().toString()*/);
+		//lastMenuInfo = new AdapterContextMenuInfo(v, 1, 1);
+		
+	}
+
+
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		
+
+		switch (item.getItemId()) {
+		case ADD_BOARD_INDEX:
+			handleAddBoard();
+			break;
+		case ADD_BOARD_INDEX + 1: //del
+			
+			int position = info.position;
+			if(position < image.length)
+				new AlertDialog.Builder(this).setTitle("错误")
+				.setMessage("这个删不了")
+				.setPositiveButton("不确定", null).show();
+		
+			else{
+				String fid = urls[position];
+				if(removeCustomBoard(fid))
+				{
+					GridView gv = (GridView) findViewById(R.id.gride);
+					((BaseAdapter) gv.getAdapter()).notifyDataSetChanged();
+				}
+				
+				
+			}
+				
+			break;
+		}
+		
+		return super.onContextItemSelected(item);
+	}
+
+
+
+
+	private void handleAddBoard() {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(this);  
+        final EditText input = new EditText(this);  
+        alert.setView(input);  
+        alert.setTitle("输入板块名  板块id");
+        alert.setMessage("类似: 议事厅(空格)7");
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
+            public void onClick(DialogInterface dialog, int whichButton) {  
+                String value = input.getText().toString().trim(); 
+                final  String values[] = value.split(" ");
+                if(values.length <2){
+                	Toast.makeText(getApplicationContext(), "输入非法",  
+                        Toast.LENGTH_SHORT).show();
+                }else if(addCustomBoard(values[1], values[0]))
+                {
+                	GridView gv = (GridView) findViewById(R.id.gride);
+                	((BaseAdapter) gv.getAdapter()).notifyDataSetChanged();
+                }
+                String uri = "http://img4.ngacn.cc/ngabbs/nga_classic/f/"
+					+values[1]+".png";
+				String fileName = HttpUtil.PATH_ICON+"/"+values[1]+".png";
+				HttpUtil.imageInputStream2(uri, fileName);
+                
+            }  
+        });  
+  
+        alert.setNegativeButton("Cancel",  
+                new DialogInterface.OnClickListener() {  
+                    public void onClick(DialogInterface dialog, int whichButton) {  
+                        dialog.cancel();  
+                    }  
+                });  
+        alert.show(); 
+		
+	}
+
+
+
+	static final int ADD_BOARD_INDEX = 1;
+
 
 	String error = "";
 	int error_level = 0;
 
 	private void initDate() {
 		app = ((MyApp) getApplication());
+		prepareGridData();
+
 
 		new Thread() {
 			public void run() {
@@ -193,21 +352,6 @@ public class MainActivity extends Activity {
 					}
 
 					delay("检查缓存目录...");
-					// File file_sd = new File(HttpUtil.PATH_SD);
-
-					// String[] nga_cache = file_sd.list(new FilenameFilter() {
-					// @Override
-					// public boolean accept(File dir, String filename) {
-					// if ("nga_cache.zip".equals(filename)) {
-					// return true;
-					// } else {
-					// return false;
-					// }
-					// }
-					// });
-					// if (nga_cache.length == 1) {
-					// HttpUtil.PATH_ZIP = HttpUtil.PATH_SD + nga_cache[0];
-					// }
 
 					System.out.println("zip is");
 
@@ -245,7 +389,105 @@ public class MainActivity extends Activity {
 				}
 			};
 		}.start();
+	
 	}
+
+	private void prepareGridData() {
+		List<BoardInfo> boards = getOptionBoard();
+		List<String> urlList = new ArrayList<String>(Arrays.asList(defaults_urls));
+		List<String> nameList = new ArrayList<String>(Arrays.asList(defaults_names));
+
+		for (BoardInfo b : boards) {
+			urlList.add(b.getUrl());
+			nameList.add(b.getName());
+
+		}
+		synchronized(this){
+			urls = urlList.toArray(new String[urlList.size()]);
+			names = nameList.toArray(new String[nameList.size()]);
+			
+		}
+
+	}
+	private List<BoardInfo> boardInfo;
+	private List<BoardInfo> getOptionBoard() {
+		return  boardInfo;
+	}
+	
+	private void setOptionBoard(List<BoardInfo> info){	
+		this.boardInfo = info;
+	}
+	
+	private void flushBoardInfo(){
+		String infoString = JSON.toJSONString(boardInfo);
+		SharedPreferences share = this.getSharedPreferences("perference",
+				MODE_PRIVATE);
+		Editor editor = share.edit();
+		editor.putString("boards", infoString);
+		editor.commit();
+		
+	}
+	private void loadBoardInfo(){
+		SharedPreferences share = this.getSharedPreferences("perference",
+				MODE_PRIVATE);
+		String infoString = share.getString("boards", "");
+		if(boardInfo==null)
+			boardInfo = new ArrayList<BoardInfo>();
+		if(!infoString.equals(""))
+		{
+			try{
+			boardInfo  =  JSON.parseArray(infoString, BoardInfo.class);
+			}catch(Exception e){
+				Log.e("", Log.getStackTraceString(e));
+			}
+			
+		}
+
+			
+		
+	}
+	
+	private boolean addCustomBoard(String fid,String name){
+		List<BoardInfo> boards = getOptionBoard();
+		boards.add(new BoardInfo(fid, name));
+		synchronized(this){
+			setOptionBoard(boards);
+			flushBoardInfo();
+			
+		}
+		//refresh
+		this.prepareGridData();
+		return true;
+	}
+	
+	private boolean removeCustomBoard(String fid){
+		List<BoardInfo> boards = getOptionBoard();
+
+
+		for (BoardInfo b : boards) {
+			if(b.getUrl().equals(fid)){
+				
+				boards.remove(b);
+				break;
+			}
+
+		}
+
+		//urlList.remove(index);
+		//nameList.remove(index);
+		
+		synchronized (this) {
+			setOptionBoard(boards);
+			flushBoardInfo();
+
+		}
+		
+		//refresh
+		this.prepareGridData();
+		return true;
+	}
+
+
 
 	private void delay_error(String error) {
 		Message message = new Message();
@@ -289,6 +531,9 @@ public class MainActivity extends Activity {
 				}
 
 			}
+			tv_now.setVisibility(View.GONE);
+			tv_error.setVisibility(View.GONE);
+			tv_pre.setVisibility(View.GONE);
 
 		}
 	};
@@ -312,102 +557,258 @@ public class MainActivity extends Activity {
 		} else {
 			activityUtil.notice("加速模式", str);
 		}
-		new Thread() {
-			@Override
-			public void run() {
-				RSSUtil rssUtil = new RSSUtil();
-				rssUtil.parseXml(url);
-				RSSFeed rssFeed = rssUtil.getFeed();
-
-				if (rssFeed != null && rssFeed.getItems().size() != 0) {
-					// MyApp app = ((MyApp) getApplicationContext());
-					app.setRssFeed(rssFeed);
-
-					HashMap<Object, RSSFeed> map = new HashMap<Object, RSSFeed>();
-					if(false)
-						map.put(StringUtil.getNowPageNum(rssFeed.getLink()),
-							rssFeed);
-					app.setMap(map);
-					Intent intent = new Intent();
-					intent
-							.setClass(MainActivity.this,
-									TopicListActivity1.class);
-					startActivity(intent);
-
-				} else {
-					activityUtil.notice("ERROR", "没有找到可用网络");
-				}
-				activityUtil.dismiss();
-			}
-		}.start();
+		new GetToplistRssThread(url).start();
 	}
 
-	int[] image = { R.drawable.p7,R.drawable.p354, /*R.drawable.tf,*/ R.drawable.p320,
-			R.drawable.p181, R.drawable.p187, R.drawable.p185, R.drawable.p189,
-			R.drawable.p182, R.drawable.p186, R.drawable.p184, R.drawable.p183,
-			R.drawable.p188 };
-	String[] urls = { "7","-7", /*"323",*/ "320", "181", "187", "185", "189", "182",
-			"186", "184", "183", "188" };
-	String[] names = { "议事厅", "大漩涡", /*"台服讨论区",*/ "黑锋要塞", "铁血沙场", "猎手大厅", "风暴祭坛",
-			"暗影裂口", "魔法圣堂", "翡翠梦境", "圣光之力", "信仰神殿", "恶魔深渊" };
+	class GetToplistRssThread extends Thread {
+		final String url;
 
-	class ImageList extends BaseAdapter {
+		public GetToplistRssThread(String url) {
+			super();
+			this.url = url;
+		}
+
+		@Override
+		public void run() {
+			RSSUtil rssUtil = new RSSUtil();
+			rssUtil.parseXml(url);
+			RSSFeed rssFeed = rssUtil.getFeed();
+
+			if (rssFeed != null && rssFeed.getItems().size() != 0) {
+				// MyApp app = ((MyApp) getApplicationContext());
+				app.setRssFeed(rssFeed);
+
+				HashMap<Object, RSSFeed> map = new HashMap<Object, RSSFeed>();
+				if (false)
+					map.put(StringUtil.getNowPageNum(rssFeed.getLink()),
+							rssFeed);
+				app.setMap(map);
+				Intent intent = new Intent();
+				intent.setClass(MainActivity.this, TopicListActivity1.class);
+				startActivity(intent);
+
+			} else {
+				activityUtil.notice("ERROR", "没有找到可用网络");
+			}
+			activityUtil.dismiss();
+		}
+	}
+
+	int[] image = { R.drawable.p7, R.drawable.p354, /* R.drawable.tf, */
+			R.drawable.p320, R.drawable.p181, R.drawable.p187, R.drawable.p185,
+			R.drawable.p189, R.drawable.p182, R.drawable.p186, R.drawable.p184,
+			R.drawable.p183, R.drawable.p188 };
+	String[] urls = null;
+	String[] names = null;
+	
+	String[] defaults_urls = { "7", "-7", /* "323", */"320", "181", "187", "185", "189",
+			"182", "186", "184", "183", "188" };
+	String[] defaults_names = { "议事厅", "大漩涡", /* "台服讨论区", */"黑锋要塞", "铁血沙场", "猎手大厅",
+			"风暴祭坛", "暗影裂口", "魔法圣堂", "翡翠梦境", "圣光之力", "信仰神殿", "恶魔深渊" };
+
+	class ImageGridList extends BaseAdapter {
 		Activity activity;
-
-		public ImageList(Activity a) {
+		
+		private Map<String,Drawable> iconMap;
+		public ImageGridList(Activity a) {
 			activity = a;
+			iconMap = new HashMap<String,Drawable>();
 		}
 
 		public int getCount() {
-			return image.length;
+			return names.length;
 		}
 
 		public Object getItem(int position) {
-			return image[position];
+			return urls[position];
 		}
 
 		public long getItemId(int position) {
 			return position;
 		}
-
+		
+		class ViewHolder{
+			ImageView img;
+			TextView text;
+		};
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
+			ViewHolder holder;
+			if (convertView == null) {
+				holder = new ViewHolder();
+				convertView = getLayoutInflater().inflate(R.layout.board_icon,
+						null);
 
-			final TextView iv = new TextView(activity);
-			Drawable draw = getResources().getDrawable(image[position]);
-			iv.setCompoundDrawablesWithIntrinsicBounds(null, draw, null, null);
-			iv.setText(names[position]);
-			iv.setGravity(Gravity.CENTER_HORIZONTAL);
-			iv.setTextColor(android.graphics.Color.BLACK);
-			if (error_level == 0) {
-				iv.setOnClickListener(new OnClickListener() {
-					public void onClick(View v) {
+				ImageView iconView = (ImageView) convertView
+						.findViewById(R.id.board_imgicon);
+				TextView tv = (TextView) convertView
+						.findViewById(R.id.board_name_view);
+				holder.img = iconView;
+				holder.text = tv;
+				convertView.setTag(holder);
+				//iconView.setGravity(Gravity.CENTER_HORIZONTAL);
+				String methodName = "setGravity";
+				Class argClass[] = new Class[1];
+				argClass[0] = int.class;
+				 Method setMethod;
+				try {//刷大牌，玩反射
+					setMethod = convertView.getClass().
+					 	getMethod(methodName,argClass);
+					 Object args[] = new Object[1];
+					 args[0] = Gravity.CENTER_HORIZONTAL;
+					 setMethod.invoke(convertView, args);
+				} catch (Exception e){
+					Log.i(this.getClass().getSimpleName(),"fail to set gravity");
+				}
+			} else {
 
-						if (position != 0 && !HttpUtil.HOST_PORT.equals("")) {
-							HttpUtil.HOST = HttpUtil.HOST_PORT
-									+ HttpUtil.Servlet_timer;
-						}
+				holder = (ViewHolder) convertView.getTag();
+			}
+			
+			Drawable draw = getDrable(convertView, position);
+			holder.img.setImageDrawable(draw);
+			holder.text.setText(names[position]);
+			return convertView;
+			//return iv;
+		}
 
-						System.out.println("set host:" + HttpUtil.HOST);
 
-						String url = HttpUtil.Server + "/thread.php?fid="
-								+ urls[position] + "&rss=1";
-						int fid = 0;
-						fid = Integer.parseInt( urls[position]);
-						if(fid < 0 && app.getUid() != null && app.getCid() != null){
-							
-							url = url + "&ngaPassportUid=" + app.getUid()
-								+ "&ngaPassportCid=" + app.getCid();
-						}
-							
-						if (!StringUtil.isEmpty(url)) {
-							getData(url);
-						}
+		private Drawable getDrable(View convertView, int position) {
+			Drawable d = null;
+			final String url = urls[position];
+			if (position < image.length) {// default board
+				d = getResources().getDrawable(image[position]);
+			} else {// optional board
+				d = iconMap.get(url);
+				if (d == null) {
+					final String iconFolder = HttpUtil.PATH_ICON;
+					String iconPath = iconFolder + "/" + url + ".png";
+
+					// def = getResources().getDrawable(R.drawable.pdefault);
+
+					try {
+						Bitmap bmp = BitmapFactory
+								.decodeStream(new FileInputStream(iconPath));
+						d = new BitmapDrawable(bmp);
+					} catch (FileNotFoundException e) {
+						d = getResources().getDrawable(R.drawable.pdefault);
+
 					}
-				});
+
+					iconMap.put(urls[position], d);
+				}
+			}
+
+			return d;
+		}
+
+	}
+
+	private String text_urls[] = { "321", "-1068355","-447601" };
+	private String text_names[] = { "DotA","晴风村","二次元国家地理 - NG2" };
+
+	class TextListAdapter extends BaseAdapter {
+		final Activity activity;
+
+		public TextListAdapter(Activity activity) {
+			super();
+			this.activity = activity;
+		}
+
+		@Override
+		public int getCount() {
+			return text_urls.length;
+
+		}
+
+		@Override
+		public Object getItem(int position) {
+			if (position < text_urls.length)
+				return text_urls[position];
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			final TextView iv = new TextView(activity);
+			iv.setText(text_names[position]);
+			iv.setTextColor(android.graphics.Color.BLACK);
+			Drawable draw = getResources().getDrawable(R.drawable.pdefault);
+			iv.setCompoundDrawablesWithIntrinsicBounds(draw, null, null, null);
+			if (error_level == 0) {
+				String fidString = (String) getItem(position);
+				iv.setOnClickListener(new EnterToplistLintener(position,
+						fidString));
+
 			}
 			return iv;
+		}
+
+	}
+
+	class EnterToplistLintener implements OnItemClickListener , OnClickListener {
+		int position;
+		String fidString;
+
+		public EnterToplistLintener(int position, String fidString) {
+			super();
+			this.position = position;
+			this.fidString = fidString;
+		}
+		public EnterToplistLintener(){//constructoer	
+		}
+
+		public void onClick(View v) {
+
+			if (position != 0 && !HttpUtil.HOST_PORT.equals("")) {
+				HttpUtil.HOST = HttpUtil.HOST_PORT + HttpUtil.Servlet_timer;
+			}
+			int fid = 0;
+			try {
+				fid = Integer.parseInt(fidString);
+			} catch (Exception e) {
+				final String tag = this.getClass().getSimpleName();
+				Log.e(tag, Log.getStackTraceString(e));
+				Log.e(tag, "invalid fid " + fidString);
+			}
+			if (fid == 0) {
+				String tip = fidString + "不是合法的板块id";
+				Toast.makeText(app, tip, Toast.LENGTH_LONG);
+				return;
+			}
+
+			Log.i(this.getClass().getSimpleName(), "set host:" + HttpUtil.HOST);
+
+			String url = HttpUtil.Server + "/thread.php?fid=" + fidString
+					+ "&rss=1";
+
+			if (fid < 0 && app.getUid() != null && app.getCid() != null) {
+
+				url = url + "&ngaPassportUid=" + app.getUid()
+						+ "&ngaPassportCid=" + app.getCid();
+			}
+
+			if (!StringUtil.isEmpty(url)) {
+				getData(url);
+			}
+		}
+
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+				long arg3) {
+			// TODO Auto-generated method stub
+			position = arg2;
+			fidString=(String) arg0.getItemAtPosition(position);
+			onClick(arg1);
+			
 		}
 	}
 
 }
+
+
