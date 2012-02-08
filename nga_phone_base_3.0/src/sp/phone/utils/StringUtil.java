@@ -152,7 +152,7 @@ public class StringUtil {
 		//[url][/url]
 		s = s.replaceAll("\\[url\\](http[^\\[|\\]]+)\\[/url\\]",
 				"<a href=\"$1\">$1</a>");
-		s = s.replaceAll("\\[url=(http[^\\[|\\]]+)\\]\\s*(\\.+?)\\s*\\[/url\\]"
+		s = s.replaceAll("\\[url=(http[^\\[|\\]]+)\\]\\s*(.+?)\\s*\\[/url\\]"
 				,"<a href=\"$1\">$2</a>");
 		//color
 		
