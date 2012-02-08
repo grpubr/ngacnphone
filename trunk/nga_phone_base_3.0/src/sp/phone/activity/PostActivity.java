@@ -7,6 +7,7 @@ import org.apache.commons.io.IOUtils;
 
 import sp.phone.forumoperation.HttpPostClient;
 import sp.phone.forumoperation.ThreadPostAction;
+import sp.phone.utils.ThemeManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,7 +45,12 @@ public class PostActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		this.setContentView(R.layout.reply);
+		View v = this.getLayoutInflater().inflate(R.layout.reply, null);
+		v.setBackgroundColor(getResources()
+				.getColor(
+					ThemeManager.getInstance().getBackgroundColor()
+				));
+		this.setContentView(v);
 		Intent intent = this.getIntent();
 		prefix = intent.getStringExtra("prefix");
 		action = intent.getStringExtra("action");
