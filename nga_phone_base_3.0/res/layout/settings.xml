@@ -3,5 +3,7 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent" android:background="@drawable/bg_wood">
-    <CheckBox android:layout_height="wrap_content" android:layout_alignParentLeft="true" android:id="@+id/checkBox_down_img_no_wifi" android:text="@string/nowifi_downimg" android:layout_width="fill_parent" android:textColor="@color/black"></CheckBox>
+    <CheckBox android:layout_width="wrap_content" android:layout_below="@+id/checkBox_down_img_no_wifi" android:layout_height="wrap_content" android:layout_alignLeft="@+id/checkBox_down_img_no_wifi" android:id="@+id/checkBox_night_mode" android:text="@string/nightmode"></CheckBox>
+    <CheckBox android:textColor="@color/black" android:id="@+id/checkBox_down_img_no_wifi" android:layout_width="fill_parent" android:text="@string/nowifi_downimg" android:layout_height="wrap_content" android:layout_alignParentLeft="true"></CheckBox>
+
 </RelativeLayout>
