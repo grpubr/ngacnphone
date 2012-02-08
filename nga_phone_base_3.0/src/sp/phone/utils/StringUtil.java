@@ -128,28 +128,61 @@ public class StringUtil {
 	public static String parseHTML3(String s) {
 		// 转换字体
 		if (s.indexOf("[quote]") != -1) {
-			s = s.replace("[quote]", "");
+			s = s.replace("[quote]", "<font color='blue' size='2'>");
 			s = s.replace("[/quote]", "</font><font color='green' size='2'>");
 
-			s = s.replace("[b]", "<font color='red' size='1'>");
-			s = s.replace("[/b]", "</font>");
+
 			s = s.replace("<br/><br/>", "<br/>");
 			s = s.replace("<br/><br/>", "<br/>");
 
-			s = s.replace("[/pid]", "<font color='blue' size='2'>");
+			s = s.replace("[/pid]",""/* "<font color='blue' size='2'>"*/);
 			s = s + "</font>";
 		} else {
 			s = "<font color='green' size='2'>" + s;
 			s = s + "</font>";
 		}
-		// 转换 表情
-
+		// 转换 tag
+		s = s.replaceAll("\\[b\\]", "<b>");
+		s = s.replaceAll("\\[/b\\]","</b>"/* "</font>"*/);
+		
+		s = s.replaceAll("\\[u\\]", "<u>");
+		s = s.replaceAll("\\[/u\\]","</u>");
+		
 		s = s.replaceAll("(\\[s:\\d+\\])", "<img src='$1'>");
 		//[url][/url]
 		s = s.replaceAll("\\[url\\](http[^\\[|\\]]+)\\[/url\\]",
 				"<a href=\"$1\">$1</a>");
-		//[img]./111.jpg[/img]
+		s = s.replaceAll("\\[url=(http[^\\[|\\]]+)\\]\\s*(\\.+?)\\s*\\[/url\\]"
+				,"<a href=\"$1\">$2</a>");
+		//color
 		
+		s = s.replaceAll("\\[color=([^\\[|\\]]+)\\]\\s*(\\.+?)\\s*\\[/color\\]"
+				,"<b style=\"color:$1\">$2</b>");
+		
+		s = s.replaceAll("\\[table\\]","<table>");
+		s = s.replaceAll("\\[/table\\]","<table>");
+		s = s.replaceAll("\\[tr\\]","<tr>");
+		s = s.replaceAll("\\[/tr\\]","<tr>");
+		s = s.replaceAll("\\[td\\]",
+				"<td style=\"border-left:1px solid #aaa;border-bottom:1px solid #aaa\">");
+		s = s.replaceAll("\\[/td\\]","<td>");
+		//[i][/i]
+		s = s.replaceAll("\\[i\\]", "<i style=\"font-style:italic\">");
+		s = s.replaceAll("\\[/i\\]", "</i>");
+		//[del][/del]
+		s = s.replaceAll("\\[del\\]", "<del class=\"gray\">");
+		s = s.replaceAll("\\[/del\\]","</del>");
+		
+		s = s.replaceAll("\\[font=(\\w+?)\\]","<span style=\"font-family:$1\">");
+		s = s.replaceAll("\\[/font\\]","</span>");
+		
+		s = s.replaceAll("\\[/font\\]","</span>");
+		s = s.replaceAll("\\[/font\\]","</span>");
+		
+		s = s.replaceAll("\\[size=(\\d+)%\\]","<span style=\"font-size:$1%;line-height:$1%\">");
+		s = s.replaceAll("\\[/size\\]","</span>");
+		
+		//[img]./ddd.jpg[/img]
 		s = s.replaceAll("\\[img\\]\\s*\\.(/[^\\[|\\]]+)\\s*\\[/img\\]", 
 				"<img src=\"http://img.ngacn.cc/attachments$1\" width=\"100%\">");
 		//[img]http://[/img]
