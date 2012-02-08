@@ -6,6 +6,8 @@ import java.net.URL;
 import org.kxml2.io.KXmlParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.util.Log;
+
 import sp.phone.bean.RSSFeed;
 import sp.phone.bean.RSSItem;
 
@@ -157,7 +159,7 @@ public class RSSUtil {
 		} catch (XmlPullParserException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.e(this.getClass().getCanonicalName(),Log.getStackTraceString(e));
 		}
 
 	}
