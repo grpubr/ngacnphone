@@ -9,14 +9,20 @@ import android.os.Message;
 
 public class ActivityUtil {
 
-	public static int bg;
+	private static int bg;
 	int[] bgs = { R.drawable.bg_black, R.drawable.bg_wood,
-			R.drawable.bg_black_thread };
+			R.drawable.bg_black_thread,R.color.shit1,R.color.black };
 
 	public void setBG() {
 		int r = 1;// new Random().nextInt(bgs.length);
 		bg = bgs[r];
-		System.out.println("set bg:" + r);
+		bg = R.color.black;//R.color.shit2;
+		
+	}
+	public static void setBg(int id){
+	
+		bg = id;
+
 	}
 
 	private ProgressDialog proDialog;

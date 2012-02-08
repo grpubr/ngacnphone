@@ -6,13 +6,13 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.htmlparser.util.ParserException;
 
 import com.alibaba.fastjson.JSON;
-
 import sp.phone.bean.ArticlePage;
 
 public class HttpUtil {
@@ -22,6 +22,7 @@ public class HttpUtil {
 	public final static String PATH_SD = android.os.Environment
 			.getExternalStorageDirectory()
 			+ "/";
+	public final static String PATH_ICON = PATH_SD + "nga_cache/icon";
 	public static String PATH_ZIP = "";
 
 	public final static String Server = "http://bbs.ngacn.cc";
@@ -133,7 +134,8 @@ public class HttpUtil {
 
 		try {
 			URL url = new URL(uri);
-			final InputStream is = url.openStream();
+			URLConnection conn = url.openConnection();
+			final InputStream is = conn.getInputStream();
 			// InputStream is2 = is;
 			System.out.println("get image is");
 			new Thread() {
