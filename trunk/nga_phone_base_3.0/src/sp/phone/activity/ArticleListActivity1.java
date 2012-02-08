@@ -10,20 +10,23 @@ import sp.phone.bean.ArticlePage;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.StringUtil;
+import sp.phone.utils.ThemeManager;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.ContextMenu;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.View.OnTouchListener;
@@ -45,9 +48,12 @@ public class ArticleListActivity1 extends Activity {
 
 	private MyApp app;
 	final int REPLY_POST_ORDER = 0;
-
+	private ArticleFlingListener flingListener;
+	private static final String TABID_NEXT = "tab_next";
+	private static final String TABID_PRE = "tab_prev";
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tab2);
@@ -76,13 +82,13 @@ public class ArticleListActivity1 extends Activity {
 		//soundPool = new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);
 		// 载入音频流
 		//hitOkSfx = soundPool.load(this, R.raw.shake, 0);
-
+		flingListener = new ArticleFlingListener(this);
 		TextView titleTV = (TextView) findViewById(R.id.title);
 		titleTV.setText(articlePage.getNow().get("title"));
 
 		tabHost = (TabHost) findViewById(android.R.id.tabhost);
 		tabHost.setup();
-		tabHost.setBackgroundResource(ActivityUtil.bg);
+		tabHost.setBackgroundResource(ThemeManager.getInstance().getBackgroundColor());
 		HashMap<String, String> page = articlePage.getPage();
 		if (page == null || page.size() == 0) {
 			TabSpec spec = tabHost.newTabSpec("tab" + 1);
@@ -186,13 +192,7 @@ public class ArticleListActivity1 extends Activity {
 			final String postTime = map.get("postTime");
 			final String url = map.get("url");
 			
-			/*tid = currentAdapter.getItem(0).get("url");
-			tid = tid.substring(url.indexOf("tid=")+4);
-			int end = tid.indexOf("&");
-			if(end == -1)
-				end = tid.length();
-			tid = tid.substring(0,end);*/
-			
+
 			if(url.indexOf("pid=") != -1 )
 			{
 				String pid = url.substring(url.indexOf("pid=")+4);
@@ -236,44 +236,72 @@ public class ArticleListActivity1 extends Activity {
 		return true;
 	}
 
-	private void setListener() {
-		tabHost.setOnTabChangedListener(changeListener);
-		
+	
+	
+
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onTouchEvent(android.view.MotionEvent)
+	 */
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		// TODO Auto-generated method stub
+		return flingListener.getDetector().onTouchEvent(event);
 	}
 
-	OnTabChangeListener changeListener = new OnTabChangeListener() {
+	private void setListener() {
+		tabHost.setOnTabChangedListener(changeListener);
+	}
+
+	OnTabChangeListener changeListener = new ArticlePageChangeListener();
+	
+	class ArticlePageChangeListener implements OnTabChangeListener{
 		public void onTabChanged(String tabId) {
 
 			//soundPool.play(hitOkSfx, 1, 1, 0, 0, 1);
 
 			// 重新加载 数据
 			HashMap<String, String> page = articlePage.getPage();
-			String urls = HttpUtil.Server;
-			final String url_last = urls + page.get("last");
-			if (tabId.equals("tab_first")) {
-				urls += page.get("first");
-			} else if (tabId.equals("tab_next")) {
-				urls += page.get("next");
-			} else if (tabId.equals("tab_last")) {
-				urls += page.get("last");
-			} else {
-				String num = tabId.split("_")[1];
-				for (HashMap<String, String> hashMap : articlePage.getList()) {
-					if (num.equals(hashMap.get("num"))) {
-						urls += hashMap.get("link");
-						break;
+			String host = HttpUtil.Server;
+			String urls = null;
+			String url_last=null;
+			if (page != null) {
+				url_last = host + page.get("last");
+				if (tabId.equals("tab_first")) {
+					urls = page.get("first");
+				} else if (tabId.equals("tab_next")) {
+					urls = page.get("next");
+				} else if (tabId.equals("tab_last")) {
+					urls = page.get("last");
+				} else if (tabId.equals("tab_prev")) {// virtual tab
+					urls = page.get("prev");
+				} else {
+					String num = tabId.split("_")[1];
+					for (HashMap<String, String> hashMap : articlePage
+							.getList()) {
+						if (num.equals(hashMap.get("num"))) {
+							urls = hashMap.get("link");
+							break;
+						}
 					}
 				}
-			}
 
+				if (urls == null)
+					urls = page.get("current");
+				
+			} else {
+				urls = articlePage.getNow().get("link");
+			}
+			
 			if (urls.indexOf("\n") != -1) {
 				urls = urls.substring(0, urls.length() - 1);
 			}
-
+			
+			urls = host + urls;
 			final String s = urls;
 
 			ArticlePage ap2 = map_article.get(s);
-			if (ap2 != null && !url_last.trim().equals(urls) ) {
+			if (url_last != null &&ap2 != null && !url_last.trim().equals(urls) ) {
 				articlePage = ap2;
 				// Message message = new Message();
 				// handler_rebuild.sendMessage(message);
@@ -281,60 +309,11 @@ public class ArticleListActivity1 extends Activity {
 				reBuild();
 			} else {
 				new LoadArticleThread(s).start();
-				/*
-				new Thread() {
-					@Override
-					public void run() {
-						ArticlePage ap = null;
-						if (!HttpUtil.HOST_PORT.equals("")) {
-							String str = StringUtil.getSaying();
-							if (str.indexOf(";") != -1) {
-								activityUtil.notice("加速模式", str.split(";")[0]
-										+ "-----" + str.split(";")[1]);
-							} else {
-								activityUtil.notice("加速模式", str);
-							}
-							String a = s.replace("&", "@");
-							ap = HttpUtil.getArticlePageByJson(HttpUtil.HOST
-									+ "?uri=" + a);
 
-						}
-						if (ap == null) {
-							String str = StringUtil.getSaying();
-							if (str.indexOf(";") != -1) {
-								activityUtil.notice("普通模式", str.split(";")[0]
-										+ "-----" + str.split(";")[1]);
-							} else {
-								activityUtil.notice("普通模式", str);
-							}
-
-							// activityUtil.notice("INFO",
-							// "连接策略:P-N,将模拟浏览器显示方式");
-							
-							String cookie = "ngaPassportUid=" + ArticleListActivity1.this.app.getUid()
-								+"; ngaPassportCid=" + ArticleListActivity1.this.app.getCid();
-							ap = HttpUtil.getArticlePage(s,cookie);
-						}
-						if (ap != null) {
-							app.setArticlePage(ap);// 设置当前page
-							map_article.put(s, ap);// 添加新的数据
-							app.setMap_article(map_article);
-							articlePage = ap;
-							Message message = new Message();
-							handler_rebuild.sendMessage(message);
-						} else {
-							activityUtil.notice("ERROR", "可能遇到了一个广告或者帖子被删除");
-						}
-						activityUtil.dismiss();
-
-					}
-				}.start();*/
-				
-				
 			}
 
 		}
-	};
+	}
 
 	class LoadArticleThread extends Thread {
 		private final String url;
@@ -419,13 +398,15 @@ public class ArticleListActivity1 extends Activity {
 				ListView listView = new ListView(ArticleListActivity1.this);
 				mData = getData(tag);
 				ArticleListAdapter adapter = new ArticleListAdapter(
-						ArticleListActivity1.this, mData, listView, zf);
+						ArticleListActivity1.this,flingListener,
+						mData, listView, zf);
 				listView.setAdapter(adapter);
 				// listView.setBackgroundResource(R.drawable.bodybg);
 				listView.setCacheColorHint(0);
-				// listView.setDivider(null);
+				app.getResources().getColor(R.color.shit1);
 				listView.setVerticalScrollBarEnabled(false);
 				listView.setOnCreateContextMenuListener(new FloorCreateContextMenuListener());
+				listView.setOnTouchListener(flingListener);
 				return listView;
 			} else {
 				return new TextView(ArticleListActivity1.this);
@@ -468,5 +449,75 @@ public class ArticleListActivity1 extends Activity {
 		}
 		
 	}
+
+	class ArticleFlingListener extends SimpleOnGestureListener implements
+			OnTouchListener {
+		Context context;
+		GestureDetector gDetector;
+		final float FLING_MIN_DISTANCE = 100;
+
+		/*
+		 * public ArticleFlingListener() { super(); }
+		 */
+
+		public ArticleFlingListener(Context context) {
+			this(context, null);
+		}
+
+		public ArticleFlingListener(Context context, GestureDetector gDetector) {
+
+			if (gDetector == null)
+				gDetector = new GestureDetector(context, this);
+
+			this.context = context;
+			this.gDetector = gDetector;
+		}
+
+		@Override
+		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+				float velocityY) {
+			if(e1 == null || e2 == null)
+				return false;
+			if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE
+					&& Math.abs(velocityX) > 1.73*Math.abs(velocityY)) {
+				// left
+
+				 new ArticlePageChangeListener().onTabChanged(TABID_NEXT);
+				 return true;
+			}
+
+			if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE
+					&& Math.abs(velocityX) > 1.73*Math.abs(velocityY)) {
+				// right
+				 new ArticlePageChangeListener().onTabChanged(TABID_PRE);
+				 return true;
+			}
+			return  false;// super.onFling(e1, e2, velocityX, velocityY);
+		}
+
+		@Override
+		public boolean onSingleTapConfirmed(MotionEvent e) {
+			return false;
+
+		}
+
+		public boolean onTouch(View v, MotionEvent event) {
+
+			// Within the MyGestureListener class you can now manage the
+			// event.getAction() codes.
+
+			// Note that we are now calling the gesture Detectors onTouchEvent.
+			// And given we've set this class as the GestureDetectors listener
+			// the onFling, onSingleTap etc methods will be executed.
+
+			return gDetector.onTouchEvent(event);
+
+		}
+
+		public GestureDetector getDetector() {
+			return gDetector;
+		}
+	}
+
 
 }
