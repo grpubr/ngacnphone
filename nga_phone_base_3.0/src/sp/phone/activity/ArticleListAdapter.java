@@ -8,28 +8,24 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.ImageUtil;
 import sp.phone.utils.StringUtil;
+import sp.phone.utils.ThemeManager;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo.State;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.Html.ImageGetter;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.View.OnCreateContextMenuListener;
+import android.view.View.OnTouchListener;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -44,13 +40,15 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 	ListView listView;
 	private LayoutInflater inflater;
 	private Activity activity;
+	OnTouchListener gestureListener;
 
-	public ArticleListAdapter(Activity activity,
+	public ArticleListAdapter(Activity activity,OnTouchListener gestureListener,
 			List<HashMap<String, String>> lMap, ListView listView, ZipFile zf) {
 		super(activity, 0, lMap);
 		this.activity = activity;
 		this.listView = listView;
 		this.zf = zf;
+		this.gestureListener  = gestureListener;
 		inflater = LayoutInflater.from(activity);
 		
 
@@ -170,15 +168,24 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			nickNameTV.setText(map.get("nickName"));
 
 			WebView contentTV = (WebView) rowView.findViewById(R.id.content);
+			contentTV.setBackgroundColor(0);
 			contentTV.setFocusable(false);
+			int bgColor = parent.getContext().getResources()
+			.getColor(ThemeManager.getInstance().getBackgroundColor());
+			bgColor = bgColor & 0xffffff;
+			String colorStr = Integer.toHexString(bgColor);
 			String ngaHtml = StringUtil.parseHTML3(map.get("content"));
-			ngaHtml = "<span>" + ngaHtml + "</span>";
+			ngaHtml = "<HTML> <HEAD><META   http-equiv=Content-Type   content= \"text/html;   charset=UTF-8 \">" 
+				+"<body bgcolor= \"#"+ colorStr +" \">"
+				+ ngaHtml + 
+				"</body>";
+			
 			if(!app.isDownImgWithoutWifi() && !isInWifi() )
 				contentTV.getSettings().setBlockNetworkImage(true);
 			else
 				contentTV.getSettings().setBlockNetworkImage(false);
 			contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
-			
+			contentTV.setOnTouchListener(gestureListener);
 			
 			TextView floorTV = (TextView) rowView.findViewById(R.id.floor);
 			floorTV.setText("[" + floor + " ¥]");
@@ -200,6 +207,7 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			m.put(position, rowView);
 		}
 		
+
 		
 		return rowView;
 	}
