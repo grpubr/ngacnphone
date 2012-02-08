@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -18,12 +19,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import sp.phone.forumoperation.HttpPostClient;
+import sp.phone.utils.ActivityUtil;
+import sp.phone.utils.ThemeManager;
 
 public class LoginActivity extends Activity {
 
 	EditText userText;
 	EditText passwordText;
-
+	View view;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -33,7 +36,9 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		this.setContentView(R.layout.login);
+		view = LayoutInflater.from(this).inflate(R.layout.login, null);
+		
+		this.setContentView(view);
 
 		Button button_login = (Button) findViewById(R.id.login_button);
 		userText = (EditText) findViewById(R.id.login_user_edittext);
@@ -49,6 +54,11 @@ public class LoginActivity extends Activity {
 
 		LoginButtonListener listener = new LoginButtonListener(postUrl);
 		button_login.setOnClickListener(listener);
+		updateThemeUI();
+	}
+	
+	private void updateThemeUI(){
+		view.setBackgroundResource(ThemeManager.getInstance().getBackgroundColor());
 	}
 
 	class LoginButtonListener implements OnClickListener {
