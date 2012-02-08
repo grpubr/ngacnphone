@@ -67,6 +67,7 @@ public class MainActivity extends Activity {
 	ActivityUtil activityUtil = new ActivityUtil(this);
 	private MyApp app;
 	View view;
+	boolean firstRun;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
@@ -92,6 +93,13 @@ public class MainActivity extends Activity {
 				MODE_PRIVATE);
 		if(share.getBoolean("nightmode", false))
 			ThemeManager.getInstance().setMode(1);
+		firstRun = share.getBoolean("firstRun", true);
+		if(firstRun){
+			Editor editor = share.edit();
+			editor.putBoolean("firstRun", false);
+			editor.commit();
+		}
+			
 		
 	}
 
@@ -222,9 +230,16 @@ public class MainActivity extends Activity {
 		gv.setAdapter(adapter);
 		gv.setOnItemClickListener(new EnterToplistLintener());
 		MainActivity.this.registerForContextMenu(gv);
-		/*ListView textListView = (ListView) findViewById(R.id.text_topics_listview);
-		TextListAdapter textAdapter = new TextListAdapter(this);
-		textListView.setAdapter(textAdapter);*/
+		
+		if(firstRun){
+			new AlertDialog.Builder(this).setTitle("提示")
+			.setMessage(StringUtil.getTips())
+			.setPositiveButton("知道了", null).show();
+			
+			firstRun = false;
+			
+		}
+		
 
 	}
 	
