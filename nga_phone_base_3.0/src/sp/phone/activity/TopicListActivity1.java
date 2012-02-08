@@ -9,6 +9,7 @@ import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.RSSUtil;
 import sp.phone.utils.StringUtil;
+import sp.phone.utils.ThemeManager;
 import sp.phone.activity.R;
 import android.app.Activity;
 import android.content.Context;
@@ -16,14 +17,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Html;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -40,13 +45,17 @@ public class TopicListActivity1 extends Activity {
 	ActivityUtil activityUtil = new ActivityUtil(this);
 
 	static TabHost tabHost;
+	private static final String TABID_PRE = "tab_f";
+	private static final String TABID_NEXT = "tab_n";
 	private RSSFeed rssFeed;
 	private int page;
 	private HashMap<Object, RSSFeed> map;
 	private int max_num = 5;
 	private MyApp app;
 	private HashMap<Object, ArticlePage> map_article;
-
+	private TopicFlingListener flingListener;
+	protected ListView currentListview;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,16 +81,26 @@ public class TopicListActivity1 extends Activity {
 				handlePostThread(item);
 				break;
 			case R.id.threadlist_menu_item2 :
-				Toast.makeText(this, "点下面",
-						Toast.LENGTH_LONG).show();
+				new BoardPageNumChangeListener().onTabChanged(
+						tabHost.getCurrentTabTag());
 				break;
 			case R.id.threadlist_menu_item3 :
-				Toast.makeText(this, "点这个没用",
-						Toast.LENGTH_LONG).show();
+				this.finish();
 				break;
 		}
 		return true;
 	}
+	
+	
+	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onTouchEvent(android.view.MotionEvent)
+	 */
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		return	flingListener.getDetector().onTouchEvent(event);
+	}
+
 	private boolean handlePostThread(MenuItem item){
 		final String fid_start_tag = "fid=";
 		final String fid_end_tag = "&";
@@ -115,6 +134,7 @@ public class TopicListActivity1 extends Activity {
 		rssFeed = app.getRssFeed();
 		map = app.getMap();
 		map_article = app.getMap_article();
+		flingListener = new TopicFlingListener(this);
 
 	}
 
@@ -130,9 +150,10 @@ public class TopicListActivity1 extends Activity {
 		setTitle(rssFeed.getTitle());
 		tabHost = (TabHost) findViewById(android.R.id.tabhost);
 		tabHost.setup();
-		tabHost.setBackgroundResource(ActivityUtil.bg);
+		tabHost.setBackgroundResource(
+			ThemeManager.getInstance().getBackgroundColor());
 		// 首页
-		TabSpec ts_first = tabHost.newTabSpec("tab_f");
+		TabSpec ts_first = tabHost.newTabSpec(TABID_PRE);
 		TextView tv2 = new TextView(TopicListActivity1.this);
 		tv2.setBackgroundResource(R.drawable.page_first);
 		ts_first.setIndicator(tv2);
@@ -164,7 +185,7 @@ public class TopicListActivity1 extends Activity {
 			}
 		}
 
-		TabSpec ts_next = tabHost.newTabSpec("tab_n");
+		TabSpec ts_next = tabHost.newTabSpec(TABID_NEXT);
 		TextView tv3 = new TextView(TopicListActivity1.this);
 		tv3.setBackgroundResource(R.drawable.page_next);
 		ts_next.setIndicator(tv3);
@@ -174,71 +195,73 @@ public class TopicListActivity1 extends Activity {
 	}
 
 	private void setListener() {
-		tabHost.setOnTabChangedListener(new OnTabChangeListener() {
-
-			public void onTabChanged(final String tabId) {
-
-				//soundPool.play(hitOkSfx, 1, 1, 0, 0, 1);
-
-				String link = rssFeed.getLink();
-				final int num;
-				if (tabId.equals("tab_f")) {
-					num = 1;
-					max_num = 5;
-				} else if (tabId.equals("tab_n")) {
-					num = page + 1;
-					if (num <= 5) {
-						max_num = 5;
-					} else {
-						max_num = num;
-					}
-				} else {
-					num = Integer.parseInt(tabId.split("_")[1]);
-					if (num <= 5) {
-						max_num = 5;
-					} else {
-						max_num = num;
-					}
-				}
-				RSSFeed rssFeed2 = null;
-				if (!tabId.equals("tab_f")) {
-					rssFeed2 = map.get(num);
-				}
-				if (rssFeed2 == null) {
-					link = link.substring(0, link.length() - 1);
-					final String newURL;
-					if (link.indexOf("page") == -1) {
-						newURL = link + "&page=" + num + "&rss=1";
-					} else {
-						newURL = link.replaceAll("page=\\d", "page=" + num
-								+ "&rss=1");
-					}
-					new Thread() {
-						@Override
-						public void run() {
-							String str = StringUtil.getSaying();
-							if (str.indexOf(";") != -1) {
-								activityUtil.notice("加速模式", str.split(";")[0]
-										+ "-----" + str.split(";")[1]);
-							} else {
-								activityUtil.notice("加速模式", str);
-							}
-							RSSUtil rssUtil = new RSSUtil();
-							rssUtil.parseXml(newURL);
-							rssFeed = rssUtil.getFeed();
-							//map.put(num, rssFeed);
-							Message message = new Message();
-							handler_rebuild.sendMessage(message);
-						}
-					}.start();
-				} else {
-					rssFeed = rssFeed2;
-					reBuild();
-				}
-			}
-		});
+		tabHost.setOnTabChangedListener(new BoardPageNumChangeListener());
 	}
 
+	class BoardPageNumChangeListener implements OnTabChangeListener{
+		public void onTabChanged(final String tabId) {
+
+			//soundPool.play(hitOkSfx, 1, 1, 0, 0, 1);
+
+			String link = rssFeed.getLink();
+			final int num;
+			if (tabId.equals(TABID_PRE)) {
+				num = page > 1? page -1:1;
+				max_num = max_num>5?max_num-1:5;
+			} else if (tabId.equals(TABID_NEXT)) {
+				num = page + 1;
+				if (num <= 5) {
+					max_num = 5;
+				} else {
+					max_num = num;
+				}
+			} else {
+				num = Integer.parseInt(tabId.split("_")[1]);
+				if (num <= 5) {
+					max_num = 5;
+				} else {
+					max_num = num;
+				}
+			}
+			RSSFeed rssFeed2 = null;
+			if (!tabId.equals(TABID_PRE)) {
+				rssFeed2 = map.get(num);
+			}
+			if (rssFeed2 == null) {
+				link = link.substring(0, link.length() - 1);
+				final String newURL;
+				if (link.indexOf("page") == -1) {
+					newURL = link + "&page=" + num + "&rss=1";
+				} else {
+					newURL = link.replaceAll("page=\\d", "page=" + num
+							+ "&rss=1");
+				}
+				new Thread() {
+					@Override
+					public void run() {
+						String str = StringUtil.getSaying();
+						if (str.indexOf(";") != -1) {
+							activityUtil.notice("加速模式", str.split(";")[0]
+									+ "-----" + str.split(";")[1]);
+						} else {
+							activityUtil.notice("加速模式", str);
+						}
+						RSSUtil rssUtil = new RSSUtil();
+						rssUtil.parseXml(newURL);
+						rssFeed = rssUtil.getFeed();
+						//map.put(num, rssFeed);
+						Message message = new Message();
+						handler_rebuild.sendMessage(message);
+					}
+				}.start();
+			} else {
+				rssFeed = rssFeed2;
+				reBuild();
+			}
+		}
+		
+	}
+	
 	private Handler handler_rebuild = new Handler() {
 		public void handleMessage(Message msg) {
 			if (rssFeed != null && rssFeed.getItems().size() != 0) {
@@ -256,6 +279,15 @@ public class TopicListActivity1 extends Activity {
 		setListener();
 	}
 
+	//for other tabs
+	class tabFactory2 implements TabContentFactory {
+		public View createTabContent(String tag) {
+			TextView view = new TextView(TopicListActivity1.this);
+			return view;
+		}
+	}
+	
+	//factory for current tab;
 	class tabFactory implements TabContentFactory {
 		public View createTabContent(String tag) {
 
@@ -266,32 +298,20 @@ public class TopicListActivity1 extends Activity {
 			listView.setVerticalScrollBarEnabled(false);
 			MyAdapter adapter = new MyAdapter(TopicListActivity1.this);
 			listView.setAdapter(adapter);
+			listView.setOnTouchListener(flingListener);
 			listView.setOnItemClickListener(new ArticlelistItemClickListener());
+			//listView.indexOfChild(child)
+			currentListview = listView;
 			return listView;
 		}
 		
 		
 	}
+	
 
-	class ArticlelistItemClickListener implements OnItemClickListener{
+	class FloorOpener {
 		
-		
-		@Override
-		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-				long arg3) {
-			// TODO Auto-generated method stub
-			RSSItem item = rssFeed.getItems().get(arg2);
-			String guid = item.getGuid();
-			 String url;
-			if (guid.indexOf("\n") != -1) {
-				url = guid.substring(0, guid.length() - 1);
-			} else {
-				url = guid;
-			}
-			handleFloor(url);
-		}
-		
-		private void handleFloor(String floorUrl) {
+		void handleFloor(String floorUrl) {
 			final String url = floorUrl;
 			ArticlePage ap = map_article.get(url + "&page=1");
 			if (ap != null) {
@@ -311,18 +331,14 @@ public class TopicListActivity1 extends Activity {
 
 							String str = StringUtil.getSaying();
 							if (str.indexOf(";") != -1) {
-								activityUtil.notice("加速模式", str
-										.split(";")[0]
-										+ "-----"
-										+ str.split(";")[1]);
+								activityUtil.notice("加速模式", str.split(";")[0]
+										+ "-----" + str.split(";")[1]);
 							} else {
 								activityUtil.notice("加速模式", str);
 							}
 							articlePage = HttpUtil
 									.getArticlePageByJson(HttpUtil.HOST
-											+ "?uri="
-											+ url
-											+ "@page=1");
+											+ "?uri=" + url + "@page=1");
 						}
 						if (articlePage == null) {
 							// activityUtil.notice("INFO",
@@ -330,51 +346,58 @@ public class TopicListActivity1 extends Activity {
 
 							String str = StringUtil.getSaying();
 							if (str.indexOf(";") != -1) {
-								activityUtil.notice("普通模式", str
-										.split(";")[0]
-										+ "-----"
-										+ str.split(";")[1]);
+								activityUtil.notice("普通模式", str.split(";")[0]
+										+ "-----" + str.split(";")[1]);
 							} else {
 								activityUtil.notice("普通模式", str);
 							}
 							String cookie = "";
-							if(TopicListActivity1.this.app.getUid() != null && 
-									TopicListActivity1.this.app.getUid()!= "")
-							cookie= "ngaPassportUid=" + TopicListActivity1.this.app.getUid()
-							+"; ngaPassportCid=" + TopicListActivity1.this.app.getCid();
-							articlePage = HttpUtil
-									.getArticlePage(url + "&page=1",cookie);
+							if (TopicListActivity1.this.app.getUid() != null
+									&& TopicListActivity1.this.app.getUid() != "")
+								cookie = "ngaPassportUid=" + app.getUid()
+										+ "; ngaPassportCid=" + app.getCid();
+							articlePage = HttpUtil.getArticlePage(url
+									+ "&page=1", cookie);
 						}
 						if (articlePage != null) {
 							app.setArticlePage(articlePage);// 设置当前page
-							map_article.put(url + "&page=1",
-									articlePage);// 添加新的数据
+							map_article.put(url + "&page=1", articlePage);// 添加新的数据
 							app.setMap_article(map_article);
 							Intent intent = new Intent();
-							intent.setClass(
-									TopicListActivity1.this,
+							intent.setClass(TopicListActivity1.this,
 									ArticleListActivity1.class);
 							startActivity(intent);
 						} else {
-							activityUtil.notice("ERROR",
-									"可能遇到了一个广告或者帖子被删除");
+							activityUtil.notice("ERROR", "可能遇到了一个广告或者帖子被删除");
 						}
 						activityUtil.dismiss();
 					}
 				}.start();
 			}
 		}
-		
-		
+
+	}
+
+	
+	class ArticlelistItemClickListener extends FloorOpener
+		implements OnItemClickListener{
+			
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+				long arg3) {
+			RSSItem item = rssFeed.getItems().get(arg2);
+			String guid = item.getGuid();
+			 String url;
+			if (guid.indexOf("\n") != -1) {
+				url = guid.substring(0, guid.length() - 1);
+			} else {
+				url = guid;
+			}
+			handleFloor(url);
+		}
+			
 	}
 	
-
-	class tabFactory2 implements TabContentFactory {
-		public View createTabContent(String tag) {
-			TextView view = new TextView(TopicListActivity1.this);
-			return view;
-		}
-	}
 
 	class MyAdapter extends BaseAdapter {
 		HashMap<Integer, View> m = new HashMap<Integer, View>();
@@ -399,9 +422,7 @@ public class TopicListActivity1 extends Activity {
 		public View getView(int position, View view, ViewGroup parent) {
 
 			View convertView = m.get(position);
-			if (convertView != null) {
-				return convertView;
-			} else {
+			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.topic_list, null);
 				TextView num = (TextView) convertView.findViewById(R.id.num);
 				TextView title = (TextView) convertView
@@ -423,8 +444,14 @@ public class TopicListActivity1 extends Activity {
 				if( count_in_desc !=-1)
 					reply_count = arr[last_index].substring(0, arr[last_index].indexOf("个"));
 					replies.setText("[" + reply_count + " RE]");
-
-				title.setText(Html.fromHtml(arr[0]));
+				try{
+				title.setTextColor(parent.getResources().getColor(
+							ThemeManager.getInstance().getForegroundColor()));
+				}catch(Exception e){
+					Log.e(getClass().getSimpleName(),Log.getStackTraceString(e));
+				}
+				title.setText(arr[0]);
+				
 
 				/*String guid = item.getGuid();
 				final String url;
@@ -447,4 +474,74 @@ public class TopicListActivity1 extends Activity {
 
 	}
 
+	class TopicFlingListener extends SimpleOnGestureListener implements
+			OnTouchListener {
+		Context context;
+		GestureDetector gDetector;
+		final float FLING_MIN_DISTANCE = 100;
+		/*public ArticleFlingListener() {
+			super();
+		}*/
+
+		public TopicFlingListener(Context context) {
+			this(context, null);
+		}
+
+		public TopicFlingListener(Context context, GestureDetector gDetector) {
+
+			if (gDetector == null)
+				gDetector = new GestureDetector(context, this);
+
+			this.context = context;
+			this.gDetector = gDetector;
+		}
+
+		@Override
+		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+				float velocityY) {
+			if(e1 == null || e2 == null)
+				return false;
+			if(e1.getX()-e2.getX() > FLING_MIN_DISTANCE&& 
+					Math.abs(velocityX) >1.73* Math.abs(velocityY)){
+				//left
+				
+				new BoardPageNumChangeListener().onTabChanged(TABID_NEXT);
+				 return true;
+			}
+			
+			if(e2.getX()-e1.getX() > FLING_MIN_DISTANCE&&
+					Math.abs(velocityX) >1.73* Math.abs(velocityY) ){//3/3^0.5
+				//right
+				new BoardPageNumChangeListener().onTabChanged(TABID_PRE);
+				 return true;
+				
+			}
+			return false;//super.onFling(e1, e2, velocityX, velocityY);
+		}
+
+		@Override
+		public boolean onSingleTapConfirmed(MotionEvent e) {
+			return false;
+
+		}
+
+		public boolean onTouch(View v, MotionEvent event) {
+
+			// Within the MyGestureListener class you can now manage the
+			// event.getAction() codes.
+
+			// Note that we are now calling the gesture Detectors onTouchEvent.
+			// And given we've set this class as the GestureDetectors listener
+			// the onFling, onSingleTap etc methods will be executed.
+
+			 return gDetector.onTouchEvent(event);
+			 
+		}
+
+		public GestureDetector getDetector() {
+			return gDetector;
+		}
+	}
+	
 }
+
