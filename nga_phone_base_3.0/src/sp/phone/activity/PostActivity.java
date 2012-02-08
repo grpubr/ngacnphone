@@ -31,8 +31,12 @@ public class PostActivity extends Activity {
 	private Button button_cancel;
 	private MyApp app;
 	private String REPLY_URL="http://bbs.ngacn.cc/post.php?";
-	private String sig ="\n----sent from my android app" +
-				"\nhttp://code.google.com/p/ngacnphone/downloads/list";
+	private String sig ="\n[url=http://code.google.com/p/ngacnphone/downloads/list]"
+		+"----sent from my " + android.os.Build.MANUFACTURER
+		+ " " + android.os.Build.PRODUCT + ",android "
+		+ android.os.Build.VERSION.RELEASE + "[/url]\n";
+
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
