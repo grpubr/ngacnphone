@@ -206,6 +206,9 @@ public class TopicListActivity1 extends Activity {
 			String link = rssFeed.getLink();
 			final int num;
 			if (tabId.equals(TABID_PRE)) {
+				if(page ==1)
+					TopicListActivity1.this.finish();
+				
 				num = page > 1? page -1:1;
 				max_num = max_num>5?max_num-1:5;
 			} else if (tabId.equals(TABID_NEXT)) {

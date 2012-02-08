@@ -245,7 +245,6 @@ public class ArticleListActivity1 extends Activity {
 	 */
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		// TODO Auto-generated method stub
 		return flingListener.getDetector().onTouchEvent(event);
 	}
 
@@ -286,10 +285,17 @@ public class ArticleListActivity1 extends Activity {
 					}
 				}
 
-				if (urls == null)
+				if (urls == null){
+					if(tabId.equals("tab_prev"))
+							ArticleListActivity1.this.finish();
+							
 					urls = page.get("current");
+				}
 				
 			} else {
+				if(tabId.equals("tab_prev"))
+						ArticleListActivity1.this.finish();
+						
 				urls = articlePage.getNow().get("link");
 			}
 			
