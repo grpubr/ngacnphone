@@ -1,53 +1,69 @@
 package sp.phone.utils;
 
-import sp.phone.activity.R;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 public class ActivityUtil {
 
-	private static int bg;
-	int[] bgs = { R.drawable.bg_black, R.drawable.bg_wood,
-			R.drawable.bg_black_thread,R.color.shit1,R.color.black };
 
-	public void setBG() {
-		int r = 1;// new Random().nextInt(bgs.length);
-		bg = bgs[r];
-		bg = R.color.black;//R.color.shit2;
+	static ActivityUtil instance;
+	static Object lock= new Object();
+	public static ActivityUtil getInstance(){
+		/*if(instance == null){
+			instance = new ActivityUtil();
+		}*/
+		return new ActivityUtil();//instance;
 		
 	}
-	public static void setBg(int id){
-	
-		bg = id;
-
+	private ActivityUtil(){
+		
 	}
-
 	private ProgressDialog proDialog;
 
-	private Context context;
+	/*private Context context;
 
 	public ActivityUtil(Context context) {
 		this.context = context;
+	}*/
+	public void noticeSaying(Context context){
+		
+		String str = StringUtil.getSaying();
+		if (str.indexOf(";") != -1) {
+			/*notice("加速模式", str.split(";")[0]
+					+ "-----" + str.split(";")[1]);*/
+			notice("加速模式",str.replace(";", "-----"),context);
+		} else {
+			notice("加速模式", str,context);
+		}
+	}
+	
+	public void noticeError(String error,Context context){
+		
+		notice("错误", error,context);
 	}
 
-	public void notice(String title, String content) {
+	private void notice(String title, String content,Context c) {
 		Message message = new Message();
 		Bundle b = new Bundle();
 		b.putString("title", title);
 		b.putString("content", content);
+		message.obj = c;
 		message.setData(b);
 		handler.sendMessage(message);
 	}
 
 	private Handler handler = new Handler() {
-		public void handleMessage(final Message msg) {
+		public void handleMessage (final Message msg) {
+			Context context = (Context) msg.obj;
 			Bundle b = msg.getData();
 			if (b != null) {
 				String title = b.getString("title");
 				String content = b.getString("content");
+				synchronized( lock){
 				if (proDialog != null) {
 
 					if ("ERROR".equals(title)) {
@@ -69,16 +85,24 @@ public class ActivityUtil {
 					proDialog.setMessage(content);
 					proDialog.show();
 				} else {
+					try{
 					proDialog = ProgressDialog.show(context, title, content);
 					proDialog.setCanceledOnTouchOutside(true);
+					}catch(Exception e){
+						Log.e(this.getClass().getSimpleName(),Log.getStackTraceString(e));
+					}
 				}
+				}//sync
 			}
 		};
 	};
 
 	public void dismiss() {
+		synchronized( lock){
 		if (proDialog != null) {
 			proDialog.dismiss();
+			proDialog = null;
+		}
 		}
 	}
 

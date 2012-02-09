@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -40,7 +41,7 @@ import android.widget.TabHost.TabSpec;
 
 public class ArticleListActivity1 extends Activity {
 
-	ActivityUtil activityUtil = new ActivityUtil(this);
+	ActivityUtil activityUtil = ActivityUtil.getInstance();
 
 	private TabHost tabHost;
 	private ArticlePage articlePage;
@@ -286,15 +287,21 @@ public class ArticleListActivity1 extends Activity {
 				}
 
 				if (urls == null){
-					if(tabId.equals("tab_prev"))
+					if(tabId.equals("tab_prev")){
+							activityUtil.dismiss();
 							ArticleListActivity1.this.finish();
+							return;
+					}
 							
 					urls = page.get("current");
 				}
 				
 			} else {
-				if(tabId.equals("tab_prev"))
-						ArticleListActivity1.this.finish();
+				if(tabId.equals("tab_prev")){
+					activityUtil.dismiss();
+					ArticleListActivity1.this.finish();
+					return;
+				}
 						
 				urls = articlePage.getNow().get("link");
 			}
@@ -331,27 +338,21 @@ public class ArticleListActivity1 extends Activity {
 		public void run() {
 			ArticlePage ap = null;
 			if (!HttpUtil.HOST_PORT.equals("")) {
-				String str = StringUtil.getSaying();
-				if (str.indexOf(";") != -1) {
-					activityUtil.notice("加速模式", str.split(";")[0]
-							+ "-----" + str.split(";")[1]);
-				} else {
-					activityUtil.notice("加速模式", str);
-				}
+				activityUtil.noticeSaying(ArticleListActivity1.this);
 				String a = url.replace("&", "@");
 				ap = HttpUtil.getArticlePageByJson(HttpUtil.HOST
 						+ "?uri=" + a);
 
 			}
 			if (ap == null) {
-				String str = StringUtil.getSaying();
+				/*String str = StringUtil.getSaying();
 				if (str.indexOf(";") != -1) {
 					activityUtil.notice("普通模式", str.split(";")[0]
 							+ "-----" + str.split(";")[1]);
 				} else {
 					activityUtil.notice("普通模式", str);
-				}
-
+				}*/
+				activityUtil.noticeSaying(ArticleListActivity1.this);
 				// activityUtil.notice("INFO",
 				// "连接策略:P-N,将模拟浏览器显示方式");
 				
@@ -367,7 +368,7 @@ public class ArticleListActivity1 extends Activity {
 				Message message = new Message();
 				handler_rebuild.sendMessage(message);
 			} else {
-				activityUtil.notice("ERROR", "可能遇到了一个广告或者帖子被删除");
+				activityUtil.noticeError("可能遇到了一个广告或者帖子被删除",ArticleListActivity1.this);
 			}
 			activityUtil.dismiss();
 
@@ -515,8 +516,14 @@ public class ArticleListActivity1 extends Activity {
 			// Note that we are now calling the gesture Detectors onTouchEvent.
 			// And given we've set this class as the GestureDetectors listener
 			// the onFling, onSingleTap etc methods will be executed.
-
-			return gDetector.onTouchEvent(event);
+			boolean ret = true;
+			try{
+				ret = gDetector.onTouchEvent(event);
+			}catch(Exception e){
+				Log.e(this.getClass().getSimpleName(),Log.getStackTraceString(e));
+			}
+			
+			return ret;
 
 		}
 

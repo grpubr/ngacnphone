@@ -12,6 +12,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.htmlparser.util.ParserException;
 
+import android.util.Log;
+
 import com.alibaba.fastjson.JSON;
 import sp.phone.bean.ArticlePage;
 
@@ -190,14 +192,20 @@ public class HttpUtil {
 		return null;
 	}
 
-	public static ArticlePage getArticlePage(String uri, String cookie) {
+	public static  ArticlePage getArticlePage(String uri, String cookie) {
+		ArticlePage ret= null;
 		try {
+			long start = System.currentTimeMillis();
 			String html = getHtml(uri,cookie);
-			return ArticleUtil.parserArticleList(html);
+			long end  = System.currentTimeMillis();
+			Log.i("ArticlePage","network const:" + (end-start));
+			 ret = ArticleUtil.parserArticleList(html);
+			 long end2  = System.currentTimeMillis(); 
+			 Log.i("ArticlePage","parse action const:" + (end2-end));
 		} catch (ParserException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return ret;
 	}
 
 	public static ArticlePage getArticlePageByJson(String uri) {
