@@ -7,7 +7,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -308,18 +311,30 @@ public class MainActivity extends Activity {
             public void onClick(DialogInterface dialog, int whichButton) {  
                 String value = input.getText().toString().trim(); 
                 final  String values[] = value.split(" ");
+                
                 if(values.length <2){
                 	Toast.makeText(MainActivity.this, "ÊäÈë·Ç·¨",  
                         Toast.LENGTH_SHORT).show();
                 }else if(addCustomBoard(values[1], values[0]))
                 {
-                	GridView gv = (GridView) findViewById(R.id.gride);
+                	final GridView gv = (GridView) findViewById(R.id.gride);
                 	((BaseAdapter) gv.getAdapter()).notifyDataSetChanged();
+                	
+                	final String uri = "http://img4.ngacn.cc/ngabbs/nga_classic/f/"
+        					+values[1]+".png";
+        				final String fileName = HttpUtil.PATH_ICON+"/"+values[1]+".png";
+        				
+        				new Thread() {
+        					public void run() {
+        						HttpUtil.downImage(uri,fileName+".bak");
+        						File f = new File(fileName+".bak");
+        						if(f.exists()){
+        							f.renameTo(new File(fileName));
+        							//((BaseAdapter) gv.getAdapter()).notifyDataSetChanged();
+        						}
+        					};
+        				}.start();
                 }
-                String uri = "http://img4.ngacn.cc/ngabbs/nga_classic/f/"
-					+values[1]+".png";
-				String fileName = HttpUtil.PATH_ICON+"/"+values[1]+".png";
-				HttpUtil.imageInputStream2(uri, fileName);
                 
             }  
         });  
