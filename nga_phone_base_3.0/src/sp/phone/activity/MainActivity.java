@@ -64,7 +64,7 @@ public class MainActivity extends Activity {
 	TextView tv_pre;
 	TextView tv_now;
 	TextView tv_error;
-	ActivityUtil activityUtil = new ActivityUtil(this);
+	ActivityUtil activityUtil =ActivityUtil.getInstance();
 	private MyApp app;
 	View view;
 	boolean firstRun;
@@ -75,7 +75,7 @@ public class MainActivity extends Activity {
 
 		// getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 		// R.layout.title_bar);
-		activityUtil.setBG();
+
 		
 		Intent intent = getIntent();
 		
@@ -309,7 +309,7 @@ public class MainActivity extends Activity {
                 String value = input.getText().toString().trim(); 
                 final  String values[] = value.split(" ");
                 if(values.length <2){
-                	Toast.makeText(getApplicationContext(), "输入非法",  
+                	Toast.makeText(MainActivity.this, "输入非法",  
                         Toast.LENGTH_SHORT).show();
                 }else if(addCustomBoard(values[1], values[0]))
                 {
@@ -564,14 +564,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void getData(final String url) {
-		String str = StringUtil.getSaying();
-		if (str.indexOf(";") != -1) {
-			activityUtil.notice("加速模式", str.split(";")[0] + "-----"
-					+ str.split(";")[1]);
-
-		} else {
-			activityUtil.notice("加速模式", str);
-		}
+		activityUtil.noticeSaying(MainActivity.this);
 		new GetToplistRssThread(url).start();
 	}
 
@@ -590,7 +583,7 @@ public class MainActivity extends Activity {
 			RSSFeed rssFeed = rssUtil.getFeed();
 
 			if (rssFeed != null && rssFeed.getItems().size() != 0) {
-				// MyApp app = ((MyApp) getApplicationContext());
+				// MyApp app = ((MyApp) MainActivity.this);
 				app.setRssFeed(rssFeed);
 
 				HashMap<Object, RSSFeed> map = new HashMap<Object, RSSFeed>();
@@ -603,7 +596,7 @@ public class MainActivity extends Activity {
 				startActivity(intent);
 
 			} else {
-				activityUtil.notice("ERROR", "没有找到可用网络");
+				activityUtil.noticeError( "没有找到可用网络",MainActivity.this);
 			}
 			activityUtil.dismiss();
 		}

@@ -22,6 +22,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo.State;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,8 +60,12 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 		State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
 		return wifi == State.CONNECTED;
 	}
+	long start;
+	long end;
 	public View getView(int position, View view, ViewGroup parent) {
-
+		if(position ==0){
+			start = System.currentTimeMillis();
+		}
 		View rowView = m.get(position);
 		if (rowView != null && m.size() > 1) {
 			return rowView;
@@ -98,7 +103,7 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 								Bitmap bitmap = BitmapFactory
 										.decodeFile(newImage);
 								if (bitmap != null) {
-									System.out.println("from file" + floor);
+									//System.out.println("from file" + floor);
 									Message message = handler2.obtainMessage(0,
 											bitmap);
 									handler2.sendMessage(message);
@@ -120,7 +125,7 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 									}
 								}
 								if (is == null) {
-									System.out.println("from net" + floor);
+									//System.out.println("from net" + floor);
 									// обть
 									if(!app.isDownImgWithoutWifi() && !isInWifi() ){
 										Bitmap bitmap = BitmapFactory.decodeResource(app.getResources(), R.drawable.default_avatar);
@@ -203,7 +208,10 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			//rowView.setOnLongClickListener(new FloorLongClickListen() );
 			//rowView.setOnCreateContextMenuListener( new FloorCreateContextMenuListener() );
 			//rowView.set
-			
+			if(position == this.getCount()-1){
+				end = System.currentTimeMillis();
+				Log.i(getClass().getSimpleName(),"render cost:" +(end-start));
+			}
 			m.put(position, rowView);
 		}
 		

@@ -42,7 +42,7 @@ import android.widget.TabHost.TabSpec;
 
 public class TopicListActivity1 extends Activity {
 
-	ActivityUtil activityUtil = new ActivityUtil(this);
+	ActivityUtil activityUtil = ActivityUtil.getInstance();
 
 	static TabHost tabHost;
 	private static final String TABID_PRE = "tab_f";
@@ -206,8 +206,11 @@ public class TopicListActivity1 extends Activity {
 			String link = rssFeed.getLink();
 			final int num;
 			if (tabId.equals(TABID_PRE)) {
-				if(page ==1)
+				if(page ==1){
+					activityUtil.dismiss();
 					TopicListActivity1.this.finish();
+					return;
+				}
 				
 				num = page > 1? page -1:1;
 				max_num = max_num>5?max_num-1:5;
@@ -242,13 +245,7 @@ public class TopicListActivity1 extends Activity {
 				new Thread() {
 					@Override
 					public void run() {
-						String str = StringUtil.getSaying();
-						if (str.indexOf(";") != -1) {
-							activityUtil.notice("加速模式", str.split(";")[0]
-									+ "-----" + str.split(";")[1]);
-						} else {
-							activityUtil.notice("加速模式", str);
-						}
+						activityUtil.noticeSaying(TopicListActivity1.this);
 						RSSUtil rssUtil = new RSSUtil();
 						rssUtil.parseXml(newURL);
 						rssFeed = rssUtil.getFeed();
@@ -331,14 +328,14 @@ public class TopicListActivity1 extends Activity {
 
 						System.out.println("host:" + HttpUtil.HOST);
 						if (!HttpUtil.HOST_PORT.equals("")) {
-
-							String str = StringUtil.getSaying();
+							activityUtil.noticeSaying(TopicListActivity1.this);
+							/*String str = StringUtil.getSaying();
 							if (str.indexOf(";") != -1) {
 								activityUtil.notice("加速模式", str.split(";")[0]
 										+ "-----" + str.split(";")[1]);
 							} else {
 								activityUtil.notice("加速模式", str);
-							}
+							}*/
 							articlePage = HttpUtil
 									.getArticlePageByJson(HttpUtil.HOST
 											+ "?uri=" + url + "@page=1");
@@ -346,14 +343,14 @@ public class TopicListActivity1 extends Activity {
 						if (articlePage == null) {
 							// activityUtil.notice("INFO",
 							// "连接策略:P-N,这种策略将模拟浏览器显示方式");
-
-							String str = StringUtil.getSaying();
+							activityUtil.noticeSaying(TopicListActivity1.this);
+							/*String str = StringUtil.getSaying();
 							if (str.indexOf(";") != -1) {
 								activityUtil.notice("普通模式", str.split(";")[0]
 										+ "-----" + str.split(";")[1]);
 							} else {
 								activityUtil.notice("普通模式", str);
-							}
+							}*/
 							String cookie = "";
 							if (TopicListActivity1.this.app.getUid() != null
 									&& TopicListActivity1.this.app.getUid() != "")
@@ -371,7 +368,8 @@ public class TopicListActivity1 extends Activity {
 									ArticleListActivity1.class);
 							startActivity(intent);
 						} else {
-							activityUtil.notice("ERROR", "可能遇到了一个广告或者帖子被删除");
+							activityUtil.noticeError( "可能遇到了一个广告或者帖子被删除"
+									,TopicListActivity1.this);
 						}
 						activityUtil.dismiss();
 					}
@@ -421,9 +419,12 @@ public class TopicListActivity1 extends Activity {
 		public long getItemId(int arg0) {
 			return arg0;
 		}
-
+		long start;
+		long end;
 		public View getView(int position, View view, ViewGroup parent) {
-
+			if(position ==0){
+				start = System.currentTimeMillis();
+			}
 			View convertView = m.get(position);
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.topic_list, null);
@@ -467,6 +468,10 @@ public class TopicListActivity1 extends Activity {
 				
 				//if(false)// no cache
 				m.put(position, convertView);
+			}
+			if(position == this.getCount()-1){
+				end = System.currentTimeMillis();
+				Log.i(getClass().getSimpleName(),"render cost:"+(end-start));
 			}
 			return convertView;
 		}

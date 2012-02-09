@@ -156,7 +156,7 @@ public class StringUtil {
 				,"<a href=\"$1\">$2</a>");
 		//color
 		
-		s = s.replaceAll("\\[color=([^\\[|\\]]+)\\]\\s*(\\.+?)\\s*\\[/color\\]"
+		s = s.replaceAll("\\[color=([^\\[|\\]]+)\\]\\s*(.+?)\\s*\\[/color\\]"
 				,"<b style=\"color:$1\">$2</b>");
 		
 		s = s.replaceAll("\\[table\\]","<table>");
