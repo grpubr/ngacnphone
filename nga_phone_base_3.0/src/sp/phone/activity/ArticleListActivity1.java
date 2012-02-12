@@ -5,16 +5,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.zip.ZipFile;
 
+import com.alibaba.fastjson.JSON;
+
+import sp.phone.activity.TopicListActivity1.BoardPageNumChangeListener;
 import sp.phone.bean.Article;
 import sp.phone.bean.ArticlePage;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
+import sp.phone.utils.PhoneConfiguration;
+import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,6 +30,8 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,6 +41,9 @@ import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.View.OnTouchListener;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -38,6 +51,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
+import android.widget.Toast;
 
 public class ArticleListActivity1 extends Activity {
 
@@ -55,11 +69,11 @@ public class ArticleListActivity1 extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
-		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+		//requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tab2);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
-				R.layout.title_bar);
+		//getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
+		//		R.layout.title_bar);
 
 		initDate();
 		initView();
@@ -84,9 +98,9 @@ public class ArticleListActivity1 extends Activity {
 		// 载入音频流
 		//hitOkSfx = soundPool.load(this, R.raw.shake, 0);
 		flingListener = new ArticleFlingListener(this);
-		TextView titleTV = (TextView) findViewById(R.id.title);
-		titleTV.setText(articlePage.getNow().get("title"));
-
+		//TextView titleTV = (TextView) findViewById(R.id.title);
+		//titleTV.setText(articlePage.getNow().get("title"));
+		this.setTitle(articlePage.getNow().get("title"));
 		tabHost = (TabHost) findViewById(android.R.id.tabhost);
 		tabHost.setup();
 		tabHost.setBackgroundResource(ThemeManager.getInstance().getBackgroundColor());
@@ -168,6 +182,75 @@ public class ArticleListActivity1 extends Activity {
 		}
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.articlelist_menu, menu);
+		int flags = ActionBar.DISPLAY_SHOW_HOME;
+		flags |= ActionBar.DISPLAY_USE_LOGO;
+		flags |= ActionBar.DISPLAY_SHOW_TITLE;
+		flags |= ActionBar.DISPLAY_HOME_AS_UP;
+		flags |= ActionBar.DISPLAY_SHOW_CUSTOM;
+		ReflectionUtil.actionBar_setDisplayOption(this, flags);
+
+
+		//final ActionBar bar = getActionBar();
+		//bar.setDisplayOptions(flags);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch( item.getItemId())
+		{
+			case R.id.article_menuitem_reply:
+				String tid = getTid();
+				Intent intent = new Intent();
+				intent.putExtra("prefix", "" );
+				intent.putExtra("tid", tid);
+				intent.putExtra("action", "reply");
+				
+				intent.setClass(ArticleListActivity1.this, PostActivity.class);
+				startActivity(intent);
+				break;
+			case R.id.article_menuitem_refresh:
+				final String url = HttpUtil.Server + articlePage.getNow().get("link");
+				new LoadArticleThread(url).start();
+				break;
+			case R.id.article_menuitem_addbookmark:
+				String bookmarkUrl = articlePage.getNow().get("link");
+				String title = articlePage.getNow().get("title");
+				boolean ret = PhoneConfiguration.getInstance().addBookmark(bookmarkUrl, title);
+				if(ret)
+					Toast.makeText(this, "收藏成功", Toast.LENGTH_LONG);
+				else
+					Toast.makeText(this, "链接已经在收藏夹里了", Toast.LENGTH_LONG);
+				
+				SharedPreferences share = this.getSharedPreferences("perference",
+						MODE_PRIVATE);
+				Editor editor = share.edit();
+				String bookmarks = JSON.toJSONString(PhoneConfiguration.getInstance().getBookmarks());
+				editor.putString("bookmarks", bookmarks);
+				editor.commit();
+				break;
+			case R.id.article_menuitem_back:
+			case android.R.id.home:
+				this.finish();
+				break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	private String getTid(){
+		String tid = null;
+		tid = articlePage.getNow().get("link");
+		tid = tid.substring(tid.indexOf("tid=")+4);
+		int end = tid.indexOf("&");
+		if(end == -1)
+			end = tid.length();
+		tid = tid.substring(0,end);
+		return tid;
+	}
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onContextItemSelected(android.view.MenuItem)
 	 */
@@ -177,13 +260,7 @@ public class ArticleListActivity1 extends Activity {
 		ListView currentView = (ListView) tabHost.getCurrentView();
 		ArticleListAdapter currentAdapter = (ArticleListAdapter) currentView.getAdapter();
 		StringBuffer postPrefix = new StringBuffer();
-		String tid = null;
-		tid = articlePage.getNow().get("link");
-		tid = tid.substring(tid.indexOf("tid=")+4);
-		int end = tid.indexOf("&");
-		if(end == -1)
-			end = tid.length();
-		tid = tid.substring(0,end);
+		String tid = getTid();
 		if( REPLY_POST_ORDER ==item.getItemId())
 		{
 
@@ -412,8 +489,18 @@ public class ArticleListActivity1 extends Activity {
 				listView.setCacheColorHint(0);
 				app.getResources().getColor(R.color.shit1);
 				listView.setVerticalScrollBarEnabled(false);
+				listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+				
 				listView.setOnCreateContextMenuListener(new FloorCreateContextMenuListener());
 				listView.setOnTouchListener(flingListener);
+				listView.setOnItemClickListener(new OnItemClickListener(){
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						((ListView) parent).setItemChecked(position, true);
+					}
+					
+				});
 				return listView;
 			} else {
 				return new TextView(ArticleListActivity1.this);
@@ -461,7 +548,7 @@ public class ArticleListActivity1 extends Activity {
 			OnTouchListener {
 		Context context;
 		GestureDetector gDetector;
-		final float FLING_MIN_DISTANCE = 100;
+		final float FLING_MIN_DISTANCE = 80;
 
 		/*
 		 * public ArticleFlingListener() { super(); }
