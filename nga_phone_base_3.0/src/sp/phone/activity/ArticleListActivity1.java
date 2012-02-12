@@ -224,8 +224,10 @@ public class ArticleListActivity1 extends Activity {
 				boolean ret = PhoneConfiguration.getInstance().addBookmark(bookmarkUrl, title);
 				if(ret)
 					Toast.makeText(this, "收藏成功", Toast.LENGTH_LONG);
-				else
+				else{
 					Toast.makeText(this, "链接已经在收藏夹里了", Toast.LENGTH_LONG);
+					break;
+				}
 				
 				SharedPreferences share = this.getSharedPreferences("perference",
 						MODE_PRIVATE);
@@ -251,6 +253,20 @@ public class ArticleListActivity1 extends Activity {
 		tid = tid.substring(0,end);
 		return tid;
 	}
+	
+	
+	
+
+	
+	
+
+	@Override
+	protected void onRestart() {
+		final String url = HttpUtil.Server + articlePage.getNow().get("link");
+		new LoadArticleThread(url).start();
+		super.onRestart();
+	}
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onContextItemSelected(android.view.MenuItem)
 	 */
