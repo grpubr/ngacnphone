@@ -5,12 +5,16 @@ import java.util.HashMap;
 import sp.phone.bean.ArticlePage;
 import sp.phone.bean.RSSFeed;
 import sp.phone.bean.RSSItem;
+import sp.phone.forumoperation.FloorOpener;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
+import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.RSSUtil;
+import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import sp.phone.activity.R;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -52,7 +56,6 @@ public class TopicListActivity1 extends Activity {
 	private HashMap<Object, RSSFeed> map;
 	private int max_num = 5;
 	private MyApp app;
-	private HashMap<Object, ArticlePage> map_article;
 	private TopicFlingListener flingListener;
 	protected ListView currentListview;
 	
@@ -70,6 +73,15 @@ public class TopicListActivity1 extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.threadlist_menu, menu);
+		int flags = ActionBar.DISPLAY_SHOW_HOME;
+		flags |= ActionBar.DISPLAY_USE_LOGO;
+		flags |= ActionBar.DISPLAY_SHOW_TITLE;
+		flags |= ActionBar.DISPLAY_HOME_AS_UP;
+		flags |= ActionBar.DISPLAY_SHOW_CUSTOM;
+
+		 ReflectionUtil.actionBar_setDisplayOption(this, flags);
+		//final ActionBar bar = getActionBar();
+		//bar.setDisplayOptions(flags);
 		return true;
 	}
 
@@ -84,8 +96,15 @@ public class TopicListActivity1 extends Activity {
 				new BoardPageNumChangeListener().onTabChanged(
 						tabHost.getCurrentTabTag());
 				break;
+			case R.id.goto_bookmark_item:
+				Intent intent_bookmark = new Intent(this, BookmarkActivity.class);
+				startActivity(intent_bookmark);
+				break;
 			case R.id.threadlist_menu_item3 :
-				this.finish();
+			case android.R.id.home:
+				Intent intent = new Intent(this, MainActivity.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            startActivity(intent);
 				break;
 		}
 		return true;
@@ -133,7 +152,7 @@ public class TopicListActivity1 extends Activity {
 		app = ((MyApp) getApplication());
 		rssFeed = app.getRssFeed();
 		map = app.getMap();
-		map_article = app.getMap_article();
+		app.getMap_article();
 		flingListener = new TopicFlingListener(this);
 
 	}
@@ -299,7 +318,8 @@ public class TopicListActivity1 extends Activity {
 			MyAdapter adapter = new MyAdapter(TopicListActivity1.this);
 			listView.setAdapter(adapter);
 			listView.setOnTouchListener(flingListener);
-			listView.setOnItemClickListener(new ArticlelistItemClickListener());
+			listView.setOnItemClickListener(
+					new ArticlelistItemClickListener(TopicListActivity1.this));
 			//listView.indexOfChild(child)
 			currentListview = listView;
 			return listView;
@@ -309,7 +329,7 @@ public class TopicListActivity1 extends Activity {
 	}
 	
 
-	class FloorOpener {
+	/*class FloorOpener {
 		
 		void handleFloor(String floorUrl) {
 			final String url = floorUrl;
@@ -329,13 +349,7 @@ public class TopicListActivity1 extends Activity {
 						System.out.println("host:" + HttpUtil.HOST);
 						if (!HttpUtil.HOST_PORT.equals("")) {
 							activityUtil.noticeSaying(TopicListActivity1.this);
-							/*String str = StringUtil.getSaying();
-							if (str.indexOf(";") != -1) {
-								activityUtil.notice("加速模式", str.split(";")[0]
-										+ "-----" + str.split(";")[1]);
-							} else {
-								activityUtil.notice("加速模式", str);
-							}*/
+
 							articlePage = HttpUtil
 									.getArticlePageByJson(HttpUtil.HOST
 											+ "?uri=" + url + "@page=1");
@@ -344,13 +358,7 @@ public class TopicListActivity1 extends Activity {
 							// activityUtil.notice("INFO",
 							// "连接策略:P-N,这种策略将模拟浏览器显示方式");
 							activityUtil.noticeSaying(TopicListActivity1.this);
-							/*String str = StringUtil.getSaying();
-							if (str.indexOf(";") != -1) {
-								activityUtil.notice("普通模式", str.split(";")[0]
-										+ "-----" + str.split(";")[1]);
-							} else {
-								activityUtil.notice("普通模式", str);
-							}*/
+
 							String cookie = "";
 							if (TopicListActivity1.this.app.getUid() != null
 									&& TopicListActivity1.this.app.getUid() != "")
@@ -379,10 +387,17 @@ public class TopicListActivity1 extends Activity {
 
 	}
 
+	*/
+	
 	
 	class ArticlelistItemClickListener extends FloorOpener
 		implements OnItemClickListener{
 			
+		public ArticlelistItemClickListener(Activity activity) {
+			super(activity);
+			// TODO Auto-generated constructor stub
+		}
+
 		@Override
 		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 				long arg3) {
@@ -449,8 +464,10 @@ public class TopicListActivity1 extends Activity {
 					reply_count = arr[last_index].substring(0, arr[last_index].indexOf("个"));
 					replies.setText("[" + reply_count + " RE]");
 				try{
-				title.setTextColor(parent.getResources().getColor(
+					title.setTextColor(parent.getResources().getColor(
 							ThemeManager.getInstance().getForegroundColor()));
+					float size = PhoneConfiguration.getInstance().getTextSize();
+					title.setTextSize(size);
 				}catch(Exception e){
 					Log.e(getClass().getSimpleName(),Log.getStackTraceString(e));
 				}
