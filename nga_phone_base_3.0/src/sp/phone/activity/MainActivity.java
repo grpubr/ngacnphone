@@ -1,5 +1,6 @@
 package sp.phone.activity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -7,10 +8,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,10 +15,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipFile;
 
+import sp.phone.bean.Bookmark;
 import sp.phone.bean.RSSFeed;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
+import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.RSSUtil;
+import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import sp.phone.bean.BoardInfo;
@@ -50,6 +50,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -81,13 +82,14 @@ public class MainActivity extends Activity {
 
 		
 		Intent intent = getIntent();
-		
+		app = ((MyApp) getApplication());
 		loadConfig(intent);
 		initDate();
 		initView();
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private void loadConfig(Intent intent) {
 
 		initUserInfo(intent);
@@ -100,31 +102,49 @@ public class MainActivity extends Activity {
 		if(firstRun){
 			Editor editor = share.edit();
 			editor.putBoolean("firstRun", false);
+			editor.putBoolean("refreshAfterPost", true);
 			editor.commit();
 		}
+		//refresh
+		PhoneConfiguration config = PhoneConfiguration.getInstance();
+		config.setRefreshAfterPost(
+				share.getBoolean("refreshAfterPost",true));
+		//font
+		final float defTextSize = 21.0f;//new TextView(this).getTextSize();
+		final int defWebSize = 16;//new WebView(this).getSettings().getDefaultFontSize();
+		
+		final float textSize = share.getFloat("textsize", defTextSize);
+		final int webSize = share.getInt("websize", defWebSize);
+		config.setTextSize(textSize);
+		config.setWebSize(webSize);
+		
+		//bookmarks
+		String bookmarkJson = share.getString("bookmarks", "");
+		List<Bookmark> bookmarks = new ArrayList<Bookmark>();
+		try{
+		if(!bookmarkJson.equals(""))
+			bookmarks=JSON.parseArray(bookmarkJson, Bookmark.class);
+		}catch(Exception e){
+			Log.e("JSON_error",Log.getStackTraceString(e));
+		}
+		PhoneConfiguration.getInstance().setBookmarks(bookmarks);
+		
+		
+		
 			
 		
 	}
 
 	private void initUserInfo(Intent intent) {
-		app = ((MyApp) getApplication());
+		
 		String uid = null;// intent.getStringExtra("uid");
 		String cid = null;// intent.getStringExtra("cid");
-		String userName = null;// intent.getStringExtra("User");
+		//String userName = null;// intent.getStringExtra("User");
 
 		SharedPreferences share = this.getSharedPreferences("perference",
 				MODE_PRIVATE);
 
-		if (uid != null && cid != null && uid != "" && cid != "") {
-			app.setUid(uid);
-			app.setCid(cid);
-
-			Editor editor = share.edit();
-			editor.putString("uid", uid);
-			editor.putString("cid", cid);
-			editor.putString("username", userName);
-			editor.commit();
-		} else {
+		
 			uid = share.getString("uid", "");
 			cid = share.getString("cid", "");
 			if (uid != null && cid != null && uid != "" && cid != "") {
@@ -134,7 +154,7 @@ public class MainActivity extends Activity {
 			boolean downImgWithoutWifi = share.getBoolean(
 					"down_load_without_wifi", true);
 			app.setDownImgWithoutWifi(downImgWithoutWifi);
-		}
+		
 
 	}
 
@@ -147,6 +167,14 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
+		int flags = ActionBar.DISPLAY_SHOW_HOME;
+		flags |= ActionBar.DISPLAY_USE_LOGO;
+		flags |= ActionBar.DISPLAY_SHOW_TITLE;
+		flags |= ActionBar.DISPLAY_HOME_AS_UP;
+		//flags |= ActionBar.DISPLAY_SHOW_CUSTOM;
+
+		ReflectionUtil.actionBar_setDisplayOption(this, flags);
+		
 		return true;
 	}
 	
@@ -206,8 +234,12 @@ public class MainActivity extends Activity {
 			this.jumpToSetting();
 			break;
 		case R.id.mainmenu_exit:
+		case android.R.id.home: //this is a system id
 			this.finish();
+			
 			break;
+		default:
+			return super.onOptionsItemSelected(item);
 		
 		}
 		return true;
@@ -670,19 +702,7 @@ public class MainActivity extends Activity {
 				holder.text = tv;
 				convertView.setTag(holder);
 				//iconView.setGravity(Gravity.CENTER_HORIZONTAL);
-				String methodName = "setGravity";
-				Class argClass[] = new Class[1];
-				argClass[0] = int.class;
-				 Method setMethod;
-				try {//刷大牌，玩反射
-					setMethod = convertView.getClass().
-					 	getMethod(methodName,argClass);
-					 Object args[] = new Object[1];
-					 args[0] = Gravity.CENTER_HORIZONTAL;
-					 setMethod.invoke(convertView, args);
-				} catch (Exception e){
-					Log.i(this.getClass().getSimpleName(),"fail to set gravity");
-				}
+				ReflectionUtil.view_setGravity(convertView, Gravity.CENTER_HORIZONTAL);
 			} else {
 
 				holder = (ViewHolder) convertView.getTag();
@@ -810,10 +830,15 @@ public class MainActivity extends Activity {
 			String url = HttpUtil.Server + "/thread.php?fid=" + fidString
 					+ "&rss=1";
 
-			if (fid < 0 && app.getUid() != null && app.getCid() != null) {
+			if ( app.getUid() != null && app.getCid() != null) {
 
 				url = url + "&ngaPassportUid=" + app.getUid()
 						+ "&ngaPassportCid=" + app.getCid();
+			}else if(fid<0){
+				new AlertDialog.Builder(MainActivity.this).setTitle("提示")
+				.setMessage("个人板块要登录了才能进去")
+				.setPositiveButton("知道了", null).show();
+				return;
 			}
 
 			if (!StringUtil.isEmpty(url)) {
