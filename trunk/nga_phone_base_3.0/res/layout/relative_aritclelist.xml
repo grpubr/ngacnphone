@@ -6,7 +6,13 @@
     <TextView android:layout_alignParentLeft="true" android:layout_height="wrap_content" android:text="TextView" android:layout_width="100dip" android:id="@+id/nickName"></TextView>
     <ImageView android:src="@drawable/icon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@+id/nickName" android:layout_alignLeft="@+id/nickName" android:layout_alignRight="@+id/nickName" android:id="@+id/avatarImage"></ImageView>
     <LinearLayout android:id="@+id/linearLayout1" android:layout_toRightOf="@+id/avatarImage" android:layout_height="wrap_content" android:layout_alignTop="@+id/avatarImage" android:layout_width="fill_parent" android:orientation="vertical">
-        <TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/title" android:text="TextView"></TextView>
+
+        <TextView
+            android:id="@+id/floor_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView" >
+</TextView>
         <android.webkit.WebView android:layout_width="fill_parent" android:id="@+id/content" android:layout_height="wrap_content"></android.webkit.WebView>
     </LinearLayout>
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TextView" android:layout_toRightOf="@+id/nickName" android:layout_alignTop="@+id/nickName" android:layout_alignBottom="@+id/nickName" android:id="@+id/floor"></TextView>

@@ -5,6 +5,7 @@ import java.util.zip.ZipFile;
 
 import sp.phone.bean.ArticlePage;
 import sp.phone.bean.RSSFeed;
+import sp.phone.utils.PhoneConfiguration;
 import android.app.Application;
 
 public class MyApp extends Application {
@@ -19,6 +20,15 @@ public class MyApp extends Application {
 	private String uid;
 	private String cid;
 	private boolean downImgWithoutWifi;
+	private PhoneConfiguration config;
+	
+	
+	
+	@Override
+	public void onCreate() {
+		config = PhoneConfiguration.getInstance();
+		super.onCreate();
+	}
 
 	public ZipFile getZf() {
 		return zf;
@@ -98,6 +108,12 @@ public class MyApp extends Application {
 	public boolean isDownImgWithoutWifi() {
 		return downImgWithoutWifi;
 	}
+
+	public PhoneConfiguration getConfig() {
+		return config;
+	}
+
+
 
 
 }
