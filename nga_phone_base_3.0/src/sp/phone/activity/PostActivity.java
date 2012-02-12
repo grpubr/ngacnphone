@@ -10,6 +10,7 @@ import sp.phone.forumoperation.ThreadPostAction;
 import sp.phone.utils.ThemeManager;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -34,7 +35,7 @@ public class PostActivity extends Activity {
 	private String REPLY_URL="http://bbs.ngacn.cc/post.php?";
 	private String sig ="\n[url=http://code.google.com/p/ngacnphone/downloads/list]"
 		+"----sent from my " + android.os.Build.MANUFACTURER
-		+ " " + android.os.Build.PRODUCT + ",android "
+		+ " " + android.os.Build.MODEL + ",android "
 		+ android.os.Build.VERSION.RELEASE + "[/url]\n";
 
 
@@ -82,8 +83,7 @@ public class PostActivity extends Activity {
 		
 	}
 	class ButtonCommitListener implements OnClickListener{
-		private final String result_start_tag = "<span style='color:#aaa'>&gt;</span>";
-		private final String result_end_tag = "<br/>";
+
 		private final String url;
 		ButtonCommitListener(String url){
 			this.url = url;
@@ -102,26 +102,59 @@ public class PostActivity extends Activity {
 		}
 		
 		public void handleReply(View v) {
-			HttpPostClient c = 
-				new HttpPostClient(url);
+
+
+			act.setPost_subject_(titleText.getText().toString());
+			act.setPost_content_(bodyText.getText().toString()+ sig);
+			new ArticlePostTask(v).execute(url,act.toString());
+
+			
+			PostActivity.this.finish();
+		}
+
+		
+	}
+	
+	private class ArticlePostTask extends AsyncTask<String, Integer, String>{
+
+		final View v;
+		private final String result_start_tag = "<span style='color:#aaa'>&gt;</span>";
+		private final String result_end_tag = "<br/>";
+		
+		public ArticlePostTask(View v) {
+			super();
+			this.v = v;
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			if(params.length<2)
+				return "parameter error";
+			String ret = "ÍøÂç´íÎó";
+			String url = params[0];
+			String body = params[1];
+			
+			HttpPostClient c =  new HttpPostClient(url);
 			String cookie = "ngaPassportUid="+ app.getUid()+
 			"; ngaPassportCid=" + app.getCid();
 			c.setCookie(cookie);
-			act.setPost_subject_(titleText.getText().toString());
-			act.setPost_content_(bodyText.getText().toString()+ sig);
+			
 			try {
-				InputStream input = c.post_body(act.toString()).getInputStream();
+				InputStream input = null;
+				input = c.post_body(body).getInputStream();
+				if(input != null)
+				{
 				String html = IOUtils.toString(input, "gbk");
-				String result = getReplyResult(html);
-				Toast.makeText(v.getContext(), result,
-						Toast.LENGTH_LONG).show();
+				ret = getReplyResult(html);
+
+				}
 			} catch (IOException e) {
 				Log.e(LOG_TAG, Log.getStackTraceString(e));
 				
 			}
-			
-			PostActivity.this.finish();
+			return ret;
 		}
+		
 		private String getReplyResult(String html){
 			int start = html.indexOf(result_start_tag);
 			if(start == -1)
@@ -134,6 +167,14 @@ public class PostActivity extends Activity {
 			
 			
 		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			Toast.makeText(v.getContext(), result,
+					Toast.LENGTH_LONG).show();
+			super.onPostExecute(result);
+		}
+		
 		
 	}
 
