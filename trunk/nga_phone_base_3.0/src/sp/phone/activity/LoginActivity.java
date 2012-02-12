@@ -5,21 +5,30 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 
+import org.apache.commons.io.IOUtils;
+
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import sp.phone.activity.TopicListActivity1.BoardPageNumChangeListener;
 import sp.phone.forumoperation.HttpPostClient;
 import sp.phone.utils.ActivityUtil;
+import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.ThemeManager;
 
 public class LoginActivity extends Activity {
@@ -60,20 +69,52 @@ public class LoginActivity extends Activity {
 	private void updateThemeUI(){
 		view.setBackgroundResource(ThemeManager.getInstance().getBackgroundColor());
 	}
+	
+	
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		//MenuInflater inflater = getMenuInflater();
+		//inflater.inflate(R.menu.main_menu, menu);
+		int flags = ActionBar.DISPLAY_SHOW_HOME;
+		flags |= ActionBar.DISPLAY_USE_LOGO;
+		flags |= ActionBar.DISPLAY_SHOW_TITLE;
+		flags |= ActionBar.DISPLAY_HOME_AS_UP;
+		flags |= ActionBar.DISPLAY_SHOW_CUSTOM;
+		//final ActionBar bar = getActionBar();
+		//bar.setDisplayOptions(flags);
+		ReflectionUtil.actionBar_setDisplayOption(this, flags);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch( item.getItemId())
+		{
+			
+			case android.R.id.home:
+				Intent intent = new Intent(this, MainActivity.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            startActivity(intent);
+				break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+
 
 	class LoginButtonListener implements OnClickListener {
-		private HttpPostClient c;
-		private String uid;
-		private String cid;
+		final private String loginUrl;
+		public LoginButtonListener(String loginUrl) {
+			super();
+			this.loginUrl = loginUrl;
+		}
+
+
 		private final String LOG_TAG = LoginButtonListener.class
 				.getSimpleName();
 
-		public LoginButtonListener(String loginUrl) {
-			c = new HttpPostClient(loginUrl);
 
-			uid = null;
-			cid = null;
-		}
 
 		@Override
 		public void onClick(View v) {
@@ -84,20 +125,78 @@ public class LoginActivity extends Activity {
 			bodyBuffer.append("&password=");
 			bodyBuffer.append(URLEncoder.encode(passwordText.getText()
 					.toString()));
+			new LoginTask(v).execute(loginUrl,bodyBuffer.toString());
+			
 
-			HttpURLConnection conn = c.post_body(bodyBuffer.toString());
-			if (!validate(conn)) {
+		}
 
-				Toast.makeText(v.getContext(), R.string.login_failed,
-						Toast.LENGTH_LONG).show();
-			} else {
+
+		private class LoginTask extends AsyncTask<String, Integer,  Boolean>{
+			final View v;
+			private String uid=null;
+			private String cid=null;
+			public LoginTask(View v) {
+				super();
+				this.v = v;
+			}
+			@Override
+			protected  Boolean doInBackground(String... params) {
+				String url = params[0];
+				String body =params[1];
+				String ret = v.getResources().getString(R.string.login_failed);
+				HttpURLConnection conn = new HttpPostClient(url).post_body(body);
+				return validate(conn);
+
+
+
+			}
+			
+			private boolean validate(HttpURLConnection conn) {
+				if (conn == null)
+					return false;
+
+				String cookieVal = null;
+				String key = null;
+
+				String uid = "";
+				String cid = "";
+				String location = "";
+
+
+				for (int i = 1; (key = conn.getHeaderFieldKey(i)) != null; i++) {
+					Log.d(LOG_TAG, conn.getHeaderFieldKey(i) + ":"
+							+ conn.getHeaderField(i));
+					if (key.equalsIgnoreCase("set-cookie")) {
+						cookieVal = conn.getHeaderField(i);
+						cookieVal = cookieVal.substring(0, cookieVal.indexOf(';'));
+						if (cookieVal.indexOf("_sid=") == 0)
+							cid = cookieVal.substring(5);
+						if (cookieVal.indexOf("_178c=") == 0)
+							uid = cookieVal.substring(6, cookieVal.indexOf('%'));
+
+					}
+					if (key.equalsIgnoreCase("Location")) {
+						location = conn.getHeaderField(i);
+
+					}
+				}
+				if (cid != "" && uid != ""
+						&& location.indexOf("login_success&error=0") != -1) {
+					this.uid = uid;
+					this.cid = cid;
+					Log.i(LOG_TAG, "uid =" + uid + ",csid=" + cid);
+					return true;
+				}
+
+				return false;
+			}
+			
+			@Override
+			protected void onPostExecute( Boolean result) {
+				if(result.booleanValue()){
 				Toast.makeText(v.getContext(), R.string.login_successfully,
 						Toast.LENGTH_LONG).show();
 				Intent intent = new Intent();
-				/*
-				 * intent.putExtra("uid", uid); intent.putExtra("cid", cid);
-				 * intent.putExtra("username", userText.getText().toString());
-				 */
 				intent.setClass(v.getContext(), MainActivity.class);
 				SharedPreferences share = LoginActivity.this
 						.getSharedPreferences("perference", MODE_PRIVATE);
@@ -108,57 +207,14 @@ public class LoginActivity extends Activity {
 				editor.commit();
 
 				startActivity(intent);
-				// LoginActivity.this.finish();
-			}
-
-		}
-
-		private boolean validate(HttpURLConnection conn) {
-			if (conn == null)
-				return false;
-
-			String cookieVal = null;
-			String key = null;
-
-			String uid = "";
-			String cid = "";
-			String location = "";
-			try {
-				InputStream in = conn.getInputStream();
-				byte buffer[] = new byte[1024];
-				in.read(buffer, 0, 1024);
-				String s = new String(buffer,0, buffer.length);
-				System.out.print(s);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			for (int i = 1; (key = conn.getHeaderFieldKey(i)) != null; i++) {
-				Log.d(LOG_TAG, conn.getHeaderFieldKey(i) + ":"
-						+ conn.getHeaderField(i));
-				if (key.equalsIgnoreCase("set-cookie")) {
-					cookieVal = conn.getHeaderField(i);
-					cookieVal = cookieVal.substring(0, cookieVal.indexOf(';'));
-					if (cookieVal.indexOf("_sid=") == 0)
-						cid = cookieVal.substring(5);
-					if (cookieVal.indexOf("_178c=") == 0)
-						uid = cookieVal.substring(6, cookieVal.indexOf('%'));
-
-				}
-				if (key.equalsIgnoreCase("Location")) {
-					location = conn.getHeaderField(i);
-
+				super.onPostExecute(result);
+				}else{
+					Toast.makeText(v.getContext(), R.string.login_failed,
+							Toast.LENGTH_LONG).show();
 				}
 			}
-			if (cid != "" && uid != ""
-					&& location.indexOf("login_success&error=0") != -1) {
-				this.uid = uid;
-				this.cid = cid;
-				Log.i(LOG_TAG, "uid =" + uid + ",csid=" + cid);
-				return true;
-			}
-
-			return false;
+			
+			
 		}
 
 	}

@@ -71,7 +71,7 @@ public class HttpPostClient {
 		}catch(Exception e) {
 			//sb.append(e.toString());
 			conn = null;
-			Log.e(LOG_TAG, e.toString());
+			Log.e(LOG_TAG, Log.getStackTraceString(e));
 		}
 		return conn;
 	}
