@@ -182,8 +182,18 @@ public class ArticleUtil {
 				}
 			} else if (node instanceof Div) {
 				Div div = (Div) node;
-				LinkTag linkTag = (LinkTag) div.getChild(1).getChildren()
-						.toNodeArray()[5];
+				Node[] links =  div.getChild(1).getChildren()
+						.toNodeArray();
+				LinkTag linkTag = null;
+				for(Node linknode:links){
+					if(linknode instanceof LinkTag){
+						LinkTag tmp = (LinkTag) linknode;
+						if(!tmp.getLink().equals("")){
+							linkTag = tmp;
+						}
+					}
+					
+				}
 				HashMap<String, String> current = new HashMap<String, String>();
 				current.put("link", linkTag.getLink());
 				current.put("title", linkTag.getLinkText());
