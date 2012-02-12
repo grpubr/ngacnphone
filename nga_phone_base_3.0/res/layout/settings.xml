@@ -1,9 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent" android:background="@drawable/bg_wood">
-    <CheckBox android:layout_width="wrap_content" android:layout_below="@+id/checkBox_down_img_no_wifi" android:layout_height="wrap_content" android:layout_alignLeft="@+id/checkBox_down_img_no_wifi" android:id="@+id/checkBox_night_mode" android:text="@string/nightmode"></CheckBox>
-    <CheckBox android:textColor="@color/black" android:id="@+id/checkBox_down_img_no_wifi" android:layout_width="fill_parent" android:text="@string/nowifi_downimg" android:layout_height="wrap_content" android:layout_alignParentLeft="true"></CheckBox>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
-</RelativeLayout>
+        <CheckBox
+            android:id="@+id/checkBox_down_img_no_wifi"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/nowifi_downimg"
+            android:textColor="@color/black" />
+
+        <CheckBox
+            android:id="@+id/checkBox_night_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nightmode" />
+
+        <TextView
+            android:id="@+id/textView_font_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="@string/font_size" />
+
+        <SeekBar
+            android:id="@+id/fontsize_seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="20dp" />
+
+    </LinearLayout>
+
+

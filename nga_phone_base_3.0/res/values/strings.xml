@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">National Geographic of Azeroth</string>
+    <string name="app_name">NGA安卓版</string>
     <string name="menu_login">登录</string>
     <string name="menu_setting">设置</string>
     <string name="menu_exit">退出</string>
@@ -19,4 +19,12 @@
     <string name="error">出错了</string>
     <string name="nowifi_downimg">没wifi也下载图片</string>
     <string name="nightmode">夜间模式</string>
+    <string name="refresh">刷新</string>
+    <string name="back">返回</string>
+    <string name="new_thread">发帖</string>
+    <string name="reply_thread">回帖</string>
+    <string name="bookmark">收藏本帖</string>
+    <string name="showbookmark">查看收藏夹</string>
+    <string name="goto_bookmark">收藏夹</string>
+    <string name="font_size">字体大小</string>
 </resources>
