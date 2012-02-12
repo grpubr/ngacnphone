@@ -159,12 +159,12 @@ public class StringUtil {
 		s = s.replaceAll("\\[color=([^\\[|\\]]+)\\]\\s*(.+?)\\s*\\[/color\\]"
 				,"<b style=\"color:$1\">$2</b>");
 		
-		s = s.replaceAll("\\[table\\]","<table>");
-		s = s.replaceAll("\\[/table\\]","<table>");
+		s = s.replaceAll("\\[table\\]","<table style='color:green'>");
+		s = s.replaceAll("\\[/table\\]","</table>");
 		s = s.replaceAll("\\[tr\\]","<tr>");
 		s = s.replaceAll("\\[/tr\\]","<tr>");
 		s = s.replaceAll("\\[td\\]",
-				"<td style=\"border-left:1px solid #aaa;border-bottom:1px solid #aaa\">");
+				"<td style=\"border:1px solid red\">");
 		s = s.replaceAll("\\[/td\\]","<td>");
 		//[i][/i]
 		s = s.replaceAll("\\[i\\]", "<i style=\"font-style:italic\">");
@@ -184,10 +184,14 @@ public class StringUtil {
 		
 		//[img]./ddd.jpg[/img]
 		s = s.replaceAll("\\[img\\]\\s*\\.(/[^\\[|\\]]+)\\s*\\[/img\\]", 
-				"<img src=\"http://img.ngacn.cc/attachments$1\" width=\"100%\">");
+				"<img src=\"http://img.ngacn.cc/attachments$1\" style= 'max-width:100%;' >");
+		//s = s.replaceAll("\\[img\\]\\s*\\.(/[^\\[|\\]]+)\\s*\\[/img\\]", 
+		//		"<img src=\"http://img.ngacn.cc/attachments$1\" width=\"100%\">");
 		//[img]http://[/img]
 		s = s.replaceAll("\\[img\\]\\s*(http[^\\[|\\]]+)\\s*\\[/img\\]", 
-				"<img src='$1' width=\"100%\">");
+				"<img src='$1' style= 'max-width:100%;' >");
+		//s = s.replaceAll("\\[img\\]\\s*(http[^\\[|\\]]+)\\s*\\[/img\\]", 
+		//		"<img src='$1' width=\"100%\">");
 		return s;
 	}
 
