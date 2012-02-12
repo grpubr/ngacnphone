@@ -11,6 +11,7 @@ import java.util.zip.ZipFile;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.ImageUtil;
+import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 
@@ -191,6 +192,8 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 				contentTV.getSettings().setBlockNetworkImage(false);
 			contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
 			contentTV.setOnTouchListener(gestureListener);
+			contentTV.getSettings().setDefaultFontSize(
+					PhoneConfiguration.getInstance().getWebSize());
 			
 			TextView floorTV = (TextView) rowView.findViewById(R.id.floor);
 			floorTV.setText("[" + floor + " ¥]");
@@ -199,7 +202,7 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 					.findViewById(R.id.postTime);
 			postTimeTV.setText(map.get("postTime"));
 
-			TextView titleTV = (TextView) rowView.findViewById(R.id.title);
+			TextView titleTV = (TextView) rowView.findViewById(R.id.floor_title);
 			if (!StringUtil.isEmpty(map.get("title"))) {
 				titleTV.setText(map.get("title"));
 			} else {
