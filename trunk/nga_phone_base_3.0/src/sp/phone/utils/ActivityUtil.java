@@ -35,9 +35,9 @@ public class ActivityUtil {
 		if (str.indexOf(";") != -1) {
 			/*notice("加速模式", str.split(";")[0]
 					+ "-----" + str.split(";")[1]);*/
-			notice("加速模式",str.replace(";", "-----"),context);
+			notice("",str.replace(";", "-----"),context);
 		} else {
-			notice("加速模式", str,context);
+			notice("", str,context);
 		}
 	}
 	
@@ -81,7 +81,9 @@ public class ActivityUtil {
 						// e.printStackTrace();
 						// }
 					}
-					proDialog.setTitle(title);
+					if(!title.equals(""))
+						proDialog.setTitle(title);
+					
 					proDialog.setMessage(content);
 					proDialog.show();
 				} else {
