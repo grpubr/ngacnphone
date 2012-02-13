@@ -17,7 +17,6 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.Switch;
 import android.widget.TextView;
 
 

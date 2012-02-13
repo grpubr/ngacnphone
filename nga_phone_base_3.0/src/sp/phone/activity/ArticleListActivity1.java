@@ -7,7 +7,6 @@ import java.util.zip.ZipFile;
 
 import com.alibaba.fastjson.JSON;
 
-import sp.phone.activity.TopicListActivity1.BoardPageNumChangeListener;
 import sp.phone.bean.Article;
 import sp.phone.bean.ArticlePage;
 import sp.phone.utils.ActivityUtil;
@@ -35,13 +34,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.View.OnTouchListener;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;

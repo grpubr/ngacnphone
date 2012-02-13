@@ -109,7 +109,7 @@ public class PostActivity extends Activity {
 			new ArticlePostTask(v).execute(url,act.toString());
 
 			
-			PostActivity.this.finish();
+			
 		}
 
 		
@@ -172,6 +172,7 @@ public class PostActivity extends Activity {
 		protected void onPostExecute(String result) {
 			Toast.makeText(v.getContext(), result,
 					Toast.LENGTH_LONG).show();
+			PostActivity.this.finish();
 			super.onPostExecute(result);
 		}
 		

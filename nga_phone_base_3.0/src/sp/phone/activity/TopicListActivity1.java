@@ -2,12 +2,10 @@ package sp.phone.activity;
 
 import java.util.HashMap;
 
-import sp.phone.bean.ArticlePage;
 import sp.phone.bean.RSSFeed;
 import sp.phone.bean.RSSItem;
 import sp.phone.forumoperation.FloorOpener;
 import sp.phone.utils.ActivityUtil;
-import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.RSSUtil;
 import sp.phone.utils.ReflectionUtil;
