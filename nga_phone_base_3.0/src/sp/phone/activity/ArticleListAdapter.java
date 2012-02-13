@@ -27,10 +27,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
@@ -68,6 +70,14 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 		}
 		View rowView = m.get(position);
 		if (rowView != null && m.size() > 1) {
+			TextView nickNameTV = (TextView) rowView
+					.findViewById(R.id.nickName);
+			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) nickNameTV.getLayoutParams();		
+			final int configWidth = PhoneConfiguration.getInstance().nikeWidth;
+			if(params.width != configWidth){
+				params.width =configWidth; 
+				nickNameTV.setLayoutParams(params);
+			}
 			return rowView;
 		} else {
 			final MyApp app = (MyApp) activity.getApplication();
@@ -171,6 +181,9 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			TextView nickNameTV = (TextView) rowView
 					.findViewById(R.id.nickName);
 			nickNameTV.setText(map.get("nickName"));
+			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) nickNameTV.getLayoutParams();
+			params.width = PhoneConfiguration.getInstance().nikeWidth;
+			//nickNameTV.setLayoutParams(params);//其他组件是根据这个来定位的
 
 			WebView contentTV = (WebView) rowView.findViewById(R.id.content);
 			contentTV.setBackgroundColor(0);

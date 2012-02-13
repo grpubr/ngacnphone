@@ -10,6 +10,7 @@ public class PhoneConfiguration {
 	List<Bookmark> bookmarks;// url<-->tilte
 	private float textSize;
 	private int webSize;
+	public int nikeWidth = 100;
 	public float getTextSize() {
 		return textSize;
 	}
