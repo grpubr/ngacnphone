@@ -39,6 +39,11 @@ import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.View.OnTouchListener;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -50,7 +55,7 @@ import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
 import android.widget.Toast;
 
-public class ArticleListActivity1 extends Activity {
+public class ArticleListActivity1 extends Activity implements LoadStopable {
 
 	ActivityUtil activityUtil = ActivityUtil.getInstance();
 
@@ -118,7 +123,7 @@ public class ArticleListActivity1 extends Activity {
 						@Override
 						public void onClick(View v) {
 							//Log.e(this.getClass().getCanonicalName(), "click?");
-							new LoadArticleThread(url).start();
+							new LoadArticleThread(url,ArticleListActivity1.this).start();
 						}
 						
 						
@@ -213,7 +218,7 @@ public class ArticleListActivity1 extends Activity {
 				break;
 			case R.id.article_menuitem_refresh:
 				final String url = HttpUtil.Server + articlePage.getNow().get("link");
-				new LoadArticleThread(url).start();
+				new LoadArticleThread(url,this).start();
 				break;
 			case R.id.article_menuitem_addbookmark:
 				String bookmarkUrl = articlePage.getNow().get("link");
@@ -260,7 +265,7 @@ public class ArticleListActivity1 extends Activity {
 	@Override
 	protected void onRestart() {
 		final String url = HttpUtil.Server + articlePage.getNow().get("link");
-		new LoadArticleThread(url).start();
+		new LoadArticleThread(url,this).start();
 		super.onRestart();
 	}
 
@@ -345,10 +350,18 @@ public class ArticleListActivity1 extends Activity {
 
 	OnTabChangeListener changeListener = new ArticlePageChangeListener();
 	
-	class ArticlePageChangeListener implements OnTabChangeListener{
+
+	class ArticlePageChangeListener implements OnTabChangeListener,LoadStopable{
+		boolean isloading = false;
+		
 		public void onTabChanged(String tabId) {
 
 			//soundPool.play(hitOkSfx, 1, 1, 0, 0, 1);
+			synchronized(this){
+				if(isloading)
+					return;
+				isloading = true;
+			}
 
 			// 重新加载 数据
 			HashMap<String, String> page = articlePage.getPage();
@@ -411,18 +424,28 @@ public class ArticleListActivity1 extends Activity {
 				System.gc();
 				reBuild();
 			} else {
-				new LoadArticleThread(s).start();
+				new LoadArticleThread(s,this).start();
 
 			}
 
 		}
+
+		@Override
+		public void stopLoading() {
+			synchronized(this){
+				this.isloading = false;
+			}
+			
+		}
 	}
 
 	class LoadArticleThread extends Thread {
+		final LoadStopable stopable;
 		private final String url;
-		public LoadArticleThread(String url) {
+		public LoadArticleThread(String url,LoadStopable stopable) {
 			super();
 			this.url = url;
+			this.stopable = stopable;
 		}
 		@Override
 		public void run() {
@@ -460,6 +483,7 @@ public class ArticleListActivity1 extends Activity {
 			} else {
 				activityUtil.noticeError("可能遇到了一个广告或者帖子被删除",ArticleListActivity1.this);
 			}
+			stopable.stopLoading();
 			activityUtil.dismiss();
 
 		}
@@ -498,6 +522,8 @@ public class ArticleListActivity1 extends Activity {
 						ArticleListActivity1.this,flingListener,
 						mData, listView, zf);
 				listView.setAdapter(adapter);
+				
+
 				// listView.setBackgroundResource(R.drawable.bodybg);
 				listView.setCacheColorHint(0);
 				app.getResources().getColor(R.color.shit1);
@@ -562,6 +588,7 @@ public class ArticleListActivity1 extends Activity {
 		Context context;
 		GestureDetector gDetector;
 		final float FLING_MIN_DISTANCE = 80;
+		ArticlePageChangeListener changeListener = new ArticlePageChangeListener();
 
 		/*
 		 * public ArticleFlingListener() { super(); }
@@ -579,24 +606,50 @@ public class ArticleListActivity1 extends Activity {
 			this.context = context;
 			this.gDetector = gDetector;
 		}
+		
+
+		@Override
+		public boolean onScroll(MotionEvent e1, MotionEvent e2,
+				float distanceX, float distanceY) {
+			if(e1 == null || e2 == null)
+				return false;
+			if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE*2
+					&& Math.abs(distanceX) > 1.73*Math.abs(distanceY)) {
+				// left
+
+				changeListener.onTabChanged(TABID_NEXT);
+				 return true;
+			}
+
+			if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE*2
+					&& Math.abs(distanceX) > 1.73*Math.abs(distanceY)) {
+				// right
+				changeListener.onTabChanged(TABID_PRE);
+				 return true;
+			}
+			return  false;
+			//return super.onScroll(e1, e2, distanceX, distanceY);
+		}
 
 		@Override
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 				float velocityY) {
+			
 			if(e1 == null || e2 == null)
 				return false;
-			if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE
+			
+			if ( e1.getX() - e2.getX() > FLING_MIN_DISTANCE
 					&& Math.abs(velocityX) > 1.73*Math.abs(velocityY)) {
 				// left
 
-				 new ArticlePageChangeListener().onTabChanged(TABID_NEXT);
+				changeListener.onTabChanged(TABID_NEXT);
 				 return true;
 			}
 
-			if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE
+			if ( e2.getX() - e1.getX() > FLING_MIN_DISTANCE
 					&& Math.abs(velocityX) > 1.73*Math.abs(velocityY)) {
 				// right
-				 new ArticlePageChangeListener().onTabChanged(TABID_PRE);
+				changeListener.onTabChanged(TABID_PRE);
 				 return true;
 			}
 			return  false;// super.onFling(e1, e2, velocityX, velocityY);
@@ -632,5 +685,15 @@ public class ArticleListActivity1 extends Activity {
 		}
 	}
 
+	@Override
+	public void stopLoading() {
+		// TODO Auto-generated method stub
+		
+	}
 
+
+}
+interface LoadStopable{
+	void stopLoading();
+	
 }
