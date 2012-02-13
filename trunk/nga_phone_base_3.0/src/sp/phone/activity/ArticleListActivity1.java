@@ -33,6 +33,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
+import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -46,6 +48,8 @@ import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -55,7 +59,8 @@ import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
 import android.widget.Toast;
 
-public class ArticleListActivity1 extends Activity implements LoadStopable {
+public class ArticleListActivity1 extends Activity 
+	implements LoadStopable,OnTouchListener {
 
 	ActivityUtil activityUtil = ActivityUtil.getInstance();
 
@@ -68,12 +73,15 @@ public class ArticleListActivity1 extends Activity implements LoadStopable {
 	private ArticleFlingListener flingListener;
 	private static final String TABID_NEXT = "tab_next";
 	private static final String TABID_PRE = "tab_prev";
+	//private ScaleGestureDetector scaleDector;
+	private WebWidthChangeListener  webWidthChangeListener;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
 		//requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tab2);
+		webWidthChangeListener = new WebWidthChangeListener(this);
 		//getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 		//		R.layout.title_bar);
 
@@ -332,15 +340,17 @@ public class ArticleListActivity1 extends Activity implements LoadStopable {
 		return true;
 	}
 
-	
-	
 
-
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onTouchEvent(android.view.MotionEvent)
-	 */
+	
 	@Override
-	public boolean onTouchEvent(MotionEvent event) {
+	public void stopLoading() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		webWidthChangeListener.getScaleDector().onTouchEvent(event);
 		return flingListener.getDetector().onTouchEvent(event);
 	}
 
@@ -522,6 +532,7 @@ public class ArticleListActivity1 extends Activity implements LoadStopable {
 						ArticleListActivity1.this,flingListener,
 						mData, listView, zf);
 				listView.setAdapter(adapter);
+				webWidthChangeListener.setAdapter(adapter);
 				
 
 				// listView.setBackgroundResource(R.drawable.bodybg);
@@ -531,7 +542,7 @@ public class ArticleListActivity1 extends Activity implements LoadStopable {
 				listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 				
 				listView.setOnCreateContextMenuListener(new FloorCreateContextMenuListener());
-				listView.setOnTouchListener(flingListener);
+				listView.setOnTouchListener(ArticleListActivity1.this);
 				listView.setOnItemClickListener(new OnItemClickListener(){
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
@@ -685,13 +696,53 @@ public class ArticleListActivity1 extends Activity implements LoadStopable {
 		}
 	}
 
-	@Override
-	public void stopLoading() {
-		// TODO Auto-generated method stub
-		
+
+
+
+}
+
+class WebWidthChangeListener extends SimpleOnScaleGestureListener{
+	private ScaleGestureDetector scaleDector;
+	private BaseAdapter adapter=null;
+	
+	WebWidthChangeListener(Context context){
+		scaleDector = new ScaleGestureDetector(context,this);
+	}
+	
+	public void setAdapter(BaseAdapter adapter) {
+		this.adapter = adapter;
+	}
+	
+	
+
+
+	public ScaleGestureDetector getScaleDector() {
+		return scaleDector;
 	}
 
+	@Override
+	public boolean onScale(ScaleGestureDetector detector) {
+		int tochange = (int) ((detector.getCurrentSpan()
+			- detector.getPreviousSpan())/50);
+		final int nextWidth = PhoneConfiguration.getInstance().nikeWidth + tochange;
+		if( nextWidth>5 && nextWidth <300)
+			PhoneConfiguration.getInstance().nikeWidth = nextWidth ;
+				;
+		//Log.i("test","current width"+PhoneConfiguration.getInstance().nikeWidth);
+		if(adapter !=null){
+			//Log.d("test","call notify");
+			adapter.notifyDataSetChanged();
+		}
+		return super.onScale(detector);
+	}
 
+	@Override
+	public void onScaleEnd(ScaleGestureDetector detector) {
+		// TODO Auto-generated method stub
+		super.onScaleEnd(detector);
+	}
+	
+	
 }
 interface LoadStopable{
 	void stopLoading();
