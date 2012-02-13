@@ -31,6 +31,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnTouchListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -216,9 +219,17 @@ public class TopicListActivity1 extends Activity {
 	}
 
 	class BoardPageNumChangeListener implements OnTabChangeListener{
+		boolean isWorking = false;
 		public void onTabChanged(final String tabId) {
 
 			//soundPool.play(hitOkSfx, 1, 1, 0, 0, 1);
+			synchronized(this){
+				if(isWorking){
+					return;
+				}
+				Log.d(this.getClass().getSimpleName(), "is loading, return");
+				isWorking = true;
+			}
 
 			String link = rssFeed.getLink();
 			final int num;
@@ -267,6 +278,9 @@ public class TopicListActivity1 extends Activity {
 						rssUtil.parseXml(newURL);
 						rssFeed = rssUtil.getFeed();
 						//map.put(num, rssFeed);
+						synchronized(BoardPageNumChangeListener.this){
+							isWorking = false;
+						}
 						Message message = new Message();
 						handler_rebuild.sendMessage(message);
 					}
@@ -319,6 +333,13 @@ public class TopicListActivity1 extends Activity {
 			listView.setOnItemClickListener(
 					new ArticlelistItemClickListener(TopicListActivity1.this));
 			//listView.indexOfChild(child)
+			
+			/*LayoutAnimationController controller = 
+					AnimationUtils.loadLayoutAnimation(TopicListActivity1.this,
+			        R.anim.test_anim);
+			
+			listView.setLayoutAnimation(controller);*/
+			
 			currentListview = listView;
 			return listView;
 		}
@@ -502,6 +523,7 @@ public class TopicListActivity1 extends Activity {
 		Context context;
 		GestureDetector gDetector;
 		final float FLING_MIN_DISTANCE = 100;
+		BoardPageNumChangeListener pageChange = new BoardPageNumChangeListener();
 		/*public ArticleFlingListener() {
 			super();
 		}*/
@@ -518,24 +540,53 @@ public class TopicListActivity1 extends Activity {
 			this.context = context;
 			this.gDetector = gDetector;
 		}
+		
+		
+
+		@Override
+		public boolean onScroll(MotionEvent e1, MotionEvent e2,
+				float distanceX, float distanceY) {
+			
+			
+			if(e1 == null || e2 == null)
+				return false;
+			if(e1.getX()-e2.getX() > FLING_MIN_DISTANCE*2&& 
+					Math.abs(distanceX) >1.73* Math.abs(distanceY)){
+				//left
+				
+				pageChange.onTabChanged(TABID_NEXT);
+				 return false;
+			}
+			
+			if(e2.getX()-e1.getX() > FLING_MIN_DISTANCE*2&&
+					Math.abs(distanceX) >1.73* Math.abs(distanceY) ){//3/3^0.5
+				//right
+				Log.i(this.getClass().getSimpleName(), "invoke change to previous tab");
+				pageChange.onTabChanged(TABID_PRE);
+				 return false;
+				
+			}
+			return false;
+			//return super.onScroll(e1, e2, distanceX, distanceY);
+		}
 
 		@Override
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 				float velocityY) {
 			if(e1 == null || e2 == null)
 				return false;
-			if(e1.getX()-e2.getX() > FLING_MIN_DISTANCE&& 
+			if( e1.getX()-e2.getX() > FLING_MIN_DISTANCE&& 
 					Math.abs(velocityX) >1.73* Math.abs(velocityY)){
 				//left
 				
-				new BoardPageNumChangeListener().onTabChanged(TABID_NEXT);
+				pageChange.onTabChanged(TABID_NEXT);
 				 return true;
 			}
 			
-			if(e2.getX()-e1.getX() > FLING_MIN_DISTANCE&&
+			if( e2.getX()-e1.getX() > FLING_MIN_DISTANCE&&
 					Math.abs(velocityX) >1.73* Math.abs(velocityY) ){//3/3^0.5
 				//right
-				new BoardPageNumChangeListener().onTabChanged(TABID_PRE);
+				pageChange.onTabChanged(TABID_PRE);
 				 return true;
 				
 			}

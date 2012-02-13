@@ -7,7 +7,7 @@
 	<TextView android:id="@+id/title" android:textStyle="bold"
 		android:layout_toRightOf="@id/num" android:layout_marginLeft="10dip"
 		android:text="you are fuck you."
-		android:layout_height="wrap_content" android:textSize="20px" android:layout_width="fill_parent" android:textColor="@color/black"/>
+		android:layout_height="wrap_content" android:textSize="20px" android:layout_width="fill_parent" android:textColor="@color/black" android:inputType="textMultiLine"/>
 	<TextView android:id="@+id/replies" android:layout_below="@id/title"
 		android:layout_width="wrap_content" android:layout_height="16px"
 		android:textColor="@color/page" android:textSize="13px" android:text="16 RE"
