@@ -1,11 +1,7 @@
 package sp.phone.activity;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
-
-import org.apache.commons.io.IOUtils;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -17,7 +13,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,9 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import sp.phone.activity.TopicListActivity1.BoardPageNumChangeListener;
 import sp.phone.forumoperation.HttpPostClient;
-import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.ThemeManager;
 
@@ -143,7 +136,6 @@ public class LoginActivity extends Activity {
 			protected  Boolean doInBackground(String... params) {
 				String url = params[0];
 				String body =params[1];
-				String ret = v.getResources().getString(R.string.login_failed);
 				HttpURLConnection conn = new HttpPostClient(url).post_body(body);
 				return validate(conn);
 
