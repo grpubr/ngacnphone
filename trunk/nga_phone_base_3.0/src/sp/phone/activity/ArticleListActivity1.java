@@ -624,17 +624,29 @@ public class ArticleListActivity1 extends Activity
 				float distanceX, float distanceY) {
 			if(e1 == null || e2 == null)
 				return false;
-			if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE*2
-					&& Math.abs(distanceX) > 1.73*Math.abs(distanceY)) {
+			
+			Log.d("test","onScroll:1x="+e1.getX()+",e2x="+e2.getX()+",e1y="+e1.getY()
+					+ ",e2y="+e2.getY()+ ",dx="+distanceX+",dy="+distanceY);
+			float deltaX = Math.abs(e1.getX() - e2.getX());
+			float deltaY = Math.abs(e1.getY() - e2.getY()); //distanceX is not equal to e1x-e2x
+			if ((e1.getX() - e2.getX() > FLING_MIN_DISTANCE*2 )
+					&& (deltaX > 1.73*deltaY )
+				) {
 				// left
-
+				Log.d("test","onScroll will call change to next");
+				Log.d("test","1x="+e1.getX()+",e2x="+e2.getX()+",e1y="+e1.getY()
+						+ ",e2y="+e2.getY()+ ",dx="+distanceX+",dy="+distanceY);
+				
 				changeListener.onTabChanged(TABID_NEXT);
 				 return true;
 			}
 
-			if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE*2
-					&& Math.abs(distanceX) > 1.73*Math.abs(distanceY)) {
+			if ((e2.getX() - e1.getX() > FLING_MIN_DISTANCE*2)
+					&& (deltaX > 1.73*deltaY ) ) {
 				// right
+				Log.d("test","onScroll will call change to pre");
+				Log.d("test","1x="+e1.getX()+",e2x="+e2.getX()+",e1y="+e1.getY()
+						+ ",e2y="+e2.getY()+ ",dx="+distanceX+",dy="+distanceY);
 				changeListener.onTabChanged(TABID_PRE);
 				 return true;
 			}
@@ -648,18 +660,29 @@ public class ArticleListActivity1 extends Activity
 			
 			if(e1 == null || e2 == null)
 				return false;
-			
-			if ( e1.getX() - e2.getX() > FLING_MIN_DISTANCE
-					&& Math.abs(velocityX) > 1.73*Math.abs(velocityY)) {
+			float deltaX = Math.abs(e1.getX() - e2.getX());
+			float deltaY = Math.abs(e1.getY() - e2.getY());
+			if ( (e1.getX() - e2.getX() > FLING_MIN_DISTANCE)
+					&& (deltaX > 1.73*deltaY)
+					&& (Math.abs(velocityX) > 1.73*Math.abs(velocityY))
+				){
 				// left
-
+				Log.d("test","onFling will call change to next");
+				Log.d("test","1x="+e1.getX()+",e2x="+e2.getX()+",e1y="+e1.getY()
+						+ ",e2y="+e2.getY()+ ",vx="+velocityX+",vy="+velocityY);
+				
 				changeListener.onTabChanged(TABID_NEXT);
 				 return true;
 			}
 
-			if ( e2.getX() - e1.getX() > FLING_MIN_DISTANCE
-					&& Math.abs(velocityX) > 1.73*Math.abs(velocityY)) {
+			if ( (e2.getX() - e1.getX() > FLING_MIN_DISTANCE)
+					&& (deltaX > 1.73*deltaY)
+					&& (Math.abs(velocityX) > 1.73*Math.abs(velocityY))
+				) {
 				// right
+				Log.d("test","onFling will call change to pre");
+				Log.d("test","1x="+e1.getX()+",e2x="+e2.getX()+",e1y="+e1.getY()
+						+ ",e2y="+e2.getY()+ ",vx="+velocityX+",vy="+velocityY);
 				changeListener.onTabChanged(TABID_PRE);
 				 return true;
 			}

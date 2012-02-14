@@ -550,16 +550,18 @@ public class TopicListActivity1 extends Activity {
 			
 			if(e1 == null || e2 == null)
 				return false;
-			if(e1.getX()-e2.getX() > FLING_MIN_DISTANCE*2&& 
-					Math.abs(distanceX) >1.73* Math.abs(distanceY)){
-				//left
+			float deltaX = Math.abs(e1.getX() - e2.getX());
+			float deltaY = Math.abs(e1.getY() - e2.getY()); //distanceX is not equal to e1x-e2x
+			if ((e1.getX() - e2.getX() > FLING_MIN_DISTANCE*2 )
+					&& (deltaX > 1.73*deltaY )
+				) {//left
 				
 				pageChange.onTabChanged(TABID_NEXT);
 				 return false;
 			}
 			
-			if(e2.getX()-e1.getX() > FLING_MIN_DISTANCE*2&&
-					Math.abs(distanceX) >1.73* Math.abs(distanceY) ){//3/3^0.5
+			if ((e2.getX() - e1.getX() > FLING_MIN_DISTANCE*2)
+					&& (deltaX > 1.73*deltaY ) ) {
 				//right
 				Log.i(this.getClass().getSimpleName(), "invoke change to previous tab");
 				pageChange.onTabChanged(TABID_PRE);
@@ -575,16 +577,22 @@ public class TopicListActivity1 extends Activity {
 				float velocityY) {
 			if(e1 == null || e2 == null)
 				return false;
-			if( e1.getX()-e2.getX() > FLING_MIN_DISTANCE&& 
-					Math.abs(velocityX) >1.73* Math.abs(velocityY)){
+			float deltaX = Math.abs(e1.getX() - e2.getX());
+			float deltaY = Math.abs(e1.getY() - e2.getY());
+			if ( (e1.getX() - e2.getX() > FLING_MIN_DISTANCE)
+					&& (deltaX > 1.73*deltaY)
+					&& (Math.abs(velocityX) > 1.73*Math.abs(velocityY))
+				){
 				//left
 				
 				pageChange.onTabChanged(TABID_NEXT);
 				 return true;
 			}
 			
-			if( e2.getX()-e1.getX() > FLING_MIN_DISTANCE&&
-					Math.abs(velocityX) >1.73* Math.abs(velocityY) ){//3/3^0.5
+			if ( (e2.getX() - e1.getX() > FLING_MIN_DISTANCE)
+					&& (deltaX > 1.73*deltaY)
+					&& (Math.abs(velocityX) > 1.73*Math.abs(velocityY))
+				) {
 				//right
 				pageChange.onTabChanged(TABID_PRE);
 				 return true;
