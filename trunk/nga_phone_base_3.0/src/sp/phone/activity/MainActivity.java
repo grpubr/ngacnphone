@@ -1,5 +1,6 @@
 package sp.phone.activity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -78,7 +79,7 @@ public class MainActivity extends Activity {
 		// getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 		// R.layout.title_bar);
 
-		
+	
 		Intent intent = getIntent();
 		app = ((MyApp) getApplication());
 		loadConfig(intent);
@@ -165,13 +166,20 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
-		int flags = 15;
+		final int flags = ThemeManager.ACTION_BAR_FLAG;
 		/*ActionBar.DISPLAY_SHOW_HOME;//2
 		flags |= ActionBar.DISPLAY_USE_LOGO;//1
 		flags |= ActionBar.DISPLAY_SHOW_TITLE;//8
 		flags |= ActionBar.DISPLAY_HOME_AS_UP;//4
 		*/
 
+		int actionNum = ThemeManager.ACTION_IF_ROOM;//SHOW_AS_ACTION_IF_ROOM
+		int i = 0;
+		for(i = 0;i< menu.size();i++){
+			ReflectionUtil.setShowAsAction(
+					menu.getItem(i), actionNum);
+		}
+		
 		ReflectionUtil.actionBar_setDisplayOption(this, flags);
 		
 		return true;
@@ -248,6 +256,7 @@ public class MainActivity extends Activity {
 		// titleTV.setText("源于一个简单的想法");
 		setTitle("源于一个简单的想法");
 		
+		ThemeManager.SetContextTheme(this);
 		view = LayoutInflater.from(this).inflate(R.layout.main, null);
 		// setContentView(R.layout.main);
 		view.setBackgroundResource(

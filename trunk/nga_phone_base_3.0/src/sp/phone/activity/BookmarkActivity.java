@@ -7,6 +7,7 @@ import sp.phone.bean.Bookmark;
 import sp.phone.forumoperation.FloorOpener;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
+import sp.phone.utils.ThemeManager;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -35,6 +36,7 @@ public class BookmarkActivity extends Activity
 
 		 //getLayoutInflater().inflate(R.layout.bookmarks, null);
 		//view.setBackgroundResource(ThemeManager.getInstance().getBackgroundColor());
+		ThemeManager.SetContextTheme(this);
 		this.setContentView(R.layout.bookmarks);
 		 view = (ListView)findViewById(R.id.bookmark_listview);
 		bookmarks = 

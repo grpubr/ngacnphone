@@ -37,6 +37,8 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		ThemeManager.SetContextTheme(this);
+		
 		view = LayoutInflater.from(this).inflate(R.layout.login, null);
 		
 		this.setContentView(view);

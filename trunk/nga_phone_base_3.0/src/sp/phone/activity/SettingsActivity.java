@@ -43,6 +43,7 @@ public class SettingsActivity extends Activity{
 	void initView(){
 		MyApp app = (MyApp) getApplication();
 		//checkbox
+		ThemeManager.SetContextTheme(this);
 		try{
 		 view = (LinearLayout) getLayoutInflater().inflate(R.layout.settings, null);
 		}catch(Exception e){

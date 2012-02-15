@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 
 public class ReflectionUtil {
@@ -42,6 +43,18 @@ public class ReflectionUtil {
 			Log.i(v.getClass().getSimpleName(),"fail to set gravity");
 		}
 		return ret;
+	}
+	
+	public static void setShowAsAction(MenuItem item, int actionEnum){
+		final String methodName = "setShowAsAction";
+		 Method setMethod;
+		try {//
+			setMethod = MenuItem.class.getMethod(methodName,int.class);
+			 setMethod.invoke(item, actionEnum);
+		} catch (Exception e){
+			Log.i(MenuItem.class.getSimpleName(),"fail to setShowAsAction");
+		}
+		
 	}
 
 }

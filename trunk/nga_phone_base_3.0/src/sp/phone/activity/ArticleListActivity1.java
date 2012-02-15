@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Resources.Theme;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -71,6 +72,8 @@ public class ArticleListActivity1 extends Activity
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
+		ThemeManager.SetContextTheme(this);
+
 		//requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tab2);
@@ -100,11 +103,12 @@ public class ArticleListActivity1 extends Activity
 		// overridePendingTransition(android.R.anim.fade_in,
 		//		 android.R.anim.fade_out);
 		 
-
+		
 		flingListener = new ArticleFlingListener(this);
 		//TextView titleTV = (TextView) findViewById(R.id.title);
 		//titleTV.setText(articlePage.getNow().get("title"));
 		this.setTitle(articlePage.getNow().get("title"));
+
 		tabHost = (TabHost) findViewById(android.R.id.tabhost);
 		tabHost.setup();
 		tabHost.setBackgroundResource(ThemeManager.getInstance().getBackgroundColor());
@@ -191,12 +195,18 @@ public class ArticleListActivity1 extends Activity
 		
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.articlelist_menu, menu);
-		int flags = 15;//
-		/*ActionBar.DISPLAY_SHOW_HOME;
-		flags |= ActionBar.DISPLAY_USE_LOGO;
-		flags |= ActionBar.DISPLAY_SHOW_TITLE;
-		flags |= ActionBar.DISPLAY_HOME_AS_UP;
+		final int flags = ThemeManager.ACTION_BAR_FLAG;
+		/*ActionBar.DISPLAY_SHOW_HOME;//2
+		flags |= ActionBar.DISPLAY_USE_LOGO;//1
+		flags |= ActionBar.DISPLAY_SHOW_TITLE;//8
+		flags |= ActionBar.DISPLAY_HOME_AS_UP;//4
 		*/
+		int actionNum = ThemeManager.ACTION_IF_ROOM;//SHOW_AS_ACTION_IF_ROOM
+		int i = 0;
+		for(i = 0;i< menu.size();i++){
+			ReflectionUtil.setShowAsAction(
+					menu.getItem(i), actionNum);
+		}
 		ReflectionUtil.actionBar_setDisplayOption(this, flags);
 
 

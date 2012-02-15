@@ -44,7 +44,8 @@ public class PostActivity extends Activity {
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+
+		ThemeManager.SetContextTheme(this);
 		super.onCreate(savedInstanceState);
 		View v = this.getLayoutInflater().inflate(R.layout.reply, null);
 		v.setBackgroundColor(getResources()
