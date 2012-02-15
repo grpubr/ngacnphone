@@ -25,8 +25,14 @@ public 	class FloorOpener {
 	}
 	public void handleFloor(String floorUrl) {
 		final String url = floorUrl;
-		ArticlePage ap = map_article.get(url + "&page=1");
-		if (ap != null) {
+		final String  completeURL = url + "&page=1";
+		ArticlePage ap = map_article.get(completeURL);
+		String url_last=null;
+		if (ap != null &&ap.getPage() != null ) 
+			url_last=ap.getPage().get("last");
+		
+		if (ap != null &&url_last !=null && !url_last.equals(completeURL)  ) {
+			
 			app.setArticlePage(ap);
 			Intent intent = new Intent();
 			intent.setClass(activity,
