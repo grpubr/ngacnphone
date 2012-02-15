@@ -61,6 +61,7 @@ public class TopicListActivity1 extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		ThemeManager.SetContextTheme(this);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tab1);
 
@@ -73,12 +74,18 @@ public class TopicListActivity1 extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.threadlist_menu, menu);
-		int flags = 15;
-		/*ActionBar.DISPLAY_SHOW_HOME;
-		flags |= ActionBar.DISPLAY_USE_LOGO;
-		flags |= ActionBar.DISPLAY_SHOW_TITLE;
-		flags |= ActionBar.DISPLAY_HOME_AS_UP;
-		flags |= ActionBar.DISPLAY_SHOW_CUSTOM;*/
+		final int flags = ThemeManager.ACTION_BAR_FLAG;
+		/*ActionBar.DISPLAY_SHOW_HOME;//2
+		flags |= ActionBar.DISPLAY_USE_LOGO;//1
+		flags |= ActionBar.DISPLAY_SHOW_TITLE;//8
+		flags |= ActionBar.DISPLAY_HOME_AS_UP;//4
+		*/
+		int actionNum = ThemeManager.ACTION_IF_ROOM;//SHOW_AS_ACTION_IF_ROOM
+		int i = 0;
+		for(i = 0;i< menu.size();i++){
+			ReflectionUtil.setShowAsAction(
+					menu.getItem(i), actionNum);
+		}
 
 		 ReflectionUtil.actionBar_setDisplayOption(this, flags);
 		//final ActionBar bar = getActionBar();
@@ -167,8 +174,9 @@ public class TopicListActivity1 extends Activity {
 		//soundPool = new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);
 		// ÔØÈëÒôÆµÁ÷
 		//hitOkSfx = soundPool.load(this, R.raw.tweet, 0);
-
+		
 		setTitle(rssFeed.getTitle());
+		
 		tabHost = (TabHost) findViewById(android.R.id.tabhost);
 		tabHost.setup();
 		tabHost.setBackgroundResource(

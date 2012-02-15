@@ -1,4 +1,5 @@
 package sp.phone.utils;
+import android.content.Context;
 import sp.phone.activity.R;
 public class ThemeManager {
 	private static ThemeManager instance = null;
@@ -7,6 +8,17 @@ public class ThemeManager {
 	int mode = 0;
 	static final public int MODE_NORMAL = 0;
 	static final public  int MODE_NIGHT = 1;
+	static final public int ACTION_BAR_FLAG = 31;
+	
+	/*ActionBar.DISPLAY_SHOW_HOME;//2
+	flags |= ActionBar.DISPLAY_USE_LOGO;//1
+	flags |= ActionBar.DISPLAY_SHOW_TITLE;//8
+	flags |= ActionBar.DISPLAY_HOME_AS_UP;//4*/
+	
+	static final public int ACTION_IF_ROOM = 1;//SHOW_AS_ACTION_IF_ROOM
+	static final public int Theme_Holo = 16973931;//android.R$style.class
+	public static final int Theme = 16973829;//android.R$style.class
+	
 	public static ThemeManager getInstance(){
 		if(instance == null){
 			instance = new ThemeManager();
@@ -32,6 +44,12 @@ public class ThemeManager {
 		return mode;
 	}
 
+	public static void SetContextTheme(Context context){
+		if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+			context.setTheme(android.R.style.Theme);
+		else
+			context.setTheme(android.R.style.Theme_Holo);
+	}
 	
 	
 
