@@ -12,7 +12,6 @@ import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import sp.phone.activity.R;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -74,11 +73,12 @@ public class TopicListActivity1 extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.threadlist_menu, menu);
-		int flags = ActionBar.DISPLAY_SHOW_HOME;
+		int flags = 15;
+		/*ActionBar.DISPLAY_SHOW_HOME;
 		flags |= ActionBar.DISPLAY_USE_LOGO;
 		flags |= ActionBar.DISPLAY_SHOW_TITLE;
 		flags |= ActionBar.DISPLAY_HOME_AS_UP;
-		flags |= ActionBar.DISPLAY_SHOW_CUSTOM;
+		flags |= ActionBar.DISPLAY_SHOW_CUSTOM;*/
 
 		 ReflectionUtil.actionBar_setDisplayOption(this, flags);
 		//final ActionBar bar = getActionBar();
@@ -102,7 +102,8 @@ public class TopicListActivity1 extends Activity {
 				startActivity(intent_bookmark);
 				break;
 			case R.id.threadlist_menu_item3 :
-			case android.R.id.home:
+			default:
+				//case android.R.id.home:
 				Intent intent = new Intent(this, MainActivity.class);
 	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	            startActivity(intent);
@@ -327,6 +328,10 @@ public class TopicListActivity1 extends Activity {
 			listView.setCacheColorHint(0);
 			// listView.setDivider(null);
 			listView.setVerticalScrollBarEnabled(false);
+			LayoutAnimationController anim = AnimationUtils.loadLayoutAnimation
+					(TopicListActivity1.this, R.anim.article_list_anim);
+			listView.setLayoutAnimation(anim);
+			
 			MyAdapter adapter = new MyAdapter(TopicListActivity1.this);
 			listView.setAdapter(adapter);
 			listView.setOnTouchListener(flingListener);

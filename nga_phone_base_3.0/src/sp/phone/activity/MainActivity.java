@@ -1,6 +1,5 @@
 package sp.phone.activity;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -88,7 +87,7 @@ public class MainActivity extends Activity {
 
 	}
 
-	@SuppressWarnings("unchecked")
+
 	private void loadConfig(Intent intent) {
 
 		initUserInfo(intent);
@@ -166,11 +165,12 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
-		int flags = ActionBar.DISPLAY_SHOW_HOME;
-		flags |= ActionBar.DISPLAY_USE_LOGO;
-		flags |= ActionBar.DISPLAY_SHOW_TITLE;
-		flags |= ActionBar.DISPLAY_HOME_AS_UP;
-		//flags |= ActionBar.DISPLAY_SHOW_CUSTOM;
+		int flags = 15;
+		/*ActionBar.DISPLAY_SHOW_HOME;//2
+		flags |= ActionBar.DISPLAY_USE_LOGO;//1
+		flags |= ActionBar.DISPLAY_SHOW_TITLE;//8
+		flags |= ActionBar.DISPLAY_HOME_AS_UP;//4
+		*/
 
 		ReflectionUtil.actionBar_setDisplayOption(this, flags);
 		
@@ -188,6 +188,7 @@ public class MainActivity extends Activity {
 		GridView gv = (GridView) findViewById(R.id.gride);
 		if(gv != null)
 			((BaseAdapter) gv.getAdapter()).notifyDataSetChanged();
+
 		super.onResume();
 	}
 
@@ -233,13 +234,11 @@ public class MainActivity extends Activity {
 			this.jumpToSetting();
 			break;
 		case R.id.mainmenu_exit:
-		case android.R.id.home: //this is a system id
-			this.finish();
-			
-			break;
 		default:
-			return super.onOptionsItemSelected(item);
-		
+		//case android.R.id.home: //this is a system id
+			this.finish();
+			break;
+
 		}
 		return true;
 	}
