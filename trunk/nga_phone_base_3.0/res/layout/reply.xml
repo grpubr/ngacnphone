@@ -39,7 +39,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:hint="@string/title" android:textColor="@android:color/holo_blue_bright" android:background="@color/white"/>
+        android:hint="@string/title" 
+        android:textColor="@color/red" 
+        android:background="@color/white"/>
 
     <EditText
         android:id="@+id/reply_body_edittext"
@@ -49,10 +51,9 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/reply_titile_edittext"
         android:layout_marginTop="20dp"
-        android:layout_weight="1"
         android:background="@color/white"
         android:gravity="top|left"
-        android:textColor="@android:color/holo_blue_bright" android:inputType="textMultiLine">
+        android:textColor="@@color/red" android:inputType="textMultiLine">
 
         <requestFocus />
     </EditText>

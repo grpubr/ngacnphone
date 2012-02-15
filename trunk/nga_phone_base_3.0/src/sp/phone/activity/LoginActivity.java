@@ -3,7 +3,6 @@ package sp.phone.activity;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -69,11 +68,11 @@ public class LoginActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		//MenuInflater inflater = getMenuInflater();
 		//inflater.inflate(R.menu.main_menu, menu);
-		int flags = ActionBar.DISPLAY_SHOW_HOME;
+		int flags = 15;/*ActionBar.DISPLAY_SHOW_HOME;
 		flags |= ActionBar.DISPLAY_USE_LOGO;
 		flags |= ActionBar.DISPLAY_SHOW_TITLE;
 		flags |= ActionBar.DISPLAY_HOME_AS_UP;
-		flags |= ActionBar.DISPLAY_SHOW_CUSTOM;
+		flags |= ActionBar.DISPLAY_SHOW_CUSTOM;*/
 		//final ActionBar bar = getActionBar();
 		//bar.setDisplayOptions(flags);
 		ReflectionUtil.actionBar_setDisplayOption(this, flags);
@@ -84,8 +83,8 @@ public class LoginActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch( item.getItemId())
 		{
-			
-			case android.R.id.home:
+			default:
+			//case android.R.id.home:
 				Intent intent = new Intent(this, MainActivity.class);
 	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	            startActivity(intent);

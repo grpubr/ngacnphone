@@ -16,7 +16,6 @@ import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -41,15 +40,9 @@ import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.View.OnTouchListener;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.LayoutAnimationController;
-import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -104,9 +97,10 @@ public class ArticleListActivity1 extends Activity
 
 	private void initView() {
 
-		//soundPool = new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);
-		// ‘ÿ»Î“Ù∆µ¡˜
-		//hitOkSfx = soundPool.load(this, R.raw.shake, 0);
+		// overridePendingTransition(android.R.anim.fade_in,
+		//		 android.R.anim.fade_out);
+		 
+
 		flingListener = new ArticleFlingListener(this);
 		//TextView titleTV = (TextView) findViewById(R.id.title);
 		//titleTV.setText(articlePage.getNow().get("title"));
@@ -197,11 +191,12 @@ public class ArticleListActivity1 extends Activity
 		
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.articlelist_menu, menu);
-		int flags = ActionBar.DISPLAY_SHOW_HOME;
+		int flags = 15;//
+		/*ActionBar.DISPLAY_SHOW_HOME;
 		flags |= ActionBar.DISPLAY_USE_LOGO;
 		flags |= ActionBar.DISPLAY_SHOW_TITLE;
 		flags |= ActionBar.DISPLAY_HOME_AS_UP;
-		flags |= ActionBar.DISPLAY_SHOW_CUSTOM;
+		*/
 		ReflectionUtil.actionBar_setDisplayOption(this, flags);
 
 
@@ -247,7 +242,8 @@ public class ArticleListActivity1 extends Activity
 				editor.commit();
 				break;
 			case R.id.article_menuitem_back:
-			case android.R.id.home:
+			default:
+			//case android.R.id.home:
 				this.finish();
 				break;
 		}
