@@ -348,67 +348,7 @@ public class TopicListActivity1 extends Activity {
 	}
 	
 
-	/*class FloorOpener {
-		
-		void handleFloor(String floorUrl) {
-			final String url = floorUrl;
-			ArticlePage ap = map_article.get(url + "&page=1");
-			if (ap != null) {
-				app.setArticlePage(ap);
-				Intent intent = new Intent();
-				intent.setClass(TopicListActivity1.this,
-						ArticleListActivity1.class);
-				startActivity(intent);
-			} else {
-				new Thread() {
-					@Override
-					public void run() {
-						ArticlePage articlePage = null;
 
-						System.out.println("host:" + HttpUtil.HOST);
-						if (!HttpUtil.HOST_PORT.equals("")) {
-							activityUtil.noticeSaying(TopicListActivity1.this);
-
-							articlePage = HttpUtil
-									.getArticlePageByJson(HttpUtil.HOST
-											+ "?uri=" + url + "@page=1");
-						}
-						if (articlePage == null) {
-							// activityUtil.notice("INFO",
-							// "连接策略:P-N,这种策略将模拟浏览器显示方式");
-							activityUtil.noticeSaying(TopicListActivity1.this);
-
-							String cookie = "";
-							if (TopicListActivity1.this.app.getUid() != null
-									&& TopicListActivity1.this.app.getUid() != "")
-								cookie = "ngaPassportUid=" + app.getUid()
-										+ "; ngaPassportCid=" + app.getCid();
-							articlePage = HttpUtil.getArticlePage(url
-									+ "&page=1", cookie);
-						}
-						if (articlePage != null) {
-							app.setArticlePage(articlePage);// 设置当前page
-							map_article.put(url + "&page=1", articlePage);// 添加新的数据
-							app.setMap_article(map_article);
-							Intent intent = new Intent();
-							intent.setClass(TopicListActivity1.this,
-									ArticleListActivity1.class);
-							startActivity(intent);
-						} else {
-							activityUtil.noticeError( "可能遇到了一个广告或者帖子被删除"
-									,TopicListActivity1.this);
-						}
-						activityUtil.dismiss();
-					}
-				}.start();
-			}
-		}
-
-	}
-
-	*/
-	
-	
 	class ArticlelistItemClickListener extends FloorOpener
 		implements OnItemClickListener{
 			
