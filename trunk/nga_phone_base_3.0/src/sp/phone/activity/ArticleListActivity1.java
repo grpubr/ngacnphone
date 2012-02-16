@@ -3,6 +3,7 @@ package sp.phone.activity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipFile;
 
 import com.alibaba.fastjson.JSON;
@@ -278,7 +279,14 @@ public class ArticleListActivity1 extends Activity
 
 	@Override
 	protected void onRestart() {
-		final String url = HttpUtil.Server + articlePage.getNow().get("link");
+		String url = HttpUtil.Server + articlePage.getNow().get("link");
+		Map<String,String> pages = articlePage.getPage();
+		String last = null;
+		if(pages!= null){
+			last=pages.get("current");
+		}
+		if(last!= null)
+			url = HttpUtil.Server + last;
 		new LoadArticleThread(url,this).start();
 		super.onRestart();
 	}
@@ -303,7 +311,7 @@ public class ArticleListActivity1 extends Activity
 			final String url = map.get("url");
 			
 
-			if(url.indexOf("pid=") != -1 )
+			if(false && ( url.indexOf("pid=") != -1) )
 			{
 				String pid = url.substring(url.indexOf("pid=")+4);
 				if(pid.indexOf("&") != -1)
@@ -317,8 +325,12 @@ public class ArticleListActivity1 extends Activity
 				postPrefix.append(" (");
 				postPrefix.append(postTime);
 				postPrefix.append(")[/b]\n");
-			}else if(url.indexOf("tid=")!= -1){
-				
+			}else if(true){//if(url.indexOf("tid=")!= -1){
+			
+				String content = map.get("content");
+				if(content.length() > 100){
+					content = content.substring(0, 99)+ ".......";
+				}
 				postPrefix.append("[quote][tid=");
 				postPrefix.append(tid);
 				postPrefix.append("]Topic[/pid] [b]Post by ");
@@ -326,7 +338,7 @@ public class ArticleListActivity1 extends Activity
 				postPrefix.append(" (");
 				postPrefix.append(postTime);
 				postPrefix.append("):[/b]\n");
-				postPrefix.append(map.get("content"));
+				postPrefix.append(content);
 				postPrefix.append("[/quote]");
 				
 				
@@ -336,7 +348,7 @@ public class ArticleListActivity1 extends Activity
 			postPrefix.append("]\n");
 		}
 		Intent intent = new Intent();
-		intent.putExtra("prefix", StringUtil.removeHtmlTag(postPrefix.toString()) );
+		intent.putExtra("prefix", StringUtil.removeBrTag(postPrefix.toString()) );
 		intent.putExtra("tid", tid);
 		intent.putExtra("action", "reply");
 		
@@ -631,13 +643,19 @@ public class ArticleListActivity1 extends Activity
 			if(e1 == null || e2 == null)
 				return false;
 			
-			Log.d("test","onScroll:1x="+e1.getX()+",e2x="+e2.getX()+",e1y="+e1.getY()
-					+ ",e2y="+e2.getY()+ ",dx="+distanceX+",dy="+distanceY);
+
 			float deltaX = Math.abs(e1.getX() - e2.getX());
 			float deltaY = Math.abs(e1.getY() - e2.getY()); //distanceX is not equal to e1x-e2x
-			if ((e1.getX() - e2.getX() > FLING_MIN_DISTANCE*2 )
-					&& (deltaX > 1.73*deltaY )
-				) {
+			if(deltaX<FLING_MIN_DISTANCE*2
+				||deltaX < 1.73*deltaY
+				|| (Math.abs(distanceY) < 1.73* Math.abs(distanceY))
+				)
+			{
+				return false;
+			}
+			
+			if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE*2 )
+			{
 				// left
 				Log.d("test","onScroll will call change to next");
 				Log.d("test","1x="+e1.getX()+",e2x="+e2.getX()+",e1y="+e1.getY()
@@ -647,8 +665,8 @@ public class ArticleListActivity1 extends Activity
 				 return true;
 			}
 
-			if ((e2.getX() - e1.getX() > FLING_MIN_DISTANCE*2)
-					&& (deltaX > 1.73*deltaY ) ) {
+			if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE*2)
+				{
 				// right
 				Log.d("test","onScroll will call change to pre");
 				Log.d("test","1x="+e1.getX()+",e2x="+e2.getX()+",e1y="+e1.getY()

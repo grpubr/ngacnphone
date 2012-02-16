@@ -31,7 +31,7 @@ public class RSSUtil {
 
 	private void characters(KXmlParser parser) {
 		String s = parser.getText();
-
+		s = StringUtil.unEscapeHtml(s);
 		switch (type) {
 		case TITLE:
 			if (reading_chan) {

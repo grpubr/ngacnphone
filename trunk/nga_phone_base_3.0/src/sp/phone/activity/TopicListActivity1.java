@@ -30,7 +30,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnTouchListener;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
@@ -505,16 +504,23 @@ public class TopicListActivity1 extends Activity {
 				return false;
 			float deltaX = Math.abs(e1.getX() - e2.getX());
 			float deltaY = Math.abs(e1.getY() - e2.getY()); //distanceX is not equal to e1x-e2x
-			if ((e1.getX() - e2.getX() > FLING_MIN_DISTANCE*2 )
-					&& (deltaX > 1.73*deltaY )
-				) {//left
+			
+			if(deltaX<FLING_MIN_DISTANCE*2
+					||deltaX < 1.73*deltaY
+					|| (Math.abs(distanceY) < 1.73* Math.abs(distanceY))
+				)
+			{
+				return false;
+			}
+			if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE*2 )
+			{//left
 				
 				pageChange.onTabChanged(TABID_NEXT);
 				 return false;
 			}
 			
-			if ((e2.getX() - e1.getX() > FLING_MIN_DISTANCE*2)
-					&& (deltaX > 1.73*deltaY ) ) {
+			if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE*2)
+			{
 				//right
 				Log.i(this.getClass().getSimpleName(), "invoke change to previous tab");
 				pageChange.onTabChanged(TABID_PRE);

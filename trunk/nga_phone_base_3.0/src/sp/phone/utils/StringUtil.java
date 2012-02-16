@@ -8,6 +8,8 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+
 public class StringUtil {
 	private final static String HOST = "http://bbs.ngacn.cc/";
 
@@ -195,7 +197,7 @@ public class StringUtil {
 		return s;
 	}
 
-	public static String removeHtmlTag(String s){
+	public static String removeBrTag(String s){
 		s =s.replaceAll("<br/>", "\n");
 		return s;
 	}
@@ -219,6 +221,12 @@ public class StringUtil {
 		return SAYING[num];
 	}
 
+	public static String unEscapeHtml(String s){
+		String ret = "";
+		ret = org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4(s);
+		return ret;
+	}
+	
 	private static final String[] SAYING = {
 			"战争打响，真理阵亡。;埃斯库罗斯",
 			"让子弹先走。 ",

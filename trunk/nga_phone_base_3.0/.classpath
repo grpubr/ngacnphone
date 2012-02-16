@@ -6,6 +6,7 @@
 	<classpathentry kind="lib" path="lib/htmlparser.jar"/>
 	<classpathentry kind="lib" path="lib/commons-io-2.0.1.jar" sourcepath="D:/commons-io-2.0.1-src.zip"/>
 	<classpathentry kind="lib" path="lib/fastjson-1.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang3-3.1.jar" sourcepath="E:/download/commons-lang3-3.1-bin/commons-lang3-3.1/commons-lang3-3.1-sources.jar"/>
 	<classpathentry excluding="**/.svn/**" kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="output" path="bin/classes"/>
