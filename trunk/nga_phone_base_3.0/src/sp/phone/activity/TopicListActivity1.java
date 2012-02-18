@@ -145,10 +145,17 @@ public class TopicListActivity1 extends Activity {
 			end = fid.length();
 		fid = fid.substring(start,end);
 		
-		
+		int intFid=0;
+		try{
+		intFid = Integer.parseInt(fid);
+		}catch(Exception e){
+			Toast.makeText(this, R.string.error,
+					Toast.LENGTH_LONG).show();
+			return false;
+		}
 		Intent intent = new Intent();
 		//intent.putExtra("prefix",postPrefix.toString());
-		intent.putExtra("fid", fid);
+		intent.putExtra("fid", intFid);
 		intent.putExtra("action", "new");
 		
 		intent.setClass(this, PostActivity.class);
