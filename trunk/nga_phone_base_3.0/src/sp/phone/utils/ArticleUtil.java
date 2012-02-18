@@ -235,7 +235,10 @@ public class ArticleUtil {
 
 			}
 		}
-		articlePage.setListArticle(listArticle);
+		if(listArticle.size() == 0)
+			articlePage = null;
+		else
+			articlePage.setListArticle(listArticle);
 		return articlePage;
 	}
 }

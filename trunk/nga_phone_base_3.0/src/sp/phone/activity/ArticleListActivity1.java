@@ -65,7 +65,11 @@ public class ArticleListActivity1 extends Activity
 	private HashMap<Object, ArticlePage> map_article;
 
 	private MyApp app;
-	final int REPLY_POST_ORDER = 0;
+	
+	final int QUOTE_ORDER = 0;
+	final int REPLY_ORDER = 1;
+	final int COPY_CLIPBOARD_ORDER = 2;
+	final int SHOW_THISONLY_ORDER = 3;
 	private ArticleFlingListener flingListener;
 	private static final String TABID_NEXT = "tab_next";
 	private static final String TABID_PRE = "tab_prev";
@@ -97,9 +101,6 @@ public class ArticleListActivity1 extends Activity
 		zf = app.getZf();
 	}
 
-	//SoundPool soundPool = null;
-	//private int hitOkSfx;
-
 	private void initView() {
 
 		// overridePendingTransition(android.R.anim.fade_in,
@@ -108,8 +109,8 @@ public class ArticleListActivity1 extends Activity
 		
 		flingListener = new ArticleFlingListener(this);
 		//TextView titleTV = (TextView) findViewById(R.id.title);
-		//titleTV.setText(articlePage.getNow().get("title"));
-		this.setTitle(articlePage.getNow().get("title"));
+		final String title  = articlePage.getNow().get("title");
+		this.setTitle(title);
 
 		tabHost = (TabHost) findViewById(android.R.id.tabhost);
 		tabHost.setup();
@@ -292,9 +293,7 @@ public class ArticleListActivity1 extends Activity
 		super.onRestart();
 	}
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onContextItemSelected(android.view.MenuItem)
-	 */
+
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
@@ -310,7 +309,7 @@ public class ArticleListActivity1 extends Activity
 		switch(item.getItemId())
 		//if( REPLY_POST_ORDER ==item.getItemId())
 		{
-		case REPLY_POST_ORDER:
+		case QUOTE_ORDER:
 
 
 			final String name = map.get("nickName");
@@ -333,7 +332,7 @@ public class ArticleListActivity1 extends Activity
 			postPrefix.append("\n[@");
 			postPrefix.append(name);
 			postPrefix.append("]\n");
-		case REPLY_POST_ORDER+1:	
+		case REPLY_ORDER:	
 			Intent intent = new Intent();
 			intent.putExtra("prefix", StringUtil.removeBrTag(postPrefix.toString()) );
 			intent.putExtra("tid", tid);
@@ -341,9 +340,15 @@ public class ArticleListActivity1 extends Activity
 			intent.setClass(ArticleListActivity1.this, PostActivity.class);
 			startActivity(intent);
 			break;
-		case REPLY_POST_ORDER+2:
+		case COPY_CLIPBOARD_ORDER:
 			ClipboardManager cbm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 			cbm.setText(StringUtil.removeBrTag(content));
+			break;
+		case SHOW_THISONLY_ORDER:
+			final String authorId = map.get("userId");
+			final String tempUrl = HttpUtil.Server +"/read.php?tid="
+					+ tid + "&authorid=" + authorId;
+			new LoadArticleThread(tempUrl,this).start();
 			break;
 			
 			
@@ -505,7 +510,7 @@ public class ArticleListActivity1 extends Activity
 				Message message = new Message();
 				handler_rebuild.sendMessage(message);
 			} else {
-				activityUtil.noticeError("可能遇到了一个广告或者帖子被删除",ArticleListActivity1.this);
+				activityUtil.noticeError("可能遇到了一个广告或者帖子不存在",ArticleListActivity1.this);
 			}
 			stopable.stopLoading();
 			activityUtil.dismiss();
@@ -551,7 +556,7 @@ public class ArticleListActivity1 extends Activity
 
 				// listView.setBackgroundResource(R.drawable.bodybg);
 				listView.setCacheColorHint(0);
-				app.getResources().getColor(R.color.shit1);
+
 				listView.setVerticalScrollBarEnabled(false);
 				listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 				
@@ -596,9 +601,11 @@ public class ArticleListActivity1 extends Activity
 			public void onCreateContextMenu(ContextMenu arg0, View arg1,
 					ContextMenuInfo arg2) {
 
-				arg0.add(0,REPLY_POST_ORDER,0, "喷之");
-				arg0.add(0,REPLY_POST_ORDER+ 1,0, "回帖");
-				arg0.add(0,REPLY_POST_ORDER+ 2,0, "复制到剪切板");
+				arg0.add(0,QUOTE_ORDER,0, "喷之");
+				arg0.add(0,REPLY_ORDER+ 1,0, "回帖");
+				arg0.add(0,COPY_CLIPBOARD_ORDER,0, "复制到剪切板");
+				arg0.add(0,SHOW_THISONLY_ORDER,0, "只看此人");
+
 				
 				
 				
@@ -782,7 +789,6 @@ class WebWidthChangeListener extends SimpleOnScaleGestureListener{
 
 	@Override
 	public void onScaleEnd(ScaleGestureDetector detector) {
-		// TODO Auto-generated method stub
 		super.onScaleEnd(detector);
 	}
 	
