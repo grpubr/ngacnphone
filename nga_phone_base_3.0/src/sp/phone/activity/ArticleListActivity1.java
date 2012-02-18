@@ -602,7 +602,7 @@ public class ArticleListActivity1 extends Activity
 					ContextMenuInfo arg2) {
 
 				arg0.add(0,QUOTE_ORDER,0, "喷之");
-				arg0.add(0,REPLY_ORDER+ 1,0, "回帖");
+				arg0.add(0,REPLY_ORDER,0, "回帖");
 				arg0.add(0,COPY_CLIPBOARD_ORDER,0, "复制到剪切板");
 				arg0.add(0,SHOW_THISONLY_ORDER,0, "只看此人");
 
