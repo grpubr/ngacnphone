@@ -45,9 +45,7 @@ public class ThemeManager {
 	}
 
 	public static void SetContextTheme(Context context){
-		if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-			context.setTheme(android.R.style.Theme);
-		else
+		if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 			context.setTheme(android.R.style.Theme_Holo);
 	}
 	

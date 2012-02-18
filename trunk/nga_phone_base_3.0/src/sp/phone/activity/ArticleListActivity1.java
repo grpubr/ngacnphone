@@ -18,6 +18,7 @@ import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 
 import android.app.Activity;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -301,59 +302,54 @@ public class ArticleListActivity1 extends Activity
 		ArticleListAdapter currentAdapter = (ArticleListAdapter) currentView.getAdapter();
 		StringBuffer postPrefix = new StringBuffer();
 		String tid = getTid();
-		if( REPLY_POST_ORDER ==item.getItemId())
-		{
 
-			HashMap<String, String> map = currentAdapter.getItem(info.position);
-			
+		final HashMap<String, String> map = 
+				currentAdapter.getItem(info.position);
+		String content = map.get("content");
+
+		switch(item.getItemId())
+		//if( REPLY_POST_ORDER ==item.getItemId())
+		{
+		case REPLY_POST_ORDER:
+
+
 			final String name = map.get("nickName");
 			final String postTime = map.get("postTime");
-			final String url = map.get("url");
+			// final String url = map.get("url");
 			
-
-			if(false && ( url.indexOf("pid=") != -1) )
-			{
-				String pid = url.substring(url.indexOf("pid=")+4);
-				if(pid.indexOf("&") != -1)
-					pid = pid.substring(0,pid.indexOf("&"));
-				
-				
-				postPrefix.append("[b]Reply to [pid=");
-				postPrefix.append(pid);
-				postPrefix.append("]Reply[/pid] Post by ");
-				postPrefix.append(name);
-				postPrefix.append(" (");
-				postPrefix.append(postTime);
-				postPrefix.append(")[/b]\n");
-			}else if(true){//if(url.indexOf("tid=")!= -1){
-			
-				String content = map.get("content");
-				if(content.length() > 100){
-					content = content.substring(0, 99)+ ".......";
-				}
-				postPrefix.append("[quote][tid=");
-				postPrefix.append(tid);
-				postPrefix.append("]Topic[/pid] [b]Post by ");
-				postPrefix.append(name);
-				postPrefix.append(" (");
-				postPrefix.append(postTime);
-				postPrefix.append("):[/b]\n");
-				postPrefix.append(content);
-				postPrefix.append("[/quote]");
-				
-				
+			if (content.length() > 100) {
+				content = content.substring(0, 99) + ".......";
 			}
+			postPrefix.append("[quote][tid=");
+			postPrefix.append(tid);
+			postPrefix.append("]Topic[/pid] [b]Post by ");
+			postPrefix.append(name);
+			postPrefix.append(" (");
+			postPrefix.append(postTime);
+			postPrefix.append("):[/b]\n");
+			postPrefix.append(content);
+			postPrefix.append("[/quote]");
+
 			postPrefix.append("\n[@");
 			postPrefix.append(name);
 			postPrefix.append("]\n");
+		case REPLY_POST_ORDER+1:	
+			Intent intent = new Intent();
+			intent.putExtra("prefix", StringUtil.removeBrTag(postPrefix.toString()) );
+			intent.putExtra("tid", tid);
+			intent.putExtra("action", "reply");	
+			intent.setClass(ArticleListActivity1.this, PostActivity.class);
+			startActivity(intent);
+			break;
+		case REPLY_POST_ORDER+2:
+			ClipboardManager cbm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+			cbm.setText(StringUtil.removeBrTag(content));
+			break;
+			
+			
 		}
-		Intent intent = new Intent();
-		intent.putExtra("prefix", StringUtil.removeBrTag(postPrefix.toString()) );
-		intent.putExtra("tid", tid);
-		intent.putExtra("action", "reply");
-		
-		intent.setClass(ArticleListActivity1.this, PostActivity.class);
-		startActivity(intent);
+
+
 		
 		return true;
 	}
@@ -602,6 +598,7 @@ public class ArticleListActivity1 extends Activity
 
 				arg0.add(0,REPLY_POST_ORDER,0, "喷之");
 				arg0.add(0,REPLY_POST_ORDER+ 1,0, "回帖");
+				arg0.add(0,REPLY_POST_ORDER+ 2,0, "复制到剪切板");
 				
 				
 				
