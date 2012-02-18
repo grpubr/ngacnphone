@@ -68,8 +68,13 @@ public class PostActivity extends Activity {
 		act.setFid_(fid);
 		
 		titleText = (EditText) findViewById(R.id.reply_titile_edittext);
+		titleText.setSelected(true);
 		bodyText = (EditText) findViewById(R.id.reply_body_edittext);
 		bodyText.setText(prefix);
+		if(prefix != null)
+			bodyText.setSelection(prefix.length());
+
+		
 		button_commit = (Button)findViewById(R.id.reply_commit_button);
 		button_cancel = (Button)findViewById(R.id.reply_cancel_button);
 		
