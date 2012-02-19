@@ -1,5 +1,6 @@
 package sp.phone.utils;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import sp.phone.activity.R;
 public class ThemeManager {
 	private static ThemeManager instance = null;
@@ -19,6 +20,7 @@ public class ThemeManager {
 	static final public int Theme_Holo = 16973931;//android.R$style.class
 	public static final int Theme = 16973829;//android.R$style.class
 	
+	public int screenOrentation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 	public static ThemeManager getInstance(){
 		if(instance == null){
 			instance = new ThemeManager();

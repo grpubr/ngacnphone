@@ -15,6 +15,7 @@ import sp.phone.activity.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -60,14 +61,30 @@ public class TopicListActivity1 extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		ThemeManager.SetContextTheme(this);
+		ThemeManager.SetContextTheme(this);	
 		super.onCreate(savedInstanceState);
+		
+		int orentation = ThemeManager.getInstance().screenOrentation;
+		if(orentation ==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||
+				orentation ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+		setRequestedOrientation(orentation);
+		
 		setContentView(R.layout.tab1);
 
 		initDate();
 		initView();
 		setListener();
 	}
+
+	
+	
+	@Override
+	protected void onRestart() {
+		setRequestedOrientation(ThemeManager.getInstance().screenOrentation);
+		super.onRestart();
+	}
+
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -519,14 +536,14 @@ public class TopicListActivity1 extends Activity {
 			{
 				return false;
 			}
-			if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE*2 )
+			if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE*1.5 )
 			{//left
 				
 				pageChange.onTabChanged(TABID_NEXT);
 				 return false;
 			}
 			
-			if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE*2)
+			if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE*1.5)
 			{
 				//right
 				Log.i(this.getClass().getSimpleName(), "invoke change to previous tab");

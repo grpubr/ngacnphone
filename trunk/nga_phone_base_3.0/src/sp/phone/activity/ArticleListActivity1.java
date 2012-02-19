@@ -23,12 +23,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources.Theme;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.Menu;
@@ -82,6 +84,12 @@ public class ArticleListActivity1 extends Activity
 
 		//requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		super.onCreate(savedInstanceState);
+		int orentation = ThemeManager.getInstance().screenOrentation;
+		if(orentation ==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||
+				orentation ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+		{
+			setRequestedOrientation(orentation);
+		}
 		setContentView(R.layout.tab2);
 		webWidthChangeListener = new WebWidthChangeListener(this);
 		//getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
@@ -204,6 +212,15 @@ public class ArticleListActivity1 extends Activity
 		flags |= ActionBar.DISPLAY_SHOW_TITLE;//8
 		flags |= ActionBar.DISPLAY_HOME_AS_UP;//4
 		*/
+		MenuItem lock = menu.findItem(R.id.article_menuitem_lock);
+		int orentation = ThemeManager.getInstance().screenOrentation;
+		if(orentation ==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||
+				orentation ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+		{
+			lock.setTitle(R.string.unlock_orientation);
+			lock.setIcon(android.R.drawable.ic_menu_always_landscape_portrait);
+			
+		}
 		int actionNum = ThemeManager.ACTION_IF_ROOM;//SHOW_AS_ACTION_IF_ROOM
 		int i = 0;
 		for(i = 0;i< menu.size();i++){
@@ -254,6 +271,10 @@ public class ArticleListActivity1 extends Activity
 				editor.putString("bookmarks", bookmarks);
 				editor.commit();
 				break;
+			case R.id.article_menuitem_lock:
+				
+				handleLockOrientation(item);
+				break;
 			case R.id.article_menuitem_back:
 			default:
 			//case android.R.id.home:
@@ -262,6 +283,34 @@ public class ArticleListActivity1 extends Activity
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	private void handleLockOrientation(MenuItem item){
+		int preOrentation = ThemeManager.getInstance().screenOrentation;
+		if(preOrentation ==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||
+				preOrentation ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
+			//restore
+			int newOrientation = ActivityInfo.SCREEN_ORIENTATION_USER;
+			ThemeManager.getInstance().screenOrentation = newOrientation;
+			setRequestedOrientation(newOrientation);
+			item.setTitle(R.string.lock_orientation);
+			item.setIcon(android.R.drawable.ic_lock_idle_lock);
+
+			
+		}else{
+			int newOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+			Display dis = getWindowManager().getDefaultDisplay();
+			if(dis.getWidth() < dis.getHeight()){
+				newOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+			}
+			
+			ThemeManager.getInstance().screenOrentation = newOrientation;
+			setRequestedOrientation(newOrientation);			
+			item.setTitle(R.string.unlock_orientation);
+			item.setIcon(android.R.drawable.ic_menu_always_landscape_portrait);
+		}
+		
+	}
+	
 	private String getTid(){
 		String tid = null;
 		tid = articlePage.getNow().get("link");
@@ -658,7 +707,7 @@ public class ArticleListActivity1 extends Activity
 				return false;
 			}
 			
-			if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE*2 )
+			if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE*1.5 )
 			{
 				// left
 				Log.d("test","onScroll will call change to next");
@@ -669,7 +718,7 @@ public class ArticleListActivity1 extends Activity
 				 return true;
 			}
 
-			if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE*2)
+			if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE*1.5)
 				{
 				// right
 				Log.d("test","onScroll will call change to pre");
