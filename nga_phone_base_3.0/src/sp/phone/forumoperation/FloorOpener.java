@@ -73,6 +73,7 @@ public 	class FloorOpener {
 						articlePage = HttpUtil.getArticlePage(threadUrl
 								+ "&page=1", cookie);
 					}
+					activityUtil.dismiss();
 					if (articlePage != null) {
 						app.setArticlePage(articlePage);// 设置当前page
 						map_article.put(url + "&page=1", articlePage);// 添加新的数据
@@ -85,7 +86,7 @@ public 	class FloorOpener {
 						activityUtil.noticeError( "可能遇到了一个广告或者帖子被删除"
 								,activity);
 					}
-					activityUtil.dismiss();
+					
 				}
 			}.start();
 		}
