@@ -8,14 +8,27 @@
 		android:layout_toRightOf="@id/num" android:layout_marginLeft="10dip"
 		android:text="you are fuck you."
 		android:layout_height="wrap_content" android:textSize="20px" android:layout_width="fill_parent" android:textColor="@color/black"/>
-	<TextView android:id="@+id/replies" android:layout_below="@id/title"
-		android:layout_width="wrap_content" android:layout_height="16px"
-		android:textColor="@color/page" android:textSize="13px" android:text="16 RE"
-		android:layout_alignParentRight="true" />
-	<TextView android:id="@+id/nickName" android:layout_toLeftOf="@id/replies"
-		android:layout_below="@id/title" android:layout_width="wrap_content"
-		android:layout_height="16px" android:textSize="13px"
-		android:layout_marginRight="5px" android:textColor="@color/page"
-		android:text="jayyy" android:textStyle="bold" />
+
+	<TextView
+	    android:id="@+id/last_reply"
+	    android:layout_width="wrap_content"
+	    android:layout_height="16px"
+	    android:layout_alignParentRight="true"
+	    android:layout_below="@id/title"
+	    android:text="最后回复XXX"
+	    android:textColor="@color/page"
+	    android:textSize="13px" />
+
+	<TextView
+	    android:id="@+id/author"
+	    android:layout_width="wrap_content"
+	    android:layout_height="16px"
+	    android:layout_below="@id/title"
+	    android:layout_marginRight="10px"
+	    android:layout_toLeftOf="@id/last_reply"
+	    android:text="楼主XXX"
+	    android:textColor="@color/page"
+	    android:textSize="13px"
+	    android:textStyle="bold" />
 
 </RelativeLayout>

@@ -7,6 +7,7 @@ public class ThemeManager {
 	int foregroundColor[]={R.color.black,R.color.white};
 	int backgroundColor[]={R.color.shit2,R.color.black};
 	int mode = 0;
+	private int cseq = 0;
 	static final public int MODE_NORMAL = 0;
 	static final public  int MODE_NIGHT = 1;
 	static final public int ACTION_BAR_FLAG = 31;
@@ -32,8 +33,16 @@ public class ThemeManager {
 		return foregroundColor[mode];
 	}
 
-	public int getBackgroundColor() {
-		return backgroundColor[mode];
+	public int getBackgroundColor () {
+		int ret = backgroundColor[mode];
+		synchronized(this){
+			
+			if(MODE_NORMAL==mode && cseq%2 ==1){
+				ret= R.color.shit1;
+			}
+			cseq +=1;
+		}
+		return ret;
 	}
 	public static void setInstance(ThemeManager instance) {
 		ThemeManager.instance = instance;
