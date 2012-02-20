@@ -438,26 +438,36 @@ public class TopicListActivity1 extends Activity {
 			View convertView = m.get(position);
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.topic_list, null);
+				int colorId = ThemeManager.getInstance().getBackgroundColor();
+				convertView.setBackgroundResource(colorId);
+				
 				TextView num = (TextView) convertView.findViewById(R.id.num);
 				TextView title = (TextView) convertView
 						.findViewById(R.id.title);
-				TextView nickName = (TextView) convertView
-						.findViewById(R.id.nickName);
-				TextView replies = (TextView) convertView
-						.findViewById(R.id.replies);
-				num.setText("" + (position + 1));
+				TextView author = (TextView) convertView
+						.findViewById(R.id.author);
+				TextView lastReply = (TextView) convertView
+						.findViewById(R.id.last_reply);
+				
 				RSSItem item = rssFeed.getItems().get(position);
 
 				String description = item.getDescription();
 				String[] arr = description.split("\n");
 				
-				nickName.setText(item.getAuthor());
+				author.setText("楼主:"+item.getAuthor());
+				if(arr[1]!=null){
+				int start = arr[1].indexOf('(') + 1;//93个回复 于  (hgfan)
+				int end = arr[1].indexOf(')');
+					String lastReplyUser = arr[1].substring(start,end);
+					lastReply.setText("最后回复:"+lastReplyUser);
+				}
 				int last_index = arr.length -1;
 				String reply_count = "0";
 				int count_in_desc = arr[last_index].indexOf("个");
 				if( count_in_desc !=-1)
 					reply_count = arr[last_index].substring(0, arr[last_index].indexOf("个"));
-					replies.setText("[" + reply_count + " RE]");
+					num.setText("" + reply_count);
+				//replies.setText("[" + reply_count + " RE]");
 				try{
 					title.setTextColor(parent.getResources().getColor(
 							ThemeManager.getInstance().getForegroundColor()));

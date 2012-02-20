@@ -27,7 +27,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -83,6 +82,9 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			final MyApp app = (MyApp) activity.getApplication();
 			//rowView = inflater.inflate(R.layout.article_list_2, null);
 			rowView = inflater.inflate(R.layout.relative_aritclelist, null);
+			int colorId = ThemeManager.getInstance().getBackgroundColor();
+			rowView.setBackgroundResource(colorId);
+			
 			HashMap<String, String> map = getItem(position);
 			final String floor = map.get("floor");// Â¥²ã
 			// Í·Ïñ´¦Àí
@@ -189,7 +191,7 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			contentTV.setBackgroundColor(0);
 			contentTV.setFocusable(false);
 			int bgColor = parent.getContext().getResources()
-			.getColor(ThemeManager.getInstance().getBackgroundColor());
+			.getColor(colorId);
 			bgColor = bgColor & 0xffffff;
 			String colorStr = Integer.toHexString(bgColor);
 			String ngaHtml = StringUtil.parseHTML3(map.get("content"));
