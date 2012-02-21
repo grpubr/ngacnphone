@@ -58,6 +58,8 @@ public class PostActivity extends Activity {
 		action = intent.getStringExtra("action");
 		tid = intent.getStringExtra("tid");
 		fid = intent.getIntExtra("fid", -7);
+		String title = intent.getStringExtra("title");
+		String pid = intent.getStringExtra("pid");
 		if(tid == null)
 			tid = "";
 
@@ -66,8 +68,12 @@ public class PostActivity extends Activity {
 		act = new ThreadPostAction(tid, "", "");
 		act.setAction_(action);
 		act.setFid_(fid);
+		if(pid !=null)
+			act.setPid_(pid);
 		
 		titleText = (EditText) findViewById(R.id.reply_titile_edittext);
+		if(title!=null)
+			titleText.setText(title);
 		titleText.setSelected(true);
 		bodyText = (EditText) findViewById(R.id.reply_body_edittext);
 		bodyText.setText(prefix);
@@ -100,6 +106,8 @@ public class PostActivity extends Activity {
 				handleReply(v);
 			}else if(action.equals("new")){
 				handleNewThread(v);
+			}else if(action.equals("modify")){
+				handleNewThread(v);
 			}
 		}
 		public void handleNewThread(View v){
@@ -111,7 +119,10 @@ public class PostActivity extends Activity {
 
 
 			act.setPost_subject_(titleText.getText().toString());
-			act.setPost_content_(bodyText.getText().toString()+ sig);
+			if(!act.getAction_().equals("modify"))
+				act.setPost_content_(bodyText.getText().toString()+ sig);
+			else
+				act.setPost_content_(bodyText.getText().toString());	
 			new ArticlePostTask(v).execute(url,act.toString());
 
 			
