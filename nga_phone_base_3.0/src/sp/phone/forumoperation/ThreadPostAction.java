@@ -64,13 +64,25 @@ public class ThreadPostAction {
 		public void setTid_(String tid) {
 			tid_ = tid;
 		}
+		
+		
+	
+		public String getAction_() {
+			return action_;
+		}
 		public String toString()
 		{
 			StringBuffer sb = new StringBuffer();
 			sb.append("step=");sb.append(step_);
-			sb.append("&tid="); sb.append(tid_);
+			sb.append("&pid="); sb.append(pid_);
 			sb.append("&action=");sb.append(action_);
-			sb.append("&fid="); sb.append(fid_);
+			
+			if(!action_.equals("modify")){
+				sb.append("&fid="); sb.append(fid_);
+			}else{
+				sb.append("&fid=");
+			}
+			
 			sb.append("&tid="); sb.append(tid_);
 			sb.append("&_ff="); sb.append(_ff_);
 			sb.append("&attachments="); sb.append(attachments_);

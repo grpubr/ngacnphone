@@ -71,6 +71,7 @@ public class ArticleListActivity1 extends Activity
 	final int REPLY_ORDER = 1;
 	final int COPY_CLIPBOARD_ORDER = 2;
 	final int SHOW_THISONLY_ORDER = 3;
+	final int SHOW_MODIFY_ORDER = 4;
 	private ArticleFlingListener flingListener;
 	private static final String TABID_NEXT = "tab_next";
 	private static final String TABID_PRE = "tab_prev";
@@ -322,7 +323,13 @@ public class ArticleListActivity1 extends Activity
 	}
 	
 	
-	
+	private String getPid(String url) {
+		int start = url.indexOf("pid=")+4;
+		int end = url.indexOf("&");
+		if(end == -1)
+			end = url.length();
+		return url.substring(start,end);
+	}
 
 	
 	
@@ -363,9 +370,14 @@ public class ArticleListActivity1 extends Activity
 			final String name = map.get("nickName");
 			final String postTime = map.get("postTime");
 			// final String url = map.get("url");
-			
+			boolean endWithUrl = false;
+			if(content.endsWith("[/url]"))
+				endWithUrl = true;
 			if (content.length() > 100) {
 				content = content.substring(0, 99) + ".......";
+				if(endWithUrl)
+					content += "[/url]";
+					
 			}
 			postPrefix.append("[quote][tid=");
 			postPrefix.append(tid);
@@ -388,6 +400,17 @@ public class ArticleListActivity1 extends Activity
 			intent.setClass(ArticleListActivity1.this, PostActivity.class);
 			startActivity(intent);
 			break;
+		case SHOW_MODIFY_ORDER :
+			Intent intentModify = new Intent();
+			intentModify.putExtra("prefix", StringUtil.removeBrTag(content) );
+			intentModify.putExtra("tid", tid);
+			String pid = getPid(map.get("url"));
+			intentModify.putExtra("pid", pid);
+			intentModify.putExtra("title", map.get("title"));
+			intentModify.putExtra("action", "modify");	
+			intentModify.setClass(ArticleListActivity1.this, PostActivity.class);
+			startActivity(intentModify);
+			break;
 		case COPY_CLIPBOARD_ORDER:
 			ClipboardManager cbm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 			cbm.setText(StringUtil.removeBrTag(content));
@@ -398,6 +421,7 @@ public class ArticleListActivity1 extends Activity
 					+ tid + "&authorid=" + authorId;
 			new LoadArticleThread(tempUrl,this).start();
 			break;
+
 			
 			
 		}
@@ -409,6 +433,8 @@ public class ArticleListActivity1 extends Activity
 
 
 	
+
+
 	@Override
 	public void stopLoading() {
 		// TODO Auto-generated method stub
@@ -653,6 +679,7 @@ public class ArticleListActivity1 extends Activity
 				arg0.add(0,REPLY_ORDER,0, "回帖");
 				arg0.add(0,COPY_CLIPBOARD_ORDER,0, "复制到剪切板");
 				arg0.add(0,SHOW_THISONLY_ORDER,0, "只看此人");
+				arg0.add(0,SHOW_MODIFY_ORDER,0, "编辑");
 
 				
 				
