@@ -27,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -190,20 +191,29 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			WebView contentTV = (WebView) rowView.findViewById(R.id.content);
 			contentTV.setBackgroundColor(0);
 			contentTV.setFocusable(false);
-			int bgColor = parent.getContext().getResources()
-			.getColor(colorId);
+			int bgColor = parent.getContext().getResources().getColor(colorId);
 			bgColor = bgColor & 0xffffff;
-			String colorStr = Integer.toHexString(bgColor);
-			String ngaHtml = StringUtil.parseHTML3(map.get("content"));
-			ngaHtml = "<HTML> <HEAD><META   http-equiv=Content-Type   content= \"text/html;   charset=UTF-8 \">" 
-				+"<body bgcolor= \"#"+ colorStr +" \">"
-				+ ngaHtml + 
-				"</body>";
+			String bgcolorStr = String.format("%06x",bgColor);
 			
+			int fgColorId = ThemeManager.getInstance().getForegroundColor();
+			int fgColor = parent.getContext().getResources().getColor(fgColorId);
+			fgColor = fgColor & 0xffffff;
+			String fgColorStr = String.format("%06x",fgColor);
+			
+			String ngaHtml = StringUtil.decodeForumTag(map.get("content"));
+			ngaHtml = "<HTML> <HEAD><META   http-equiv=Content-Type   content= \"text/html;   charset=UTF-8 \">" 
+				+ "<body bgcolor= '#"+ bgcolorStr +"'>"
+				+ "<font color='#"+ fgColorStr + "' size='2'>"
+				+ ngaHtml + 
+				"</font></div></body>";
+				
+			
+			WebSettings setting = contentTV.getSettings();
 			if(!app.isDownImgWithoutWifi() && !isInWifi() )
-				contentTV.getSettings().setBlockNetworkImage(true);
+				setting.setBlockNetworkImage(true);
 			else
-				contentTV.getSettings().setBlockNetworkImage(false);
+				setting.setBlockNetworkImage(false);
+
 			contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
 			contentTV.setOnTouchListener(gestureListener);
 			contentTV.getSettings().setDefaultFontSize(
