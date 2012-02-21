@@ -22,6 +22,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo.State;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -180,10 +181,18 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			}
 
 			// 其他处理
-
+			int fgColorId = ThemeManager.getInstance().getForegroundColor();
+			int fgColor = parent.getContext().getResources().getColor(fgColorId);
+			
+			
 			TextView nickNameTV = (TextView) rowView
 					.findViewById(R.id.nickName);
 			nickNameTV.setText(map.get("nickName"));
+			nickNameTV.setTextColor(fgColor);
+			TextPaint tp = nickNameTV.getPaint();
+            tp.setFakeBoldText(true);//bold for Chinese character
+             
+             
 			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) nickNameTV.getLayoutParams();
 			params.width = PhoneConfiguration.getInstance().nikeWidth;
 			//nickNameTV.setLayoutParams(params);//其他组件是根据这个来定位的
@@ -195,8 +204,6 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			bgColor = bgColor & 0xffffff;
 			String bgcolorStr = String.format("%06x",bgColor);
 			
-			int fgColorId = ThemeManager.getInstance().getForegroundColor();
-			int fgColor = parent.getContext().getResources().getColor(fgColorId);
 			fgColor = fgColor & 0xffffff;
 			String fgColorStr = String.format("%06x",fgColor);
 			
