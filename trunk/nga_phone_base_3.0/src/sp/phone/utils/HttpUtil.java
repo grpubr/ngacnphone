@@ -25,6 +25,8 @@ public class HttpUtil {
 			.getExternalStorageDirectory()
 			+ "/";
 	public final static String PATH_ICON = PATH_SD + "nga_cache/icon";
+	public final static String PATH_WEB_CACHE = PATH_SD + "nga_cache/web_cache";
+	public final static String PATH_NOMEDIA = PATH_SD + "nga_cache/.nomedia";
 	public static String PATH_ZIP = "";
 
 	public final static String Server = "http://bbs.ngacn.cc";
