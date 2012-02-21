@@ -127,22 +127,23 @@ public class StringUtil {
 		return s;
 	}
 
-	public static String parseHTML3(String s) {
+	public static String decodeForumTag(String s) {
 		// ×ª»»×ÖÌå
-		if (s.indexOf("[quote]") != -1) {
-			s = s.replace("[quote]", "<font color='blue' size='2'>");
-			s = s.replace("[/quote]", "</font><font color='green' size='2'>");
-
-
-			s = s.replace("<br/><br/>", "<br/>");
-			s = s.replace("<br/><br/>", "<br/>");
-
-			s = s.replace("[/pid]",""/* "<font color='blue' size='2'>"*/);
-			s = s + "</font>";
-		} else {
-			s = "<font color='green' size='2'>" + s;
-			s = s + "</font>";
-		}
+		
+		//quote
+		String quoteStyle = "<div style='background:#E8E8E8;border:1px solid #888' >";
+		//reply
+		s = s.replaceAll(
+				"\\[quote\\]\\[pid=\\d+\\]Reply\\[/pid\\] \\[b\\](Post by .+ \\(\\d{4,4}-\\d\\d-\\d\\d \\d\\d:\\d\\d\\):\\[/b\\])"
+				, quoteStyle + "Reply $1");
+		s = s.replaceAll("\\[/quote\\]", "</div>");
+		//topic
+		s = s.replaceAll(
+				"\\[quote\\]\\[tid=\\d+\\]Topic\\[/pid\\] \\[b\\](Post by .+ \\(\\d{4,4}-\\d\\d-\\d\\d \\d\\d:\\d\\d\\):)\\[/b\\]"
+				, quoteStyle + "Topic $1");
+		//reply
+		s = s.replaceAll("\\[b\\]Reply to \\[pid=\\d+\\]Reply\\[/pid\\] (Post by .+ \\(\\d{4,4}-\\d\\d-\\d\\d \\d\\d:\\d\\d\\))\\[/b\\]"
+				, "Reply to Reply <b>$1</b>");
 		// ×ª»» tag
 		s = s.replaceAll("\\[b\\]", "<b>");
 		s = s.replaceAll("\\[/b\\]","</b>"/* "</font>"*/);
