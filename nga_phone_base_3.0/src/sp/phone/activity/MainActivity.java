@@ -431,6 +431,24 @@ public class MainActivity extends Activity {
 					} else {
 						delay("»º´æÄ¿Â¼Õý³£");
 					}
+					
+					file = new File(HttpUtil.PATH_WEB_CACHE);
+					if (!file.exists()) {
+						Log.i(getClass().getSimpleName(),"create webcache directory");
+						file.mkdirs();
+					} 
+					
+					file = new File(HttpUtil.PATH_NOMEDIA);
+					if (!file.exists()) {
+						Log.i(getClass().getSimpleName(),"create .nomedia");
+						try {
+							file.createNewFile();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					} 
+					
 					HttpUtil.PATH_ZIP = HttpUtil.PATH_SD
 							+ "nga_cache/nga_cache.zip";
 					File file_zip = new File(HttpUtil.PATH_ZIP);
