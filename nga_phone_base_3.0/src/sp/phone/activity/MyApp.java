@@ -100,6 +100,14 @@ public class MyApp extends Application {
 	public void setCid(String cid) {
 		this.cid = cid;
 	}
+	
+	public String getCookie(){
+		if(uid !=null && cid !=null){
+			return "ngaPassportUid="+ uid+
+					"; ngaPassportCid=" + cid;
+		}
+		return "";
+	}
 
 	public void setDownImgWithoutWifi(boolean downImgWithoutWifi) {
 		this.downImgWithoutWifi = downImgWithoutWifi;

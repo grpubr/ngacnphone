@@ -35,7 +35,7 @@ public class PostActivity extends Activity {
 	private String REPLY_URL="http://bbs.ngacn.cc/post.php?";
 	private String sig ="\n[url=http://code.google.com/p/ngacnphone/downloads/list]"
 		+"----sent from my " + android.os.Build.MANUFACTURER
-		+ " " + android.os.Build.MODEL + ",android "
+		+ " " + android.os.Build.MODEL + ",Android "
 		+ android.os.Build.VERSION.RELEASE + "[/url]\n";
 
 

@@ -75,9 +75,7 @@ public class ArticleUtil {
 					String url = div0.getStringText();	
 					url = url.substring(url.indexOf("<a id='pid") + "<a id='pid".length());
 					url = url.substring(0,url.indexOf("Anchor'></a>"));
-					if( "0".equals(url))
-						 url = lt.getLink();
-					else
+					if(! "0".equals(url))
 						url = "bbs.ngacn.cc/read.php?pid="+url;
 					
 					article.setUrl(url);
@@ -106,12 +104,7 @@ public class ArticleUtil {
 					for (Node node3 : td1Children) {
 						if (node3 instanceof Span) {
 							Span sss = (Span) node3;
-							/*if (sss.getAttribute("id") != null
-									&& sss.getAttribute("id").startsWith(
-											"postdate")) {
-								lastPostTime = sss.getFirstChild().getText();
-								article.setLastTime(lastPostTime);
-							}*/
+
 							if(sss.getAttribute("id") != null && sss.getAttribute("id").startsWith("postcontent") )
 							{
 								content = content + sss.getStringText();//sss.getFirstChild().getText();
@@ -119,8 +112,10 @@ public class ArticleUtil {
 							}
 						}else if( node3 instanceof HeadingTag){
 							HeadingTag ht = (HeadingTag)node3;
-							if(ht.getAttribute("id")!= null && ht.getChildCount() >2){
-								//content =ht.getChild(2).getText() + "\n";
+							String  titleID = ht.getAttribute("id");
+							if(titleID != null && !titleID.equals("postsubject0") && ht.getChildCount() !=0){
+								String title =ht.getChild(0).getText() ;
+								article.setTitle(title);
 							}
 								
 						}else if ( node3 instanceof ImageTag){
@@ -150,32 +145,7 @@ public class ArticleUtil {
 					}
 					
 					article.setContent(content);
-					/*TableRow tr1 = (TableRow) rows[1];
-					TableColumn[] tds1 = tr1.getColumns();
-					// System.out.println(tds1.length);
-					TableColumn td3 = tds1[0];
-					ImageTag it = (ImageTag) td3.getChild(2);
-					Object onerror = it.getAttributesEx().get(6);
-					if (onerror != null) {
-						avatarImage = onerror.toString().split("'")[1];
-						user.setAvatarImage(avatarImage);
 
-					}*/
-
-					/*TableColumn td4 = tds1[1];
-
-					for (Node node2 : td4.getChildren().toNodeArray()) {
-						if (node2 instanceof Span) {
-							Span span = (Span) node2;
-							if (span.getAttribute("id") != null
-									&& span.getAttribute("id").startsWith(
-											"postcontent")) {
-								String content = span.getStringText();
-								article.setContent(content);
-
-							}
-						}
-					}*/
 
 					article.setUser(user);
 					listArticle.add(article);
