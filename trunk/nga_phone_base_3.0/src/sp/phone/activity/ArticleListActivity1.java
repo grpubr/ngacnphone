@@ -763,11 +763,16 @@ public class ArticleListActivity1 extends Activity
 			
 			if(e1 == null || e2 == null)
 				return false;
+			//if(e2.getAction() != MotionEvent.ACTION_UP)
+			//	return false;
+			
 			float deltaX = Math.abs(e1.getX() - e2.getX());
 			float deltaY = Math.abs(e1.getY() - e2.getY());
+			
+
 			if ( (e1.getX() - e2.getX() > FLING_MIN_DISTANCE)
 					&& (deltaX > 1.73*deltaY)
-					&& (Math.abs(velocityX) > 1.73*Math.abs(velocityY))
+					&& (Math.abs(velocityX) > 3*Math.abs(velocityY))
 				){
 				// left
 				Log.d("test","onFling will call change to next");
@@ -777,15 +782,17 @@ public class ArticleListActivity1 extends Activity
 				changeListener.onTabChanged(TABID_NEXT);
 				 return true;
 			}
-
+			
 			if ( (e2.getX() - e1.getX() > FLING_MIN_DISTANCE)
 					&& (deltaX > 1.73*deltaY)
-					&& (Math.abs(velocityX) > 1.73*Math.abs(velocityY))
+					&& (Math.abs(velocityX) > 3*Math.abs(velocityY))
 				) {
+				Log.d("test","onFling action = " + e2.getAction());
 				// right
 				Log.d("test","onFling will call change to pre");
 				Log.d("test","1x="+e1.getX()+",e2x="+e2.getX()+",e1y="+e1.getY()
 						+ ",e2y="+e2.getY()+ ",vx="+velocityX+",vy="+velocityY);
+				Log.d("test", "deltaY="+ deltaY);
 				changeListener.onTabChanged(TABID_PRE);
 				 return true;
 			}

@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import sp.phone.bean.RSSFeed;
 import sp.phone.bean.RSSItem;
+import sp.phone.forumoperation.CheckReplyNotificationTask;
 import sp.phone.forumoperation.FloorOpener;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.PhoneConfiguration;
@@ -58,6 +59,7 @@ public class TopicListActivity1 extends Activity {
 	private MyApp app;
 	private TopicFlingListener flingListener;
 	protected ListView currentListview;
+	private CheckReplyNotificationTask asynTask;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,23 @@ public class TopicListActivity1 extends Activity {
 	protected void onRestart() {
 		setRequestedOrientation(ThemeManager.getInstance().screenOrentation);
 		super.onRestart();
+	}
+
+	
+
+	@Override
+	protected void onResume() {
+		if(asynTask !=null){
+			asynTask.cancel(true);
+			asynTask = null;
+		}
+		long now = System.currentTimeMillis();
+		if(false)
+		{
+			asynTask = new CheckReplyNotificationTask(this);
+			asynTask.execute(app.getCookie());
+		}
+		super.onResume();
 	}
 
 
@@ -186,6 +205,7 @@ public class TopicListActivity1 extends Activity {
 		map = app.getMap();
 		app.getMap_article();
 		flingListener = new TopicFlingListener(this);
+
 
 	}
 
@@ -574,7 +594,7 @@ public class TopicListActivity1 extends Activity {
 			float deltaY = Math.abs(e1.getY() - e2.getY());
 			if ( (e1.getX() - e2.getX() > FLING_MIN_DISTANCE)
 					&& (deltaX > 1.73*deltaY)
-					&& (Math.abs(velocityX) > 1.73*Math.abs(velocityY))
+					&& (Math.abs(velocityX) > 3*Math.abs(velocityY))
 				){
 				//left
 				
@@ -584,7 +604,7 @@ public class TopicListActivity1 extends Activity {
 			
 			if ( (e2.getX() - e1.getX() > FLING_MIN_DISTANCE)
 					&& (deltaX > 1.73*deltaY)
-					&& (Math.abs(velocityX) > 1.73*Math.abs(velocityY))
+					&& (Math.abs(velocityX) > 3*Math.abs(velocityY))
 				) {
 				//right
 				pageChange.onTabChanged(TABID_PRE);
