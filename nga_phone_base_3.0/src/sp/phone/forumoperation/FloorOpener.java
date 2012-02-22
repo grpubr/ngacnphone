@@ -75,6 +75,10 @@ public 	class FloorOpener {
 					}
 					activityUtil.dismiss();
 					if (articlePage != null) {
+						//TODO implement FIFO map
+						if(map_article.size()>4)
+							map_article.clear();
+						
 						app.setArticlePage(articlePage);// 设置当前page
 						map_article.put(url + "&page=1", articlePage);// 添加新的数据
 						app.setMap_article(map_article);
