@@ -11,7 +11,7 @@
             android:id="@+id/floor_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" >
+            android:text="TextView" android:textStyle="bold" android:gravity="center" android:visibility="visible">
 </TextView>
         <android.webkit.WebView android:layout_width="fill_parent" android:id="@+id/content" android:layout_height="wrap_content"></android.webkit.WebView>
     </LinearLayout>

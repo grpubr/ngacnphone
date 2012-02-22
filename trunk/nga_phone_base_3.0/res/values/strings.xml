@@ -29,4 +29,5 @@
     <string name="text_size">帖子列表字体大小</string>
     <string name="lock_orientation">锁定屏幕</string>
     <string name="unlock_orientation">解除屏幕锁定</string>
+    <string name="tip">随便长按上面的图标，就能添加板块。板块id就是浏览器地址栏里“tid=\&quot;后面的数字</string>
 </resources>

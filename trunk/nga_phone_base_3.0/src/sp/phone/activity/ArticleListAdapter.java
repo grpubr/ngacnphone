@@ -204,8 +204,8 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			bgColor = bgColor & 0xffffff;
 			String bgcolorStr = String.format("%06x",bgColor);
 			
-			fgColor = fgColor & 0xffffff;
-			String fgColorStr = String.format("%06x",fgColor);
+			int htmlfgColor = fgColor & 0xffffff;
+			String fgColorStr = String.format("%06x",htmlfgColor);
 			
 			String ngaHtml = StringUtil.decodeForumTag(map.get("content"));
 			ngaHtml = "<HTML> <HEAD><META   http-equiv=Content-Type   content= \"text/html;   charset=UTF-8 \">" 
@@ -236,6 +236,9 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			TextView titleTV = (TextView) rowView.findViewById(R.id.floor_title);
 			if (!StringUtil.isEmpty(map.get("title"))) {
 				titleTV.setText(map.get("title"));
+				titleTV.setTextColor(fgColor);
+				tp = titleTV.getPaint();
+	            tp.setFakeBoldText(true);//bold for Chinese character
 			} else {
 				titleTV.setVisibility(View.GONE);
 			}
