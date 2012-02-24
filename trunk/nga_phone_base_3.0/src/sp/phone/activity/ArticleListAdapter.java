@@ -92,7 +92,7 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			// 头像处理
 			final ImageView avatarIV = (ImageView) rowView
 					.findViewById(R.id.avatarImage);
-			avatarIV.setImageDrawable(null);
+			//avatarIV.setImageDrawable(null);
 
 			avatarIV.setTag(floor);// 设置 tag 为楼层
 			final String avatarImage = map.get("avatarImage");// 头像

@@ -84,6 +84,8 @@ public class ArticleListActivity1 extends Activity
 
 		//requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		super.onCreate(savedInstanceState);
+
+		
 		int orentation = ThemeManager.getInstance().screenOrentation;
 		if(orentation ==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||
 				orentation ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)

@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import sp.phone.bean.RSSFeed;
 import sp.phone.bean.RSSItem;
-import sp.phone.forumoperation.CheckReplyNotificationTask;
+import sp.phone.task.CheckReplyNotificationTask;
 import sp.phone.forumoperation.FloorOpener;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.PhoneConfiguration;
