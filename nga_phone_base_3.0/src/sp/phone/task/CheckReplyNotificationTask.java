@@ -1,9 +1,13 @@
-package sp.phone.forumoperation;
+package sp.phone.task;
 
-import sp.phone.utils.HttpUtil;
+
+
+import sp.phone.activity.ArticleListActivity1;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 
 public class CheckReplyNotificationTask extends
@@ -20,7 +24,8 @@ public class CheckReplyNotificationTask extends
 		final String cookie = params[0];
 		final String emptyMessage = "window.script_muti_get_var_store=null";
 		String result = emptyMessage;
-		while(emptyMessage.equals(result))
+		return "1234";
+		/*while(emptyMessage.equals(result))
 		{
 			result =HttpUtil.getHtml(url, cookie);
 			try {
@@ -29,7 +34,7 @@ public class CheckReplyNotificationTask extends
 
 			}
 		}
-		return result;
+		return result;*/
 	}
 
 	@Override
@@ -50,6 +55,7 @@ public class CheckReplyNotificationTask extends
 		 * ,6:4942187,7:84606246}
 		 * ,6:(tid),7:(pid)}
 		 */
+		showNotification("pianzong","1","2","ddddd");
 		int start = 0;
 		while(result.indexOf(",2:\"", start) !=-1)
 		{
@@ -73,15 +79,35 @@ public class CheckReplyNotificationTask extends
 			String pid = result.substring(start, end);
 			start = end;
 			
-			String msg = nickName + "ÕÙ»½Äãµ½:" + tid +","+pid
-					+"," + title;
-			showNotification(msg);
+
+			showNotification(nickName,tid,pid, title);
 		}
 	}
 
 
-	void showNotification(String msg){
+	void showNotification(String nickName, String tid, String pid, String title){
+		NotificationManager nm = 
+				(NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+		Intent intent = new Intent(context,ArticleListActivity1.class); 
+		intent.putExtra("tid", tid);
+		intent.putExtra("pid", pid);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		intent.addFlags(Intent.FILL_IN_DATA);
 		
+		PendingIntent pending=
+				PendingIntent.getActivity(context, 0, intent, 0); 
+
+		 Notification notification = new Notification(); 
+		 notification.icon = sp.phone.activity.R.drawable.icon;
+		 //notification.defaults = Notification.DEFAULT_LIGHTS;
+		 String tickerText = nickName + "ÕÙ»½Äã";
+       // Notification notification = new Notification(sp.phone.activity.R.drawable.defult_img,tickerText,
+        //        System.currentTimeMillis());
+        notification.tickerText = tickerText;
+        notification.when = System.currentTimeMillis();
+        
+		 notification.setLatestEventInfo(context, nickName, title, pending);
+		 nm.notify(0, notification);
 	}
 	
 	
