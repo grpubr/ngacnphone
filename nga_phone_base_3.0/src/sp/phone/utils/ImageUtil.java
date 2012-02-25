@@ -195,23 +195,25 @@ public class ImageUtil {
 	public static String newImage(String oldImage, String userId) {
 		String extension = FilenameUtils.getExtension(oldImage);
 		String path = FilenameUtils.getPath(oldImage);
+		String newName;
 		if (extension != null) {
 			if (path == null || "".equals(path)) {
 				return null;
 			} else if (extension.length() == 3) {
-				String newName = HttpUtil.PATH + "/" + userId + "." + extension;
-				return newName;
+				newName = HttpUtil.PATH + "/" + userId + "." + extension;
+				
 			} else if (extension.length() >= 4
 					&& "?".equals(extension.substring(3, 4))) {
-				String newName = HttpUtil.PATH + "/" + userId + "."
+				newName = HttpUtil.PATH + "/" + userId + "."
 						+ extension.substring(0, 3);
-				return newName;
+				
 			} else {
-				return null;
+				newName = HttpUtil.PATH + "/" + userId + ".jpg";
 			}
 		} else {
-			return null;
+			newName = HttpUtil.PATH + "/" + userId + ".jpg";
 		}
+		return newName;
 	}
 
 	public static ZipFile zf;
