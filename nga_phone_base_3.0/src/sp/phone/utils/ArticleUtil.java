@@ -23,6 +23,8 @@ import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
+import android.util.Log;
+
 import sp.phone.bean.Article;
 import sp.phone.bean.ArticlePage;
 import sp.phone.bean.User;
@@ -45,7 +47,17 @@ public class ArticleUtil {
 
 		orFilter.setPredicates(new NodeFilter[] { andFilter, andFilter2,
 				andFilter3 });
-		Parser myParser = new Parser(html);
+		
+		if(html ==null || html.equals(""))
+			return null;
+		Parser myParser;
+		try{
+			myParser = new Parser(html);
+		}catch(Exception  e){
+			Log.e(ArticleUtil.class.getSimpleName(),"fail to parse page " + Log.getStackTraceString(e));
+			Log.e(ArticleUtil.class.getSimpleName(), html);
+			return null;
+		}
 		NodeList nodeList = myParser.parse(orFilter);
 
 		ArticlePage articlePage = new ArticlePage();
