@@ -11,6 +11,9 @@ public class PhoneConfiguration {
 	private float textSize;
 	private int webSize;
 	public int nikeWidth = 100;
+	public boolean notification;
+	public boolean notificationSound;
+	public long lastMessageCheck = 0;
 	public float getTextSize() {
 		return textSize;
 	}

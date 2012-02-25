@@ -60,6 +60,7 @@ public class TopicListActivity1 extends Activity {
 	private TopicFlingListener flingListener;
 	protected ListView currentListview;
 	private CheckReplyNotificationTask asynTask;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,13 +96,16 @@ public class TopicListActivity1 extends Activity {
 			asynTask = null;
 		}
 		long now = System.currentTimeMillis();
-		if(false)
+		if(now - PhoneConfiguration.getInstance().lastMessageCheck > 60*1000)
 		{
+			
 			asynTask = new CheckReplyNotificationTask(this);
 			asynTask.execute(app.getCookie());
 		}
 		super.onResume();
 	}
+	
+	
 
 
 

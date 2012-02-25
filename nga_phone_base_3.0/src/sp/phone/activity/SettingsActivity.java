@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -22,8 +21,10 @@ import android.widget.TextView;
 public class SettingsActivity extends Activity{
 
 	private LinearLayout view;
-	private CheckBox checkBoxDownimgNowifi;
-	private CheckBox nightMode;
+	private CompoundButton checkBoxDownimgNowifi;
+	private CompoundButton nightMode;
+	private CompoundButton notification;
+	private CompoundButton notificationSound;
 	private SeekBar fontSizeBar;
 	private float defaultFontSize;
 	private TextView fontTextView;
@@ -33,7 +34,6 @@ public class SettingsActivity extends Activity{
 	//private MyGestureListener gestureListener;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		//gestureListener = new MyGestureListener(this);
 		
@@ -45,21 +45,38 @@ public class SettingsActivity extends Activity{
 		//checkbox
 		ThemeManager.SetContextTheme(this);
 		try{
-		 view = (LinearLayout) getLayoutInflater().inflate(R.layout.settings, null);
+			if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+				view = (LinearLayout) getLayoutInflater().inflate(R.layout.switch_settings, null);
+			else
+				view = (LinearLayout) getLayoutInflater().inflate(R.layout.settings, null);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		this.setContentView(view);
 		
 		
-		checkBoxDownimgNowifi = (CheckBox) findViewById(R.id.checkBox_down_img_no_wifi);
+		checkBoxDownimgNowifi = (CompoundButton) findViewById(R.id.checkBox_down_img_no_wifi);
 		checkBoxDownimgNowifi.setChecked(app.isDownImgWithoutWifi());
 		CheckBoxDownimgNowifiChangedListener listener = new CheckBoxDownimgNowifiChangedListener();
 		checkBoxDownimgNowifi.setOnCheckedChangeListener(listener);
 
-		nightMode = (CheckBox) findViewById(R.id.checkBox_night_mode);
+		nightMode = (CompoundButton) findViewById(R.id.checkBox_night_mode);
 		nightMode.setChecked(ThemeManager.getInstance().getMode() ==ThemeManager.MODE_NIGHT);
 		nightMode.setOnCheckedChangeListener(new NightModeListener());
+		
+
+		
+		notificationSound = (CompoundButton) findViewById(R.id.checkBox_notification_sound);
+		notificationSound.setOnCheckedChangeListener(new NotificationSoundChangedListener());
+		notificationSound.setChecked(PhoneConfiguration.getInstance().notificationSound);
+		notificationSound.setEnabled(PhoneConfiguration.getInstance().notification);
+		
+		
+		notification = (CompoundButton) findViewById(R.id.checkBox_notification);
+		notification.setOnCheckedChangeListener(
+				new NotificationChangedListener(notificationSound));
+		notification.setChecked(PhoneConfiguration.getInstance().notification);
+		
 		
 		fontTextView = (TextView)findViewById(R.id.textView_font_size);
 		defaultFontSize = fontTextView.getTextSize();
@@ -102,6 +119,8 @@ public class SettingsActivity extends Activity{
 						ThemeManager.getInstance().getForegroundColor());
 		checkBoxDownimgNowifi.setTextColor(fgColor);
 		nightMode.setTextColor(fgColor);
+		notification.setTextColor(fgColor);
+		notificationSound.setTextColor(fgColor);
 		fontTextView.setTextColor(fgColor);
 		
 		view.setBackgroundResource(ThemeManager.getInstance().getBackgroundColor());
@@ -141,7 +160,6 @@ public class SettingsActivity extends Activity{
 		
 		@Override
 		public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-			// TODO Auto-generated method stub
 			SharedPreferences  share = 
 				getSharedPreferences("perference", MODE_PRIVATE);
 
@@ -161,7 +179,6 @@ public class SettingsActivity extends Activity{
 
 		@Override
 		public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-			// TODO Auto-generated method stub
 			MyApp app = (MyApp) getApplication();
 			app.setDownImgWithoutWifi(arg1);
 			SharedPreferences  share = 
@@ -169,6 +186,49 @@ public class SettingsActivity extends Activity{
 
 			Editor editor = share.edit();
 			editor.putBoolean("down_load_without_wifi", arg1);
+			editor.commit();
+			
+		}
+		
+	}
+	
+	class NotificationChangedListener implements OnCheckedChangeListener{
+		final CompoundButton child;
+		public NotificationChangedListener(CompoundButton child){
+			this.child = child;
+		}
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView,
+				boolean isChecked) {
+			
+			PhoneConfiguration.getInstance().notification = isChecked;
+			child.setEnabled(isChecked);
+			SharedPreferences  share = 
+				getSharedPreferences("perference", MODE_PRIVATE);
+
+			Editor editor = share.edit();
+			editor.putBoolean("enableNotification", isChecked);
+			editor.commit();
+			
+		}
+			
+		
+		
+	}
+	
+	class NotificationSoundChangedListener implements OnCheckedChangeListener{
+
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView,
+				boolean isChecked) {
+			
+			PhoneConfiguration.getInstance().notificationSound= isChecked;
+
+			SharedPreferences  share = 
+				getSharedPreferences("perference", MODE_PRIVATE);
+
+			Editor editor = share.edit();
+			editor.putBoolean("notificationSound", isChecked);
 			editor.commit();
 			
 		}
