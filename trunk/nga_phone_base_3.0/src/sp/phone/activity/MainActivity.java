@@ -1,6 +1,5 @@
 package sp.phone.activity;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -116,6 +115,11 @@ public class MainActivity extends Activity {
 		final int webSize = share.getInt("websize", defWebSize);
 		config.setTextSize(textSize);
 		config.setWebSize(webSize);
+		
+		boolean notification = share.getBoolean("enableNotification", true);
+		boolean notificationSound = share.getBoolean("notificationSound", true);
+		config.notification = notification;
+		config.notificationSound = notificationSound;
 		
 		//bookmarks
 		String bookmarkJson = share.getString("bookmarks", "");

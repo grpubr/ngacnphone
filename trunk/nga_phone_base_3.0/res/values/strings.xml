@@ -30,4 +30,7 @@
     <string name="lock_orientation">锁定屏幕</string>
     <string name="unlock_orientation">解除屏幕锁定</string>
     <string name="tip">随便长按上面的图标，就能添加板块。板块id就是浏览器地址栏里“tid=\&quot;后面的数字</string>
+    <string name="thread_load_error">可能遇到了一个广告或者帖子被删除</string>
+    <string name="notification_on">启用被喷提示</string>
+    <string name="notification_sound">提示声音</string>
 </resources>
