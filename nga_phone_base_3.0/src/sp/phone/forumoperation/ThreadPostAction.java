@@ -18,7 +18,7 @@ public class ThreadPostAction {
 		private String post_subject_;
 		private String post_content_;
 		private String checkkey_;
-		
+		private String mention_;
 		public ThreadPostAction(String tid,String subject,String content)
 		{
 			step_ = 2;
@@ -34,6 +34,7 @@ public class ThreadPostAction {
 			post_subject_ = subject;
 			post_content_ = content;
 			checkkey_ = "";
+			mention_ = "";
 			
 			
 		}
@@ -70,6 +71,11 @@ public class ThreadPostAction {
 		public String getAction_() {
 			return action_;
 		}
+		
+		
+		public void setMention_(String mention_) {
+			this.mention_ = mention_;
+		}
 		public String toString()
 		{
 			StringBuffer sb = new StringBuffer();
@@ -93,8 +99,11 @@ public class ThreadPostAction {
 			try {
 				sb.append( URLEncoder.encode(post_subject_,"GBK"));
 				sb.append("&post_content="); sb.append( URLEncoder.encode(post_content_,"GBK"));
-				} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
+				if(mention_.length() !=0){
+					sb.append("&mention="); sb.append( URLEncoder.encode(mention_,"GBK"));
+					
+				}
+			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
 		

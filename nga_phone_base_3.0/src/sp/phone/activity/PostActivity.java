@@ -7,6 +7,7 @@ import org.apache.commons.io.IOUtils;
 
 import sp.phone.forumoperation.HttpPostClient;
 import sp.phone.forumoperation.ThreadPostAction;
+import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.app.Activity;
 import android.content.Intent;
@@ -60,6 +61,7 @@ public class PostActivity extends Activity {
 		fid = intent.getIntExtra("fid", -7);
 		String title = intent.getStringExtra("title");
 		String pid = intent.getStringExtra("pid");
+		String mention = intent.getStringExtra("mention");
 		if(tid == null)
 			tid = "";
 
@@ -68,6 +70,8 @@ public class PostActivity extends Activity {
 		act = new ThreadPostAction(tid, "", "");
 		act.setAction_(action);
 		act.setFid_(fid);
+		if(!StringUtil.isEmpty(mention))
+			act.setMention_(mention);
 		if(pid !=null)
 			act.setPid_(pid);
 		
