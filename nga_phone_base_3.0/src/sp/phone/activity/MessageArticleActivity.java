@@ -65,6 +65,7 @@ public class MessageArticleActivity extends MyAbstractActivity
        // listView.setOnItemLongClickListener(listener);
         this.registerForContextMenu(listView);
         listView.setAdapter(new ThreadPageAdapter(this));
+        ActivityUtil.getInstance().noticeSaying(this);
 }
 
 
