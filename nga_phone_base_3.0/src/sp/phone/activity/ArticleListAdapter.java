@@ -1,14 +1,10 @@
 package sp.phone.activity;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import sp.phone.utils.HttpUtil;
+import sp.phone.task.AvatarLoadTask;
 import sp.phone.utils.ImageUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
@@ -16,12 +12,8 @@ import sp.phone.utils.ThemeManager;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo.State;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextPaint;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,7 +28,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
+public class ArticleListAdapter  extends ArrayAdapter<HashMap<String, String>> 
+{
 
 	ZipFile zf;
 
@@ -95,89 +88,13 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			//avatarIV.setImageDrawable(null);
 
 			avatarIV.setTag(floor);// 设置 tag 为楼层
-			final String avatarImage = map.get("avatarImage");// 头像
+			final String avatarUrl = map.get("avatarImage");// 头像
 			final String userId = map.get("userId");
-			if (!StringUtil.isEmpty(avatarImage)) {
-				final String newImage = ImageUtil.newImage(avatarImage, userId);
-				if (newImage != null) {
-					final Handler handler2 = new Handler() {
-						public synchronized void handleMessage(Message message) {
-							if (avatarIV != null) {
-								avatarIV.setImageBitmap((Bitmap) message.obj);
-							}
-						}
-					};
-
-					new Thread() {
-						@Override
-						public void run() {
-
-							File file = new File(newImage);
-							if (file.exists()) { // 开始检查缓存文件夹
-								Bitmap bitmap = BitmapFactory
-										.decodeFile(newImage);
-								if (bitmap != null) {
-									//System.out.println("from file" + floor);
-									Message message = handler2.obtainMessage(0,
-											bitmap);
-									handler2.sendMessage(message);
-								}
-							} else {
-								InputStream is = null;
-								if (zf != null) { // 开始检查缓存ZIP
-
-									String extension = ImageUtil
-											.getImageType(avatarImage);
-									ZipEntry entry = zf.getEntry("avatarImage/"
-											+ userId + "." + extension);
-									if (entry != null) {
-										try {
-											is = zf.getInputStream(entry);
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
-									}
-								}
-								if (is == null) {
-									//System.out.println("from net" + floor);
-									// 下载
-									if(!app.isDownImgWithoutWifi() && !isInWifi() ){
-										Bitmap bitmap = BitmapFactory.decodeResource(app.getResources(), R.drawable.default_avatar);
-										Message message = handler2.obtainMessage(0, bitmap);
-										handler2.sendMessage(message);
-									}else
-									{
-										HttpUtil.downImage(avatarImage, newImage);
-										if (file.exists()) {
-											Bitmap bitmap = BitmapFactory
-													.decodeFile(newImage);
-											if (bitmap != null) {
-												Message message = handler2
-														.obtainMessage(0, bitmap);
-												handler2.sendMessage(message);
-											} else {
-												System.out
-														.println("decodeStream fall"
-																+ floor);
-											}
-										}
-									}
-								} else {
-									System.out.println("from zip" + floor);
-									Bitmap bitmap = BitmapFactory
-											.decodeStream(is);
-									if (bitmap != null) {
-										Message message = handler2
-												.obtainMessage(0, bitmap);
-										handler2.sendMessage(message);
-									}
-								}
-
-							}
-
-						}
-					}.start();
-				}
+			if (!StringUtil.isEmpty(avatarUrl)) {
+				final String avatarPath = ImageUtil.newImage(avatarUrl, userId);
+				final boolean downImg = isInWifi()||app.isDownImgWithoutWifi();
+				new AvatarLoadTask(avatarIV, zf, downImg).execute(avatarUrl, avatarPath, userId);
+				
 			}
 
 			// 其他处理
@@ -242,9 +159,8 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			} else {
 				titleTV.setVisibility(View.GONE);
 			}
-			//rowView.setOnLongClickListener(new FloorLongClickListen() );
-			//rowView.setOnCreateContextMenuListener( new FloorCreateContextMenuListener() );
-			//rowView.set
+
+
 			if(position == this.getCount()-1){
 				end = System.currentTimeMillis();
 				Log.i(getClass().getSimpleName(),"render cost:" +(end-start));
@@ -252,10 +168,11 @@ public class ArticleListAdapter extends ArrayAdapter<HashMap<String, String>> {
 			m.put(position, rowView);
 		}
 		
-
+	
 		
 		return rowView;
 	}
+
 	
 
 
