@@ -362,14 +362,15 @@ public class ArticleListActivity1 extends Activity
 		final HashMap<String, String> map = 
 				currentAdapter.getItem(info.position);
 		String content = map.get("content");
-
+		final String name = map.get("nickName");
+		String mention=null;
 		switch(item.getItemId())
 		//if( REPLY_POST_ORDER ==item.getItemId())
 		{
 		case QUOTE_ORDER:
 
 
-			final String name = map.get("nickName");
+			
 			final String postTime = map.get("postTime");
 			// final String url = map.get("url");
 			boolean endWithUrl = false;
@@ -381,6 +382,7 @@ public class ArticleListActivity1 extends Activity
 					content += "[/url]";
 					
 			}
+			mention = name;
 			postPrefix.append("[quote][tid=");
 			postPrefix.append(tid);
 			postPrefix.append("]Topic[/pid] [b]Post by ");
@@ -396,6 +398,8 @@ public class ArticleListActivity1 extends Activity
 			postPrefix.append("]\n");
 		case REPLY_ORDER:	
 			Intent intent = new Intent();
+			if(!StringUtil.isEmpty(mention))
+				intent.putExtra("mention", mention);
 			intent.putExtra("prefix", StringUtil.removeBrTag(postPrefix.toString()) );
 			intent.putExtra("tid", tid);
 			intent.putExtra("action", "reply");	
