@@ -17,7 +17,7 @@
     <string name="cancel">取消</string>
     <string name="thread_reply_url">http://bbs.ngacn.cc/post.php?</string>
     <string name="error">出错了</string>
-    <string name="nowifi_downimg">没wifi也下载图片</string>
+    <string name="nowifi_downimg">没wifi也下载帖子图片</string>
     <string name="nightmode">夜间模式</string>
     <string name="refresh">刷新</string>
     <string name="back">返回</string>
@@ -33,4 +33,5 @@
     <string name="thread_load_error">可能遇到了一个广告或者帖子被删除</string>
     <string name="notification_on">启用被喷提示</string>
     <string name="notification_sound">提示声音</string>
+    <string name="download_avatar_nowifi">没wifi也下载头像</string>
 </resources>

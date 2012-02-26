@@ -6,11 +6,17 @@
 
         <Switch
             android:id="@+id/checkBox_down_img_no_wifi"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/nowifi_downimg"/>
+
+        <Switch
+            android:id="@+id/checkBox_download_avatar_no_wifi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="@string/nowifi_downimg"
-            android:textColor="@color/black" />
+            android:text="@string/download_avatar_nowifi" />
 
         <Switch
             android:id="@+id/checkBox_night_mode"
@@ -25,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="@string/notification_on" />
-
+
         <Switch
             android:id="@+id/checkBox_notification_sound"
             android:layout_width="match_parent"
