@@ -19,11 +19,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import sp.phone.bean.PerferenceConstant;
 import sp.phone.forumoperation.HttpPostClient;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.ThemeManager;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends Activity
+	implements PerferenceConstant{
 
 	EditText userText;
 	EditText passwordText;
@@ -50,8 +52,8 @@ public class LoginActivity extends Activity {
 		String postUrl = "http://account.178.com/q_account.php?_act=login";
 
 		SharedPreferences share = LoginActivity.this.getSharedPreferences(
-				"perference", MODE_PRIVATE);
-		String userName = share.getString("username", "");
+				PERFERENCE, MODE_PRIVATE);
+		String userName = share.getString(USER_NAME, "");
 		if (userName != "")
 			userText.setText(userName);
 
@@ -192,11 +194,11 @@ public class LoginActivity extends Activity {
 				Intent intent = new Intent();
 				intent.setClass(v.getContext(), MainActivity.class);
 				SharedPreferences share = LoginActivity.this
-						.getSharedPreferences("perference", MODE_PRIVATE);
+						.getSharedPreferences(PERFERENCE, MODE_PRIVATE);
 				Editor editor = share.edit();
-				editor.putString("uid", uid);
-				editor.putString("cid", cid);
-				editor.putString("username", userText.getText().toString());
+				editor.putString(UID, uid);
+				editor.putString(CID, cid);
+				editor.putString(USER_NAME, userText.getText().toString());
 				editor.commit();
 
 				startActivity(intent);

@@ -4,6 +4,7 @@ import java.util.List;
 import com.alibaba.fastjson.JSON;
 
 import sp.phone.bean.Bookmark;
+import sp.phone.bean.PerferenceConstant;
 import sp.phone.forumoperation.FloorOpener;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
@@ -27,7 +28,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.TextView;
 
 public class BookmarkActivity extends Activity 
-	implements OnItemClickListener {
+	implements OnItemClickListener, PerferenceConstant {
 	List<Bookmark> bookmarks;//reference
 	ListView view;
 	@Override
@@ -89,14 +90,14 @@ public class BookmarkActivity extends Activity
 			case 0:
 
 				SharedPreferences  share = 
-						getSharedPreferences("perference", MODE_PRIVATE);
+						getSharedPreferences(PERFERENCE, MODE_PRIVATE);
 
 					Editor editor = share.edit();
 					bookmarks.remove(info.position);
 					String jsonString = "";
 					if(bookmarks.size()>0)
 						jsonString =JSON.toJSONString(bookmarks.getClass());
-					editor.putString("bookmarks",jsonString  );
+					editor.putString(BOOKMARKS,jsonString  );
 					editor.commit();
 					
 					BookmarkAdapter ad = (BookmarkAdapter) view.getAdapter();

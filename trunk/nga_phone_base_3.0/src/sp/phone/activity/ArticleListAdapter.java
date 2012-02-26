@@ -74,8 +74,7 @@ public class ArticleListAdapter  extends ArrayAdapter<HashMap<String, String>>
 			}
 			return rowView;
 		} else {
-			final MyApp app = (MyApp) activity.getApplication();
-			//rowView = inflater.inflate(R.layout.article_list_2, null);
+
 			rowView = inflater.inflate(R.layout.relative_aritclelist, null);
 			int colorId = ThemeManager.getInstance().getBackgroundColor();
 			rowView.setBackgroundResource(colorId);
@@ -92,7 +91,7 @@ public class ArticleListAdapter  extends ArrayAdapter<HashMap<String, String>>
 			final String userId = map.get("userId");
 			if (!StringUtil.isEmpty(avatarUrl)) {
 				final String avatarPath = ImageUtil.newImage(avatarUrl, userId);
-				final boolean downImg = isInWifi()||app.isDownImgWithoutWifi();
+				final boolean downImg = isInWifi()||PhoneConfiguration.getInstance().isDownAvatarNoWifi();
 				new AvatarLoadTask(avatarIV, zf, downImg).execute(avatarUrl, avatarPath, userId);
 				
 			}
@@ -133,7 +132,7 @@ public class ArticleListAdapter  extends ArrayAdapter<HashMap<String, String>>
 				
 			
 			WebSettings setting = contentTV.getSettings();
-			if(!app.isDownImgWithoutWifi() && !isInWifi() )
+			if(!PhoneConfiguration.getInstance().isDownImgNoWifi() && !isInWifi() )
 				setting.setBlockNetworkImage(true);
 			else
 				setting.setBlockNetworkImage(false);

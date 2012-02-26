@@ -11,15 +11,12 @@ import android.app.Application;
 public class MyApp extends Application {
 
 	private RSSFeed rssFeed;
-	private HashMap<Object, RSSFeed> map;
 	private ArticlePage articlePage;
 	private HashMap<Object, ArticlePage> map_article;
 
 	private ZipFile zf;
 	
-	private String uid;
-	private String cid;
-	private boolean downImgWithoutWifi;
+
 	private PhoneConfiguration config;
 	
 	
@@ -57,13 +54,7 @@ public class MyApp extends Application {
 		this.articlePage = articlePage;
 	}
 
-	public HashMap<Object, RSSFeed> getMap() {
-		return map;
-	}
 
-	public void setMap(HashMap<Object, RSSFeed> map) {
-		this.map = map;
-	}
 
 	public RSSFeed getRssFeed() {
 		return rssFeed;
@@ -73,49 +64,7 @@ public class MyApp extends Application {
 		this.rssFeed = rssFeed;
 	}
 
-	/**
-	 * @return the uid
-	 */
-	public String getUid() {
-		return uid;
-	}
-
-	/**
-	 * @param uid the uid to set
-	 */
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
-
-	/**
-	 * @return the cid
-	 */
-	public String getCid() {
-		return cid;
-	}
-
-	/**
-	 * @param cid the cid to set
-	 */
-	public void setCid(String cid) {
-		this.cid = cid;
-	}
 	
-	public String getCookie(){
-		if(uid !=null && cid !=null){
-			return "ngaPassportUid="+ uid+
-					"; ngaPassportCid=" + cid;
-		}
-		return "";
-	}
-
-	public void setDownImgWithoutWifi(boolean downImgWithoutWifi) {
-		this.downImgWithoutWifi = downImgWithoutWifi;
-	}
-
-	public boolean isDownImgWithoutWifi() {
-		return downImgWithoutWifi;
-	}
 
 	public PhoneConfiguration getConfig() {
 		return config;

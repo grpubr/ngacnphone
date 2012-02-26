@@ -127,7 +127,7 @@ public class ArticleUtil {
 							String  titleID = ht.getAttribute("id");
 							if(titleID != null && !titleID.equals("postsubject0") && ht.getChildCount() !=0){
 								String title =ht.getChild(0).getText() ;
-								article.setTitle(title);
+								article.setTitle(StringUtil.unEscapeHtml(title));
 							}
 								
 						}else if ( node3 instanceof ImageTag){
@@ -156,7 +156,7 @@ public class ArticleUtil {
 						}
 					}
 					
-					article.setContent(content);
+					article.setContent(StringUtil.unEscapeHtml(content));
 
 
 					article.setUser(user);
@@ -178,7 +178,7 @@ public class ArticleUtil {
 				}
 				HashMap<String, String> current = new HashMap<String, String>();
 				current.put("link", linkTag.getLink());
-				current.put("title", linkTag.getLinkText());
+				current.put("title",StringUtil.unEscapeHtml(linkTag.getLinkText()));
 				articlePage.setNow(current);
 			} else if (node instanceof Span) {
 				Span span = (Span) node;
