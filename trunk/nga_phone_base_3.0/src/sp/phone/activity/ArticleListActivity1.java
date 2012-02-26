@@ -261,9 +261,9 @@ public class ArticleListActivity1 extends Activity
 				String title = articlePage.getNow().get("title");
 				boolean ret = PhoneConfiguration.getInstance().addBookmark(bookmarkUrl, title);
 				if(ret)
-					Toast.makeText(this, "收藏成功", Toast.LENGTH_LONG);
+					Toast.makeText(this, "收藏成功", Toast.LENGTH_LONG).show();
 				else{
-					Toast.makeText(this, "链接已经在收藏夹里了", Toast.LENGTH_LONG);
+					Toast.makeText(this, "链接已经在收藏夹里了", Toast.LENGTH_LONG).show();
 					break;
 				}
 				
@@ -289,18 +289,21 @@ public class ArticleListActivity1 extends Activity
 	
 	private void handleLockOrientation(MenuItem item){
 		int preOrentation = ThemeManager.getInstance().screenOrentation;
+		int newOrientation = ActivityInfo.SCREEN_ORIENTATION_USER;
+		
 		if(preOrentation ==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||
 				preOrentation ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
 			//restore
-			int newOrientation = ActivityInfo.SCREEN_ORIENTATION_USER;
+			//int newOrientation = ActivityInfo.SCREEN_ORIENTATION_USER;
 			ThemeManager.getInstance().screenOrentation = newOrientation;
+			
 			setRequestedOrientation(newOrientation);
 			item.setTitle(R.string.lock_orientation);
 			item.setIcon(android.R.drawable.ic_lock_idle_lock);
 
 			
 		}else{
-			int newOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+			newOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 			Display dis = getWindowManager().getDefaultDisplay();
 			if(dis.getWidth() < dis.getHeight()){
 				newOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
@@ -311,6 +314,12 @@ public class ArticleListActivity1 extends Activity
 			item.setTitle(R.string.unlock_orientation);
 			item.setIcon(android.R.drawable.ic_menu_always_landscape_portrait);
 		}
+		
+		SharedPreferences share = this.getSharedPreferences(PERFERENCE,
+				MODE_PRIVATE);
+		Editor editor = share.edit();
+		editor.putInt(SCREEN_ORENTATION, newOrientation);
+		editor.commit();
 		
 	}
 	
@@ -421,6 +430,7 @@ public class ArticleListActivity1 extends Activity
 		case COPY_CLIPBOARD_ORDER:
 			ClipboardManager cbm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 			cbm.setText(StringUtil.removeBrTag(content));
+			Toast.makeText(this.getApplication(), "已经复制到剪切板", Toast.LENGTH_SHORT).show();
 			break;
 		case SHOW_THISONLY_ORDER:
 			final String authorId = map.get("userId");
