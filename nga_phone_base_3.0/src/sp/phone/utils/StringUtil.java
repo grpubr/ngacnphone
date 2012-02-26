@@ -132,18 +132,19 @@ public class StringUtil {
 		
 		//quote
 		String quoteStyle = "<div style='background:#E8E8E8;border:1px solid #888' >";
+		
+		s = s.replaceAll("\\[quote\\]",quoteStyle);
+		s = s.replaceAll("\\[/quote\\]", "</div>");
 		//reply
 		s = s.replaceAll(
-				"\\[quote\\]\\[pid=\\d+\\]Reply\\[/pid\\] \\[b\\](Post by .+ \\(\\d{4,4}-\\d\\d-\\d\\d \\d\\d:\\d\\d\\):\\[/b\\])"
-				, quoteStyle + "Reply $1");
-		s = s.replaceAll("\\[/quote\\]", "</div>");
+				"\\[pid=\\d+\\]Reply\\[/pid\\]", "Reply");
+		
 		//topic
 		s = s.replaceAll(
-				"\\[quote\\]\\[tid=\\d+\\]Topic\\[/pid\\] \\[b\\](Post by .+ \\(\\d{4,4}-\\d\\d-\\d\\d \\d\\d:\\d\\d\\):)\\[/b\\]"
-				, quoteStyle + "Topic $1");
+				"\\[tid=\\d+\\]Topic\\[/pid\\]", "Topic");
 		//reply
-		s = s.replaceAll("\\[b\\]Reply to \\[pid=\\d+\\]Reply\\[/pid\\] (Post by .+ \\(\\d{4,4}-\\d\\d-\\d\\d \\d\\d:\\d\\d\\))\\[/b\\]"
-				, "Reply to Reply <b>$1</b>");
+		//s = s.replaceAll("\\[b\\]Reply to \\[pid=\\d+\\]Reply\\[/pid\\] (Post by .+ \\(\\d{4,4}-\\d\\d-\\d\\d \\d\\d:\\d\\d\\))\\[/b\\]"
+		//		, "Reply to Reply <b>$1</b>");
 		// 转换 tag
 		s = s.replaceAll("\\[b\\]", "<b>");
 		s = s.replaceAll("\\[/b\\]","</b>"/* "</font>"*/);
@@ -228,6 +229,9 @@ public class StringUtil {
 		return ret;
 	}
 	
+	public static String buildThreadURLByTid(String tid){
+		return "/read.php?tid="+tid;
+	}
 	private static final String[] SAYING = {
 			"战争打响，真理阵亡。;埃斯库罗斯",
 			"让子弹先走。 ",

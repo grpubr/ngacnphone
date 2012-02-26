@@ -7,6 +7,7 @@ import org.apache.commons.io.IOUtils;
 
 import sp.phone.forumoperation.HttpPostClient;
 import sp.phone.forumoperation.ThreadPostAction;
+import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.app.Activity;
@@ -32,7 +33,6 @@ public class PostActivity extends Activity {
 	private int fid;
 	private Button button_commit;
 	private Button button_cancel;
-	private MyApp app;
 	private String REPLY_URL="http://bbs.ngacn.cc/post.php?";
 	private String sig ="\n[url=http://code.google.com/p/ngacnphone/downloads/list]"
 		+"----sent from my " + android.os.Build.MANUFACTURER
@@ -65,7 +65,7 @@ public class PostActivity extends Activity {
 		if(tid == null)
 			tid = "";
 
-		app = (MyApp)getApplication();
+
 		
 		act = new ThreadPostAction(tid, "", "");
 		act.setAction_(action);
@@ -156,8 +156,7 @@ public class PostActivity extends Activity {
 			String body = params[1];
 			
 			HttpPostClient c =  new HttpPostClient(url);
-			String cookie = "ngaPassportUid="+ app.getUid()+
-			"; ngaPassportCid=" + app.getCid();
+			String cookie = PhoneConfiguration.getInstance().getCookie();
 			c.setCookie(cookie);
 			
 			try {

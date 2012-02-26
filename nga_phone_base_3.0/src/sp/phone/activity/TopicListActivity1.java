@@ -54,7 +54,7 @@ public class TopicListActivity1 extends Activity {
 	private static final String TABID_NEXT = "tab_n";
 	private RSSFeed rssFeed;
 	private int page;
-	private HashMap<Object, RSSFeed> map;
+	//private HashMap<Object, RSSFeed> map;
 	private int max_num = 5;
 	private MyApp app;
 	private TopicFlingListener flingListener;
@@ -96,11 +96,12 @@ public class TopicListActivity1 extends Activity {
 			asynTask = null;
 		}
 		long now = System.currentTimeMillis();
-		if(now - PhoneConfiguration.getInstance().lastMessageCheck > 60*1000)
+		PhoneConfiguration config = PhoneConfiguration.getInstance();
+		if(now - config.lastMessageCheck > 60*1000)
 		{
 			
 			asynTask = new CheckReplyNotificationTask(this);
-			asynTask.execute(app.getCookie());
+			asynTask.execute(config.getCookie());
 		}
 		super.onResume();
 	}
@@ -206,7 +207,7 @@ public class TopicListActivity1 extends Activity {
 	private void initDate() {
 		app = ((MyApp) getApplication());
 		rssFeed = app.getRssFeed();
-		map = app.getMap();
+		//map = app.getMap();
 		app.getMap_article();
 		flingListener = new TopicFlingListener(this);
 
@@ -314,9 +315,9 @@ public class TopicListActivity1 extends Activity {
 				}
 			}
 			RSSFeed rssFeed2 = null;
-			if (!tabId.equals(TABID_PRE)) {
-				rssFeed2 = map.get(num);
-			}
+			//if (!tabId.equals(TABID_PRE)) {
+			//	rssFeed2 = map.get(num);
+			//}
 			if (rssFeed2 == null) {
 				link = link.substring(0, link.length() - 1);
 				final String newURL;

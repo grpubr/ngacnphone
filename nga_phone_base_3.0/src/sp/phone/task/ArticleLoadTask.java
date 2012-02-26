@@ -5,6 +5,7 @@ import sp.phone.bean.ArticlePage;
 import sp.phone.bean.OnThreadLoadCompleteLinstener;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
+import sp.phone.utils.PhoneConfiguration;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -18,7 +19,7 @@ public class ArticleLoadTask extends AsyncTask<String, Integer, ArticlePage> {
 		super();
 		this.context = context;
 		app = (MyApp) context.getApplicationContext();
-		cookie = app.getCookie();
+		cookie = PhoneConfiguration.getInstance().getCookie();
 		this.completeListener = completeListener;
 	}
 	public ArticleLoadTask(Context context){

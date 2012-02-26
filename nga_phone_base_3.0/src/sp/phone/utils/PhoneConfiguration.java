@@ -11,9 +11,65 @@ public class PhoneConfiguration {
 	private float textSize;
 	private int webSize;
 	public int nikeWidth = 100;
+	public boolean downAvatarNoWifi;
+	public boolean downImgNoWifi;
 	public boolean notification;
 	public boolean notificationSound;
 	public long lastMessageCheck = 0;
+	public String cid;
+	public String uid;
+	
+	
+	
+	
+	public int getNikeWidth() {
+		return nikeWidth;
+	}
+	public void setNikeWidth(int nikeWidth) {
+		this.nikeWidth = nikeWidth;
+	}
+	public boolean isDownAvatarNoWifi() {
+		return downAvatarNoWifi;
+	}
+	public void setDownAvatarNoWifi(boolean downAvatarNoWifi) {
+		this.downAvatarNoWifi = downAvatarNoWifi;
+	}
+	public boolean isDownImgNoWifi() {
+		return downImgNoWifi;
+	}
+	public void setDownImgNoWifi(boolean downImgNoWifi) {
+		this.downImgNoWifi = downImgNoWifi;
+	}
+	public boolean isNotification() {
+		return notification;
+	}
+	public void setNotification(boolean notification) {
+		this.notification = notification;
+	}
+	public boolean isNotificationSound() {
+		return notificationSound;
+	}
+	public void setNotificationSound(boolean notificationSound) {
+		this.notificationSound = notificationSound;
+	}
+	public long getLastMessageCheck() {
+		return lastMessageCheck;
+	}
+	public void setLastMessageCheck(long lastMessageCheck) {
+		this.lastMessageCheck = lastMessageCheck;
+	}
+	public String getCid() {
+		return cid;
+	}
+	public void setCid(String cid) {
+		this.cid = cid;
+	}
+	public String getUid() {
+		return uid;
+	}
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
 	public float getTextSize() {
 		return textSize;
 	}
@@ -51,6 +107,15 @@ public class PhoneConfiguration {
 	public void setBookmarks(List<Bookmark> bookmarks) {
 		this.bookmarks = bookmarks;
 	}
+	
+	public String getCookie(){
+		if( !StringUtil.isEmpty(uid) && !StringUtil.isEmpty(cid)){
+			return "ngaPassportUid="+ uid+
+					"; ngaPassportCid=" + cid;
+		}
+		return "";
+	}
+	
 	public boolean addBookmark(String url,String title){
 		boolean ret = true;
 		for(Bookmark b:bookmarks){

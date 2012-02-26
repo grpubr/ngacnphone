@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSON;
 
 import sp.phone.bean.Article;
 import sp.phone.bean.ArticlePage;
+import sp.phone.bean.PerferenceConstant;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
@@ -57,7 +58,7 @@ import android.widget.TabHost.TabSpec;
 import android.widget.Toast;
 
 public class ArticleListActivity1 extends Activity 
-	implements LoadStopable,OnTouchListener {
+	implements LoadStopable,OnTouchListener, PerferenceConstant {
 
 	ActivityUtil activityUtil = ActivityUtil.getInstance();
 
@@ -266,11 +267,11 @@ public class ArticleListActivity1 extends Activity
 					break;
 				}
 				
-				SharedPreferences share = this.getSharedPreferences("perference",
+				SharedPreferences share = this.getSharedPreferences(PERFERENCE,
 						MODE_PRIVATE);
 				Editor editor = share.edit();
 				String bookmarks = JSON.toJSONString(PhoneConfiguration.getInstance().getBookmarks());
-				editor.putString("bookmarks", bookmarks);
+				editor.putString(BOOKMARKS, bookmarks);
 				editor.commit();
 				break;
 			case R.id.article_menuitem_lock:
@@ -578,8 +579,7 @@ public class ArticleListActivity1 extends Activity
 				// activityUtil.notice("INFO",
 				// "连接策略:P-N,将模拟浏览器显示方式");
 				
-				String cookie = "ngaPassportUid=" + ArticleListActivity1.this.app.getUid()
-					+"; ngaPassportCid=" + ArticleListActivity1.this.app.getCid();
+				String cookie = PhoneConfiguration.getInstance().getCookie();
 				ap = HttpUtil.getArticlePage(url,cookie);
 			}
 			if (ap != null) {

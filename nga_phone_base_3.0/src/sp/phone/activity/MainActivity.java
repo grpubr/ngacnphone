@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.zip.ZipFile;
 
 import sp.phone.bean.Bookmark;
+import sp.phone.bean.PerferenceConstant;
 import sp.phone.bean.RSSFeed;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
@@ -60,7 +61,8 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.alibaba.fastjson.JSON;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity
+	implements PerferenceConstant{
 	final static int version = 112;
 	TextView tv_pre;
 	TextView tv_now;
@@ -91,42 +93,42 @@ public class MainActivity extends Activity {
 
 		initUserInfo(intent);
 		this.loadBoardInfo();
-		SharedPreferences share = this.getSharedPreferences("perference",
+		SharedPreferences share = this.getSharedPreferences(PERFERENCE,
 				MODE_PRIVATE);
-		if(share.getBoolean("nightmode", false))
+		if(share.getBoolean(NIGHT_MODE, false))
 			ThemeManager.getInstance().setMode(1);
 		//firstRun = share.getBoolean("firstRun", true);
-		int version_in_config = share.getInt("version", 0);
+		int version_in_config = share.getInt(VERSION, 0);
 		if(version_in_config < version){
 			Editor editor = share.edit();
-			editor.putInt("version", version);
-			editor.putBoolean("refreshAfterPost", true);
+			editor.putInt(VERSION, version);
+			editor.putBoolean(REFRESH_AFTER_POST, true);
 			this.boardInfo = this.resetBoard();
 			String infoString = JSON.toJSONString(boardInfo);
-			editor.putString("boards", infoString);
+			editor.putString(BOARDS, infoString);
 			editor.commit();
 			
 		}
 		//refresh
 		PhoneConfiguration config = PhoneConfiguration.getInstance();
 		config.setRefreshAfterPost(
-				share.getBoolean("refreshAfterPost",true));
+				share.getBoolean(REFRESH_AFTER_POST,true));
 		//font
 		final float defTextSize = 21.0f;//new TextView(this).getTextSize();
 		final int defWebSize = 16;//new WebView(this).getSettings().getDefaultFontSize();
 		
-		final float textSize = share.getFloat("textsize", defTextSize);
-		final int webSize = share.getInt("websize", defWebSize);
+		final float textSize = share.getFloat(TEXT_SIZE, defTextSize);
+		final int webSize = share.getInt(WEB_SIZE, defWebSize);
 		config.setTextSize(textSize);
 		config.setWebSize(webSize);
 		
-		boolean notification = share.getBoolean("enableNotification", true);
-		boolean notificationSound = share.getBoolean("notificationSound", true);
+		boolean notification = share.getBoolean(ENABLE_NOTIFIACTION, true);
+		boolean notificationSound = share.getBoolean(NOTIFIACTION_SOUND, true);
 		config.notification = notification;
 		config.notificationSound = notificationSound;
 		
 		//bookmarks
-		String bookmarkJson = share.getString("bookmarks", "");
+		String bookmarkJson = share.getString(BOOKMARKS, "");
 		List<Bookmark> bookmarks = new ArrayList<Bookmark>();
 		try{
 		if(!bookmarkJson.equals(""))
@@ -144,24 +146,25 @@ public class MainActivity extends Activity {
 
 	private void initUserInfo(Intent intent) {
 		
-		String uid = null;// intent.getStringExtra("uid");
-		String cid = null;// intent.getStringExtra("cid");
-		//String userName = null;// intent.getStringExtra("User");
+		String uid = null;
+		String cid = null;
+		
+		PhoneConfiguration config = PhoneConfiguration.getInstance();
 
-		SharedPreferences share = this.getSharedPreferences("perference",
+		SharedPreferences share = this.getSharedPreferences(PERFERENCE,
 				MODE_PRIVATE);
 
 		
-			uid = share.getString("uid", "");
-			cid = share.getString("cid", "");
+			uid = share.getString(UID, "");
+			cid = share.getString(CID, "");
 			if (uid != null && cid != null && uid != "" && cid != "") {
-				app.setUid(uid);
-				app.setCid(cid);
+				config.setUid(uid);
+				config.setCid(cid);
 			}
-			boolean downImgWithoutWifi = share.getBoolean(
-					"down_load_without_wifi", true);
-			app.setDownImgWithoutWifi(downImgWithoutWifi);
-		
+			boolean downImgWithoutWifi = share.getBoolean(DOWNLOAD_IMG_NO_WIFI, false);
+			config.setDownImgNoWifi(downImgWithoutWifi);
+			boolean downAvatarNoWifi = share.getBoolean(DOWNLOAD_AVATAR_NO_WIFI, false);
+			config.setDownAvatarNoWifi(downAvatarNoWifi);
 
 	}
 
@@ -406,7 +409,7 @@ public class MainActivity extends Activity {
 
 	private void initDate() {
 		app = ((MyApp) getApplication());
-		prepareGridData();
+		//prepareGridData();
 
 
 		new Thread() {
@@ -561,11 +564,7 @@ public class MainActivity extends Activity {
 		return boards;
 	}
 
-	private void prepareGridData() {
-		List<BoardInfo> boards = getOptionBoard();
 
-
-	}
 	private List<BoardInfo> boardInfo;
 	private List<BoardInfo> getOptionBoard() {
 		return  boardInfo;
@@ -577,17 +576,17 @@ public class MainActivity extends Activity {
 	
 	private void flushBoardInfo(){
 		String infoString = JSON.toJSONString(boardInfo);
-		SharedPreferences share = this.getSharedPreferences("perference",
+		SharedPreferences share = this.getSharedPreferences(PERFERENCE,
 				MODE_PRIVATE);
 		Editor editor = share.edit();
-		editor.putString("boards", infoString);
+		editor.putString(BOARDS, infoString);
 		editor.commit();
 		
 	}
 	private void loadBoardInfo(){
-		SharedPreferences share = this.getSharedPreferences("perference",
+		SharedPreferences share = this.getSharedPreferences(PERFERENCE,
 				MODE_PRIVATE);
-		String infoString = share.getString("boards", "");
+		String infoString = share.getString(BOARDS, "");
 		if(boardInfo==null)
 			boardInfo = new ArrayList<BoardInfo>();
 		if(!infoString.equals(""))
@@ -613,7 +612,7 @@ public class MainActivity extends Activity {
 			
 		}
 		//refresh
-		this.prepareGridData();
+		//this.prepareGridData();
 		return true;
 	}
 	
@@ -634,13 +633,13 @@ public class MainActivity extends Activity {
 		//nameList.remove(index);
 		
 		synchronized (this) {
-			setOptionBoard(boards);
+			//setOptionBoard(boards);
 			flushBoardInfo();
 
 		}
 		
 		//refresh
-		this.prepareGridData();
+		//this.prepareGridData();
 		return true;
 	}
 
@@ -728,11 +727,11 @@ public class MainActivity extends Activity {
 				// MyApp app = ((MyApp) MainActivity.this);
 				app.setRssFeed(rssFeed);
 
-				HashMap<Object, RSSFeed> map = new HashMap<Object, RSSFeed>();
+				/*HashMap<Object, RSSFeed> map = new HashMap<Object, RSSFeed>();
 				if (false)
 					map.put(StringUtil.getNowPageNum(rssFeed.getLink()),
 							rssFeed);
-				app.setMap(map);
+				app.setMap(map);*/
 				Intent intent = new Intent();
 				intent.setClass(MainActivity.this, TopicListActivity1.class);
 				startActivity(intent);
@@ -843,52 +842,7 @@ public class MainActivity extends Activity {
 
 	}
 
-	private String text_urls[] = { "321", "-1068355","-447601" };
-	private String text_names[] = { "DotA","晴风村","二次元国家地理 - NG2" };
-
-	class TextListAdapter extends BaseAdapter {
-		final Activity activity;
-
-		public TextListAdapter(Activity activity) {
-			super();
-			this.activity = activity;
-		}
-
-		@Override
-		public int getCount() {
-			return text_urls.length;
-
-		}
-
-		@Override
-		public Object getItem(int position) {
-			if (position < text_urls.length)
-				return text_urls[position];
-			return null;
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			final TextView iv = new TextView(activity);
-			iv.setText(text_names[position]);
-			iv.setTextColor(android.graphics.Color.BLACK);
-			Drawable draw = getResources().getDrawable(R.drawable.pdefault);
-			iv.setCompoundDrawablesWithIntrinsicBounds(draw, null, null, null);
-			if (error_level == 0) {
-				String fidString = (String) getItem(position);
-				iv.setOnClickListener(new EnterToplistLintener(position,
-						fidString));
-
-			}
-			return iv;
-		}
-
-	}
+	
 
 	class EnterToplistLintener implements OnItemClickListener , OnClickListener {
 		int position;
@@ -925,11 +879,10 @@ public class MainActivity extends Activity {
 
 			String url = HttpUtil.Server + "/thread.php?fid=" + fidString
 					+ "&rss=1";
+			PhoneConfiguration config = PhoneConfiguration.getInstance();
+			if ( !StringUtil.isEmpty(config.getCookie())) {
 
-			if ( app.getUid() != null && app.getCid() != null) {
-
-				url = url + "&ngaPassportUid=" + app.getUid()
-						+ "&ngaPassportCid=" + app.getCid();
+				url = url + "&" + config.getCookie().replace("; ", "&");
 			}else if(fid<0){
 				new AlertDialog.Builder(MainActivity.this).setTitle("提示")
 				.setMessage("个人板块要登录了才能进去")

@@ -6,6 +6,7 @@ import sp.phone.activity.MessageArticleActivity;
 import sp.phone.activity.R;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
+import sp.phone.utils.StringUtil;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -82,7 +83,7 @@ public class CheckReplyNotificationTask extends
 			String pid = result.substring(start, end);
 			start = end;
 			
-
+			title = StringUtil.unEscapeHtml(title);
 			showNotification(nickName,tid,pid, title);
 		}
 	}

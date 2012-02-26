@@ -7,6 +7,7 @@ import java.util.zip.ZipFile;
 import sp.phone.bean.Article;
 import sp.phone.bean.ArticlePage;
 import sp.phone.bean.OnThreadLoadCompleteLinstener;
+import sp.phone.forumoperation.FloorOpener;
 import sp.phone.task.ArticleLoadTask;
 import sp.phone.task.AvatarLoadTask;
 import sp.phone.utils.ActivityUtil;
@@ -32,9 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -46,6 +45,7 @@ public class MessageArticleActivity extends MyAbstractActivity
 	implements OnThreadLoadCompleteLinstener{
 
 	static final int CONTEXT_MENU_ITEM_REPLY = 0;
+	static final int CONTEXT_MENU_ITEM_WHOLE_THREAD = 1;
 	private ListView listView;
 	String tid;
 	String pid;
@@ -118,16 +118,17 @@ public class MessageArticleActivity extends MyAbstractActivity
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		menu.add(0, CONTEXT_MENU_ITEM_REPLY, 0, "喷回去");
+		menu.add(0, CONTEXT_MENU_ITEM_WHOLE_THREAD, 0, "查看整个帖子");
 		super.onCreateContextMenu(menu, v, menuInfo);
 	}
 
-	private String getPid(String url) {
+	/*private String getPid(String url) {
 		int start = url.indexOf("pid=")+4;
 		int end = url.indexOf("&");
 		if(end == -1)
 			end = url.length();
 		return url.substring(start,end);
-	}
+	}*/
 	
 	private String buildQuoteContent(String nickName, String postTime,String content){
 		StringBuffer postPrefix = new StringBuffer();
@@ -168,6 +169,9 @@ public class MessageArticleActivity extends MyAbstractActivity
 			ReplyIntent.setClass(this, PostActivity.class);
 			startActivity(ReplyIntent);
 			break;
+		case CONTEXT_MENU_ITEM_WHOLE_THREAD :	
+			String url = StringUtil.buildThreadURLByTid(tid);
+			new FloorOpener(this).handleFloor(url);
 		}
 		return true;
 	}
@@ -300,7 +304,7 @@ public class MessageArticleActivity extends MyAbstractActivity
 			final String userId = "" + article.getUser().getUserId();
 			if (!StringUtil.isEmpty(avatarUrl)) {
 				final String avatarPath = ImageUtil.newImage(avatarUrl, userId);
-				final boolean downImg = isInWifi()||app.isDownImgWithoutWifi();
+				final boolean downImg = isInWifi()||PhoneConfiguration.getInstance().isDownAvatarNoWifi();
 				new AvatarLoadTask(avatarIV, zf, downImg).execute(avatarUrl, avatarPath, userId);
 				
 			}
@@ -332,11 +336,11 @@ public class MessageArticleActivity extends MyAbstractActivity
 				+ ngaHtml + 
 				"</font></div></body>";
 				
-			MyApp app = (MyApp) activity.getApplication();
+
 			WebSettings setting = contentTV.getSettings();
 			
 			setting.setBlockNetworkImage(false);
-			if(app.isDownImgWithoutWifi() || isInWifi() )
+			if(PhoneConfiguration.getInstance().isDownAvatarNoWifi() || isInWifi() )
 				setting.setBlockNetworkImage(true);
 
 			contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);

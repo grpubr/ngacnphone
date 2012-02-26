@@ -1,5 +1,6 @@
 package sp.phone.activity;
 
+import sp.phone.bean.PerferenceConstant;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.ThemeManager;
@@ -22,6 +23,7 @@ public class SettingsActivity extends Activity{
 
 	private LinearLayout view;
 	private CompoundButton checkBoxDownimgNowifi;
+	private CompoundButton checkBoxDownAvatarNowifi;
 	private CompoundButton nightMode;
 	private CompoundButton notification;
 	private CompoundButton notificationSound;
@@ -41,7 +43,7 @@ public class SettingsActivity extends Activity{
 		
 	}
 	void initView(){
-		MyApp app = (MyApp) getApplication();
+
 		//checkbox
 		ThemeManager.SetContextTheme(this);
 		try{
@@ -56,9 +58,14 @@ public class SettingsActivity extends Activity{
 		
 		
 		checkBoxDownimgNowifi = (CompoundButton) findViewById(R.id.checkBox_down_img_no_wifi);
-		checkBoxDownimgNowifi.setChecked(app.isDownImgWithoutWifi());
-		CheckBoxDownimgNowifiChangedListener listener = new CheckBoxDownimgNowifiChangedListener();
+		checkBoxDownimgNowifi.setChecked(PhoneConfiguration.getInstance().downImgNoWifi);
+		DownImgNoWifiChangedListener listener = new DownImgNoWifiChangedListener();
 		checkBoxDownimgNowifi.setOnCheckedChangeListener(listener);
+		
+		checkBoxDownAvatarNowifi = (CompoundButton) findViewById(R.id.checkBox_download_avatar_no_wifi);
+		checkBoxDownAvatarNowifi.setChecked(PhoneConfiguration.getInstance().downImgNoWifi);
+		DownAvatarNowifiChangedListener AvatarListener = new DownAvatarNowifiChangedListener();
+		checkBoxDownAvatarNowifi.setOnCheckedChangeListener(AvatarListener);
 
 		nightMode = (CompoundButton) findViewById(R.id.checkBox_night_mode);
 		nightMode.setChecked(ThemeManager.getInstance().getMode() ==ThemeManager.MODE_NIGHT);
@@ -156,15 +163,15 @@ public class SettingsActivity extends Activity{
 	}
 
 
-	class NightModeListener implements OnCheckedChangeListener{
+	class NightModeListener implements OnCheckedChangeListener, PerferenceConstant{
 		
 		@Override
 		public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
 			SharedPreferences  share = 
-				getSharedPreferences("perference", MODE_PRIVATE);
+				getSharedPreferences(PERFERENCE, MODE_PRIVATE);
 
 			Editor editor = share.edit();
-			editor.putBoolean("nightmode", arg1);
+			editor.putBoolean(NIGHT_MODE, arg1);
 			editor.commit();
 			int mode = ThemeManager.MODE_NORMAL;
 			if(arg1)
@@ -175,24 +182,44 @@ public class SettingsActivity extends Activity{
 		
 	}
 
-	class CheckBoxDownimgNowifiChangedListener implements OnCheckedChangeListener{
+	class DownImgNoWifiChangedListener 
+		implements OnCheckedChangeListener, PerferenceConstant{
 
 		@Override
 		public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-			MyApp app = (MyApp) getApplication();
-			app.setDownImgWithoutWifi(arg1);
+
+			PhoneConfiguration.getInstance().downImgNoWifi = arg1;
 			SharedPreferences  share = 
-				getSharedPreferences("perference", MODE_PRIVATE);
+				getSharedPreferences(PERFERENCE, MODE_PRIVATE);
 
 			Editor editor = share.edit();
-			editor.putBoolean("down_load_without_wifi", arg1);
+			editor.putBoolean(DOWNLOAD_IMG_NO_WIFI, arg1);
 			editor.commit();
 			
 		}
 		
 	}
 	
-	class NotificationChangedListener implements OnCheckedChangeListener{
+	class DownAvatarNowifiChangedListener 
+		implements OnCheckedChangeListener, PerferenceConstant{
+
+		@Override
+		public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
+
+			PhoneConfiguration.getInstance().downAvatarNoWifi = arg1;
+			SharedPreferences  share = 
+				getSharedPreferences(PERFERENCE, MODE_PRIVATE);
+
+			Editor editor = share.edit();
+			editor.putBoolean(DOWNLOAD_AVATAR_NO_WIFI, arg1);
+			editor.commit();
+			
+		}
+		
+	}
+	
+	class NotificationChangedListener 
+		implements OnCheckedChangeListener, PerferenceConstant{
 		final CompoundButton child;
 		public NotificationChangedListener(CompoundButton child){
 			this.child = child;
@@ -204,10 +231,10 @@ public class SettingsActivity extends Activity{
 			PhoneConfiguration.getInstance().notification = isChecked;
 			child.setEnabled(isChecked);
 			SharedPreferences  share = 
-				getSharedPreferences("perference", MODE_PRIVATE);
+				getSharedPreferences(PERFERENCE, MODE_PRIVATE);
 
 			Editor editor = share.edit();
-			editor.putBoolean("enableNotification", isChecked);
+			editor.putBoolean(ENABLE_NOTIFIACTION, isChecked);
 			editor.commit();
 			
 		}
@@ -216,7 +243,8 @@ public class SettingsActivity extends Activity{
 		
 	}
 	
-	class NotificationSoundChangedListener implements OnCheckedChangeListener{
+	class NotificationSoundChangedListener 
+		implements OnCheckedChangeListener, PerferenceConstant{
 
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView,
@@ -225,17 +253,18 @@ public class SettingsActivity extends Activity{
 			PhoneConfiguration.getInstance().notificationSound= isChecked;
 
 			SharedPreferences  share = 
-				getSharedPreferences("perference", MODE_PRIVATE);
+				getSharedPreferences(PERFERENCE, MODE_PRIVATE);
 
 			Editor editor = share.edit();
-			editor.putBoolean("notificationSound", isChecked);
+			editor.putBoolean(NOTIFIACTION_SOUND, isChecked);
 			editor.commit();
 			
 		}
 		
 	}
 	
-	class FontSizeListener implements SeekBar.OnSeekBarChangeListener{
+	class FontSizeListener implements SeekBar.OnSeekBarChangeListener
+		, PerferenceConstant{
 
 		@Override
 		public void onProgressChanged(SeekBar seekBar, int progress,
@@ -255,10 +284,10 @@ public class SettingsActivity extends Activity{
 		public void onStopTrackingTouch(SeekBar seekBar) {
 			float textSize = defaultFontSize*seekBar.getProgress()/100.0f;
 			SharedPreferences  share = 
-					getSharedPreferences("perference", MODE_PRIVATE);
+					getSharedPreferences(PERFERENCE, MODE_PRIVATE);
 
 				Editor editor = share.edit();
-				editor.putFloat("textsize", textSize);
+				editor.putFloat(TEXT_SIZE, textSize);
 				editor.commit();
 			PhoneConfiguration.getInstance().setTextSize(textSize);
 		}
@@ -266,7 +295,8 @@ public class SettingsActivity extends Activity{
 		
 	}
 	
-	class WebSizeListener implements SeekBar.OnSeekBarChangeListener{
+	class WebSizeListener implements SeekBar.OnSeekBarChangeListener
+		, PerferenceConstant{
 
 		@Override
 		public void onProgressChanged(SeekBar seekBar, int progress,
@@ -289,11 +319,11 @@ public class SettingsActivity extends Activity{
 
 			int webSize = (int) (defaultWebSize*seekBar.getProgress()/100.0f);
 			SharedPreferences  share = 
-					getSharedPreferences("perference", MODE_PRIVATE);
+					getSharedPreferences(PERFERENCE, MODE_PRIVATE);
 
 				Editor editor = share.edit();
 				
-				editor.putInt("websize", webSize);
+				editor.putInt(WEB_SIZE, webSize);
 				editor.commit();
 
 			PhoneConfiguration.getInstance().setWebSize(webSize);

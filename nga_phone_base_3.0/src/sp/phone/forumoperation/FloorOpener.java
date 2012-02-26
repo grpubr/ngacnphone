@@ -7,6 +7,7 @@ import sp.phone.activity.MyApp;
 import sp.phone.bean.ArticlePage;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.ActivityUtil;
+import sp.phone.utils.PhoneConfiguration;
 import android.app.Activity;
 import android.content.Intent;
 
@@ -66,10 +67,8 @@ public 	class FloorOpener {
 						if(!url.startsWith("http://")){
 							threadUrl = "http://bbs.ngacn.cc" + url;
 						}
-						String cookie = "";
-						if (app.getUid() != null && app.getUid() != "")
-							cookie = "ngaPassportUid=" + app.getUid()
-									+ "; ngaPassportCid=" + app.getCid();
+						String cookie = PhoneConfiguration.getInstance().getCookie();
+
 						articlePage = HttpUtil.getArticlePage(threadUrl
 								+ "&page=1", cookie);
 					}
