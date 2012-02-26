@@ -30,6 +30,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -97,7 +98,11 @@ public class MainActivity extends Activity
 				MODE_PRIVATE);
 		if(share.getBoolean(NIGHT_MODE, false))
 			ThemeManager.getInstance().setMode(1);
-		//firstRun = share.getBoolean("firstRun", true);
+		
+		ThemeManager.getInstance().screenOrentation = 
+				share.getInt(SCREEN_ORENTATION,ActivityInfo.SCREEN_ORIENTATION_USER);
+		
+		
 		int version_in_config = share.getInt(VERSION, 0);
 		if(version_in_config < version){
 			Editor editor = share.edit();

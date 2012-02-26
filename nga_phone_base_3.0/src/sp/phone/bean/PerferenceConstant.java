@@ -16,4 +16,5 @@ public interface PerferenceConstant {
 	final String VERSION = "version";
 	final String REFRESH_AFTER_POST = "refreshAfterPost";
 	final String BOARDS = "boards";
+	final String SCREEN_ORENTATION = "screenOrentation";
 }
