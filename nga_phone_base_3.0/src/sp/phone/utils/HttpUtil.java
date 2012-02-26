@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -177,11 +178,15 @@ public class HttpUtil {
 		InputStream is = null;
 		try {
 			URL url = new URL(uri);
-			String firefox_ua = "Mozilla/5.0 (Windows NT 6.1; rv:6.0.1) Gecko/20100101 Firefox/6.0.1";
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestProperty("Cookie", cookie);
-			conn.setRequestProperty("User-Agent", firefox_ua);
+			conn.setRequestProperty("User-Agent", "3rd_part_android_app");
+			conn.setRequestProperty("Accept-Charset", "GBK");
+			conn.setRequestProperty("Accept-Encoding", "gzip,deflate");
+			conn.connect();
 			is = conn.getInputStream();
+			if( "gzip".equals(conn.getHeaderField("Content-Encoding")) )
+				is = new GZIPInputStream(is);
 			//is = url.openStream();
 			return IOUtils.toString(is, "gbk");
 		} catch (MalformedURLException e) {

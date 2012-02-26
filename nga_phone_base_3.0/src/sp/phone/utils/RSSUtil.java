@@ -1,7 +1,10 @@
 package sp.phone.utils;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.zip.GZIPInputStream;
 
 import org.kxml2.io.KXmlParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -131,7 +134,16 @@ public class RSSUtil {
 	public void parseXml(String url) {
 		KXmlParser parser = new KXmlParser();
 		try {
-			parser.setInput(new URL(url).openStream(), "gbk");
+			URL uri = new URL(url);
+			HttpURLConnection conn = (HttpURLConnection) uri.openConnection();
+			conn.setRequestProperty("User-Agent", "3rd_part_android_app");
+			conn.setRequestProperty("Accept-Charset", "GBK");
+			conn.setRequestProperty("Accept-Encoding", "gzip,deflate");
+			conn.connect();
+			InputStream is = conn.getInputStream();
+			if( "gzip".equals(conn.getHeaderField("Content-Encoding")) )
+				is = new GZIPInputStream(is);
+			parser.setInput(is, "gbk");
 			int eventType = parser.getEventType();
 			if (eventType == KXmlParser.START_DOCUMENT) {
 				startDocument(parser);
@@ -159,7 +171,8 @@ public class RSSUtil {
 		} catch (XmlPullParserException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			Log.e(this.getClass().getCanonicalName(),Log.getStackTraceString(e));
+			Log.e(this.getClass().getCanonicalName(),
+					Log.getStackTraceString(e));
 		}
 
 	}
