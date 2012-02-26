@@ -9,8 +9,14 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="@string/nowifi_downimg"
-            android:textColor="@color/black" />
+            android:text="@string/nowifi_downimg"/>
+
+        <CheckBox
+            android:id="@+id/checkBox_download_avatar_no_wifi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/download_avatar_nowifi" />
 
         <CheckBox
             android:id="@+id/checkBox_night_mode"
