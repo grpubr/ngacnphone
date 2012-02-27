@@ -61,7 +61,7 @@ public class CheckReplyNotificationTask extends
 		 */
 		
 		int start = 0;
-		while(result.indexOf(",2:\"", start) !=-1)
+		while(result != null && result.indexOf(",2:\"", start) !=-1)
 		{
 			start = result.indexOf(",2:\"", start)+4;
 			int end = result.indexOf("\",3:",start);
