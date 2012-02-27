@@ -132,7 +132,9 @@ public class StringUtil {
 		
 		//quote
 		String quoteStyle = "<div style='background:#E8E8E8;border:1px solid #888' >";
-		
+		if(ThemeManager.getInstance().getMode() == ThemeManager.MODE_NIGHT)
+			quoteStyle = "<div style='background:#000000;border:1px solid #888' >";
+			
 		s = s.replaceAll("\\[quote\\]",quoteStyle);
 		s = s.replaceAll("\\[/quote\\]", "</div>");
 		//reply
@@ -158,6 +160,9 @@ public class StringUtil {
 				"<a href=\"$1\">$1</a>");
 		s = s.replaceAll("\\[url=(http[^\\[|\\]]+)\\]\\s*(.+?)\\s*\\[/url\\]"
 				,"<a href=\"$1\">$2</a>");
+		//flash
+		s = s.replaceAll("\\[flash\\](http[^\\[|\\]]+)\\[/flash\\]",
+				"<a href=\"$1\">$1</a>");
 		//color
 		
 		s = s.replaceAll("\\[color=([^\\[|\\]]+)\\]\\s*(.+?)\\s*\\[/color\\]"

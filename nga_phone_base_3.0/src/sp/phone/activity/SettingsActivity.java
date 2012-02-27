@@ -125,6 +125,7 @@ public class SettingsActivity extends Activity{
 		int fgColor =  getResources().getColor(
 						ThemeManager.getInstance().getForegroundColor());
 		checkBoxDownimgNowifi.setTextColor(fgColor);
+		checkBoxDownAvatarNowifi.setTextColor(fgColor);
 		nightMode.setTextColor(fgColor);
 		notification.setTextColor(fgColor);
 		notificationSound.setTextColor(fgColor);
