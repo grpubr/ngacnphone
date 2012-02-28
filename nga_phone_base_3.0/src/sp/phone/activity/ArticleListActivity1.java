@@ -539,8 +539,7 @@ public class ArticleListActivity1 extends Activity
 			ArticlePage ap2 = map_article.get(s);
 			if (url_last != null &&ap2 != null && !url_last.trim().equals(urls) ) {
 				articlePage = ap2;
-				// Message message = new Message();
-				// handler_rebuild.sendMessage(message);
+				this.stopLoading();
 				System.gc();
 				reBuild();
 			} else {
