@@ -198,7 +198,7 @@ public class StringUtil {
 		//		"<img src=\"http://img.ngacn.cc/attachments$1\" width=\"100%\">");
 		//[img]http://[/img]
 		s = s.replaceAll("\\[img\\]\\s*(http[^\\[|\\]]+)\\s*\\[/img\\]", 
-				"<img src='$1' style= 'max-width:100%;' >");
+				"<a href='$1'><img src='$1' style= 'max-width:100%;' ></a>");
 		//s = s.replaceAll("\\[img\\]\\s*(http[^\\[|\\]]+)\\s*\\[/img\\]", 
 		//		"<img src='$1' width=\"100%\">");
 		return s;
