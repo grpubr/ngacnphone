@@ -1,5 +1,8 @@
 package sp.phone.activity;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +22,8 @@ import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 
 import android.app.Activity;
-import android.content.ClipboardManager;
+
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -77,7 +81,8 @@ public class ArticleListActivity1 extends Activity
 	private static final String TABID_NEXT = "tab_next";
 	private static final String TABID_PRE = "tab_prev";
 	//private ScaleGestureDetector scaleDector;
-	private WebWidthChangeListener  webWidthChangeListener;
+	//private WebWidthChangeListener  webWidthChangeListener;
+	private Object  webWidthChangeListener=null;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -94,9 +99,33 @@ public class ArticleListActivity1 extends Activity
 			setRequestedOrientation(orentation);
 		}
 		setContentView(R.layout.tab2);
-		webWidthChangeListener = new WebWidthChangeListener(this);
-		//getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
-		//		R.layout.title_bar);
+		//if(android.os.Build.VERSION.SDK_INT  >= android.os.Build.VERSION_CODES.FROYO)
+		//webWidthChangeListener = new WebWidthChangeListener(this);
+		try {
+			Constructor<?> ScaleListenerContructor = Class.forName("sp.phone.activity.WebWidthChangeListener")
+					.getConstructor(Context.class);
+			//WebWidthChangeListener.class.getConstructor(parameterTypes)
+				webWidthChangeListener = ScaleListenerContructor.newInstance(this);
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		initDate();
 		initView();
@@ -427,9 +456,16 @@ public class ArticleListActivity1 extends Activity
 			intentModify.setClass(ArticleListActivity1.this, PostActivity.class);
 			startActivity(intentModify);
 			break;
-		case COPY_CLIPBOARD_ORDER:
-			ClipboardManager cbm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-			cbm.setText(StringUtil.removeBrTag(content));
+		case COPY_CLIPBOARD_ORDER:	
+			//if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB )
+			//{
+				android.text.ClipboardManager  cbm = (android.text.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+				cbm.setText(StringUtil.removeBrTag(content));
+			//}else{
+				//android.content.ClipboardManager  cbm = (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+				//cbm.setPrimaryClip(ClipData.newPlainText("content", content));
+			//}
+				
 			Toast.makeText(this.getApplication(), "已经复制到剪切板", Toast.LENGTH_SHORT).show();
 			break;
 		case SHOW_THISONLY_ORDER:
@@ -460,7 +496,26 @@ public class ArticleListActivity1 extends Activity
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		webWidthChangeListener.getScaleDector().onTouchEvent(event);
+		if(webWidthChangeListener !=null){
+			try {
+				Method onTouchMethod = webWidthChangeListener.getClass()
+						.getMethod("onTouch", event.getClass());
+				onTouchMethod.invoke(webWidthChangeListener, event);
+			} catch (NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 		return flingListener.getDetector().onTouchEvent(event);
 	}
 
@@ -640,7 +695,15 @@ public class ArticleListActivity1 extends Activity
 						ArticleListActivity1.this,flingListener,
 						mData, listView, zf);
 				listView.setAdapter(adapter);
-				webWidthChangeListener.setAdapter(adapter);
+				if(webWidthChangeListener!=null){
+					try{
+					Method setAapterMethod = webWidthChangeListener.getClass()
+							.getMethod("setAdapter", BaseAdapter.class);
+					setAapterMethod.invoke(webWidthChangeListener, adapter);
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+				}
 				
 
 				// listView.setBackgroundResource(R.drawable.bodybg);
@@ -854,7 +917,7 @@ class WebWidthChangeListener extends SimpleOnScaleGestureListener{
 	private ScaleGestureDetector scaleDector;
 	private BaseAdapter adapter=null;
 	
-	WebWidthChangeListener(Context context){
+	public WebWidthChangeListener(Context context){
 		scaleDector = new ScaleGestureDetector(context,this);
 	}
 	
@@ -869,6 +932,10 @@ class WebWidthChangeListener extends SimpleOnScaleGestureListener{
 		return scaleDector;
 	}
 
+	public boolean onTouch(MotionEvent event) {
+		return getScaleDector().onTouchEvent(event);
+	}
+	
 	@Override
 	public boolean onScale(ScaleGestureDetector detector) {
 		int tochange = (int) ((detector.getCurrentSpan()
