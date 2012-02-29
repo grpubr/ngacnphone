@@ -11,6 +11,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -21,7 +22,7 @@ import android.widget.TextView;
 
 public class SettingsActivity extends Activity{
 
-	private LinearLayout view;
+	private View view;
 	private CompoundButton checkBoxDownimgNowifi;
 	private CompoundButton checkBoxDownAvatarNowifi;
 	private CompoundButton nightMode;
@@ -48,14 +49,13 @@ public class SettingsActivity extends Activity{
 		ThemeManager.SetContextTheme(this);
 		try{
 			if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-				view = (LinearLayout) getLayoutInflater().inflate(R.layout.switch_settings, null);
+				view =  getLayoutInflater().inflate(R.layout.switch_settings, null);
 			else
-				view = (LinearLayout) getLayoutInflater().inflate(R.layout.settings, null);
+				view = getLayoutInflater().inflate(R.layout.settings, null);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		this.setContentView(view);
-		
 		
 		checkBoxDownimgNowifi = (CompoundButton) findViewById(R.id.checkBox_down_img_no_wifi);
 		checkBoxDownimgNowifi.setChecked(PhoneConfiguration.getInstance().downImgNoWifi);
