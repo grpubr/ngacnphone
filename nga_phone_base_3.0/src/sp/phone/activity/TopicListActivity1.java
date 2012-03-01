@@ -49,7 +49,8 @@ public class TopicListActivity1 extends Activity {
 
 	ActivityUtil activityUtil = ActivityUtil.getInstance();
 
-	static TabHost tabHost;
+	private TabHost tabHost;
+	private final String TAG = Activity.class.getSimpleName();
 	private static final String TABID_PRE = "tab_f";
 	private static final String TABID_NEXT = "tab_n";
 	private RSSFeed rssFeed;
@@ -97,9 +98,9 @@ public class TopicListActivity1 extends Activity {
 		}
 		long now = System.currentTimeMillis();
 		PhoneConfiguration config = PhoneConfiguration.getInstance();
-		if(now - config.lastMessageCheck > 60*1000)
+		if(now - config.lastMessageCheck > 60*1000 && config.notification)
 		{
-			
+			Log.d(TAG, "start to check Reply Notification");
 			asynTask = new CheckReplyNotificationTask(this);
 			asynTask.execute(config.getCookie());
 		}
@@ -107,6 +108,15 @@ public class TopicListActivity1 extends Activity {
 	}
 	
 	
+	
+
+
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+	}
 
 
 
@@ -208,6 +218,7 @@ public class TopicListActivity1 extends Activity {
 		app = ((MyApp) getApplication());
 		rssFeed = app.getRssFeed();
 		//map = app.getMap();
+		Log.d(this.getClass().getSimpleName(), "rssFeed=" + rssFeed);
 		app.getMap_article();
 		flingListener = new TopicFlingListener(this);
 
@@ -222,6 +233,11 @@ public class TopicListActivity1 extends Activity {
 		//soundPool = new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);
 		// ‘ÿ»Î“Ù∆µ¡˜
 		//hitOkSfx = soundPool.load(this, R.raw.tweet, 0);
+		if(rssFeed == null){
+			Log.i(this.getClass().getSimpleName(), "rssFeed= null,finish");
+			this.finish();
+			return;
+		}
 		
 		setTitle(rssFeed.getTitle());
 		
@@ -272,7 +288,8 @@ public class TopicListActivity1 extends Activity {
 	}
 
 	private void setListener() {
-		tabHost.setOnTabChangedListener(new BoardPageNumChangeListener());
+		if(tabHost !=null)
+			tabHost.setOnTabChangedListener(new BoardPageNumChangeListener());
 	}
 
 	class BoardPageNumChangeListener implements OnTabChangeListener{
