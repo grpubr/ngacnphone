@@ -149,6 +149,12 @@ public class ArticleListActivity1 extends Activity
 		
 		flingListener = new ArticleFlingListener(this);
 		//TextView titleTV = (TextView) findViewById(R.id.title);
+		if(articlePage == null){
+			this.d("articlePage == null,abort create");
+			this.finish();
+			return;
+		}
+		
 		final String title  = articlePage.getNow().get("title");
 		this.setTitle(title);
 
@@ -231,6 +237,10 @@ public class ArticleListActivity1 extends Activity
 			ts_last.setContent(new tabFactory2());
 			tabHost.addTab(ts_last);
 		}
+	}
+	
+	private void d(String log){
+		Log.i(this.getClass().getSimpleName(), log);
 	}
 
 	@Override
@@ -365,7 +375,10 @@ public class ArticleListActivity1 extends Activity
 	
 	
 	private String getPid(String url) {
-		int start = url.indexOf("pid=")+4;
+		int start = url.indexOf("pid=");
+		if(start == -1)
+			return "";
+		start +=4;
 		int end = url.indexOf("&");
 		if(end == -1)
 			end = url.length();
@@ -520,7 +533,8 @@ public class ArticleListActivity1 extends Activity
 	}
 
 	private void setListener() {
-		tabHost.setOnTabChangedListener(changeListener);
+		if(tabHost!= null)
+			tabHost.setOnTabChangedListener(changeListener);
 	}
 
 	OnTabChangeListener changeListener = new ArticlePageChangeListener();
