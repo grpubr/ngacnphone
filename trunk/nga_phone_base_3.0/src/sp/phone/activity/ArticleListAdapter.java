@@ -150,7 +150,7 @@ public class ArticleListAdapter  extends ArrayAdapter<HashMap<String, String>>
 			postTimeTV.setText(map.get("postTime"));
 
 			TextView titleTV = (TextView) rowView.findViewById(R.id.floor_title);
-			if (!StringUtil.isEmpty(map.get("title"))) {
+			if (!StringUtil.isEmpty(map.get("title")) && position!=0) {
 				titleTV.setText(map.get("title"));
 				titleTV.setTextColor(fgColor);
 				tp = titleTV.getPaint();
