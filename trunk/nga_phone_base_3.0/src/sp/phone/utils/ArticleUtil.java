@@ -125,9 +125,14 @@ public class ArticleUtil {
 						}else if( node3 instanceof HeadingTag){
 							HeadingTag ht = (HeadingTag)node3;
 							String  titleID = ht.getAttribute("id");
-							if(titleID != null && !titleID.equals("postsubject0") && ht.getChildCount() !=0){
-								String title =ht.getChild(0).getText() ;
-								article.setTitle(StringUtil.unEscapeHtml(title));
+							if(titleID != null && titleID.startsWith("postsubject") && ht.getChildCount() !=0){
+								if(!titleID.equals("postsubject0")){
+									String title =ht.getChild(0).getText() ;
+									article.setTitle(StringUtil.unEscapeHtml(title));
+								}else{
+									String title =ht.getChild(2).getText() ;
+									article.setTitle(StringUtil.unEscapeHtml(title));
+								}
 							}
 								
 						}else if ( node3 instanceof ImageTag){

@@ -11,12 +11,13 @@ public class ActivityUtil {
 
 
 	static ActivityUtil instance;
+	static final String TAG = ActivityUtil.class.getSimpleName();
 	static Object lock= new Object();
 	public static ActivityUtil getInstance(){
-		/*if(instance == null){
+		if(instance == null){
 			instance = new ActivityUtil();
-		}*/
-		return new ActivityUtil();//instance;
+		}
+		return instance;//instance;
 		
 	}
 	private ActivityUtil(){
@@ -58,6 +59,7 @@ public class ActivityUtil {
 
 	private Handler handler = new Handler() {
 		public void handleMessage (final Message msg) {
+			Log.d(TAG, "handle Message");
 			Context context = (Context) msg.obj;
 			Bundle b = msg.getData();
 			if (b != null) {
@@ -102,6 +104,7 @@ public class ActivityUtil {
 	public void dismiss() {
 		synchronized( lock){
 		if (proDialog != null) {
+			Log.d(TAG, "dissmiss dialog");
 			proDialog.dismiss();
 			proDialog = null;
 		}
