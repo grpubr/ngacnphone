@@ -25,6 +25,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo.State;
 import android.os.Bundle;
 import android.text.TextPaint;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -46,6 +47,7 @@ public class MessageArticleActivity extends MyAbstractActivity
 
 	static final int CONTEXT_MENU_ITEM_REPLY = 0;
 	static final int CONTEXT_MENU_ITEM_WHOLE_THREAD = 1;
+	static private final String TAG = MessageArticleActivity.class.getSimpleName();
 	private ListView listView;
 	String tid;
 	String pid;
@@ -60,12 +62,13 @@ public class MessageArticleActivity extends MyAbstractActivity
 		
         NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         nm.cancel(R.layout.message_article);
-        this.asyncLoadThread(tid, pid, page);
+        
         //OnItemLongClickListener listener = new FloorClickListener();
        // listView.setOnItemLongClickListener(listener);
         this.registerForContextMenu(listView);
         listView.setAdapter(new ThreadPageAdapter(this));
         ActivityUtil.getInstance().noticeSaying(this);
+        this.asyncLoadThread(tid, pid, page);
 }
 
 
@@ -182,6 +185,8 @@ public class MessageArticleActivity extends MyAbstractActivity
 	 */
 	@Override
 	public void NotifyLoadComplete(ArticlePage articlePage) {
+		
+		Log.d(TAG, "NotifyLoadComplete");
 		ActivityUtil.getInstance().dismiss();
 		if(articlePage == null){
 			Toast.makeText(this, R.string.thread_load_error, Toast.LENGTH_LONG);
@@ -256,8 +261,7 @@ public class MessageArticleActivity extends MyAbstractActivity
 			if(convertView == null){
 				rowView = LayoutInflater.from(activity)
 						.inflate(R.layout.relative_aritclelist, null);
-				int colorId = ThemeManager.getInstance().getBackgroundColor();
-				rowView.setBackgroundResource(colorId);
+				
 				
 				FloorViewHolder holder = new FloorViewHolder();
 				holder.avatarIV = (ImageView) rowView.findViewById(R.id.avatarImage);
@@ -273,6 +277,10 @@ public class MessageArticleActivity extends MyAbstractActivity
 				rowView = convertView;
 			}
 			
+			
+			int colorId = ThemeManager.getInstance().getBackgroundColor();
+			rowView.setBackgroundResource(colorId);
+			
 			FloorViewHolder holder = (FloorViewHolder) rowView.getTag();
 			
 			Article article = (Article) this.getItem(position);
@@ -286,8 +294,8 @@ public class MessageArticleActivity extends MyAbstractActivity
 			params.width = PhoneConfiguration.getInstance().nikeWidth;//the basement in the layout
 			
 			
-			ColorDrawable colorDrawable = (ColorDrawable) rowView.getBackground();
-			int bgColor = colorDrawable.getColor();
+			
+			int bgColor = parent.getContext().getResources().getColor(colorId);
 			initContent(article, holder.contentTV, fgColor,bgColor );
 			
 			initFloor(article, holder.floorTV);
