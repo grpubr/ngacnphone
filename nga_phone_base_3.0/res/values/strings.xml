@@ -34,4 +34,6 @@
     <string name="notification_on">启用被喷提示</string>
     <string name="notification_sound">提示声音</string>
     <string name="download_avatar_nowifi">没wifi也下载头像</string>
+    <string name="upload">上传</string>
+    <string name="avoidWindfury">防止风怒机制</string>
 </resources>

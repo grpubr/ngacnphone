@@ -33,6 +33,22 @@
             android:text="@string/cancel" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/linearLayout2" >
+
+        <ImageButton
+            android:id="@+id/imageButton_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:contentDescription="@string/upload"
+            android:src="@android:drawable/stat_sys_upload" />
+
+    </LinearLayout>
+
     <EditText
         android:id="@+id/reply_titile_edittext"
         android:layout_width="fill_parent"
@@ -47,13 +63,18 @@
         android:id="@+id/reply_body_edittext"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/linearLayout2"
+        android:layout_above="@id/linearLayout1"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/reply_titile_edittext"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
         android:background="@color/white"
+        android:cursorVisible="true"
         android:gravity="top|left"
-        android:textColor="@color/black" android:inputType="textMultiLine" android:cursorVisible="true" android:layout_marginLeft="10dp" android:imeOptions="actionDone" android:textCursorDrawable="@null">
+        android:imeOptions="actionDone"
+        android:inputType="textMultiLine"
+        android:textColor="@color/black"
+        android:textCursorDrawable="@null" >
 
         <requestFocus />
     </EditText>
