@@ -292,7 +292,7 @@ public class ArticleListActivity1 extends Activity
 				startActivity(intent);
 				break;
 			case R.id.article_menuitem_refresh:
-				final String url = HttpUtil.Server + articlePage.getNow().get("link");
+				final String url = HttpUtil.Server + articlePage.getPage().get("current");
 				new LoadArticleThread(url,this).start();
 				break;
 			case R.id.article_menuitem_addbookmark:
@@ -421,8 +421,8 @@ public class ArticleListActivity1 extends Activity
 		{
 		case QUOTE_ORDER:
 
-
-			
+			final String quote_regex = "\\[quote\\]([\\s\\S])*\\[/quote\\]";
+			content = content.replaceAll(quote_regex, "");
 			final String postTime = map.get("postTime");
 			// final String url = map.get("url");
 			boolean endWithUrl = false;
@@ -788,6 +788,7 @@ public class ArticleListActivity1 extends Activity
 		Context context;
 		GestureDetector gDetector;
 		final float FLING_MIN_DISTANCE = 80;
+		final float FLING_MIN_VELOCITY = 5000;
 		ArticlePageChangeListener changeListener = new ArticlePageChangeListener();
 
 		/*
@@ -864,7 +865,8 @@ public class ArticleListActivity1 extends Activity
 
 			if ( (e1.getX() - e2.getX() > FLING_MIN_DISTANCE)
 					&& (deltaX > 1.73*deltaY)
-					&& (Math.abs(velocityX) > 3*Math.abs(velocityY))
+					&& (Math.abs(velocityX) > 3*Math.abs(velocityY)
+					&& Math.abs(velocityX) > FLING_MIN_VELOCITY)
 				){
 				// left
 				Log.d("test","onFling will call change to next");
@@ -877,7 +879,8 @@ public class ArticleListActivity1 extends Activity
 			
 			if ( (e2.getX() - e1.getX() > FLING_MIN_DISTANCE)
 					&& (deltaX > 1.73*deltaY)
-					&& (Math.abs(velocityX) > 3*Math.abs(velocityY))
+					&& (Math.abs(velocityX) > 3*Math.abs(velocityY)
+					&& Math.abs(velocityX) > FLING_MIN_VELOCITY)
 				) {
 				if(e1.getAction() == MotionEvent.ACTION_UP)
 					Log.d("test","onFling action = " + e2.getAction());
