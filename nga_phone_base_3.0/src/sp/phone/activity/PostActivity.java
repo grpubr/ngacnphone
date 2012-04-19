@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class PostActivity extends Activity {
@@ -33,12 +34,14 @@ public class PostActivity extends Activity {
 	private int fid;
 	private Button button_commit;
 	private Button button_cancel;
+	private ImageButton button_upload;
 	private String REPLY_URL="http://bbs.ngacn.cc/post.php?";
+	final int REQUEST_CODE_SELECT_PIC = 1;
 	private String sig ="\n[url=http://code.google.com/p/ngacnphone/downloads/list]"
 		+"----sent from my " + android.os.Build.MANUFACTURER
 		+ " " + android.os.Build.MODEL + ",Android "
 		+ android.os.Build.VERSION.RELEASE + "[/url]\n";
-
+	private boolean loading;
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -74,6 +77,7 @@ public class PostActivity extends Activity {
 			act.setMention_(mention);
 		if(pid !=null)
 			act.setPid_(pid);
+		loading = false;
 		
 		titleText = (EditText) findViewById(R.id.reply_titile_edittext);
 		if(title!=null)
@@ -87,6 +91,7 @@ public class PostActivity extends Activity {
 		
 		button_commit = (Button)findViewById(R.id.reply_commit_button);
 		button_cancel = (Button)findViewById(R.id.reply_cancel_button);
+		button_upload = (ImageButton) findViewById(R.id.imageButton_upload);
 		
 		button_commit.setOnClickListener(new ButtonCommitListener(REPLY_URL));
 		button_cancel.setOnClickListener( new OnClickListener(){
@@ -96,16 +101,56 @@ public class PostActivity extends Activity {
 		 	}
 			}
 		);
+		button_upload.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+                Intent intent = new Intent();  
+                intent.setType("image/*");  
+                intent.setAction(Intent.ACTION_GET_CONTENT);   
+                startActivityForResult(intent,  REQUEST_CODE_SELECT_PIC);  
+				
+			}
+			
+		}
+		);
 		
 	}
+	
+	
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch(requestCode)
+		{
+		case REQUEST_CODE_SELECT_PIC :
+				Toast.makeText(this, "图片还传不了", Toast.LENGTH_SHORT).show();
+				break;
+		default:
+				;
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+
+
 	class ButtonCommitListener implements OnClickListener{
 
-		private final String url;
+		private final String url;		
 		ButtonCommitListener(String url){
 			this.url = url;
 		}
 		@Override
 		public void onClick(View v) {
+			synchronized(button_commit){
+				if(loading == true){
+					String avoidWindfury = PostActivity.this.getString(R.string.avoidWindfury);
+					Toast.makeText(PostActivity.this, avoidWindfury, Toast.LENGTH_SHORT).show();
+					return ;
+				}
+				loading = true;
+			}
+			
 			if(action.equals("reply")){
 				handleReply(v);
 			}else if(action.equals("new")){
