@@ -31,7 +31,7 @@ public class HttpUtil {
 	public static String PATH_ZIP = "";
 
 	public final static String Server = "http://bbs.ngacn.cc";
-
+	private static String TAG = HttpUtil.class.getSimpleName();
 	/*private static String[] host_arr = { "http://aa121077313.gicp.net:8099",
 			"http://aa121077313.gicp.net:8098", "http://10.0.2.2:8099",
 			"http://10.0.2.2:8098" };*/
@@ -113,7 +113,7 @@ public class HttpUtil {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.e(TAG, "failed to download img:" + uri+ "," + e.getMessage());
 		}
 	}
 
