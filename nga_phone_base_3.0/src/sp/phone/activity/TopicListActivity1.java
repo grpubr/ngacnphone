@@ -551,6 +551,7 @@ public class TopicListActivity1 extends Activity {
 		Context context;
 		GestureDetector gDetector;
 		final float FLING_MIN_DISTANCE = 100;
+		final float FLING_MIN_VELOCITY = 5000;
 		BoardPageNumChangeListener pageChange = new BoardPageNumChangeListener();
 		/*public ArticleFlingListener() {
 			super();
@@ -616,7 +617,8 @@ public class TopicListActivity1 extends Activity {
 			float deltaY = Math.abs(e1.getY() - e2.getY());
 			if ( (e1.getX() - e2.getX() > FLING_MIN_DISTANCE)
 					&& (deltaX > 1.73*deltaY)
-					&& (Math.abs(velocityX) > 3*Math.abs(velocityY))
+					&& (Math.abs(velocityX) > 3*Math.abs(velocityY)
+					&& Math.abs(velocityX) > FLING_MIN_VELOCITY)
 				){
 				//left
 				
@@ -626,7 +628,8 @@ public class TopicListActivity1 extends Activity {
 			
 			if ( (e2.getX() - e1.getX() > FLING_MIN_DISTANCE)
 					&& (deltaX > 1.73*deltaY)
-					&& (Math.abs(velocityX) > 3*Math.abs(velocityY))
+					&& (Math.abs(velocityX) > 3*Math.abs(velocityY)
+					&& Math.abs(velocityX) > FLING_MIN_VELOCITY)
 				) {
 				//right
 				pageChange.onTabChanged(TABID_PRE);
