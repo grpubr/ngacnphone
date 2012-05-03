@@ -63,7 +63,7 @@ public class SettingsActivity extends Activity{
 		checkBoxDownimgNowifi.setOnCheckedChangeListener(listener);
 		
 		checkBoxDownAvatarNowifi = (CompoundButton) findViewById(R.id.checkBox_download_avatar_no_wifi);
-		checkBoxDownAvatarNowifi.setChecked(PhoneConfiguration.getInstance().downImgNoWifi);
+		checkBoxDownAvatarNowifi.setChecked(PhoneConfiguration.getInstance().downAvatarNoWifi);
 		DownAvatarNowifiChangedListener AvatarListener = new DownAvatarNowifiChangedListener();
 		checkBoxDownAvatarNowifi.setOnCheckedChangeListener(AvatarListener);
 
