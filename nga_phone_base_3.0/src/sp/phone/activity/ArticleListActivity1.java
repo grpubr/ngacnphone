@@ -292,7 +292,15 @@ public class ArticleListActivity1 extends Activity
 				startActivity(intent);
 				break;
 			case R.id.article_menuitem_refresh:
-				final String url = HttpUtil.Server + articlePage.getPage().get("current");
+				//final String url = HttpUtil.Server + articlePage.getPage().get("current");
+				String url = HttpUtil.Server + articlePage.getNow().get("link");
+				Map<String,String> pages = articlePage.getPage();
+				String last = null;
+				if(pages!= null){
+					last=pages.get("current");
+				}
+				if(last!= null)
+					url = HttpUtil.Server + last;
 				new LoadArticleThread(url,this).start();
 				break;
 			case R.id.article_menuitem_addbookmark:
