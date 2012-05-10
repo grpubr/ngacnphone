@@ -27,11 +27,21 @@ public class RSSUtil {
 	private RSSItem item;
 	private int type;
 	private boolean reading_chan = false;
-
+	
+	public final static int NOERROR = 0;
+	public final static int NETWORK_ERROR = 1;
+	public final static int DOCUMENT_ERROR = 2;
+	
+	private int errorCode = NOERROR ;
+	
 	public RSSFeed getFeed() {
 		return feed;
 	}
-
+	
+	public int getErrorCode(){
+		return errorCode;
+	}
+	
 	private void characters(KXmlParser parser) {
 		String s = parser.getText();
 		s = StringUtil.unEscapeHtml(s);
@@ -136,7 +146,7 @@ public class RSSUtil {
 		try {
 			URL uri = new URL(url);
 			HttpURLConnection conn = (HttpURLConnection) uri.openConnection();
-			conn.setRequestProperty("User-Agent", "3rd_part_android_app");
+			conn.setRequestProperty("User-Agent", HttpUtil.USER_AGENT);
 			conn.setRequestProperty("Accept-Charset", "GBK");
 			conn.setRequestProperty("Accept-Encoding", "gzip,deflate");
 			conn.connect();
@@ -169,8 +179,10 @@ public class RSSUtil {
 				}
 			}
 		} catch (XmlPullParserException e) {
+			errorCode = DOCUMENT_ERROR;
 			e.printStackTrace();
 		} catch (IOException e) {
+			errorCode = NETWORK_ERROR;
 			Log.e(this.getClass().getCanonicalName(),
 					Log.getStackTraceString(e));
 		}
