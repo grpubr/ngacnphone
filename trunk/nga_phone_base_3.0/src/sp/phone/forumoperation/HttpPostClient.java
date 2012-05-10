@@ -4,6 +4,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import sp.phone.utils.HttpUtil;
+
 
 
 
@@ -49,7 +51,7 @@ public class HttpPostClient {
 				conn.setRequestProperty("Cookie", cookie);
 			conn.setInstanceFollowRedirects(false);
 			
-			conn.setRequestProperty("User-Agent", "3rd_part_android_app");
+			conn.setRequestProperty("User-Agent", HttpUtil.USER_AGENT);
 			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded"); 
 			conn.setRequestProperty("Content-Length", String.valueOf(body.length())); 
 			conn.setRequestProperty("Accept-Charset", "GBK");

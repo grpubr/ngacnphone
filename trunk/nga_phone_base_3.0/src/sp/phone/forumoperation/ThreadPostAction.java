@@ -112,6 +112,12 @@ public class ThreadPostAction {
 			return sb.toString();
 			//&_ff=&attachments=&attachments_check=&force_topic_key=&filter_key=1&post_subject=12345&post_content=nga+%B0%B2%D7%BF%B0%E6%B7%A2%CC%F9%B2%E2%CA%D4&checkkey=1326813478553736"
 		}
+		public void setAttachments_(String attachments_) {
+			this.attachments_ = attachments_;
+		}
+		public void setAttachments_check_(String attachments_check_) {
+			this.attachments_check_ = attachments_check_;
+		}
 		
 		
 
