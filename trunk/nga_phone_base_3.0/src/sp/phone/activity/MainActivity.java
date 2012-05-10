@@ -739,12 +739,17 @@ public class MainActivity extends Activity
 				app.setMap(map);*/
 				Intent intent = new Intent();
 				intent.setClass(MainActivity.this, TopicListActivity1.class);
+				activityUtil.dismiss();
 				startActivity(intent);
 
-			} else {
+			} else if(rssUtil.getErrorCode() == RSSUtil.NETWORK_ERROR){
 				activityUtil.noticeError( "没有找到可用网络",MainActivity.this);
+			} else if(rssUtil.getErrorCode() == RSSUtil.DOCUMENT_ERROR){
+				activityUtil.noticeError( "请重新登录",MainActivity.this);
+			}else {
+				activityUtil.noticeError( "未知错误",MainActivity.this);
 			}
-			activityUtil.dismiss();
+			
 		}
 	}
 
