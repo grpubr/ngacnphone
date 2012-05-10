@@ -134,7 +134,22 @@ public class StringUtil {
 		String quoteStyle = "<div style='background:#E8E8E8;border:1px solid #888' >";
 		if(ThemeManager.getInstance().getMode() == ThemeManager.MODE_NIGHT)
 			quoteStyle = "<div style='background:#000000;border:1px solid #888' >";
-			
+		
+		final String styleLeft = "<div style='float:left' >";
+		final String styleRight = "<div style='float:right' >";
+		
+		s = s.replaceAll("\\[l\\]", styleLeft);
+		s = s.replaceAll("\\[/l\\]", "</div>");
+		
+		s = s.replaceAll("\\[r\\]", styleRight);
+		s = s.replaceAll("\\[/r\\]", "</div>");
+		
+		final String styleAlignRight = "<div style='text-align:right' >";
+		final String styleAlignLeft = "<div style='text-align:left' >";
+		s = s.replaceAll("\\[align=right\\]", styleAlignRight);
+		s = s.replaceAll("\\[align=left\\]", styleAlignLeft);
+		s = s.replaceAll("\\[/align\\]", "</div>");
+		
 		s = s.replaceAll("\\[quote\\]",quoteStyle);
 		s = s.replaceAll("\\[/quote\\]", "</div>");
 		//reply
@@ -233,6 +248,8 @@ public class StringUtil {
 		ret = org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4(s);
 		return ret;
 	}
+	
+
 	
 	public static String buildThreadURLByTid(String tid){
 		return "/read.php?tid="+tid;
