@@ -1,5 +1,6 @@
 package sp.phone.activity;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -7,13 +8,17 @@ import org.apache.commons.io.IOUtils;
 
 import sp.phone.forumoperation.HttpPostClient;
 import sp.phone.forumoperation.ThreadPostAction;
+import sp.phone.task.FileUploadTask;
+import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,7 +27,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-public class PostActivity extends Activity {
+public class PostActivity extends Activity
+	implements FileUploadTask.onFileUploaded{
 
 	private final String LOG_TAG = Activity.class.getSimpleName();
 	private String prefix;
@@ -43,6 +49,7 @@ public class PostActivity extends Activity {
 		+ android.os.Build.VERSION.RELEASE + "[/url]\n";
 	private boolean loading;
 
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -57,6 +64,9 @@ public class PostActivity extends Activity {
 					ThemeManager.getInstance().getBackgroundColor()
 				));
 		this.setContentView(v);
+		
+
+		
 		Intent intent = this.getIntent();
 		prefix = intent.getStringExtra("prefix");
 		action = intent.getStringExtra("action");
@@ -121,10 +131,29 @@ public class PostActivity extends Activity {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(resultCode == 0 )
+			return;
 		switch(requestCode)
 		{
 		case REQUEST_CODE_SELECT_PIC :
-				Toast.makeText(this, "图片还传不了", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "测试阶段，一次一张图", Toast.LENGTH_SHORT).show();
+				Log.i(LOG_TAG, " select file :" + data.getDataString() );
+				ContentResolver cr = this.getContentResolver();
+				
+			try {
+				 ParcelFileDescriptor pfd = cr.openFileDescriptor(data.getData(), "r");
+				 long filesize = pfd.getStatSize();
+				 Log.d(LOG_TAG, "file size =" + filesize);
+				 pfd.close();
+				 InputStream is = cr.openInputStream(data.getData());
+				 new FileUploadTask(is,filesize,this, this).execute();
+			} catch (FileNotFoundException e) {
+				
+				Log.wtf(LOG_TAG, "file not found", e);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 				break;
 		default:
 				;
@@ -191,6 +220,24 @@ public class PostActivity extends Activity {
 			super();
 			this.v = v;
 		}
+		
+		@Override
+		protected void onPreExecute() {
+			ActivityUtil.getInstance().noticeSaying(v.getContext());
+			super.onPreExecute();
+		}
+
+		@Override
+		protected void onCancelled() {
+			ActivityUtil.getInstance().dismiss();
+			super.onCancelled();
+		}
+
+		@Override
+		protected void onCancelled(String result) {
+			ActivityUtil.getInstance().dismiss();
+			super.onCancelled(result);
+		}
 
 		@Override
 		protected String doInBackground(String... params) {
@@ -237,11 +284,21 @@ public class PostActivity extends Activity {
 		protected void onPostExecute(String result) {
 			Toast.makeText(v.getContext(), result,
 					Toast.LENGTH_LONG).show();
+			ActivityUtil.getInstance().dismiss();
 			PostActivity.this.finish();
 			super.onPostExecute(result);
 		}
 		
 		
+	}
+
+	@Override
+	public int finishUpload(String attachments, String attachmentsCheck,
+			String picUrl) {
+		this.act.setAttachments_(attachments);
+		act.setAttachments_check_(attachmentsCheck);
+		bodyText.setText( bodyText.getText().toString() + "\n[img]" +picUrl + "[/img]");
+		return 0;
 	}
 
 }
