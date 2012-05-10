@@ -42,7 +42,8 @@ public class HttpUtil {
 	public static String Servlet_timer = "/servlet/TimerServlet";
 
 	public static String HOST_PORT = "";
-
+	public static String USER_AGENT = 
+			"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.30 Safari/536.5";
 	public static void selectServer2() {
 		for (String host : host_arr) {
 			HttpURLConnection conn = null;
@@ -180,7 +181,7 @@ public class HttpUtil {
 			URL url = new URL(uri);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestProperty("Cookie", cookie);
-			conn.setRequestProperty("User-Agent", "3rd_part_android_app");
+			conn.setRequestProperty("User-Agent", USER_AGENT);
 			conn.setRequestProperty("Accept-Charset", "GBK");
 			conn.setRequestProperty("Accept-Encoding", "gzip,deflate");
 			conn.connect();
