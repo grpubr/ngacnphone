@@ -406,13 +406,13 @@ public class StringUtil {
 		}
 		return ret;
 	}
-	final static String tips = 
+	final static String tips = "支持发图了";/*
 		  "1.主界面按menu登录.\n"
 		+ "2.设置里可以选择夜间模式，是否下载图片\n"
 		+ "3.长按板块增加或者删除自定义版本\n"
 		+ "4.进板块按menu，可以发帖\n"
 		+ "5.板块内和帖子内可以左右滑动\n"
-		+"6.长按楼层，回帖或者引用\n";
+		+"6.长按楼层，回帖或者引用\n";*/
 	public static String getTips(){
 		
 		return tips;

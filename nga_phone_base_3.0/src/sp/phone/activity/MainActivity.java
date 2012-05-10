@@ -64,14 +64,14 @@ import com.alibaba.fastjson.JSON;
 
 public class MainActivity extends Activity
 	implements PerferenceConstant{
-	final static int version = 112;
+	final static int version = 138;
 	TextView tv_pre;
 	TextView tv_now;
 	TextView tv_error;
 	ActivityUtil activityUtil =ActivityUtil.getInstance();
 	private MyApp app;
 	View view;
-
+	boolean newVersion = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
@@ -105,12 +105,16 @@ public class MainActivity extends Activity
 		
 		int version_in_config = share.getInt(VERSION, 0);
 		if(version_in_config < version){
+			newVersion = true;
 			Editor editor = share.edit();
 			editor.putInt(VERSION, version);
 			editor.putBoolean(REFRESH_AFTER_POST, true);
-			this.boardInfo = this.resetBoard();
-			String infoString = JSON.toJSONString(boardInfo);
-			editor.putString(BOARDS, infoString);
+			if(this.boardInfo == null || this.boardInfo.size() == 0)
+			{
+				this.boardInfo = this.resetBoard();
+				String infoString = JSON.toJSONString(boardInfo);
+				editor.putString(BOARDS, infoString);
+			}
 			editor.commit();
 			
 		}
@@ -291,14 +295,14 @@ public class MainActivity extends Activity
 		gv.setOnItemClickListener(new EnterToplistLintener());
 		MainActivity.this.registerForContextMenu(gv);
 		
-		/*if(firstRun){
+		if(newVersion){
 			new AlertDialog.Builder(this).setTitle("提示")
 			.setMessage(StringUtil.getTips())
 			.setPositiveButton("知道了", null).show();
 			
-			firstRun = false;
+			newVersion = false;
 			
-		}*/
+		}
 		
 
 	}
