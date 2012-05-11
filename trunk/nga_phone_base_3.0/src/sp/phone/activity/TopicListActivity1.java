@@ -211,6 +211,8 @@ public class TopicListActivity1 extends Activity {
 		
 		intent.setClass(this, PostActivity.class);
 		startActivity(intent);
+		overridePendingTransition(R.anim.zoom_enter,
+				R.anim.zoom_exit);
 		return true;
 	}
 

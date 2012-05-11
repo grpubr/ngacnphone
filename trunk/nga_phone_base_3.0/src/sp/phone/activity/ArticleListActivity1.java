@@ -290,6 +290,8 @@ public class ArticleListActivity1 extends Activity
 				
 				intent.setClass(ArticleListActivity1.this, PostActivity.class);
 				startActivity(intent);
+				overridePendingTransition(R.anim.zoom_enter,
+						R.anim.zoom_exit);
 				break;
 			case R.id.article_menuitem_refresh:
 				//final String url = HttpUtil.Server + articlePage.getPage().get("current");
@@ -465,6 +467,8 @@ public class ArticleListActivity1 extends Activity
 			intent.putExtra("action", "reply");	
 			intent.setClass(ArticleListActivity1.this, PostActivity.class);
 			startActivity(intent);
+			overridePendingTransition(R.anim.zoom_enter,
+					R.anim.zoom_exit);
 			break;
 		case SHOW_MODIFY_ORDER :
 			Intent intentModify = new Intent();
@@ -476,6 +480,8 @@ public class ArticleListActivity1 extends Activity
 			intentModify.putExtra("action", "modify");	
 			intentModify.setClass(ArticleListActivity1.this, PostActivity.class);
 			startActivity(intentModify);
+			overridePendingTransition(R.anim.zoom_enter,
+					R.anim.zoom_exit);
 			break;
 		case COPY_CLIPBOARD_ORDER:	
 			//if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB )
