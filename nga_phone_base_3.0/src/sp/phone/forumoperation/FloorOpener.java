@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import sp.phone.activity.ArticleListActivity1;
 import sp.phone.activity.MyApp;
+import sp.phone.activity.R;
 import sp.phone.bean.ArticlePage;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.ActivityUtil;
@@ -81,10 +82,19 @@ public 	class FloorOpener {
 						app.setArticlePage(articlePage);// 设置当前page
 						map_article.put(url + "&page=1", articlePage);// 添加新的数据
 						app.setMap_article(map_article);
-						Intent intent = new Intent(activity,
-								ArticleListActivity1.class);
-					
-						activity.startActivity(intent);
+						
+						activity.runOnUiThread(new Runnable() {
+							public void run() {
+								Intent intent = new Intent(activity,
+										ArticleListActivity1.class);
+								activity.startActivity(intent);
+								activity.overridePendingTransition(R.anim.zoom_enter,
+										R.anim.zoom_exit);
+
+							}
+
+						});
+
 					} else {
 						activityUtil.noticeError( "可能遇到了一个广告或者帖子被删除"
 								,activity);

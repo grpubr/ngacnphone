@@ -62,6 +62,8 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.alibaba.fastjson.JSON;
 
+
+
 public class MainActivity extends Activity
 	implements PerferenceConstant{
 	final static int version = 138;
@@ -227,6 +229,7 @@ public class MainActivity extends Activity
 		intent.setClass(MainActivity.this, LoginActivity.class);
 		try {
 			startActivity(intent);
+			overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
 			// MainActivity.this.finish();
 		} catch (Exception e) {
 
@@ -240,6 +243,7 @@ public class MainActivity extends Activity
 		intent.setClass(MainActivity.this, SettingsActivity.class);
 		try {
 			startActivity(intent);
+			overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
 			// MainActivity.this.finish();
 		} catch (Exception e) {
 
@@ -741,10 +745,18 @@ public class MainActivity extends Activity
 					map.put(StringUtil.getNowPageNum(rssFeed.getLink()),
 							rssFeed);
 				app.setMap(map);*/
-				Intent intent = new Intent();
-				intent.setClass(MainActivity.this, TopicListActivity1.class);
 				activityUtil.dismiss();
-				startActivity(intent);
+				runOnUiThread(new Runnable() {
+					public void run() {
+						Intent intent = new Intent();
+						intent.setClass(MainActivity.this,
+								TopicListActivity1.class);
+						startActivity(intent);
+						overridePendingTransition(R.anim.zoom_enter,
+								R.anim.zoom_exit);
+					}
+
+				});
 
 			} else if(rssUtil.getErrorCode() == RSSUtil.NETWORK_ERROR){
 				activityUtil.noticeError( "没有找到可用网络",MainActivity.this);

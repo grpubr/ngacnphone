@@ -28,9 +28,9 @@ AsyncTask<String, Integer, String> {
 	private Context context;
 	private onFileUploaded notifier;
 	
-	static final private String filename = "filename1.gif";
-	static final private String utfFilename = "ilename1.gif";
-	static final private String contentType = "image/gif";
+	final private String filename ;
+	final private String utfFilename;
+	final private String contentType ;
 	
 	static final private String attachmentsStartFlag = "namedItem('attachments').value+='";
 	static final private String attachmentsCheckStartFlag = "namedItem('attachments_check').value+='";
@@ -39,12 +39,15 @@ AsyncTask<String, Integer, String> {
 	static final private String picUrlStartTag = "addUploadedAttach('";
 	static final private String picUrlEndTag = "'";
 	
-	public FileUploadTask(InputStream is, long filesize, Context context, onFileUploaded notifier) {
+	public FileUploadTask(InputStream is, long filesize, Context context, onFileUploaded notifier, String contentType) {
 		super();
 		this.is = is;
 		this.filesize = filesize;
 		this.context = context;
 		this.notifier = notifier;
+		this.contentType = contentType;
+		this.filename = contentType.replace('/', '.');
+		this.utfFilename = filename.substring(1);
 	}
 
 	@Override
@@ -80,7 +83,7 @@ AsyncTask<String, Integer, String> {
 			if(end == -1)
 				break;
 			String attachments = result.substring(start, end);
-			attachments = URLEncoder.encode(attachments);
+			attachments = URLEncoder.encode(attachments + "\t");
 			
 			start = result.indexOf(attachmentsCheckStartFlag);
 			if(start == -1)
@@ -90,6 +93,7 @@ AsyncTask<String, Integer, String> {
 			if(end == -1)
 				break;
 			String attachmentsCheck = result.substring(start, end);
+			attachmentsCheck = URLEncoder.encode(attachmentsCheck + "\t");
 			
 			start = result.indexOf(picUrlStartTag);
 			if(start == -1)

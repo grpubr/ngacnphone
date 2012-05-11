@@ -136,17 +136,23 @@ public class PostActivity extends Activity
 		switch(requestCode)
 		{
 		case REQUEST_CODE_SELECT_PIC :
-				Toast.makeText(this, "测试阶段，一次一张图", Toast.LENGTH_SHORT).show();
+				//Toast.makeText(this, "测试阶段，一次一张图", Toast.LENGTH_SHORT).show();
 				Log.i(LOG_TAG, " select file :" + data.getDataString() );
 				ContentResolver cr = this.getContentResolver();
 				
 			try {
 				 ParcelFileDescriptor pfd = cr.openFileDescriptor(data.getData(), "r");
 				 long filesize = pfd.getStatSize();
+				 if(filesize >= 1024*1024)
+				 {
+					 Toast.makeText(this, "限1M一下的图片", Toast.LENGTH_SHORT).show();
+					 break;
+				 }
+				 String contentType = cr.getType(data.getData());
 				 Log.d(LOG_TAG, "file size =" + filesize);
 				 pfd.close();
 				 InputStream is = cr.openInputStream(data.getData());
-				 new FileUploadTask(is,filesize,this, this).execute();
+				 new FileUploadTask(is,filesize,this, this, contentType).execute();
 			} catch (FileNotFoundException e) {
 				
 				Log.wtf(LOG_TAG, "file not found", e);
@@ -295,8 +301,8 @@ public class PostActivity extends Activity
 	@Override
 	public int finishUpload(String attachments, String attachmentsCheck,
 			String picUrl) {
-		this.act.setAttachments_(attachments);
-		act.setAttachments_check_(attachmentsCheck);
+		this.act.appendAttachments_(attachments);
+		act.appendAttachments_check_(attachmentsCheck);
 		bodyText.setText( bodyText.getText().toString() + "\n[img]" +picUrl + "[/img]");
 		return 0;
 	}

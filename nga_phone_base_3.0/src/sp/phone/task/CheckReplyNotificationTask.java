@@ -55,10 +55,7 @@ public class CheckReplyNotificationTask extends
 		 * 
 		 */
 		
-		/*
-		 * ,6:4942187,7:84606246}
-		 * ,6:(tid),7:(pid)}
-		 */
+
 		
 		int start = 0;
 		while(result != null && result.indexOf(",2:\"", start) !=-1)
