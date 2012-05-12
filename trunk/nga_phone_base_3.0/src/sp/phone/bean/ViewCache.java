@@ -64,12 +64,12 @@ public class ViewCache {
 		return postTime;
 	}
 
-	private ImageView avatarImage;// 头像
-	private TextView nickName;// 昵称
-//	private TextView postNum;// 发帖数
-	private TextView title;// 回帖标题
-	private TextView content;// 回帖内容
-	private TextView floor;// 楼层
-	private TextView postTime;// 发布时间
+	private ImageView avatarImage;
+	private TextView nickName;
+//	private TextView postNum;
+	private TextView title;
+	private TextView content;
+	private TextView floor;
+	private TextView postTime;
 
 }
