@@ -1,16 +1,26 @@
 package sp.phone.bean;
 
-public class BoardInfo {
+public class Board {
+	private int category;
 	private String url;
 	private String name;
 	private int icon;
-	public BoardInfo(){
+	public Board(){
 		
 	}
 	
 	
 	
-	public BoardInfo(String url, String name, int icon) {
+	public Board(int category, String url, String name, int icon) {
+	
+		this(url, name, icon);
+		this.category = category;
+	}
+
+
+
+
+	public Board(String url, String name, int icon) {
 		super();
 		this.url = url;
 		this.name = name;
@@ -19,7 +29,7 @@ public class BoardInfo {
 
 
 
-	public BoardInfo(String url, String name) {
+	public Board(String url, String name) {
 		this(url,name, 0);
 	}
 
@@ -44,6 +54,26 @@ public class BoardInfo {
 	public void setIcon(int icon) {
 		this.icon = icon;
 	}
+
+
+
+	/**
+	 * @return the category
+	 */
+	public int getCategory() {
+		return category;
+	}
+
+
+
+	/**
+	 * @param category the category to set
+	 */
+	public void setCategory(int category) {
+		this.category = category;
+	}
+	
+	
 	
 	
 
