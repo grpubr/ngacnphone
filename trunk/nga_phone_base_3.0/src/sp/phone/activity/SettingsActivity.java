@@ -47,14 +47,9 @@ public class SettingsActivity extends Activity{
 
 		//checkbox
 		ThemeManager.SetContextTheme(this);
-		try{
-			if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-				view =  getLayoutInflater().inflate(R.layout.switch_settings, null);
-			else
-				view = getLayoutInflater().inflate(R.layout.settings, null);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
+
+		view = getLayoutInflater().inflate(R.layout.settings, null);
+
 		this.setContentView(view);
 		
 		checkBoxDownimgNowifi = (CompoundButton) findViewById(R.id.checkBox_down_img_no_wifi);
