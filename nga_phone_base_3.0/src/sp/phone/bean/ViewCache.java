@@ -2,6 +2,7 @@ package sp.phone.bean;
 
 import sp.phone.activity.R;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,9 +44,9 @@ public class ViewCache {
 		return title;
 	}
 
-	public TextView getContent() {
+	public WebView getContent() {
 		if (content == null) {
-			content = (TextView) baseView.findViewById(R.id.content);
+			content = (WebView) baseView.findViewById(R.id.content);
 		}
 		return content;
 	}
@@ -68,7 +69,7 @@ public class ViewCache {
 	private TextView nickName;
 //	private TextView postNum;
 	private TextView title;
-	private TextView content;
+	private WebView content;
 	private TextView floor;
 	private TextView postTime;
 

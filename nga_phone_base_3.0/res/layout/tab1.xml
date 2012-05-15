@@ -10,7 +10,7 @@
 		</TabWidget>
 		<FrameLayout android:id="@android:id/tabcontent"
 			android:layout_height="fill_parent" android:layout_width="fill_parent"
-			android:layout_above="@id/@android:id/tabs">
+			android:layout_above="@android:id/tabs">
 		</FrameLayout>
 	</RelativeLayout>
 </TabHost>

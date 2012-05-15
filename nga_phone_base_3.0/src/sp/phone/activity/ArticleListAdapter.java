@@ -14,6 +14,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo.State;
 import android.text.TextPaint;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ public class ArticleListAdapter  extends ArrayAdapter<HashMap<String, String>>
 
 	//ZipFile zf;
 
-	HashMap<Integer, View> m = new HashMap<Integer, View>();
+	SparseArray<View> m = new SparseArray<View>();
 	ListView listView;
 	private LayoutInflater inflater;
 	private Activity activity;

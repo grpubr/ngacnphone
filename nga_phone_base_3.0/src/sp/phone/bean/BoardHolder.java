@@ -3,28 +3,30 @@ package sp.phone.bean;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.util.SparseArray;
+
 
 public class BoardHolder {
-	private Map<Integer,BoardCategory> boardInfo;
-	private Map<Integer,String> categoryName;
+	private SparseArray<BoardCategory> boardInfo;
+	private SparseArray<String> categoryName;
 	
 	/**
 	 * @return the boardInfo
 	 */
-	public Map<Integer,BoardCategory> getBoardInfo() {
+	public SparseArray<BoardCategory> getBoardInfo() {
 		return boardInfo;
 	}
 
 	/**
 	 * @param boardInfo the boardInfo to set
 	 */
-	public void setBoardInfo(Map<Integer,BoardCategory> boardInfo) {
+	public void setBoardInfo(SparseArray<BoardCategory> boardInfo) {
 		this.boardInfo = boardInfo;
 	}
 
 	public BoardHolder(){
-		boardInfo = new HashMap<Integer,BoardCategory>();
-		categoryName = new HashMap<Integer,String>();
+		boardInfo = new SparseArray<BoardCategory>();
+		categoryName = new SparseArray<String>();
 	}
 	
 	public void addCategoryName(int index, String name){

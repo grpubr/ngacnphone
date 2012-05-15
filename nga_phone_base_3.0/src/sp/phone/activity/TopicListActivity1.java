@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -262,7 +263,7 @@ public class TopicListActivity1 extends Activity {
 				TextView tv = new TextView(TopicListActivity1.this);
 				tv.setText(i + "");
 				tv.setGravity(Gravity.CENTER);
-				tv.setTextColor(R.color.white);
+				tv.setTextColor(getResources().getColor(R.color.white));
 				tv.setTextSize(20);
 				spec.setIndicator(tv);
 				spec.setContent(new tabFactory());
@@ -455,7 +456,7 @@ public class TopicListActivity1 extends Activity {
 	
 
 	class MyAdapter extends BaseAdapter {
-		HashMap<Integer, View> m = new HashMap<Integer, View>();
+		SparseArray<View> m = new SparseArray< View>();
 		private LayoutInflater inflater;
 
 		public MyAdapter(Context context) {
