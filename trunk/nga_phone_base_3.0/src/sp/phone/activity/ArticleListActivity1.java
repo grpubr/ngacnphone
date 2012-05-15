@@ -199,7 +199,7 @@ public class ArticleListActivity1 extends Activity
 				// ¶¨µ±Ç°tab
 				if (num.equals(now)) {
 					tv.setText(num);
-					tv.setTextColor(R.color.white);
+					tv.setTextColor(getResources().getColor(R.color.white));
 					tv.setGravity(Gravity.CENTER);
 					spec.setIndicator(tv);
 					spec.setContent(new tabFactory());

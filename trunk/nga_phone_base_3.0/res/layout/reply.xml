@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:layout_gravity="bottom"
     android:layout_marginTop="10dp"
-    android:background="@drawable/bg_wood" >
+     >
 
     <LinearLayout
         android:id="@+id/linearLayout2"

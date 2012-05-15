@@ -12,7 +12,9 @@
         android:layout_alignLeft="@+id/nickName"
         android:layout_alignRight="@+id/nickName"
         android:layout_below="@+id/nickName"
-        android:src="@drawable/default_avatar" >
+        android:clickable="false"
+        android:src="@drawable/default_avatar" android:contentDescription="@string/avatar">
+
 </ImageView>
     <LinearLayout android:id="@+id/linearLayout1" android:layout_toRightOf="@+id/avatarImage" android:layout_height="wrap_content" android:layout_alignTop="@+id/avatarImage" android:layout_width="fill_parent" android:orientation="vertical">
 
