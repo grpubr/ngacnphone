@@ -7,9 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipFile;
-
-import com.alibaba.fastjson.JSON;
 
 import sp.phone.bean.Article;
 import sp.phone.bean.ArticlePage;
@@ -20,10 +17,7 @@ import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
-
 import android.app.Activity;
-
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,8 +28,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Display;
 import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,22 +40,22 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
-import android.widget.TextView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.alibaba.fastjson.JSON;
 
 public class ArticleListActivity1 extends Activity 
 	implements LoadStopable,OnTouchListener, PerferenceConstant {
@@ -132,13 +128,13 @@ public class ArticleListActivity1 extends Activity
 		setListener();
 	}
 
-	ZipFile zf;
+	//ZipFile zf;
 
 	private void initDate() {
 		app = ((MyApp) getApplication());
 		articlePage = app.getArticlePage();
 		map_article = app.getMap_article();
-		zf = app.getZf();
+		//zf = app.getZf();
 	}
 
 	private void initView() {
@@ -721,7 +717,7 @@ public class ArticleListActivity1 extends Activity
 				mData = getData(tag);
 				ArticleListAdapter adapter = new ArticleListAdapter(
 						ArticleListActivity1.this,flingListener,
-						mData, listView, zf);
+						mData, listView);
 				listView.setAdapter(adapter);
 				if(webWidthChangeListener!=null){
 					try{

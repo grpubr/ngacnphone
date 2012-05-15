@@ -1,8 +1,6 @@
 package sp.phone.activity;
 
 import java.util.HashMap;
-import java.util.zip.ZipFile;
-
 import sp.phone.bean.ArticlePage;
 import sp.phone.bean.RSSFeed;
 import sp.phone.utils.PhoneConfiguration;
@@ -13,10 +11,6 @@ public class MyApp extends Application {
 	private RSSFeed rssFeed;
 	private ArticlePage articlePage;
 	private HashMap<Object, ArticlePage> map_article;
-
-	private ZipFile zf;
-	
-
 	private PhoneConfiguration config;
 	
 	
@@ -27,13 +21,7 @@ public class MyApp extends Application {
 		super.onCreate();
 	}
 
-	public ZipFile getZf() {
-		return zf;
-	}
 
-	public void setZf(ZipFile zf) {
-		this.zf = zf;
-	}
 
 	public HashMap<Object, ArticlePage> getMap_article() {
 		if (map_article == null) {
