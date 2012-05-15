@@ -2,8 +2,6 @@ package sp.phone.activity;
 
 
 
-import java.util.zip.ZipFile;
-
 import sp.phone.bean.Article;
 import sp.phone.bean.ArticlePage;
 import sp.phone.bean.OnThreadLoadCompleteLinstener;
@@ -20,7 +18,6 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo.State;
 import android.os.Bundle;
@@ -305,15 +302,14 @@ public class MessageArticleActivity extends MyAbstractActivity
 		}
 		
 		private void initAvatar(Article article, ImageView avatarIV){
-			MyApp app = (MyApp)activity.getApplication();
-			ZipFile zf = app.getZf();
+
 			
 			final String avatarUrl = article.getUser().getAvatarImage();// Í·Ïñ
 			final String userId = "" + article.getUser().getUserId();
 			if (!StringUtil.isEmpty(avatarUrl)) {
 				final String avatarPath = ImageUtil.newImage(avatarUrl, userId);
 				final boolean downImg = isInWifi()||PhoneConfiguration.getInstance().isDownAvatarNoWifi();
-				new AvatarLoadTask(avatarIV, zf, downImg).execute(avatarUrl, avatarPath, userId);
+				new AvatarLoadTask(avatarIV, null, downImg).execute(avatarUrl, avatarPath, userId);
 				
 			}
 		}

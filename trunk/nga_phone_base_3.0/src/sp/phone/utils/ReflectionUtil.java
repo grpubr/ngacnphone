@@ -1,5 +1,6 @@
 package sp.phone.utils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import android.app.Activity;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class ReflectionUtil {
 	public static boolean actionBar_setDisplayOption(Activity activity,
@@ -55,6 +57,20 @@ public class ReflectionUtil {
 			Log.i(MenuItem.class.getSimpleName(),"fail to setShowAsAction");
 		}
 		
+	}
+	
+	public static  OnItemClickListener getOnItemClickListener(Object o){
+		OnItemClickListener listener=null;
+		try {
+			
+			Method m = o.getClass().getMethod("getOnItemClickListener");
+			listener= (OnItemClickListener) m.invoke(o);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
+		return listener;
 	}
 
 }

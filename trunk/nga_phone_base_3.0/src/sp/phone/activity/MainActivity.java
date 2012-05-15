@@ -1,18 +1,13 @@
 package sp.phone.activity;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.os.Bundle;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.zip.ZipFile;
 
+import sp.phone.adapter.BoardPagerAdapter;
+import sp.phone.bean.Board;
+import sp.phone.bean.BoardHolder;
 import sp.phone.bean.Bookmark;
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.bean.RSSFeed;
@@ -23,62 +18,50 @@ import sp.phone.utils.RSSUtil;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
-import sp.phone.bean.BoardInfo;
-
-import android.content.Context;
-import android.content.DialogInterface;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Handler;
-import android.os.Message;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 
 
 
-public class MainActivity extends Activity
+
+public class MainActivity extends FragmentActivity
 	implements PerferenceConstant{
-	final static int version = 138;
-	TextView tv_pre;
-	TextView tv_now;
-	TextView tv_error;
+	final static int version = 139;
 	ActivityUtil activityUtil =ActivityUtil.getInstance();
 	private MyApp app;
 	View view;
 	boolean newVersion = false;
+	OnItemClickListener onItemClickListenerlistener = new EnterToplistLintener();
+	
+	public OnItemClickListener getOnItemClickListener(){
+		return onItemClickListenerlistener;
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		super.onCreate(savedInstanceState);
-
+		
 		// getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 		// R.layout.title_bar);
 
@@ -95,7 +78,7 @@ public class MainActivity extends Activity
 	private void loadConfig(Intent intent) {
 
 		initUserInfo(intent);
-		this.loadBoardInfo();
+		this.boardInfo = this.loadDefaultBoard();;//this.loadBoardInfo();
 		SharedPreferences share = this.getSharedPreferences(PERFERENCE,
 				MODE_PRIVATE);
 		if(share.getBoolean(NIGHT_MODE, false))
@@ -111,15 +94,19 @@ public class MainActivity extends Activity
 			Editor editor = share.edit();
 			editor.putInt(VERSION, version);
 			editor.putBoolean(REFRESH_AFTER_POST, true);
-			if(this.boardInfo == null || this.boardInfo.size() == 0)
-			{
-				this.boardInfo = this.resetBoard();
-				String infoString = JSON.toJSONString(boardInfo);
-				editor.putString(BOARDS, infoString);
-			}
+
 			editor.commit();
 			
 		}
+		
+		/*if(this.boardInfo == null || this.boardInfo.getCategoryCount() == 0 || boardInfo.get(0, 0) == null )
+		{
+			Editor editor = share.edit();
+			this.boardInfo = this.resetBoard();
+			String infoString = JSON.toJSONString(boardInfo);
+			editor.putString(BOARDS, infoString);
+			editor.commit();
+		}*/
 		//refresh
 		PhoneConfiguration config = PhoneConfiguration.getInstance();
 		config.setRefreshAfterPost(
@@ -278,26 +265,25 @@ public class MainActivity extends Activity
 	}
 
 	private void initView() {
-		// TextView titleTV = (TextView) findViewById(R.id.title);
-		// titleTV.setText("源于一个简单的想法");
+
 		setTitle("源于一个简单的想法");
 		
 		ThemeManager.SetContextTheme(this);
-		view = LayoutInflater.from(this).inflate(R.layout.main, null);
-		// setContentView(R.layout.main);
+		view = LayoutInflater.from(this).inflate(R.layout.viewpager_main, null);
 		view.setBackgroundResource(
 			ThemeManager.getInstance().getBackgroundColor());
 		setContentView(view);
 
-		tv_pre = new TextView(this);//(TextView) findViewById(R.id.tv_pre);
-		tv_now = new TextView(this);//(TextView) findViewById(R.id.tv_now);
-		tv_error = new TextView(this);//(TextView) findViewById(R.id.tv_error);
+		ViewPager pager = (ViewPager) findViewById(R.id.pager);
+		//this.getSupportFragmentManager();
+		pager.setAdapter(
+				new BoardPagerAdapter( getSupportFragmentManager(),boardInfo) );
 
-		GridView gv = (GridView) findViewById(R.id.gride);
+		/*GridView gv = (GridView) findViewById(R.id.gride);
 		ImageGridList adapter = new ImageGridList(this);	
 		gv.setAdapter(adapter);
 		gv.setOnItemClickListener(new EnterToplistLintener());
-		MainActivity.this.registerForContextMenu(gv);
+		MainActivity.this.registerForContextMenu(gv);*/
 		
 		if(newVersion){
 			new AlertDialog.Builder(this).setTitle("提示")
@@ -312,7 +298,7 @@ public class MainActivity extends Activity
 	}
 	
 	
-	
+	/*
 	//AdapterContextMenuInfo lastMenuInfo = null;
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
@@ -321,7 +307,7 @@ public class MainActivity extends Activity
 		//GridView gv; gv.getChildAt(1);
 		//TextView clicked = (TextView)((AdapterContextMenuInfo)menuInfo).targetView;
 		menu.add(0,ADD_BOARD_INDEX,0, "加新板块");
-		menu.add(0,ADD_BOARD_INDEX+ 1,0, "删除板块"/*+clicked.getText().toString()*/);
+		menu.add(0,ADD_BOARD_INDEX+ 1,0, "删除板块");
 		menu.add(0,ADD_BOARD_INDEX+ 2,0, "重置所有板块");
 		//lastMenuInfo = new AdapterContextMenuInfo(v, 1, 1);
 		
@@ -342,7 +328,7 @@ public class MainActivity extends Activity
 			
 			int position = info.position;
 
-				String fid = this.boardInfo.get(position).getUrl();
+				String fid = this.boardInfo.get(category,position).getUrl();
 				if(removeCustomBoard(fid))
 				{
 					GridView gv = (GridView) findViewById(R.id.gride);
@@ -410,15 +396,15 @@ public class MainActivity extends Activity
                 });  
         alert.show(); 
 		
-	}
+	}*/
 
 
 
 	static final int ADD_BOARD_INDEX = 1;
 
 
-	String error = "";
-	int error_level = 0;
+	//String error = "";
+	//int error_level = 0;
 
 	private void initDate() {
 		app = ((MyApp) getApplication());
@@ -428,162 +414,140 @@ public class MainActivity extends Activity
 		new Thread() {
 			public void run() {
 
-				delay("检查本地网络...");
 
-				boolean f = check_net();
-				if (f) {
-					delay("选定可用网络");
-
-					delay("搜寻加速服务器...");
-					boolean status = HttpUtil.selectServer();
-					// boolean status = false;
-					if (!status) {
-						delay("加速:否");
-						error += "加速:否";
-					} else {
-						delay("加速服务器畅通");
-					}
-
-					delay("检查缓存目录...");
-
-					System.out.println("zip is");
-
-					File file = new File(HttpUtil.PATH);
-					if (!file.exists()) {
-						delay("创建新的缓存目录");
-						file.mkdirs();
-					} else {
-						delay("缓存目录正常");
-					}
-					
-					file = new File(HttpUtil.PATH_WEB_CACHE);
-					if (!file.exists()) {
-						Log.i(getClass().getSimpleName(),"create webcache directory");
-						file.mkdirs();
-					} 
-					
-					file = new File(HttpUtil.PATH_NOMEDIA);
-					if (!file.exists()) {
-						Log.i(getClass().getSimpleName(),"create .nomedia");
-						try {
-							file.createNewFile();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					} 
-					
-					HttpUtil.PATH_ZIP = HttpUtil.PATH_SD
-							+ "nga_cache/nga_cache.zip";
-					File file_zip = new File(HttpUtil.PATH_ZIP);
-					System.out.println("zip:" + HttpUtil.PATH_ZIP);
-					if (file_zip.exists()) {
-						try {
-							ZipFile zf = new ZipFile(HttpUtil.PATH_ZIP);
-							app.setZf(zf);
-							System.out.println("exists.");
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-
+				File file = new File(HttpUtil.PATH);
+				if (!file.exists()) {
+					delay("创建新的缓存目录");
+					file.mkdirs();
 				} else {
-					error_level = 1;
-					delay("没有找到可用的网络");
-					error += "没有找到可用的网络,";
+					delay("缓存目录正常");
 				}
-
-				if (error.equals("")) {
-					delay("初始化完毕.");
-				} else {
-					delay_error(error);
-				}
-			};
+				
+				file = new File(HttpUtil.PATH_WEB_CACHE);
+				if (!file.exists()) {
+					Log.i(getClass().getSimpleName(),"create webcache directory");
+					file.mkdirs();
+				} 
+				
+				file = new File(HttpUtil.PATH_NOMEDIA);
+				if (!file.exists()) {
+					Log.i(getClass().getSimpleName(),"create .nomedia");
+					try {
+						file.createNewFile();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} 
+				
+				
+			}
 		}.start();
 	
 	}
-	private List<BoardInfo> resetBoard(){
+	private BoardHolder loadDefaultBoard(){
 		
-		List<BoardInfo> boards = new ArrayList<BoardInfo>();
-		boards.add(new BoardInfo("7", "艾泽拉斯议事厅", R.drawable.p7));
-		boards.add(new BoardInfo("323", "台服讨论区", R.drawable.p323));
-		boards.add(new BoardInfo("-7", "大漩涡", R.drawable.p354));
-		boards.add(new BoardInfo("10", "银色黎明裁判所", R.drawable.p10));
-		boards.add(new BoardInfo("230", "艾泽拉斯风纪委员会", R.drawable.p230));
-		boards.add(new BoardInfo("387", "潘大力亚之迷雾", R.drawable.p387));
+		BoardHolder boards = new BoardHolder();
 		
-		boards.add(new BoardInfo("320", "黑锋要塞", R.drawable.p320));
-		boards.add(new BoardInfo("181", "铁血沙场", R.drawable.p181));
-		boards.add(new BoardInfo("182", "魔法圣堂", R.drawable.p182));
-		boards.add(new BoardInfo("183", "信仰神殿", R.drawable.p183));
-		boards.add(new BoardInfo("185", "风暴祭坛", R.drawable.p185));
-		boards.add(new BoardInfo("186", "翡翠梦境", R.drawable.p186));
-		boards.add(new BoardInfo("187", "猎手大厅", R.drawable.p187));
-		boards.add(new BoardInfo("184", "圣光之力", R.drawable.p184));
-		boards.add(new BoardInfo("188", "恶魔深渊", R.drawable.p188));
-		boards.add(new BoardInfo("189", "暗影裂口", R.drawable.p189));
+		int i= 0;
 		
-		boards.add(new BoardInfo("310", "前瞻资讯", R.drawable.p310));
-		boards.add(new BoardInfo("190", "任务讨论", R.drawable.p190));
-		boards.add(new BoardInfo("213", "战争档案", R.drawable.p213));
-		boards.add(new BoardInfo("218", "副本专区", R.drawable.p218));
-		boards.add(new BoardInfo("258", "战场讨论", R.drawable.p258));
-		boards.add(new BoardInfo("272", "竞技场", R.drawable.p272));
-		boards.add(new BoardInfo("191", "地精商会", R.drawable.p191));
-		boards.add(new BoardInfo("200", "插件研究", R.drawable.p200));
-		boards.add(new BoardInfo("240", "BigFoot", R.drawable.p240));
-		boards.add(new BoardInfo("274", "插件发布", R.drawable.p274));
-		boards.add(new BoardInfo("315", "战斗统计", R.drawable.p315));
-		boards.add(new BoardInfo("333", "DKP系统", R.drawable.p333));
-		boards.add(new BoardInfo("327", "成就讨论", R.drawable.p327));
-		boards.add(new BoardInfo("388", "幻化讨论", R.drawable.p388));
-		boards.add(new BoardInfo("255", "公会管理", R.drawable.p10));
-		boards.add(new BoardInfo("306", "人员招募", R.drawable.p10));
+		boards.add(new Board(i, "7", "艾泽拉斯议事厅", R.drawable.p7));
+		boards.add(new Board(i, "323", "台服讨论区", R.drawable.p323));
+		boards.add(new Board(i, "-7", "大漩涡", R.drawable.p354));
+		boards.add(new Board(i, "10", "银色黎明裁判所", R.drawable.p10));
+		boards.add(new Board(i, "230", "艾泽拉斯风纪委员会", R.drawable.p230));
+		boards.add(new Board(i, "387", "潘大力亚之迷雾", R.drawable.p387));
+		boards.addCategoryName(i, "综合讨论");
+		i++;
 		
-		boards.add(new BoardInfo("264", "卡拉赞剧院", R.drawable.p264));
-		boards.add(new BoardInfo("8", "大图书馆", R.drawable.p8));
-		boards.add(new BoardInfo("102", "作家协会", R.drawable.p102));
-		boards.add(new BoardInfo("124", "壁画洞窟", R.drawable.pdefault));
-		boards.add(new BoardInfo("254", "镶金玫瑰", R.drawable.p254));
-		boards.add(new BoardInfo("355", "龟岩兄弟会", R.drawable.p355));
-		boards.add(new BoardInfo("116", "奇迹之泉", R.drawable.p116));
+		boards.add(new Board(i, "390", "五晨寺", R.drawable.p390));
+		boards.add(new Board(i, "320", "黑锋要塞", R.drawable.p320));
+		boards.add(new Board(i, "181", "铁血沙场", R.drawable.p181));
+		boards.add(new Board(i, "182", "魔法圣堂", R.drawable.p182));
+		boards.add(new Board(i, "183", "信仰神殿", R.drawable.p183));
+		boards.add(new Board(i, "185", "风暴祭坛", R.drawable.p185));
+		boards.add(new Board(i, "186", "翡翠梦境", R.drawable.p186));
+		boards.add(new Board(i, "187", "猎手大厅", R.drawable.p187));
+		boards.add(new Board(i, "184", "圣光之力", R.drawable.p184));
+		boards.add(new Board(i, "188", "恶魔深渊", R.drawable.p188));
+		boards.add(new Board(i, "189", "暗影裂口", R.drawable.p189));
+		boards.addCategoryName(i, "职业讨论区");
+		i++;
+		
+		boards.add(new Board(i, "310", "前瞻资讯", R.drawable.p310));
+		boards.add(new Board(i, "190", "任务讨论", R.drawable.p190));
+		boards.add(new Board(i, "213", "战争档案", R.drawable.p213));
+		boards.add(new Board(i, "218", "副本专区", R.drawable.p218));
+		boards.add(new Board(i, "258", "战场讨论", R.drawable.p258));
+		boards.add(new Board(i, "272", "竞技场", R.drawable.p272));
+		boards.add(new Board(i, "191", "地精商会", R.drawable.p191));
+		boards.add(new Board(i, "200", "插件研究", R.drawable.p200));
+		boards.add(new Board(i, "240", "BigFoot", R.drawable.p240));
+		boards.add(new Board(i, "274", "插件发布", R.drawable.p274));
+		boards.add(new Board(i, "315", "战斗统计", R.drawable.p315));
+		boards.add(new Board(i, "333", "DKP系统", R.drawable.p333));
+		boards.add(new Board(i, "327", "成就讨论", R.drawable.p327));
+		boards.add(new Board(i, "388", "幻化讨论", R.drawable.p388));
+		boards.add(new Board(i, "255", "公会管理", R.drawable.p10));
+		boards.add(new Board(i, "306", "人员招募", R.drawable.p10));
+		boards.addCategoryName(i, "心得讨论");
+		i++;
+		
+		boards.add(new Board(i, "264", "卡拉赞剧院", R.drawable.p264));
+		boards.add(new Board(i, "8", "大图书馆", R.drawable.p8));
+		boards.add(new Board(i, "102", "作家协会", R.drawable.p102));
+		boards.add(new Board(i, "124", "壁画洞窟", R.drawable.pdefault));
+		boards.add(new Board(i, "254", "镶金玫瑰", R.drawable.p254));
+		boards.add(new Board(i, "355", "龟岩兄弟会", R.drawable.p355));
+		boards.add(new Board(i, "116", "奇迹之泉", R.drawable.p116));
+		boards.addCategoryName(i, "周边讨论");
+		i++;
 		
 		
-		boards.add(new BoardInfo("173", "帐号安全", R.drawable.p193));
-		boards.add(new BoardInfo("201", "系统问题", R.drawable.p201));
-		boards.add(new BoardInfo("334", "硬件配置", R.drawable.p334));
-		boards.add(new BoardInfo("335", "网站开发", R.drawable.p335));
+		boards.add(new Board(i, "173", "帐号安全", R.drawable.p193));
+		boards.add(new Board(i, "201", "系统问题", R.drawable.p201));
+		boards.add(new Board(i, "334", "硬件配置", R.drawable.p334));
+		boards.add(new Board(i, "335", "网站开发", R.drawable.p335));
+		boards.addCategoryName(i, "系统软硬件讨论");
+		i++;
 		
 		
-		boards.add(new BoardInfo("318", "Diablo III", R.drawable.p318));
-		boards.add(new BoardInfo("332", "战锤40K", R.drawable.p332));
-		boards.add(new BoardInfo("321", "DotA", R.drawable.p321));
-		boards.add(new BoardInfo("353", "纽沃斯英雄传", R.drawable.pdefault));
+		boards.add(new Board(i, "318", "Diablo III", R.drawable.p318));
+		boards.add(new Board(i, "-46468", "坦克世界", R.drawable.p46468));
+		boards.add(new Board(i, "332", "战锤40K", R.drawable.p332));
+		boards.add(new Board(i, "321", "DotA", R.drawable.p321));
+		boards.add(new Board(i, "353", "纽沃斯英雄传", R.drawable.pdefault));
+		boards.addCategoryName(i, "其他游戏");
+		i++;
 		
-		boards.add(new BoardInfo("-1068355", "晴风村", R.drawable.pdefault));
-		boards.add(new BoardInfo("-447601", " 二次元国家地理 - NG2", R.drawable.pdefault));
-		boards.add(new BoardInfo("-152678", "英雄联盟 Let's Gank", R.drawable.pdefault));
-		boards.add(new BoardInfo("-343809", "寂寞的车俱乐部", R.drawable.pdefault));
-		boards.add(new BoardInfo("-131429", "红茶馆——小说馆", R.drawable.pdefault));
-		boards.add(new BoardInfo("-46468", " 洛拉斯的坦克世界", R.drawable.pdefault));
-		boards.add(new BoardInfo("-2371813", "NGA驻吉他海四办公室", R.drawable.pdefault));
-		boards.add(new BoardInfo("-124119", "菠萝方舟·神圣避难所 ", R.drawable.pdefault));
-		boards.add(new BoardInfo("-84", " 模玩之魂", R.drawable.pdefault));
-		boards.add(new BoardInfo("-187579", " 大旋涡历史博物馆", R.drawable.pdefault));
-		boards.add(new BoardInfo("-308670", "血库的个人空间", R.drawable.pdefault));
-		boards.add(new BoardInfo("-112905", "八圣祠", R.drawable.pdefault));
+		boards.add(new Board(i, "-152678", "英雄联盟 Let's Gank", R.drawable.p152678));
+		boards.add(new Board(i, "-1068355", "晴风村", R.drawable.pdefault));
+		boards.add(new Board(i, "-447601", " 二次元国家地理 - NG2", R.drawable.pdefault));
+		boards.add(new Board(i, "-152678", "英雄联盟 Let's Gank", R.drawable.pdefault));
+		boards.add(new Board(i, "-343809", "寂寞的车俱乐部", R.drawable.pdefault));
+		boards.add(new Board(i, "-131429", "红茶馆——小说馆", R.drawable.pdefault));
+		boards.add(new Board(i, "-46468", " 洛拉斯的坦克世界", R.drawable.pdefault));
+		boards.add(new Board(i, "-2371813", "NGA驻吉他海四办公室", R.drawable.pdefault));
+		boards.add(new Board(i, "-124119", "菠萝方舟·神圣避难所 ", R.drawable.pdefault));
+		boards.add(new Board(i, "-84", " 模玩之魂", R.drawable.pdefault));
+		boards.add(new Board(i, "-187579", " 大旋涡历史博物馆", R.drawable.pdefault));
+		boards.add(new Board(i, "-308670", "血库的个人空间", R.drawable.pdefault));
+		boards.add(new Board(i, "-112905", "八圣祠", R.drawable.pdefault));
+		boards.addCategoryName(i, "个人版面");
+		i++;
 		
 		
 		return boards;
 	}
 
 
-	private List<BoardInfo> boardInfo;
-	private List<BoardInfo> getOptionBoard() {
+	private BoardHolder boardInfo;
+	/*final private int category = 0;
+	private BoardHolder getOptionBoard() {
 		return  boardInfo;
 	}
 	
-	private void setOptionBoard(List<BoardInfo> info){	
+	private void setOptionBoard(BoardHolder info){	
 		this.boardInfo = info;
 	}
 	
@@ -595,17 +559,19 @@ public class MainActivity extends Activity
 		editor.putString(BOARDS, infoString);
 		editor.commit();
 		
-	}
+	}*/
+	/*
 	private void loadBoardInfo(){
 		SharedPreferences share = this.getSharedPreferences(PERFERENCE,
 				MODE_PRIVATE);
 		String infoString = share.getString(BOARDS, "");
 		if(boardInfo==null)
-			boardInfo = new ArrayList<BoardInfo>();
+			boardInfo = new BoardHolder();
 		if(!infoString.equals(""))
 		{
 			try{
-			boardInfo  =  JSON.parseArray(infoString, BoardInfo.class);
+			boardInfo  =  JSON.parseObject(infoString, BoardHolder.class);
+			//boardInfo.convertChildren();
 			}catch(Exception e){
 				Log.e("", Log.getStackTraceString(e));
 			}
@@ -614,11 +580,11 @@ public class MainActivity extends Activity
 
 			
 		
-	}
+	}*/
 	
-	private boolean addCustomBoard(String fid,String name){
-		List<BoardInfo> boards = getOptionBoard();
-		boards.add(new BoardInfo(fid, name));
+	/*private boolean addCustomBoard(String fid,String name){
+		BoardHolder boards = getOptionBoard();
+		boards.add(new Board(fid, name));
 		synchronized(this){
 			setOptionBoard(boards);
 			flushBoardInfo();
@@ -630,17 +596,12 @@ public class MainActivity extends Activity
 	}
 	
 	private boolean removeCustomBoard(String fid){
-		List<BoardInfo> boards = getOptionBoard();
+		BoardHolder boards = getOptionBoard();
 
 
-		for (BoardInfo b : boards) {
-			if(b.getUrl().equals(fid)){
-				
-				boards.remove(b);
-				break;
-			}
-
-		}
+		
+		boards.remove(category,fid);
+		
 
 		//urlList.remove(index);
 		//nameList.remove(index);
@@ -654,68 +615,27 @@ public class MainActivity extends Activity
 		//refresh
 		//this.prepareGridData();
 		return true;
-	}
+	}*/
 
 
 
-	private void delay_error(String error) {
-		Message message = new Message();
-		Bundle b = new Bundle();
-		b.putString("error", error);
-		message.setData(b);
-		handler.sendMessage(message);
-	}
+
 
 	private void delay(String text) {
-		Message message = new Message();
-		Bundle b = new Bundle();
-		b.putString("text_now", text);
-		message.setData(b);
-		handler.sendMessage(message);
-	}
+		final String msg = text;
+		this.runOnUiThread(new Runnable(){
 
-	private String text_pre;
-
-	Handler handler = new Handler() {
-		public void handleMessage(Message msg) {
-			Bundle b = msg.getData();
-			if (b != null) {
-				tv_pre.setText(text_pre);
-
-				String error = b.getString("error");
-				if (error != null) {
-					tv_now.setVisibility(View.GONE);
-					tv_error.setVisibility(View.VISIBLE);
-					tv_error.setText(error);
-					text_pre = error;
-				} else {
-					String text_now = b.getString("text_now");
-					if (text_now != null) {
-						tv_now.setVisibility(View.VISIBLE);
-						tv_error.setVisibility(View.GONE);
-						tv_now.setText(text_now);
-
-					}
-					text_pre = text_now;
-				}
-
+			@Override
+			public void run() {
+				Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
 			}
-			tv_now.setVisibility(View.GONE);
-			tv_error.setVisibility(View.GONE);
-			tv_pre.setVisibility(View.GONE);
-
-		}
-	};
-
-	private boolean check_net() {
-		ConnectivityManager cManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo info = cManager.getActiveNetworkInfo();
-		if (info != null && info.isConnected()) {
-			return true;
-		} else {
-			return false;
-		}
+			
+		});
 	}
+
+
+
+	
 
 	private void getData(final String url) {
 		activityUtil.noticeSaying(MainActivity.this);
@@ -737,14 +657,8 @@ public class MainActivity extends Activity
 			RSSFeed rssFeed = rssUtil.getFeed();
 
 			if (rssFeed != null && rssFeed.getItems().size() != 0) {
-				// MyApp app = ((MyApp) MainActivity.this);
 				app.setRssFeed(rssFeed);
 
-				/*HashMap<Object, RSSFeed> map = new HashMap<Object, RSSFeed>();
-				if (false)
-					map.put(StringUtil.getNowPageNum(rssFeed.getLink()),
-							rssFeed);
-				app.setMap(map);*/
 				activityUtil.dismiss();
 				runOnUiThread(new Runnable() {
 					public void run() {
@@ -769,19 +683,8 @@ public class MainActivity extends Activity
 		}
 	}
 
-	/*int[] image = { R.drawable.p7, R.drawable.p354, 
-			R.drawable.p320, R.drawable.p181, R.drawable.p187, R.drawable.p185,
-			R.drawable.p189, R.drawable.p182, R.drawable.p186, R.drawable.p184,
-			R.drawable.p183, R.drawable.p188 };
-	String[] urls = null;
-	String[] names = null;
-	
-	String[] defaults_urls ={ "7", "-7", "320", "181", "187", "185", "189",
-			"182", "186", "184", "183", "188" };
-	String[] defaults_names = { "议事厅", "大漩涡", "黑锋要塞", "铁血沙场", "猎手大厅",
-			"风暴祭坛", "暗影裂口", "魔法圣堂", "翡翠梦境", "圣光之力", "信仰神殿", "恶魔深渊" };
-*/
-	class ImageGridList extends BaseAdapter {
+
+	/*class ImageGridList extends BaseAdapter {
 		Activity activity;
 		
 		private Map<String,Drawable> iconMap;
@@ -791,11 +694,11 @@ public class MainActivity extends Activity
 		}
 
 		public int getCount() {
-			return boardInfo.size();
+			return boardInfo.size(category);
 		}
 
 		public Object getItem(int position) {
-			return boardInfo.get(position).getUrl();//urls[position];
+			return boardInfo.get(category,position).getUrl();//urls[position];
 		}
 
 		public long getItemId(int position) {
@@ -830,7 +733,7 @@ public class MainActivity extends Activity
 			
 			Drawable draw = getDrable(convertView, position);
 			holder.img.setImageDrawable(draw);
-			holder.text.setText(boardInfo.get(position).getName());
+			holder.text.setText(boardInfo.get(category,position).getName());
 			return convertView;
 			//return iv;
 		}
@@ -838,8 +741,8 @@ public class MainActivity extends Activity
 
 		private Drawable getDrable(View convertView, int position) {
 			Drawable d = null;
-			final String url = boardInfo.get(position).getUrl();
-			int resId = boardInfo.get(position).getIcon();
+			final String url = boardInfo.get(category,position).getUrl();
+			int resId = boardInfo.get(category,position).getIcon();
 			if (resId != 0) {// default board
 				d = getResources().getDrawable(resId);
 			} else {// optional board
@@ -868,7 +771,7 @@ public class MainActivity extends Activity
 
 	}
 
-	
+	*/
 
 	class EnterToplistLintener implements OnItemClickListener , OnClickListener {
 		int position;
@@ -924,7 +827,6 @@ public class MainActivity extends Activity
 		@Override
 		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 				long arg3) {
-			// TODO Auto-generated method stub
 			position = arg2;
 			fidString=(String) arg0.getItemAtPosition(position);
 			onClick(arg1);

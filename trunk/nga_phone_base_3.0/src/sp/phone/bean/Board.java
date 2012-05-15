@@ -6,22 +6,19 @@ public class Board {
 	private String name;
 	private int icon;
 	public Board(){
+		this(0,"0","invalid",0);
 		
 	}
 	
 	
 	
+
+
+
+
+
 	public Board(int category, String url, String name, int icon) {
-	
-		this(url, name, icon);
 		this.category = category;
-	}
-
-
-
-
-	public Board(String url, String name, int icon) {
-		super();
 		this.url = url;
 		this.name = name;
 		this.icon = icon;
@@ -29,8 +26,19 @@ public class Board {
 
 
 
+
+
+
+
+
+	public Board(String url, String name, int icon) {
+		this(0, url, name, icon);
+	}
+
+
+
 	public Board(String url, String name) {
-		this(url,name, 0);
+		this(0,url,name, 0);
 	}
 
 	public String getUrl() {

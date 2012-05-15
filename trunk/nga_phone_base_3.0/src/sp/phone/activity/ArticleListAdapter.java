@@ -2,8 +2,6 @@ package sp.phone.activity;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.zip.ZipFile;
-
 import sp.phone.task.AvatarLoadTask;
 import sp.phone.utils.ImageUtil;
 import sp.phone.utils.PhoneConfiguration;
@@ -31,7 +29,7 @@ import android.widget.TextView;
 public class ArticleListAdapter  extends ArrayAdapter<HashMap<String, String>> 
 {
 
-	ZipFile zf;
+	//ZipFile zf;
 
 	HashMap<Integer, View> m = new HashMap<Integer, View>();
 	ListView listView;
@@ -40,11 +38,11 @@ public class ArticleListAdapter  extends ArrayAdapter<HashMap<String, String>>
 	OnTouchListener gestureListener;
 
 	public ArticleListAdapter(Activity activity,OnTouchListener gestureListener,
-			List<HashMap<String, String>> lMap, ListView listView, ZipFile zf) {
+			List<HashMap<String, String>> lMap, ListView listView) {
 		super(activity, 0, lMap);
 		this.activity = activity;
 		this.listView = listView;
-		this.zf = zf;
+		//this.zf = zf;
 		this.gestureListener  = gestureListener;
 		inflater = LayoutInflater.from(activity);
 		
@@ -92,7 +90,7 @@ public class ArticleListAdapter  extends ArrayAdapter<HashMap<String, String>>
 			if (!StringUtil.isEmpty(avatarUrl)) {
 				final String avatarPath = ImageUtil.newImage(avatarUrl, userId);
 				final boolean downImg = isInWifi()||PhoneConfiguration.getInstance().isDownAvatarNoWifi();
-				new AvatarLoadTask(avatarIV, zf, downImg).execute(avatarUrl, avatarPath, userId);
+				new AvatarLoadTask(avatarIV, null, downImg).execute(avatarUrl, avatarPath, userId);
 				
 			}
 
