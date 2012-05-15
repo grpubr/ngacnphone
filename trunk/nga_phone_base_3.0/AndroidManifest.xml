@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="sp.phone.activity" android:versionCode="26"
-	android:versionName="1.1.38" android:installLocation="auto">
+	package="sp.phone.activity" android:versionCode="27"
+	android:versionName="1.1.47" android:installLocation="auto">
 	<application android:name=".MyApp" android:label="@string/app_name" android:icon="@drawable/p7">
 		<activity android:name=".MainActivity" android:label="@string/app_name">
 			<intent-filter>
