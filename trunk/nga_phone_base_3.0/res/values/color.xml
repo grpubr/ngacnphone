@@ -20,4 +20,5 @@
 	<color name="shit1">#FEF3D1</color>
 	<color name="shit2">#FFF8E5</color>
 	<color name="red">#FF0000</color>
+	<color name="actionbar_title_color">#ffffff</color>
 </resources>

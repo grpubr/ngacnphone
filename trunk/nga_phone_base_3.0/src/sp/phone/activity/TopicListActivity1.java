@@ -1,18 +1,17 @@
 package sp.phone.activity;
 
-import java.util.HashMap;
+import com.example.android.actionbarcompat.ActionBarActivity;
 
 import sp.phone.bean.RSSFeed;
 import sp.phone.bean.RSSItem;
-import sp.phone.task.CheckReplyNotificationTask;
 import sp.phone.forumoperation.FloorOpener;
+import sp.phone.task.CheckReplyNotificationTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.RSSUtil;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
-import sp.phone.activity.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +22,7 @@ import android.os.Message;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,28 +30,27 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class TopicListActivity1 extends Activity {
+public class TopicListActivity1 extends ActionBarActivity {
 
 	ActivityUtil activityUtil = ActivityUtil.getInstance();
 
 	private TabHost tabHost;
-	private final String TAG = Activity.class.getSimpleName();
+	private final String TAG = TopicListActivity1.class.getSimpleName();
 	private static final String TABID_PRE = "tab_f";
 	private static final String TABID_NEXT = "tab_n";
 	private RSSFeed rssFeed;
@@ -125,12 +124,10 @@ public class TopicListActivity1 extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.threadlist_menu, menu);
-		final int flags = ThemeManager.ACTION_BAR_FLAG;
-		/*ActionBar.DISPLAY_SHOW_HOME;//2
-		flags |= ActionBar.DISPLAY_USE_LOGO;//1
-		flags |= ActionBar.DISPLAY_SHOW_TITLE;//8
-		flags |= ActionBar.DISPLAY_HOME_AS_UP;//4
-		*/
+		
+		/*final int flags = ThemeManager.ACTION_BAR_FLAG;
+
+
 		int actionNum = ThemeManager.ACTION_IF_ROOM;//SHOW_AS_ACTION_IF_ROOM
 		int i = 0;
 		for(i = 0;i< menu.size();i++){
@@ -139,9 +136,8 @@ public class TopicListActivity1 extends Activity {
 		}
 
 		 ReflectionUtil.actionBar_setDisplayOption(this, flags);
-		//final ActionBar bar = getActionBar();
-		//bar.setDisplayOptions(flags);
-		return true;
+		*/
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -233,9 +229,7 @@ public class TopicListActivity1 extends Activity {
 
 	private void initView() {
 
-		//soundPool = new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);
-		// ÔØÈëÒôÆµÁ÷
-		//hitOkSfx = soundPool.load(this, R.raw.tweet, 0);
+
 		if(rssFeed == null){
 			Log.i(this.getClass().getSimpleName(), "rssFeed= null,finish");
 			this.finish();
@@ -334,38 +328,30 @@ public class TopicListActivity1 extends Activity {
 					max_num = num;
 				}
 			}
-			RSSFeed rssFeed2 = null;
-			//if (!tabId.equals(TABID_PRE)) {
-			//	rssFeed2 = map.get(num);
-			//}
-			if (rssFeed2 == null) {
-				link = link.substring(0, link.length() - 1);
-				final String newURL;
-				if (link.indexOf("page") == -1) {
-					newURL = link + "&page=" + num + "&rss=1";
-				} else {
-					newURL = link.replaceAll("page=\\d", "page=" + num
-							+ "&rss=1");
-				}
-				new Thread() {
-					@Override
-					public void run() {
-						activityUtil.noticeSaying(TopicListActivity1.this);
-						RSSUtil rssUtil = new RSSUtil();
-						rssUtil.parseXml(newURL);
-						rssFeed = rssUtil.getFeed();
-						//map.put(num, rssFeed);
-						synchronized(BoardPageNumChangeListener.this){
-							isWorking = false;
-						}
-						Message message = new Message();
-						handler_rebuild.sendMessage(message);
-					}
-				}.start();
+			//RSSFeed rssFeed2 = null;
+			link = link.substring(0, link.length() - 1);
+			final String newURL;
+			if (link.indexOf("page") == -1) {
+				newURL = link + "&page=" + num + "&rss=1";
 			} else {
-				rssFeed = rssFeed2;
-				reBuild();
+				newURL = link.replaceAll("page=\\d", "page=" + num
+						+ "&rss=1");
 			}
+			new Thread() {
+				@Override
+				public void run() {
+					activityUtil.noticeSaying(TopicListActivity1.this);
+					RSSUtil rssUtil = new RSSUtil();
+					rssUtil.parseXml(newURL);
+					rssFeed = rssUtil.getFeed();
+					//map.put(num, rssFeed);
+					synchronized(BoardPageNumChangeListener.this){
+						isWorking = false;
+					}
+					Message message = new Message();
+					handler_rebuild.sendMessage(message);
+				}
+			}.start();
 		}
 		
 	}
