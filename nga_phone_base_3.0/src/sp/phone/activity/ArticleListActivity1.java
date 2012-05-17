@@ -246,8 +246,8 @@ public class ArticleListActivity1 extends ActionBarActivity
 		for(i = 0;i< menu.size();i++){
 			ReflectionUtil.setShowAsAction(
 					menu.getItem(i), actionNum);
-		}
-		ReflectionUtil.actionBar_setDisplayOption(this, flags);*/
+		}*/
+		ReflectionUtil.actionBar_setDisplayOption(this, flags);
 
 
 

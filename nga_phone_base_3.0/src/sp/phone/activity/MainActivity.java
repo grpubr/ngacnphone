@@ -15,6 +15,7 @@ import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.RSSUtil;
+import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.app.AlertDialog;
@@ -163,17 +164,17 @@ public class MainActivity extends ActionBarActivity
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
-		/*
+		
 		final int flags = ThemeManager.ACTION_BAR_FLAG;
-
+		/*
 		int actionNum = ThemeManager.ACTION_IF_ROOM;//SHOW_AS_ACTION_IF_ROOM
 		int i = 0;
 		for(i = 0;i< menu.size();i++){
 			ReflectionUtil.setShowAsAction(
 					menu.getItem(i), actionNum);
 		}
-		
-		ReflectionUtil.actionBar_setDisplayOption(this, flags);*/
+		*/
+		ReflectionUtil.actionBar_setDisplayOption(this, flags);
 		
 		return super.onCreateOptionsMenu(menu);
 	}
