@@ -125,18 +125,18 @@ public class TopicListActivity1 extends ActionBarActivity {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.threadlist_menu, menu);
 		
-		/*final int flags = ThemeManager.ACTION_BAR_FLAG;
+		final int flags = ThemeManager.ACTION_BAR_FLAG;
 
 
-		int actionNum = ThemeManager.ACTION_IF_ROOM;//SHOW_AS_ACTION_IF_ROOM
+		/*int actionNum = ThemeManager.ACTION_IF_ROOM;//SHOW_AS_ACTION_IF_ROOM
 		int i = 0;
 		for(i = 0;i< menu.size();i++){
 			ReflectionUtil.setShowAsAction(
 					menu.getItem(i), actionNum);
-		}
+		}*/
 
 		 ReflectionUtil.actionBar_setDisplayOption(this, flags);
-		*/
+		
 		return super.onCreateOptionsMenu(menu);
 	}
 
