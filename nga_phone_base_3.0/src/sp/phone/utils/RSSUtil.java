@@ -48,7 +48,7 @@ public class RSSUtil {
 		switch (type) {
 		case TITLE:
 			if (reading_chan) {
-				feed.setTitle(s);
+				feed.setTitle(s.replaceAll("^[\\s\\S]+? ", ""));
 			} else {
 				item.setTitle(s);
 			}
