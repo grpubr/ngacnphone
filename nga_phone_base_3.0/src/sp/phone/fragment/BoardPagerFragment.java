@@ -18,7 +18,7 @@ public class BoardPagerFragment extends Fragment {
 	String category;
 	GridView listview;
 	BaseAdapter adapter;
-	View v;
+	//View v;
 	public static Fragment newInstance(String category)
 	{
 		Fragment f = new BoardPagerFragment();
@@ -50,14 +50,15 @@ public class BoardPagerFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		  v =  inflater.inflate(R.layout.main, container,false);
-		 listview = (GridView)v.findViewById(R.id.gride);
+		listview =  (GridView) inflater.inflate(R.layout.category_grid, container,false);
+		//listview= new GridView(getActivity());
+		 //listview =(GridView) v;//= (GridView)v.findViewById(R.id.gride);
 		adapter = new BoardCatagoryAdapter(getResources(), inflater, category);
 		//View v = new ImageView(inflater.getContext());
-		v.setBackgroundResource(
+		listview.setBackgroundResource(
 				ThemeManager.getInstance().getBackgroundColor());
 		
-		return v;
+		return listview;
 	}
 
 
@@ -73,7 +74,7 @@ public class BoardPagerFragment extends Fragment {
 
 	@Override
 	public void onResume() {
-		v.setBackgroundResource(
+		listview.setBackgroundResource(
 				ThemeManager.getInstance().getBackgroundColor());
 		super.onResume();
 	}

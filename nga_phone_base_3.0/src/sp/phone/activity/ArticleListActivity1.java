@@ -17,7 +17,6 @@ import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -56,8 +55,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.example.android.actionbarcompat.ActionBarActivity;
 
-public class ArticleListActivity1 extends Activity 
+public class ArticleListActivity1 extends ActionBarActivity 
 	implements LoadStopable,OnTouchListener, PerferenceConstant {
 
 	ActivityUtil activityUtil = ActivityUtil.getInstance();
@@ -103,25 +103,10 @@ public class ArticleListActivity1 extends Activity
 			//WebWidthChangeListener.class.getConstructor(parameterTypes)
 				webWidthChangeListener = ScaleListenerContructor.newInstance(this);
 			
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 
 		initDate();
 		initView();
@@ -161,7 +146,8 @@ public class ArticleListActivity1 extends Activity
 		if (page == null || page.size() == 0) {
 			TabSpec spec = tabHost.newTabSpec("tab" + 1);
 			TextView tv = new TextView(ArticleListActivity1.this);
-			tv.setText("首页");
+			tv.setText("刷新");
+			//tv.setBackgroundResource(R.drawable.ic_menu_refresh);
 			tv.setTextSize(20);
 			
 			final String url = HttpUtil.Server + articlePage.getNow().get("link");
@@ -245,11 +231,7 @@ public class ArticleListActivity1 extends Activity
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.articlelist_menu, menu);
 		final int flags = ThemeManager.ACTION_BAR_FLAG;
-		/*ActionBar.DISPLAY_SHOW_HOME;//2
-		flags |= ActionBar.DISPLAY_USE_LOGO;//1
-		flags |= ActionBar.DISPLAY_SHOW_TITLE;//8
-		flags |= ActionBar.DISPLAY_HOME_AS_UP;//4
-		*/
+
 		MenuItem lock = menu.findItem(R.id.article_menuitem_lock);
 		int orentation = ThemeManager.getInstance().screenOrentation;
 		if(orentation ==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||
@@ -259,17 +241,16 @@ public class ArticleListActivity1 extends Activity
 			lock.setIcon(android.R.drawable.ic_menu_always_landscape_portrait);
 			
 		}
-		int actionNum = ThemeManager.ACTION_IF_ROOM;//SHOW_AS_ACTION_IF_ROOM
+		/*int actionNum = ThemeManager.ACTION_IF_ROOM;//SHOW_AS_ACTION_IF_ROOM
 		int i = 0;
 		for(i = 0;i< menu.size();i++){
 			ReflectionUtil.setShowAsAction(
 					menu.getItem(i), actionNum);
 		}
-		ReflectionUtil.actionBar_setDisplayOption(this, flags);
+		ReflectionUtil.actionBar_setDisplayOption(this, flags);*/
 
 
-		//final ActionBar bar = getActionBar();
-		//bar.setDisplayOptions(flags);
+
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -488,7 +469,7 @@ public class ArticleListActivity1 extends Activity
 				//android.content.ClipboardManager  cbm = (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 				//cbm.setPrimaryClip(ClipData.newPlainText("content", content));
 			//}
-				
+
 			Toast.makeText(this.getApplication(), "已经复制到剪切板", Toast.LENGTH_SHORT).show();
 			break;
 		case SHOW_THISONLY_ORDER:
@@ -524,19 +505,10 @@ public class ArticleListActivity1 extends Activity
 				Method onTouchMethod = webWidthChangeListener.getClass()
 						.getMethod("onTouch", event.getClass());
 				onTouchMethod.invoke(webWidthChangeListener, event);
-			} catch (NoSuchMethodException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			} 
 			
 		}
 		return flingListener.getDetector().onTouchEvent(event);
@@ -656,16 +628,9 @@ public class ArticleListActivity1 extends Activity
 
 			}
 			if (ap == null) {
-				/*String str = StringUtil.getSaying();
-				if (str.indexOf(";") != -1) {
-					activityUtil.notice("普通模式", str.split(";")[0]
-							+ "-----" + str.split(";")[1]);
-				} else {
-					activityUtil.notice("普通模式", str);
-				}*/
+
 				activityUtil.noticeSaying(ArticleListActivity1.this);
-				// activityUtil.notice("INFO",
-				// "连接策略:P-N,将模拟浏览器显示方式");
+
 				
 				String cookie = PhoneConfiguration.getInstance().getCookie();
 				ap = HttpUtil.getArticlePage(url,cookie);

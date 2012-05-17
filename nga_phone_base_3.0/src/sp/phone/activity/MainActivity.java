@@ -15,7 +15,6 @@ import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.RSSUtil;
-import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.app.AlertDialog;
@@ -24,7 +23,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,16 +33,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.example.android.actionbarcompat.ActionBarActivity;
 
 
 
-
-public class MainActivity extends FragmentActivity
+public class MainActivity extends ActionBarActivity
 	implements PerferenceConstant{
 	final static int version = 139;
 	ActivityUtil activityUtil =ActivityUtil.getInstance();
@@ -59,11 +55,9 @@ public class MainActivity extends FragmentActivity
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		super.onCreate(savedInstanceState);
 		
-		// getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
-		// R.layout.title_bar);
+
 
 	
 		Intent intent = getIntent();
@@ -76,7 +70,6 @@ public class MainActivity extends FragmentActivity
 
 
 	private void loadConfig(Intent intent) {
-
 		initUserInfo(intent);
 		this.boardInfo = this.loadDefaultBoard();;//this.loadBoardInfo();
 		SharedPreferences share = this.getSharedPreferences(PERFERENCE,
@@ -99,14 +92,7 @@ public class MainActivity extends FragmentActivity
 			
 		}
 		
-		/*if(this.boardInfo == null || this.boardInfo.getCategoryCount() == 0 || boardInfo.get(0, 0) == null )
-		{
-			Editor editor = share.edit();
-			this.boardInfo = this.resetBoard();
-			String infoString = JSON.toJSONString(boardInfo);
-			editor.putString(BOARDS, infoString);
-			editor.commit();
-		}*/
+
 		//refresh
 		PhoneConfiguration config = PhoneConfiguration.getInstance();
 		config.setRefreshAfterPost(
@@ -177,12 +163,8 @@ public class MainActivity extends FragmentActivity
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
+		/*
 		final int flags = ThemeManager.ACTION_BAR_FLAG;
-		/*ActionBar.DISPLAY_SHOW_HOME;//2
-		flags |= ActionBar.DISPLAY_USE_LOGO;//1
-		flags |= ActionBar.DISPLAY_SHOW_TITLE;//8
-		flags |= ActionBar.DISPLAY_HOME_AS_UP;//4
-		*/
 
 		int actionNum = ThemeManager.ACTION_IF_ROOM;//SHOW_AS_ACTION_IF_ROOM
 		int i = 0;
@@ -191,9 +173,9 @@ public class MainActivity extends FragmentActivity
 					menu.getItem(i), actionNum);
 		}
 		
-		ReflectionUtil.actionBar_setDisplayOption(this, flags);
+		ReflectionUtil.actionBar_setDisplayOption(this, flags);*/
 		
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 	
 
@@ -202,11 +184,11 @@ public class MainActivity extends FragmentActivity
 	 */
 	@Override
 	protected void onResume() {
-		view.setBackgroundResource(
+		/*view.setBackgroundResource(
 				ThemeManager.getInstance().getBackgroundColor());
-		GridView gv = (GridView) findViewById(R.id.gride);
+		GridView gv = (GridView) view;// (GridView) findViewById(R.id.gride);
 		if(gv != null)
-			((BaseAdapter) gv.getAdapter()).notifyDataSetChanged();
+			((BaseAdapter) gv.getAdapter()).notifyDataSetChanged();*/
 
 		super.onResume();
 	}
@@ -255,6 +237,11 @@ public class MainActivity extends FragmentActivity
 			this.jumpToSetting();
 			break;
 		case R.id.mainmenu_exit:
+			Intent intent = new Intent();
+			intent.setClass(MainActivity.this, ArticleListActivity.class);
+			startActivity(intent);
+			overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
+			break;
 		default:
 		//case android.R.id.home: //this is a system id
 			this.finish();
@@ -275,15 +262,10 @@ public class MainActivity extends FragmentActivity
 		setContentView(view);
 
 		ViewPager pager = (ViewPager) findViewById(R.id.pager);
-		//this.getSupportFragmentManager();
 		pager.setAdapter(
 				new BoardPagerAdapter( getSupportFragmentManager(),boardInfo) );
 
-		/*GridView gv = (GridView) findViewById(R.id.gride);
-		ImageGridList adapter = new ImageGridList(this);	
-		gv.setAdapter(adapter);
-		gv.setOnItemClickListener(new EnterToplistLintener());
-		MainActivity.this.registerForContextMenu(gv);*/
+
 		
 		if(newVersion){
 			new AlertDialog.Builder(this).setTitle("提示")
@@ -298,117 +280,9 @@ public class MainActivity extends FragmentActivity
 	}
 	
 	
-	/*
-	//AdapterContextMenuInfo lastMenuInfo = null;
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		//GridView gv; gv.getChildAt(1);
-		//TextView clicked = (TextView)((AdapterContextMenuInfo)menuInfo).targetView;
-		menu.add(0,ADD_BOARD_INDEX,0, "加新板块");
-		menu.add(0,ADD_BOARD_INDEX+ 1,0, "删除板块");
-		menu.add(0,ADD_BOARD_INDEX+ 2,0, "重置所有板块");
-		//lastMenuInfo = new AdapterContextMenuInfo(v, 1, 1);
-		
-	}
-
-
-
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		
-
-		switch (item.getItemId()) {
-		case ADD_BOARD_INDEX:
-			handleAddBoard();
-			break;
-		case ADD_BOARD_INDEX + 1: //del
-			
-			int position = info.position;
-
-				String fid = this.boardInfo.get(category,position).getUrl();
-				if(removeCustomBoard(fid))
-				{
-					GridView gv = (GridView) findViewById(R.id.gride);
-					((BaseAdapter) gv.getAdapter()).notifyDataSetChanged();
-				}				
-			break;
-		case ADD_BOARD_INDEX + 2: //del
-			this.boardInfo = this.resetBoard();
-			this.flushBoardInfo();
-			GridView gv = (GridView) findViewById(R.id.gride);
-			((BaseAdapter) gv.getAdapter()).notifyDataSetChanged();
-		break;
-			
-		}
-		
-		return super.onContextItemSelected(item);
-	}
-
-
-
-
-	private void handleAddBoard() {
-        final AlertDialog.Builder alert = new AlertDialog.Builder(this);  
-        final EditText input = new EditText(this);  
-        alert.setView(input);  
-        alert.setTitle("输入板块名  板块id");
-        alert.setMessage("类似: 议事厅(空格)7");
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
-            public void onClick(DialogInterface dialog, int whichButton) {  
-                String value = input.getText().toString().trim(); 
-                final  String values[] = value.split(" ");
-                
-                if(values.length <2){
-                	Toast.makeText(MainActivity.this, "输入非法",  
-                        Toast.LENGTH_SHORT).show();
-                }else if(addCustomBoard(values[1], values[0]))
-                {
-                	final GridView gv = (GridView) findViewById(R.id.gride);
-                	((BaseAdapter) gv.getAdapter()).notifyDataSetChanged();
-                	
-                	final String uri = "http://img4.ngacn.cc/ngabbs/nga_classic/f/"
-        					+values[1]+".png";
-        				final String fileName = HttpUtil.PATH_ICON+"/"+values[1]+".png";
-        				
-        				new Thread() {
-        					public void run() {
-        						HttpUtil.downImage(uri,fileName+".bak");
-        						File f = new File(fileName+".bak");
-        						if(f.exists()){
-        							f.renameTo(new File(fileName));
-        							//((BaseAdapter) gv.getAdapter()).notifyDataSetChanged();
-        						}
-        					};
-        				}.start();
-                }
-                
-            }  
-        });  
-  
-        alert.setNegativeButton("Cancel",  
-                new DialogInterface.OnClickListener() {  
-                    public void onClick(DialogInterface dialog, int whichButton) {  
-                        dialog.cancel();  
-                    }  
-                });  
-        alert.show(); 
-		
-	}*/
-
-
-
-	static final int ADD_BOARD_INDEX = 1;
-
-
-	//String error = "";
-	//int error_level = 0;
-
+	
 	private void initDate() {
-		app = ((MyApp) getApplication());
-		//prepareGridData();
+
 
 
 		new Thread() {
@@ -542,80 +416,7 @@ public class MainActivity extends FragmentActivity
 
 
 	private BoardHolder boardInfo;
-	/*final private int category = 0;
-	private BoardHolder getOptionBoard() {
-		return  boardInfo;
-	}
 	
-	private void setOptionBoard(BoardHolder info){	
-		this.boardInfo = info;
-	}
-	
-	private void flushBoardInfo(){
-		String infoString = JSON.toJSONString(boardInfo);
-		SharedPreferences share = this.getSharedPreferences(PERFERENCE,
-				MODE_PRIVATE);
-		Editor editor = share.edit();
-		editor.putString(BOARDS, infoString);
-		editor.commit();
-		
-	}*/
-	/*
-	private void loadBoardInfo(){
-		SharedPreferences share = this.getSharedPreferences(PERFERENCE,
-				MODE_PRIVATE);
-		String infoString = share.getString(BOARDS, "");
-		if(boardInfo==null)
-			boardInfo = new BoardHolder();
-		if(!infoString.equals(""))
-		{
-			try{
-			boardInfo  =  JSON.parseObject(infoString, BoardHolder.class);
-			//boardInfo.convertChildren();
-			}catch(Exception e){
-				Log.e("", Log.getStackTraceString(e));
-			}
-			
-		}
-
-			
-		
-	}*/
-	
-	/*private boolean addCustomBoard(String fid,String name){
-		BoardHolder boards = getOptionBoard();
-		boards.add(new Board(fid, name));
-		synchronized(this){
-			setOptionBoard(boards);
-			flushBoardInfo();
-			
-		}
-		//refresh
-		//this.prepareGridData();
-		return true;
-	}
-	
-	private boolean removeCustomBoard(String fid){
-		BoardHolder boards = getOptionBoard();
-
-
-		
-		boards.remove(category,fid);
-		
-
-		//urlList.remove(index);
-		//nameList.remove(index);
-		
-		synchronized (this) {
-			//setOptionBoard(boards);
-			flushBoardInfo();
-
-		}
-		
-		//refresh
-		//this.prepareGridData();
-		return true;
-	}*/
 
 
 
@@ -684,94 +485,7 @@ public class MainActivity extends FragmentActivity
 	}
 
 
-	/*class ImageGridList extends BaseAdapter {
-		Activity activity;
-		
-		private Map<String,Drawable> iconMap;
-		public ImageGridList(Activity a) {
-			activity = a;
-			iconMap = new HashMap<String,Drawable>();
-		}
-
-		public int getCount() {
-			return boardInfo.size(category);
-		}
-
-		public Object getItem(int position) {
-			return boardInfo.get(category,position).getUrl();//urls[position];
-		}
-
-		public long getItemId(int position) {
-			return position;
-		}
-		
-		class ViewHolder{
-			ImageView img;
-			TextView text;
-		};
-		public View getView(final int position, View convertView,
-				ViewGroup parent) {
-			ViewHolder holder;
-			if (convertView == null) {
-				holder = new ViewHolder();
-				convertView = getLayoutInflater().inflate(R.layout.board_icon,
-						null);
-
-				ImageView iconView = (ImageView) convertView
-						.findViewById(R.id.board_imgicon);
-				TextView tv = (TextView) convertView
-						.findViewById(R.id.board_name_view);
-				holder.img = iconView;
-				holder.text = tv;
-				convertView.setTag(holder);
-				//iconView.setGravity(Gravity.CENTER_HORIZONTAL);
-				ReflectionUtil.view_setGravity(convertView, Gravity.CENTER_HORIZONTAL);
-			} else {
-
-				holder = (ViewHolder) convertView.getTag();
-			}
-			
-			Drawable draw = getDrable(convertView, position);
-			holder.img.setImageDrawable(draw);
-			holder.text.setText(boardInfo.get(category,position).getName());
-			return convertView;
-			//return iv;
-		}
-
-
-		private Drawable getDrable(View convertView, int position) {
-			Drawable d = null;
-			final String url = boardInfo.get(category,position).getUrl();
-			int resId = boardInfo.get(category,position).getIcon();
-			if (resId != 0) {// default board
-				d = getResources().getDrawable(resId);
-			} else {// optional board
-				d = iconMap.get(url);
-				if (d == null) {
-					final String iconFolder = HttpUtil.PATH_ICON;
-					String iconPath = iconFolder + "/" + url + ".png";
-
-					// def = getResources().getDrawable(R.drawable.pdefault);
-
-					try {
-						Bitmap bmp = BitmapFactory
-								.decodeStream(new FileInputStream(iconPath));
-						d = new BitmapDrawable(bmp);
-					} catch (FileNotFoundException e) {
-						d = getResources().getDrawable(R.drawable.pdefault);
-
-					}
-
-					iconMap.put(url, d);
-				}
-			}
-
-			return d;
-		}
-
-	}
-
-	*/
+	
 
 	class EnterToplistLintener implements OnItemClickListener , OnClickListener {
 		int position;
