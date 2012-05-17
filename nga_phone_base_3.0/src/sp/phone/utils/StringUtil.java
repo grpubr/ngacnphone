@@ -208,7 +208,7 @@ public class StringUtil {
 		
 		//[img]./ddd.jpg[/img]
 		s = s.replaceAll("\\[img\\]\\s*\\.(/[^\\[|\\]]+)\\s*\\[/img\\]", 
-				"<img src=\"http://img.ngacn.cc/attachments$1\" style= 'max-width:100%;' >");
+				"<a href='http://img.ngacn.cc/attachments$1'><img src='http://img.ngacn.cc/attachments$1' style= 'max-width:100%;' ></a>");
 		//s = s.replaceAll("\\[img\\]\\s*\\.(/[^\\[|\\]]+)\\s*\\[/img\\]", 
 		//		"<img src=\"http://img.ngacn.cc/attachments$1\" width=\"100%\">");
 		//[img]http://[/img]
