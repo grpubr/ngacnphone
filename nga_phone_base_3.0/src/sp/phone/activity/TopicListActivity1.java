@@ -45,7 +45,7 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TopicListActivity1 extends ActionBarActivity {
+public class TopicListActivity1 extends Activity {
 
 	ActivityUtil activityUtil = ActivityUtil.getInstance();
 
@@ -391,7 +391,7 @@ public class TopicListActivity1 extends ActionBarActivity {
 			// listView.setDivider(null);
 			listView.setVerticalScrollBarEnabled(false);
 			LayoutAnimationController anim = AnimationUtils.loadLayoutAnimation
-					(TopicListActivity1.this, R.anim.article_list_anim);
+					(TopicListActivity1.this, R.anim.topic_list_anim);
 			listView.setLayoutAnimation(anim);
 			
 			MyAdapter adapter = new MyAdapter(TopicListActivity1.this);
@@ -442,7 +442,7 @@ public class TopicListActivity1 extends ActionBarActivity {
 	
 
 	class MyAdapter extends BaseAdapter {
-		SparseArray<View> m = new SparseArray< View>();
+		//SparseArray<View> m = new SparseArray< View>();
 		private LayoutInflater inflater;
 
 		public MyAdapter(Context context) {
@@ -462,16 +462,23 @@ public class TopicListActivity1 extends ActionBarActivity {
 		}
 		long start;
 		long end;
+		
+		class ViewHolder{
+			public TextView num ;
+			public TextView title ;
+			public TextView author ;
+			public TextView lastReply ;
+			
+		}
 		public View getView(int position, View view, ViewGroup parent) {
 			if(position ==0){
 				start = System.currentTimeMillis();
 			}
-			View convertView = m.get(position);
+			
+			View convertView = view;//m.get(position);
+			ViewHolder holder = null;
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.topic_list, null);
-				int colorId = ThemeManager.getInstance().getBackgroundColor();
-				convertView.setBackgroundResource(colorId);
-				
 				TextView num = (TextView) convertView.findViewById(R.id.num);
 				TextView title = (TextView) convertView
 						.findViewById(R.id.title);
@@ -479,49 +486,53 @@ public class TopicListActivity1 extends ActionBarActivity {
 						.findViewById(R.id.author);
 				TextView lastReply = (TextView) convertView
 						.findViewById(R.id.last_reply);
+				holder = new ViewHolder();
+				holder.num = num;
+				holder.title = title;
+				holder.author = author;
+				holder.lastReply = lastReply;
+				convertView.setTag(holder);
+			}else{
+				holder = (ViewHolder) convertView.getTag();
+			}
+				int colorId = ThemeManager.getInstance().getBackgroundColor();
+				convertView.setBackgroundResource(colorId);
+				
+				
 				
 				RSSItem item = rssFeed.getItems().get(position);
 
 				String description = item.getDescription();
 				String[] arr = description.split("\n");
 				
-				author.setText("楼主:"+item.getAuthor());
+				holder.author.setText("楼主:"+item.getAuthor());
 				if(arr[1]!=null){
 				int start = arr[1].indexOf('(') + 1;//93个回复 于  (hgfan)
 				int end = arr[1].indexOf(')');
 					String lastReplyUser = arr[1].substring(start,end);
-					lastReply.setText("最后回复:"+lastReplyUser);
+					holder.lastReply.setText("最后回复:"+lastReplyUser);
 				}
 				int last_index = arr.length -1;
 				String reply_count = "0";
 				int count_in_desc = arr[last_index].indexOf("个");
 				if( count_in_desc !=-1)
 					reply_count = arr[last_index].substring(0, arr[last_index].indexOf("个"));
-					num.setText("" + reply_count);
+				holder.num.setText("" + reply_count);
 				//replies.setText("[" + reply_count + " RE]");
 				try{
-					title.setTextColor(parent.getResources().getColor(
+					holder.title.setTextColor(parent.getResources().getColor(
 							ThemeManager.getInstance().getForegroundColor()));
 					float size = PhoneConfiguration.getInstance().getTextSize();
-					title.setTextSize(size);
+					holder.title.setTextSize(size);
 				}catch(Exception e){
 					Log.e(getClass().getSimpleName(),Log.getStackTraceString(e));
 				}
-				title.setText(arr[0]);
+				holder.title.setText(arr[0]);
 				
 
-				/*String guid = item.getGuid();
-				final String url;
-				if (guid.indexOf("\n") != -1) {
-					url = guid.substring(0, guid.length() - 1);
-				} else {
-					url = guid;
-				}*/
-				
-				
-				//if(false)// no cache
-				m.put(position, convertView);
-			}
+			//}
+			
+			
 			if(position == this.getCount()-1){
 				end = System.currentTimeMillis();
 				Log.i(getClass().getSimpleName(),"render cost:"+(end-start));
