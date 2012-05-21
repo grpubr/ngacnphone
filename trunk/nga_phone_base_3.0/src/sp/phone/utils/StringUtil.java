@@ -82,25 +82,7 @@ public class StringUtil {
 		return date.getTime();
 	}
 
-//	public static String parseHTML2(String s) {
-//		if (s.indexOf("[quote]") != -1) {
-//			s = s.replace("[quote]", "");
-//			s = s.replace("[/quote]", "</font><font color='green' size='15'>");
-//
-//			s = s.replace("[b]", "<font color='red' size='1'>");
-//			s = s.replace("[/b]", "</font>");
-//			s = s.replace("<br/><br/>", "<br/>");
-//			s = s.replace("<br/><br/>", "<br/>");
-//
-//			s = s.replace("[/pid]", "<font color='blue' size='2'>");
-//			s = s + "</font>";
-//		} else {
-//			s = "<font color='green' size='15'>" + s;
-//			s = s + "</font>";
-//		}
-//
-//		return s;
-//	}
+
 
 	public static String parseHTML(String s) {
 		// 转换字体
@@ -384,7 +366,8 @@ public class StringUtil {
 			"单挑时， “ 正义 ” 一方支撑不住了，就会喊人帮忙： “ 对付这种魔头，不用和他讲什么江湖道义，大家一起上！ ”",
 			"少林图书馆经常失窃……", "一个人喝完闷酒一定会下暴雨。", "团体组合流行：四大?#，四大%￥，四大*(……",
 			"拔剑时，有时会有剑气，有时会拔不出来……", "朝廷的大将军是坨屎，公公才是高手。",
-			"妓院都是怡红院(我怀疑是悦来集团的子公司……)。", "美女到处都是，这是最郁闷的…… "
+			"妓院都是怡红院(我怀疑是悦来集团的子公司……)。", "美女到处都是，这是最郁闷的…… ",
+			"大漩涡里不能黑小日本和AKB"
 
 	};
 

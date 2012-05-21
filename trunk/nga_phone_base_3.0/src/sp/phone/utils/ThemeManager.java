@@ -4,7 +4,7 @@ import android.content.pm.ActivityInfo;
 import sp.phone.activity.R;
 public class ThemeManager {
 	private static ThemeManager instance = null;
-	int foregroundColor[]={R.color.black,R.color.white};
+	int foregroundColor[]={R.color.black,R.color.night_fore_color};
 	int backgroundColor[]={R.color.shit2,R.color.black};
 	int mode = 0;
 	private int cseq = 0;
