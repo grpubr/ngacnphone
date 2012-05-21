@@ -2,4 +2,4 @@
 <layoutAnimation xmlns:android="http://schemas.android.com/apk/res/android"
         android:delay="75%"
         android:animationOrder = "normal"
-        android:animation="@anim/show_and_move_x" />
+        android:animation="@anim/show_and_move_y" />
