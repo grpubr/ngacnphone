@@ -165,8 +165,8 @@ public class ArticleListAdapter  extends ArrayAdapter<HashMap<String, String>>
 				setting.setBlockNetworkImage(true);
 			else
 				setting.setBlockNetworkImage(false);
-			contentTV.loadData(ngaHtml, "text/html; charset=UTF-8", null);
-			//contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
+			//contentTV.loadData(ngaHtml, "text/html; charset=UTF-8", null);
+			contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
 			contentTV.setOnTouchListener(gestureListener);
 			contentTV.getSettings().setDefaultFontSize(
 					PhoneConfiguration.getInstance().getWebSize());
