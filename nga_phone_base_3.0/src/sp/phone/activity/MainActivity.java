@@ -239,6 +239,7 @@ public class MainActivity extends ActionBarActivity
 			break;
 		case R.id.mainmenu_exit:
 			Intent intent = new Intent();
+			intent.putExtra("tab", "1");
 			intent.setClass(MainActivity.this, ArticleListActivity.class);
 			startActivity(intent);
 			overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
@@ -294,9 +295,7 @@ public class MainActivity extends ActionBarActivity
 				if (!file.exists()) {
 					delay("创建新的缓存目录");
 					file.mkdirs();
-				} else {
-					delay("缓存目录正常");
-				}
+				} 
 				
 				file = new File(HttpUtil.PATH_WEB_CACHE);
 				if (!file.exists()) {
