@@ -1,5 +1,7 @@
 package sp.phone.activity;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import sp.phone.task.AvatarLoadTask;
@@ -32,7 +34,7 @@ public class ArticleListAdapter  extends ArrayAdapter<HashMap<String, String>>
 
 	//ZipFile zf;
 
-	SparseArray<View> m = new SparseArray<View>();
+	//SparseArray<View> m = new SparseArray<View>();
 	ListView listView;
 	private LayoutInflater inflater;
 	private Activity activity;
@@ -57,12 +59,37 @@ public class ArticleListAdapter  extends ArrayAdapter<HashMap<String, String>>
 	}
 	long start;
 	long end;
+	class ViewHolder{
+		TextView nickNameTV;
+		ImageView avatarIV;
+		WebView contentTV;
+		TextView floorTV;
+		TextView postTimeTV;
+		TextView titleTV;
+		
+	}
 	public View getView(int position, View view, ViewGroup parent) {
 		if(position ==0){
 			start = System.currentTimeMillis();
 		}
-		View rowView = m.get(position);
-		if (rowView != null && m.size() > 1) {
+		//View rowView = m.get(position);
+		ViewHolder holder = null;
+		if(view== null){
+			view = inflater.inflate(R.layout.relative_aritclelist, null);
+			holder = new ViewHolder();
+			holder.nickNameTV =(TextView) view.findViewById(R.id.nickName);
+			holder.avatarIV = (ImageView) view.findViewById(R.id.avatarImage);
+			holder.contentTV = (WebView) view.findViewById(R.id.content);
+			holder.floorTV = (TextView) view.findViewById(R.id.floor);
+			holder.postTimeTV = (TextView)view.findViewById(R.id.postTime);
+			holder.titleTV = (TextView) view.findViewById(R.id.floor_title);
+			view.setTag(holder);
+			
+			
+		}else{
+			holder = (ViewHolder) view.getTag();
+		}
+		/*if (rowView != null && m.size() > 1) {
 			TextView nickNameTV = (TextView) rowView
 					.findViewById(R.id.nickName);
 			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) nickNameTV.getLayoutParams();		
@@ -72,26 +99,25 @@ public class ArticleListAdapter  extends ArrayAdapter<HashMap<String, String>>
 				nickNameTV.setLayoutParams(params);
 			}
 			return rowView;
-		} else {
+		} else {*/
 
-			rowView = inflater.inflate(R.layout.relative_aritclelist, null);
+			//rowView = inflater.inflate(R.layout.relative_aritclelist, null);
 			int colorId = ThemeManager.getInstance().getBackgroundColor();
-			rowView.setBackgroundResource(colorId);
+			view.setBackgroundResource(colorId);
 			
 			HashMap<String, String> map = getItem(position);
 			final String floor = map.get("floor");// 楼层
 			// 头像处理
-			final ImageView avatarIV = (ImageView) rowView
-					.findViewById(R.id.avatarImage);
+			//final ImageView avatarIV = holder.avatarIV;
 			//avatarIV.setImageDrawable(null);
 
-			avatarIV.setTag(floor);// 设置 tag 为楼层
+			holder.avatarIV.setTag(floor);// 设置 tag 为楼层
 			final String avatarUrl = map.get("avatarImage");// 头像
 			final String userId = map.get("userId");
 			if (!StringUtil.isEmpty(avatarUrl)) {
 				final String avatarPath = ImageUtil.newImage(avatarUrl, userId);
 				final boolean downImg = isInWifi()||PhoneConfiguration.getInstance().isDownAvatarNoWifi();
-				new AvatarLoadTask(avatarIV, null, downImg).execute(avatarUrl, avatarPath, userId);
+				new AvatarLoadTask(holder.avatarIV, null, downImg).execute(avatarUrl, avatarPath, userId);
 				
 			}
 
@@ -100,11 +126,10 @@ public class ArticleListAdapter  extends ArrayAdapter<HashMap<String, String>>
 			int fgColor = parent.getContext().getResources().getColor(fgColorId);
 			
 			
-			TextView nickNameTV = (TextView) rowView
-					.findViewById(R.id.nickName);
+			TextView nickNameTV = holder.nickNameTV;
 			nickNameTV.setText(map.get("nickName"));
 			nickNameTV.setTextColor(fgColor);
-			TextPaint tp = nickNameTV.getPaint();
+			TextPaint tp = holder.nickNameTV.getPaint();
             tp.setFakeBoldText(true);//bold for Chinese character
              
              
@@ -112,10 +137,12 @@ public class ArticleListAdapter  extends ArrayAdapter<HashMap<String, String>>
 			params.width = PhoneConfiguration.getInstance().nikeWidth;
 			//nickNameTV.setLayoutParams(params);//其他组件是根据这个来定位的
 
-			WebView contentTV = (WebView) rowView.findViewById(R.id.content);
-			contentTV.setBackgroundColor(0);
-			contentTV.setFocusable(false);
 			int bgColor = parent.getContext().getResources().getColor(colorId);
+			WebView contentTV = holder.contentTV;//(WebView) rowView.findViewById(R.id.content);
+			contentTV.setBackgroundColor(0);
+			contentTV.setBackgroundResource(colorId);
+			contentTV.setFocusable(false);
+			
 			bgColor = bgColor & 0xffffff;
 			String bgcolorStr = String.format("%06x",bgColor);
 			
@@ -123,11 +150,14 @@ public class ArticleListAdapter  extends ArrayAdapter<HashMap<String, String>>
 			String fgColorStr = String.format("%06x",htmlfgColor);
 			
 			String ngaHtml = StringUtil.decodeForumTag(map.get("content"));
-			ngaHtml = "<HTML> <HEAD><META   http-equiv=Content-Type   content= \"text/html;   charset=UTF-8 \">" 
+			ngaHtml = "<HTML> <HEAD><META   http-equiv=Content-Type   content= \"text/html;   charset=utf-8 \">" 
 				+ "<body bgcolor= '#"+ bgcolorStr +"'>"
 				+ "<font color='#"+ fgColorStr + "' size='2'>"
 				+ ngaHtml + 
 				"</font></div></body>";
+
+			
+
 				
 			
 			WebSettings setting = contentTV.getSettings();
@@ -135,20 +165,19 @@ public class ArticleListAdapter  extends ArrayAdapter<HashMap<String, String>>
 				setting.setBlockNetworkImage(true);
 			else
 				setting.setBlockNetworkImage(false);
-
-			contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
+			contentTV.loadData(ngaHtml, "text/html; charset=UTF-8", null);
+			//contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
 			contentTV.setOnTouchListener(gestureListener);
 			contentTV.getSettings().setDefaultFontSize(
 					PhoneConfiguration.getInstance().getWebSize());
 			
-			TextView floorTV = (TextView) rowView.findViewById(R.id.floor);
+			TextView floorTV = holder.floorTV;
 			floorTV.setText("[" + floor + " 楼]");
 
-			TextView postTimeTV = (TextView) rowView
-					.findViewById(R.id.postTime);
+			TextView postTimeTV = holder.postTimeTV;
 			postTimeTV.setText(map.get("postTime"));
 
-			TextView titleTV = (TextView) rowView.findViewById(R.id.floor_title);
+			TextView titleTV = holder.titleTV;
 			if (!StringUtil.isEmpty(map.get("title")) && position!=0) {
 				titleTV.setText(map.get("title"));
 				titleTV.setTextColor(fgColor);
@@ -163,12 +192,11 @@ public class ArticleListAdapter  extends ArrayAdapter<HashMap<String, String>>
 				end = System.currentTimeMillis();
 				Log.i(getClass().getSimpleName(),"render cost:" +(end-start));
 			}
-			m.put(position, rowView);
-		}
+	
 		
 	
 		
-		return rowView;
+		return view;
 	}
 
 	

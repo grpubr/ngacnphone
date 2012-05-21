@@ -1,7 +1,6 @@
 package sp.phone.activity;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +41,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.View.OnTouchListener;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -684,6 +685,10 @@ public class ArticleListActivity1 extends ActionBarActivity
 						ArticleListActivity1.this,flingListener,
 						mData, listView);
 				listView.setAdapter(adapter);
+				LayoutAnimationController anim = AnimationUtils.loadLayoutAnimation
+						(ArticleListActivity1.this, R.anim.article_list_anim);
+				listView.setLayoutAnimation(anim);
+				
 				if(webWidthChangeListener!=null){
 					try{
 					Method setAapterMethod = webWidthChangeListener.getClass()
