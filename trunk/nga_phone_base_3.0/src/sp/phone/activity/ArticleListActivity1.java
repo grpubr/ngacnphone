@@ -685,9 +685,10 @@ public class ArticleListActivity1 extends ActionBarActivity
 						ArticleListActivity1.this,flingListener,
 						mData, listView);
 				listView.setAdapter(adapter);
+				/*
 				LayoutAnimationController anim = AnimationUtils.loadLayoutAnimation
 						(ArticleListActivity1.this, R.anim.article_list_anim);
-				listView.setLayoutAnimation(anim);
+				listView.setLayoutAnimation(anim);*/
 				
 				if(webWidthChangeListener!=null){
 					try{

@@ -240,6 +240,7 @@ public class MainActivity extends ActionBarActivity
 		case R.id.mainmenu_exit:
 			Intent intent = new Intent();
 			intent.putExtra("tab", "1");
+			intent.putExtra("fid", -7);
 			intent.setClass(MainActivity.this, TopicListActivity.class);
 			startActivity(intent);
 			overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
@@ -534,7 +535,13 @@ public class MainActivity extends ActionBarActivity
 			}
 
 			if (!StringUtil.isEmpty(url)) {
-				getData(url);
+				Intent intent = new Intent();
+				intent.putExtra("tab", "1");
+				intent.putExtra("fid", fid);
+				intent.setClass(MainActivity.this, TopicListActivity.class);
+				startActivity(intent);
+				overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
+				//getData(url);
 			}
 		}
 
