@@ -1,19 +1,15 @@
 package sp.phone.activity;
 
 import sp.phone.adapter.TabsAdapter;
-import sp.phone.fragment.ArticleListFragment;
-
-import com.example.android.actionbarcompat.ActionBarActivity;
-
-
-
+import sp.phone.fragment.TopicListFragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-public class ArticleListActivity extends ActionBarActivity{
+public class TopicListListActivity extends FragmentActivity{
 
 	TabHost tabhost;
 	ViewPager  mViewPager;
@@ -40,7 +36,7 @@ public class ArticleListActivity extends ActionBarActivity{
 		Bundle args = new Bundle();
 		args.putInt("index", i);
 		mTabsAdapter.addTab(tabhost.newTabSpec(String.valueOf(i)).setIndicator(tv),
-				ArticleListFragment.class, args);
+				TopicListFragment.class, args);
 		}
 		
 		
