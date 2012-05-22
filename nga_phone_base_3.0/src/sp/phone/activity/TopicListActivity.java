@@ -14,6 +14,7 @@ public class TopicListActivity extends FragmentActivity{
 	TabHost tabhost;
 	ViewPager  mViewPager;
     TabsAdapter mTabsAdapter;
+    int fid;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -21,13 +22,18 @@ public class TopicListActivity extends FragmentActivity{
 		tabhost = (TabHost) findViewById(android.R.id.tabhost);
 		tabhost.setup();
 		mViewPager = (ViewPager)findViewById(R.id.pager);
-		mTabsAdapter = new TabsAdapter(this, tabhost, mViewPager);
+
+
+		fid = 7;
+		
+		fid = this.getIntent().getIntExtra("fid", 7);
+		if(null != savedInstanceState)
+			fid = savedInstanceState.getInt("fid");
+		
+		mTabsAdapter = new TabsAdapter(this, tabhost, mViewPager,fid);
 		
 		TextView tv = null;
-		/*TextView tv = new TextView(this);
-		tv.setBackgroundResource(R.drawable.page_per);
-		mTabsAdapter.addTab(tabhost.newTabSpec("pre").setIndicator(tv),
-				ArticleListFragment.class, null);*/
+
 		for(int i = 1; i < 6; i++){
 		tv = new TextView(this);
 		tv.setTextSize(20);
@@ -43,7 +49,7 @@ public class TopicListActivity extends FragmentActivity{
 		
 		
         if (savedInstanceState != null) {
-        	tabhost.setCurrentTabByTag(savedInstanceState.getString("tab"));
+        	mViewPager.setCurrentItem(savedInstanceState.getInt("tab"));
         }
 		
 	}
@@ -52,7 +58,8 @@ public class TopicListActivity extends FragmentActivity{
     protected void onSaveInstanceState(Bundle outState) {
     	
         super.onSaveInstanceState(outState);
-        outState.putString("tab", tabhost.getCurrentTabTag());
+        outState.putInt("tab",mViewPager.getCurrentItem());
+        outState.putInt("fid",fid);
         
     }
 

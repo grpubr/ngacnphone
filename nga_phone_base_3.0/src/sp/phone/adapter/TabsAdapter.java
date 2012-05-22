@@ -26,6 +26,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 	private final ViewPager mViewPager;
 	private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
 	private int offset = 0;
+	private final int fid;
 	
 	static final class TabInfo {
 		private final String tag;
@@ -56,7 +57,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 	}
 
 	public TabsAdapter(FragmentActivity activity, TabHost tabHost,
-			ViewPager pager) {
+			ViewPager pager, int fid) {
 		super(activity.getSupportFragmentManager());
 		mContext = activity;
 		mTabHost = tabHost;
@@ -64,6 +65,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 		mTabHost.setOnTabChangedListener(this);
 		mViewPager.setAdapter(this);
 		mViewPager.setOnPageChangeListener(this);
+		this.fid = fid;
 	}
 
 	public void addTab(TabHost.TabSpec tabSpec, Class<?> clss, Bundle args) {
@@ -88,6 +90,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 		offset = position/ tab_count * tab_count;
 		TabInfo info = mTabs.get(position-offset);
 		info.args.putInt("index", position);
+		info.args.putInt("fid", fid);
 		Fragment f = Fragment.instantiate(mContext, info.clss.getName(), info.args);
 		
 		return f;

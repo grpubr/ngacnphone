@@ -25,7 +25,10 @@ public class TopicListAdapter extends BaseAdapter
 	}
 
 	public Object getItem(int arg0) {
-		return arg0;
+		if(rssFeed==null){
+			return null;
+		}
+		return rssFeed.getItems().get(arg0).getGuid();
 	}
 
 	public int getCount() {
