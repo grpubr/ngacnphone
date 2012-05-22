@@ -1,7 +1,5 @@
 package sp.phone.activity;
 
-import com.example.android.actionbarcompat.ActionBarActivity;
-
 import sp.phone.bean.RSSFeed;
 import sp.phone.bean.RSSItem;
 import sp.phone.forumoperation.FloorOpener;

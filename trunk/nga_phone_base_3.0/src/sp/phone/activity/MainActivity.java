@@ -240,7 +240,7 @@ public class MainActivity extends ActionBarActivity
 		case R.id.mainmenu_exit:
 			Intent intent = new Intent();
 			intent.putExtra("tab", "1");
-			intent.setClass(MainActivity.this, ArticleListActivity.class);
+			intent.setClass(MainActivity.this, TopicListListActivity.class);
 			startActivity(intent);
 			overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
 			break;
