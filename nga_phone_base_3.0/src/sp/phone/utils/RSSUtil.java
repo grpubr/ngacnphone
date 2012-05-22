@@ -42,6 +42,23 @@ public class RSSUtil {
 		return errorCode;
 	}
 	
+	public String getErrorString(){
+		String ret = "";
+		switch(errorCode){
+		case NETWORK_ERROR:
+			ret = "没有找到可用网络";
+			break;
+		case DOCUMENT_ERROR:
+			ret = "请重新登录";
+			break;
+		default:
+			ret =  "未知错误";
+			
+		}
+		return ret;
+		
+	}
+	
 	private void characters(KXmlParser parser) {
 		String s = parser.getText();
 		s = StringUtil.unEscapeHtml(s);
