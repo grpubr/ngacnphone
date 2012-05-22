@@ -9,7 +9,7 @@ import android.view.Gravity;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-public class TopicListListActivity extends FragmentActivity{
+public class TopicListActivity extends FragmentActivity{
 
 	TabHost tabhost;
 	ViewPager  mViewPager;
