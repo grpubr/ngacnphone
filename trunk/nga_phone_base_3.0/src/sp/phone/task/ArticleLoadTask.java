@@ -3,7 +3,6 @@ package sp.phone.task;
 import sp.phone.activity.MyApp;
 import sp.phone.bean.ArticlePage;
 import sp.phone.bean.OnThreadLoadCompleteLinstener;
-import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
 import android.content.Context;
