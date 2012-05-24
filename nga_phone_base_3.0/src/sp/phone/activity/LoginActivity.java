@@ -193,6 +193,7 @@ public class LoginActivity extends Activity
 						Toast.LENGTH_LONG).show();
 				Intent intent = new Intent();
 				intent.setClass(v.getContext(), MainActivity.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				SharedPreferences share = LoginActivity.this
 						.getSharedPreferences(PERFERENCE, MODE_PRIVATE);
 				Editor editor = share.edit();
