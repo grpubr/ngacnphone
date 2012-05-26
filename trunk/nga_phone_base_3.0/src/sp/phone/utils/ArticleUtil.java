@@ -11,7 +11,6 @@ import org.htmlparser.filters.AndFilter;
 import org.htmlparser.filters.HasAttributeFilter;
 import org.htmlparser.filters.OrFilter;
 import org.htmlparser.filters.TagNameFilter;
-import org.htmlparser.lexer.PageAttribute;
 import org.htmlparser.tags.Div;
 import org.htmlparser.tags.HeadingTag;
 import org.htmlparser.tags.ImageTag;
@@ -23,13 +22,18 @@ import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
-import android.util.Log;
-
 import sp.phone.bean.Article;
 import sp.phone.bean.ArticlePage;
+import sp.phone.bean.ThreadData;
+import sp.phone.bean.ThreadPageInfo;
+import sp.phone.bean.ThreadRowInfo;
 import sp.phone.bean.User;
+import android.util.Log;
 
-@SuppressWarnings("unused")
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
+
 public class ArticleUtil {
 
 	public static ArticlePage parserArticleList(String html)
@@ -228,4 +232,52 @@ public class ArticleUtil {
 			articlePage.setListArticle(listArticle);
 		return articlePage;
 	}
+
+	public static ThreadData parseJsonThreadPage(String js){
+		
+		JSONObject o =  (JSONObject) JSON.parseObject(js).get("data");
+		if(o == null)
+			return null;
+
+		ThreadData data = new ThreadData();
+		
+		JSONObject o1;
+		o1 = (JSONObject) o.get("__T");
+		if(o1 == null)
+			return null;
+		ThreadPageInfo pageInfo;
+		pageInfo = JSONObject.toJavaObject(o1, ThreadPageInfo.class);
+		data.setThreadInfo(pageInfo);
+		
+
+		int rows = (Integer) o.get("__R__ROWS");
+		data.setRowNum(rows);
+		
+		List<ThreadRowInfo> __R = new ArrayList<ThreadRowInfo>();
+		o1 = (JSONObject) o.get("__R");
+		
+		if(o1 == null)
+			return null;
+		for(int i = 0; i <rows; i++){
+			JSONObject rowObj  = (JSONObject) o1.get(String.valueOf(i));
+			ThreadRowInfo row =JSONObject.toJavaObject(rowObj, ThreadRowInfo.class);
+			JSONObject commObj  = (JSONObject)rowObj.get("comment");
+			
+			if(commObj != null)
+			{
+				
+				row.setComments(commObj);
+			}
+			__R.add(row);
+		}
+		data.setRowList(__R);
+
+		o1 =  (JSONObject) o.get("__F");
+		
+
+		
+		return data;
+		
+	}
+
 }

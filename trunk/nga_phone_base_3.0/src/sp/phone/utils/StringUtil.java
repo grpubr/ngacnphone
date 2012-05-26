@@ -159,7 +159,7 @@ public class StringUtil {
 				,"<a href=\"$1\">$2</a>");
 		//flash
 		s = s.replaceAll("\\[flash\\](http[^\\[|\\]]+)\\[/flash\\]",
-				"<a href=\"$1\">$1</a>");
+				"<a href=\"$1\"><img src='file:///android_asset/flash.png' style= 'max-width:100%;' ></a>");
 		//color
 		
 		s = s.replaceAll("\\[color=([^\\[|\\]]+)\\]\\s*(.+?)\\s*\\[/color\\]"

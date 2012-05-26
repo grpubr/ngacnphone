@@ -290,6 +290,7 @@ public class PostActivity extends Activity
 		protected void onPostExecute(String result) {
 			Toast.makeText(v.getContext(), result,
 					Toast.LENGTH_LONG).show();
+			PhoneConfiguration.getInstance().setRefreshAfterPost(true);
 			ActivityUtil.getInstance().dismiss();
 			PostActivity.this.finish();
 			super.onPostExecute(result);

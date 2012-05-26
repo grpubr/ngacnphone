@@ -4,8 +4,11 @@ import sp.phone.activity.MainActivity;
 import sp.phone.activity.PostActivity;
 import sp.phone.activity.R;
 import sp.phone.adapter.TopicListAdapter;
+import sp.phone.bean.RSSFeed;
 import sp.phone.forumoperation.FloorOpener;
+import sp.phone.interfaces.OnTopListLoadFinishedListener;
 import sp.phone.task.TopicListLoadTask;
+import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
@@ -23,10 +26,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 
-public class TopicListFragment extends Fragment{
+public class TopicListFragment extends Fragment
+	implements OnTopListLoadFinishedListener{
 	static final String TAG = TopicListFragment.class.getSimpleName();
 	ListView listview=null;
 	TopicListAdapter adapter=null;
@@ -36,7 +40,7 @@ public class TopicListFragment extends Fragment{
 		
 		if(adapter== null)
 			adapter =new TopicListAdapter(this.getActivity());
-		Log.d(TAG,"onCreate" + (1+getArguments().getInt("index")) );
+		Log.d(TAG,"onCreate" + (1+getArguments().getInt("page")) );
 
 
 		super.onCreate(savedInstanceState);
@@ -45,7 +49,7 @@ public class TopicListFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		Log.d(TAG,"onCreateView" + (1+getArguments().getInt("index")) );
+		Log.d(TAG,"onCreateView" + (1+getArguments().getInt("page")) );
 		listview = new ListView(getActivity());
 		listview.setOnItemClickListener(new ItemClicked(getActivity()));
 		return listview;
@@ -54,7 +58,7 @@ public class TopicListFragment extends Fragment{
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		Log.d(TAG,"onActivityCreated" + (1+getArguments().getInt("index")) );
+		Log.d(TAG,"onActivityCreated" + (1+getArguments().getInt("page")) );
 		listview.setAdapter(adapter);
 	}
 	
@@ -62,7 +66,7 @@ public class TopicListFragment extends Fragment{
 
 	@Override
 	public void onStart() {
-		//Log.d(TAG,"onStart" + (1+getArguments().getInt("index")) );
+		Log.d(TAG,"onStart" + (1+getArguments().getInt("page")) );
 		this.loadPage();
 		super.onStart();
 	}
@@ -72,7 +76,7 @@ public class TopicListFragment extends Fragment{
 	@Override
 	public void onResume() {
 		this.setHasOptionsMenu(true);
-		Log.d(TAG,"onResume" + (1+getArguments().getInt("index")) );
+		Log.d(TAG,"onResume" + (1+getArguments().getInt("page")) );
 		
 		super.onResume();
 	}
@@ -80,9 +84,12 @@ public class TopicListFragment extends Fragment{
 	private void loadPage(){
 		if(task == null)
 		{
-			task= new TopicListLoadTask(this.getActivity(),adapter);
-			String fidString = String.valueOf(getArguments().getInt("fid"));
-			final String page = String.valueOf(1 + getArguments().getInt("index") );
+			int index = getArguments().getInt("page");
+			Activity activity = getActivity();
+			task= new TopicListLoadTask(activity,this);
+			
+			String fidString = String.valueOf(getArguments().getInt("id"));
+			final String page = String.valueOf(1 + index );
 			String url = HttpUtil.Server + "/thread.php?fid=" + fidString
 				+ "&page="+ page
 				+ "&rss=1";
@@ -92,6 +99,8 @@ public class TopicListFragment extends Fragment{
 				url = url + "&" + config.getCookie().replace("; ", "&");
 			}
 			task.execute(url);
+		}else{
+			ActivityUtil.getInstance().dismiss();
 		}
 		
 	}
@@ -100,12 +109,11 @@ public class TopicListFragment extends Fragment{
 	public void onSaveInstanceState(Bundle outState) {
 		task.cancel(false);
 		super.onSaveInstanceState(outState);
-		outState.putInt("index", this.getArguments().getInt("index"));
+		outState.putInt("page", this.getArguments().getInt("page"));
 	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		//MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.threadlist_menu, menu);
 		
 		final int flags = ThemeManager.ACTION_BAR_FLAG;
@@ -125,6 +133,7 @@ public class TopicListFragment extends Fragment{
 					task.cancel(false);
 					task = null;
 				}
+				ActivityUtil.getInstance().noticeSaying(getActivity());
 				loadPage();
 				break;
 			case R.id.goto_bookmark_item:
@@ -145,7 +154,7 @@ public class TopicListFragment extends Fragment{
 	private boolean handlePostThread(MenuItem item){
 		
 	
-		String fid = String.valueOf(getArguments().getInt("fid"));
+		String fid = String.valueOf(getArguments().getInt("id"));
 		
 		int intFid=0;
 		try{
@@ -189,6 +198,15 @@ public class TopicListFragment extends Fragment{
 			
 		}
 		
+		
+	}
+
+
+	@Override
+	public void finishLoad(RSSFeed feed) {
+		if(feed !=null && getActivity() !=null )
+			getActivity().setTitle(feed.getTitle());
+		adapter.finishLoad(feed);
 		
 	}
 	

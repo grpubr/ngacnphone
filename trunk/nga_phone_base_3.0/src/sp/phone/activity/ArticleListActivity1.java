@@ -10,6 +10,7 @@ import java.util.Map;
 import sp.phone.bean.Article;
 import sp.phone.bean.ArticlePage;
 import sp.phone.bean.PerferenceConstant;
+import sp.phone.bean.ThreadPage;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
@@ -84,11 +85,9 @@ public class ArticleListActivity1 extends ActionBarActivity
 	public void onCreate(Bundle savedInstanceState) {
 
 		ThemeManager.SetContextTheme(this);
-
-		//requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		super.onCreate(savedInstanceState);
-
 		
+	
 		int orentation = ThemeManager.getInstance().screenOrentation;
 		if(orentation ==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||
 				orentation ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
@@ -378,15 +377,20 @@ public class ArticleListActivity1 extends ActionBarActivity
 
 	@Override
 	protected void onRestart() {
-		String url = HttpUtil.Server + articlePage.getNow().get("link");
-		Map<String,String> pages = articlePage.getPage();
-		String last = null;
-		if(pages!= null){
-			last=pages.get("current");
+		if (PhoneConfiguration.getInstance().isRefreshAfterPost()) {
+			PhoneConfiguration.getInstance().setRefreshAfterPost(false);
+			String url = HttpUtil.Server + articlePage.getNow().get("link");
+			Map<String, String> pages = articlePage.getPage();
+			String last = null;
+			if (pages != null) {
+				last = pages.get("current");
+			}
+			if (last != null)
+				url = HttpUtil.Server + last;
+			new LoadArticleThread(url, this).start();
+			
+
 		}
-		if(last!= null)
-			url = HttpUtil.Server + last;
-		new LoadArticleThread(url,this).start();
 		super.onRestart();
 	}
 

@@ -1,34 +1,35 @@
 package sp.phone.adapter;
 
-import java.util.ArrayList;
-
 import sp.phone.activity.R;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TabHost;
+import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
 public class TabsAdapter extends FragmentStatePagerAdapter implements
 		TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener {
 	static final String TAG = TabsAdapter.class.getSimpleName();
+	static final int MAX_TAB = 5;
 	private final Context mContext;
 	private final TabHost mTabHost;
 	private final ViewPager mViewPager;
-	private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
+	//private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
 	private int offset = 0;
-	private final int fid;
+	private final int id;
+	private final Class<?> clss;
+	private int pageCount=100;
 	
-	static final class TabInfo {
+	/*static final class TabInfo {
 		private final String tag;
 		private final Class<?> clss;
 		private final Bundle args;
@@ -38,7 +39,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 			clss = _class;
 			args = _args;
 		}
-	}
+	}*/
 
 	static class DummyTabFactory implements TabHost.TabContentFactory {
 		private final Context mContext;
@@ -57,7 +58,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 	}
 
 	public TabsAdapter(FragmentActivity activity, TabHost tabHost,
-			ViewPager pager, int fid) {
+			ViewPager pager, int id,Class<?> FragmentClass) {
 		super(activity.getSupportFragmentManager());
 		mContext = activity;
 		mTabHost = tabHost;
@@ -65,22 +66,37 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 		mTabHost.setOnTabChangedListener(this);
 		mViewPager.setAdapter(this);
 		mViewPager.setOnPageChangeListener(this);
-		this.fid = fid;
+		this.id = id;
+		this.clss = FragmentClass;
 	}
 
-	public void addTab(TabHost.TabSpec tabSpec, Class<?> clss, Bundle args) {
+	public void addTab(TabHost.TabSpec tabSpec) {
 		tabSpec.setContent(new DummyTabFactory(mContext));
-		String tag = tabSpec.getTag();
-
-		TabInfo info = new TabInfo(tag, clss, args);
-		mTabs.add(info);
 		mTabHost.addTab(tabSpec);
 		notifyDataSetChanged();
 	}
 
+	public void setCount(int pageCount){
+		this.pageCount = pageCount;
+		int tabCount = mTabHost.getChildCount();
+		int tabsToDisplay = MAX_TAB < pageCount ? MAX_TAB: pageCount;
+		if(tabCount<tabsToDisplay ){
+			for(int i = tabCount; i < tabsToDisplay; ++i){
+				TextView tv = new TextView(mContext);
+				tv.setTextSize(20);
+				String tag = String.valueOf(i+1);
+				tv.setText(tag);
+				tv.setGravity(Gravity.CENTER);
+				this.addTab(mTabHost.newTabSpec(tag).setIndicator(tv));
+			}
+		}
+		
+		this.notifyDataSetChanged();
+	}
+	
 	@Override
 	public int getCount() {
-		return 100;//mTabs.size();
+		return pageCount;//mTabs.size();
 	}
 
 	@Override
@@ -88,10 +104,11 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 		Log.d(TAG, "get framgent:" + position);
 		int tab_count = mTabHost.getTabWidget().getChildCount();
 		offset = position/ tab_count * tab_count;
-		TabInfo info = mTabs.get(position-offset);
-		info.args.putInt("index", position);
-		info.args.putInt("fid", fid);
-		Fragment f = Fragment.instantiate(mContext, info.clss.getName(), info.args);
+		//TabInfo info = mTabs.get(position-offset);
+		Bundle args = new Bundle();
+		args.putInt("page", position);
+		args.putInt("id", id);
+		Fragment f = Fragment.instantiate(mContext, clss.getName(), args);
 		
 		return f;
 	}
@@ -99,7 +116,10 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 	@Override
 	public void onTabChanged(String tabId) {
 		int position = mTabHost.getCurrentTab();
-		//mTabHost.get
+
+		Log.d(TAG,"onTabChanged:" + tabId);
+
+		
 		TextView v = (TextView) mTabHost.getCurrentTabView();
 		int defaultColor = v.getCurrentTextColor();
 		for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
@@ -117,6 +137,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 	@Override
 	public void onPageScrolled(int position, float positionOffset,
 			int positionOffsetPixels) {
+		Log.d(TAG,"onPageScrolled:");
 	}
 
 	@Override
@@ -126,6 +147,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 		// The jerk.
 		// This hack tries to prevent this from pulling focus out of our
 		// ViewPager.
+		Log.d(TAG,"onPageSelected:" + position);
 		TabWidget widget = mTabHost.getTabWidget();
 		int oldFocusability = widget.getDescendantFocusability();
 		widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
