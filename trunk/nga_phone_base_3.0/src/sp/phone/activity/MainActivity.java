@@ -2,16 +2,15 @@ package sp.phone.activity;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import sp.phone.adapter.BoardPagerAdapter;
 import sp.phone.bean.Board;
 import sp.phone.bean.BoardHolder;
-import sp.phone.bean.Bookmark;
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.bean.RSSFeed;
+import sp.phone.bean.ThreadData;
 import sp.phone.utils.ActivityUtil;
+import sp.phone.utils.ArticleUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.RSSUtil;
@@ -21,8 +20,6 @@ import sp.phone.utils.ThemeManager;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -36,18 +33,17 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.example.android.actionbarcompat.ActionBarActivity;
 
 
 
 public class MainActivity extends ActionBarActivity
 	implements PerferenceConstant{
-	final static int version = 139;
+	
 	ActivityUtil activityUtil =ActivityUtil.getInstance();
 	private MyApp app;
 	View view;
-	boolean newVersion = false;
+	//boolean newVersion = false;
 	OnItemClickListener onItemClickListenerlistener = new EnterToplistLintener();
 	
 	public OnItemClickListener getOnItemClickListener(){
@@ -57,10 +53,7 @@ public class MainActivity extends ActionBarActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-
-
-	
+		this.setTheme(R.style.AppTheme);
 		Intent intent = getIntent();
 		app = ((MyApp) getApplication());
 		loadConfig(intent);
@@ -71,90 +64,13 @@ public class MainActivity extends ActionBarActivity
 
 
 	private void loadConfig(Intent intent) {
-		initUserInfo(intent);
+		//initUserInfo(intent);
 		this.boardInfo = this.loadDefaultBoard();;//this.loadBoardInfo();
-		SharedPreferences share = this.getSharedPreferences(PERFERENCE,
-				MODE_PRIVATE);
-		if(share.getBoolean(NIGHT_MODE, false))
-			ThemeManager.getInstance().setMode(1);
-		
-		ThemeManager.getInstance().screenOrentation = 
-				share.getInt(SCREEN_ORENTATION,ActivityInfo.SCREEN_ORIENTATION_USER);
-		
-		
-		int version_in_config = share.getInt(VERSION, 0);
-		if(version_in_config < version){
-			newVersion = true;
-			Editor editor = share.edit();
-			editor.putInt(VERSION, version);
-			editor.putBoolean(REFRESH_AFTER_POST, true);
-
-			editor.commit();
-			
-		}
-		
-
-		//refresh
-		PhoneConfiguration config = PhoneConfiguration.getInstance();
-		config.setRefreshAfterPost(
-				share.getBoolean(REFRESH_AFTER_POST,true));
-		//font
-		final float defTextSize = 21.0f;//new TextView(this).getTextSize();
-		final int defWebSize = 16;//new WebView(this).getSettings().getDefaultFontSize();
-		
-		final float textSize = share.getFloat(TEXT_SIZE, defTextSize);
-		final int webSize = share.getInt(WEB_SIZE, defWebSize);
-		config.setTextSize(textSize);
-		config.setWebSize(webSize);
-		
-		boolean notification = share.getBoolean(ENABLE_NOTIFIACTION, true);
-		boolean notificationSound = share.getBoolean(NOTIFIACTION_SOUND, true);
-		config.notification = notification;
-		config.notificationSound = notificationSound;
-		
-		//bookmarks
-		String bookmarkJson = share.getString(BOOKMARKS, "");
-		List<Bookmark> bookmarks = new ArrayList<Bookmark>();
-		try{
-		if(!bookmarkJson.equals(""))
-			bookmarks=JSON.parseArray(bookmarkJson, Bookmark.class);
-		}catch(Exception e){
-			Log.e("JSON_error",Log.getStackTraceString(e));
-		}
-		PhoneConfiguration.getInstance().setBookmarks(bookmarks);
-		
-		
 		
 			
 		
 	}
 
-	private void initUserInfo(Intent intent) {
-		
-		String uid = null;
-		String cid = null;
-		
-		PhoneConfiguration config = PhoneConfiguration.getInstance();
-
-		SharedPreferences share = this.getSharedPreferences(PERFERENCE,
-				MODE_PRIVATE);
-
-		
-			uid = share.getString(UID, "");
-			cid = share.getString(CID, "");
-			if (uid != null && cid != null && uid != "" && cid != "") {
-				config.setUid(uid);
-				config.setCid(cid);
-			}
-			boolean downImgWithoutWifi = share.getBoolean(DOWNLOAD_IMG_NO_WIFI, false);
-			config.setDownImgNoWifi(downImgWithoutWifi);
-			boolean downAvatarNoWifi = share.getBoolean(DOWNLOAD_AVATAR_NO_WIFI, false);
-			config.setDownAvatarNoWifi(downAvatarNoWifi);
-
-	}
-
-
-	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -240,8 +156,8 @@ public class MainActivity extends ActionBarActivity
 		case R.id.mainmenu_exit:
 			Intent intent = new Intent();
 			intent.putExtra("tab", "1");
-			intent.putExtra("fid", -7);
-			intent.setClass(MainActivity.this, TopicListActivity.class);
+			intent.putExtra("tid", 5197602);
+			intent.setClass(MainActivity.this, ArticleListActivity.class);
 			startActivity(intent);
 			overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
 			break;
@@ -270,12 +186,12 @@ public class MainActivity extends ActionBarActivity
 
 
 		
-		if(newVersion){
+		if(app.isNewVersion()){
 			new AlertDialog.Builder(this).setTitle("提示")
 			.setMessage(StringUtil.getTips())
 			.setPositiveButton("知道了", null).show();
 			
-			newVersion = false;
+			app.setNewVersion(false);
 			
 		}
 		
@@ -438,11 +354,6 @@ public class MainActivity extends ActionBarActivity
 
 
 	
-
-	private void getData(final String url) {
-		activityUtil.noticeSaying(MainActivity.this);
-		new GetToplistRssThread(url).start();
-	}
 
 	class GetToplistRssThread extends Thread {
 		final String url;
