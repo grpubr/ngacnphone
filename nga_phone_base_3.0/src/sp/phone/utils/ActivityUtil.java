@@ -66,7 +66,7 @@ public class ActivityUtil {
 				String title = b.getString("title");
 				String content = b.getString("content");
 				synchronized( lock){
-				if (proDialog != null) {
+				/*if (proDialog != null) {
 
 					if ("ERROR".equals(title)) {
 						System.out.println("sleep 3 error");
@@ -75,27 +75,21 @@ public class ActivityUtil {
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
-					} else {
-						System.out.println("sleep 2 info");
-						// try {
-						// Thread.sleep(2000);
-						// } catch (InterruptedException e) {
-						// e.printStackTrace();
-						// }
-					}
+					} 
+					
 					if(!title.equals(""))
 						proDialog.setTitle(title);
 					
 					proDialog.setMessage(content);
 					proDialog.show();
-				} else {
+				} else {*/
 					try{
 					proDialog = ProgressDialog.show(context, title, content);
 					proDialog.setCanceledOnTouchOutside(true);
 					}catch(Exception e){
 						Log.e(this.getClass().getSimpleName(),Log.getStackTraceString(e));
 					}
-				}
+				//}
 				}//sync
 			}
 		};

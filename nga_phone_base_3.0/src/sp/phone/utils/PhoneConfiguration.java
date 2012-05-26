@@ -6,7 +6,7 @@ import sp.phone.bean.Bookmark;
 
 public class PhoneConfiguration {
 	private static PhoneConfiguration instance;
-	boolean refreshAfterPost;
+	private boolean refreshAfterPost;
 	List<Bookmark> bookmarks;// url<-->tilte
 	private float textSize;
 	private int webSize;

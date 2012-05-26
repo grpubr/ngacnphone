@@ -53,21 +53,25 @@ public class TopicListLoadTask extends AsyncTask<String, Integer, RSSUtil> {
 		
 		if(rssFeed == null){
 			Log.e(TAG, "erorr in get rssutil");
+			ActivityUtil.getInstance().noticeError
+			(result.getErrorString(), context);
 		}
 		else if (rssFeed.getItems().size() == 0)
 		{
 			Log.e(TAG, "erorr in load rss feed:" + result.getErrorString());
+			ActivityUtil.getInstance().noticeError
+				(result.getErrorString(), context);
 		}else{
 			if(this.notifier != null)
 				notifier.finishLoad(rssFeed);
 		}
-		//ActivityUtil.getInstance().dismiss();
+		ActivityUtil.getInstance().dismiss();
 		super.onPostExecute(result);
 	}
 
 	@Override
 	protected void onCancelled() {
-		//ActivityUtil.getInstance().dismiss();
+		ActivityUtil.getInstance().dismiss();
 		super.onCancelled();
 	}
 	

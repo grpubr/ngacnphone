@@ -1,8 +1,7 @@
 package sp.phone.activity;
 
 import sp.phone.adapter.TabsAdapter;
-import sp.phone.fragment.TopicListFragment;
-import sp.phone.utils.ActivityUtil;
+import sp.phone.fragment.ArticleListFragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -10,12 +9,11 @@ import android.view.Gravity;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-public class TopicListActivity extends FragmentActivity{
-
+public class ArticleListActivity extends FragmentActivity {
 	TabHost tabhost;
 	ViewPager  mViewPager;
     TabsAdapter mTabsAdapter;
-    int fid;
+    int tid;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -25,26 +23,24 @@ public class TopicListActivity extends FragmentActivity{
 		mViewPager = (ViewPager)findViewById(R.id.pager);
 
 
-		fid = 7;
+		tid = 7;
 		
-		fid = this.getIntent().getIntExtra("fid", 7);
+		tid = this.getIntent().getIntExtra("tid", 7);
 		if(null != savedInstanceState)
-			fid = savedInstanceState.getInt("fid");
+			tid = savedInstanceState.getInt("tid");
 		
-		mTabsAdapter = new TabsAdapter(this, tabhost, mViewPager,fid,TopicListFragment.class);
+		mTabsAdapter = new TabsAdapter(this, tabhost, mViewPager,tid,ArticleListFragment.class);
 		
 		TextView tv = null;
 
-		for(int i = 1; i < 6; i++){
+		//for(int i = 1; i < 6; i++){
 		tv = new TextView(this);
 		tv.setTextSize(20);
-		tv.setText(String.valueOf(i));
+		tv.setText("1");
 		tv.setGravity(Gravity.CENTER);
-		mTabsAdapter.addTab(tabhost.newTabSpec(String.valueOf(i)).setIndicator(tv));
-		}
-
-		ActivityUtil.getInstance().noticeSaying(this);
-
+		mTabsAdapter.addTab(tabhost.newTabSpec("1").setIndicator(tv));
+		//}
+		
 		
 		
 		
@@ -59,18 +55,15 @@ public class TopicListActivity extends FragmentActivity{
     	
         super.onSaveInstanceState(outState);
         outState.putInt("tab",mViewPager.getCurrentItem());
-        outState.putInt("fid",fid);
+        outState.putInt("tid",tid);
         
     }
 
-	@Override
-	protected void onStop() {
-		ActivityUtil.getInstance().dismiss();
-		super.onStop();
+	public TabsAdapter getmTabsAdapter() {
+		return mTabsAdapter;
 	}
 
 
-
-	
+    
 
 }
