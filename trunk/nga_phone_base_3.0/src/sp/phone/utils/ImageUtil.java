@@ -102,7 +102,7 @@ public class ImageUtil {
 	 *            Դ
 	 * @return
 	 */
-	public static Drawable reSetDrawable(Activity activity, String source) {
+	/*public static Drawable reSetDrawable(Activity activity, String source) {
 		// System.out.println("source:" + source);
 		Drawable drawable = null;
 		if (source.startsWith("http://")) {
@@ -177,7 +177,7 @@ public class ImageUtil {
 				.getIntrinsicHeight());
 		return drawable;
 	}
-
+*/
 	public static String newImage2(String oldImage, String userId) {
 		if (oldImage.indexOf(".") != -1) {
 			String fileType = oldImage.substring(oldImage.lastIndexOf("."),
