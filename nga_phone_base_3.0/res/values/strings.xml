@@ -39,4 +39,7 @@
     <string name="avatar">头像</string>
     <string name="network_error">网络错误</string>
     <string name="thread_page_load_error">可能遇到了一个广告或者帖子被删除</string>
+    <string name="book_mark_successfully">收藏成功</string>
+    <string name="already_bookmarked">链接已经在收藏夹里了</string>
+    <string name="avatar_size">头像大小</string>
 </resources>
