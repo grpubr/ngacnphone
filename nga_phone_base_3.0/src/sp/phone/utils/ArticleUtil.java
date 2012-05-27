@@ -35,7 +35,7 @@ import com.alibaba.fastjson.JSONObject;
 
 
 public class ArticleUtil {
-
+	private final static String TAG = ArticleUtil.class.getSimpleName();
 	public static ArticlePage parserArticleList(String html)
 			throws ParserException {
 
@@ -234,7 +234,7 @@ public class ArticleUtil {
 	}
 
 	public static ThreadData parseJsonThreadPage(String js){
-		
+		//Log.d(TAG, js);
 		JSONObject o =  (JSONObject) JSON.parseObject(js).get("data");
 		if(o == null)
 			return null;
@@ -246,8 +246,14 @@ public class ArticleUtil {
 		if(o1 == null)
 			return null;
 		ThreadPageInfo pageInfo;
+		try{
 		pageInfo = JSONObject.toJavaObject(o1, ThreadPageInfo.class);
 		data.setThreadInfo(pageInfo);
+		}catch(RuntimeException e){
+			Log.e(TAG, o1.toJSONString());
+			return null;
+		}
+		
 		
 
 		int rows = (Integer) o.get("__R__ROWS");

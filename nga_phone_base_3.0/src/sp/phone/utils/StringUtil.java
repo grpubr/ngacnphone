@@ -110,8 +110,8 @@ public class StringUtil {
 	}
 
 	public static String decodeForumTag(String s) {
-		// 转换字体
-		
+		if(s==null)
+			return "";
 		//quote
 		String quoteStyle = "<div style='background:#E8E8E8;border:1px solid #888' >";
 		if(ThemeManager.getInstance().getMode() == ThemeManager.MODE_NIGHT)
@@ -151,7 +151,7 @@ public class StringUtil {
 		s = s.replaceAll("\\[u\\]", "<u>");
 		s = s.replaceAll("\\[/u\\]","</u>");
 		
-		s = s.replaceAll("(\\[s:\\d+\\])", "<img src='$1'>");
+		s = s.replaceAll("\\[s:(\\d+)\\]", "<img src='file:///android_asset/a$1.gif'>");
 		//[url][/url]
 		s = s.replaceAll("\\[url\\](http[^\\[|\\]]+)\\[/url\\]",
 				"<a href=\"$1\">$1</a>");
@@ -389,13 +389,7 @@ public class StringUtil {
 		}
 		return ret;
 	}
-	final static String tips = "支持发图了";/*
-		  "1.主界面按menu登录.\n"
-		+ "2.设置里可以选择夜间模式，是否下载图片\n"
-		+ "3.长按板块增加或者删除自定义版本\n"
-		+ "4.进板块按menu，可以发帖\n"
-		+ "5.板块内和帖子内可以左右滑动\n"
-		+"6.长按楼层，回帖或者引用\n";*/
+	final static String tips = "头像大小修改现在在设置里";
 	public static String getTips(){
 		
 		return tips;
