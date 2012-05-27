@@ -1,7 +1,5 @@
 package sp.phone.fragment;
 
-import java.util.Map;
-
 import sp.phone.activity.ArticleListActivity;
 import sp.phone.activity.PostActivity;
 import sp.phone.activity.R;
@@ -192,7 +190,7 @@ public class ArticleListFragment extends Fragment
 	
 	private void handleLockOrientation(MenuItem item){
 		int preOrentation = ThemeManager.getInstance().screenOrentation;
-		int newOrientation = ActivityInfo.SCREEN_ORIENTATION_USER;
+		int newOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 		
 		if(preOrentation ==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||
 				preOrentation ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
