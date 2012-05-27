@@ -241,12 +241,7 @@ public class ArticleListActivity1 extends ActionBarActivity
 			lock.setIcon(android.R.drawable.ic_menu_always_landscape_portrait);
 			
 		}
-		/*int actionNum = ThemeManager.ACTION_IF_ROOM;//SHOW_AS_ACTION_IF_ROOM
-		int i = 0;
-		for(i = 0;i< menu.size();i++){
-			ReflectionUtil.setShowAsAction(
-					menu.getItem(i), actionNum);
-		}*/
+
 		ReflectionUtil.actionBar_setDisplayOption(this, flags);
 
 
@@ -614,7 +609,7 @@ public class ArticleListActivity1 extends ActionBarActivity
 		}
 	}
 
-	class LoadArticleThread extends Thread {
+class LoadArticleThread extends Thread {
 		final LoadStopable stopable;
 		private final String url;
 		public LoadArticleThread(String url,LoadStopable stopable) {

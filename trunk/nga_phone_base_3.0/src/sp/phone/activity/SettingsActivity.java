@@ -14,7 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
@@ -34,6 +35,9 @@ public class SettingsActivity extends Activity{
 	private int defaultWebSize;
 	private SeekBar webSizebar;
 	private WebView websizeView;
+	private ImageView avatarImageView;
+	private TextView avatarSizeTextView;
+	private SeekBar avatarSeekBar;
 	//private MyGestureListener gestureListener;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,13 +110,17 @@ public class SettingsActivity extends Activity{
 
 		
 		
-		//Switch s_wifi = new Switch(this);
-		//view.addView(s_wifi, checkBoxDownimgNowifi.getLayoutParams());
+		avatarImageView = (ImageView) findViewById(R.id.avatarImage);
+		this.avatarSizeTextView = (TextView) findViewById(R.id.textView_avatarsize);
+		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) avatarSizeTextView.getLayoutParams();
+		params.width = PhoneConfiguration.getInstance().nikeWidth;
+		avatarSizeTextView.setLayoutParams(params);
 		
-	
-		
-		//TextView textv =(TextView)findViewById(R.id.fling_text);
-		//textv.setOnTouchListener(this.gestureListener);
+		avatarSeekBar = (SeekBar) findViewById(R.id.avatarsize_seekBar);
+		avatarSeekBar.setMax(200);
+		avatarSeekBar.setProgress(PhoneConfiguration.getInstance().nikeWidth);
+		avatarSeekBar.setOnSeekBarChangeListener(
+				new AvatarSizeListener());
 		updateThemeUI();
 	}
 	
@@ -328,4 +336,41 @@ public class SettingsActivity extends Activity{
 		
 	}
 
+	
+	class AvatarSizeListener implements SeekBar.OnSeekBarChangeListener
+	, PerferenceConstant{
+
+		@Override
+		public void onProgressChanged(SeekBar seekBar, int progress,
+				boolean fromUser) {
+			
+				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) avatarSizeTextView.getLayoutParams();
+				params.width =  progress;
+				avatarSizeTextView.setLayoutParams(params);
+				
+			
+			
+		}
+
+		@Override
+		public void onStartTrackingTouch(SeekBar seekBar) {
+			
+			
+		}
+
+		@Override
+		public void onStopTrackingTouch(SeekBar seekBar) {
+			int progress = seekBar.getProgress(); 
+			PhoneConfiguration.getInstance().nikeWidth = progress;
+			SharedPreferences  share = 
+					getSharedPreferences(PERFERENCE, MODE_PRIVATE);
+
+				Editor editor = share.edit();
+				editor.putInt(NICK_WIDTH, progress);
+				editor.commit();
+			
+		
+		}
+		
+	}
 }
