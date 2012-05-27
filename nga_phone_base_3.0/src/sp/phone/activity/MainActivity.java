@@ -2,15 +2,15 @@ package sp.phone.activity;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import sp.phone.adapter.BoardPagerAdapter;
 import sp.phone.bean.Board;
+import sp.phone.bean.BoardCategory;
 import sp.phone.bean.BoardHolder;
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.bean.RSSFeed;
-import sp.phone.bean.ThreadData;
 import sp.phone.utils.ActivityUtil;
-import sp.phone.utils.ArticleUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.RSSUtil;
@@ -20,6 +20,7 @@ import sp.phone.utils.ThemeManager;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -33,6 +34,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.example.android.actionbarcompat.ActionBarActivity;
 
 
@@ -42,6 +44,7 @@ public class MainActivity extends ActionBarActivity
 	
 	ActivityUtil activityUtil =ActivityUtil.getInstance();
 	private MyApp app;
+	ViewPager pager;
 	View view;
 	//boolean newVersion = false;
 	OnItemClickListener onItemClickListenerlistener = new EnterToplistLintener();
@@ -101,11 +104,8 @@ public class MainActivity extends ActionBarActivity
 	 */
 	@Override
 	protected void onResume() {
-		/*view.setBackgroundResource(
-				ThemeManager.getInstance().getBackgroundColor());
-		GridView gv = (GridView) view;// (GridView) findViewById(R.id.gride);
-		if(gv != null)
-			((BaseAdapter) gv.getAdapter()).notifyDataSetChanged();*/
+		pager.setAdapter(
+				new BoardPagerAdapter( getSupportFragmentManager(),boardInfo) );	
 
 		super.onResume();
 	}
@@ -180,9 +180,8 @@ public class MainActivity extends ActionBarActivity
 			ThemeManager.getInstance().getBackgroundColor());
 		setContentView(view);
 
-		ViewPager pager = (ViewPager) findViewById(R.id.pager);
-		pager.setAdapter(
-				new BoardPagerAdapter( getSupportFragmentManager(),boardInfo) );
+		pager = (ViewPager) findViewById(R.id.pager);
+		
 
 
 		
@@ -241,6 +240,20 @@ public class MainActivity extends ActionBarActivity
 		BoardHolder boards = new BoardHolder();
 		
 		int i= 0;
+		
+		SharedPreferences share = getSharedPreferences(PERFERENCE,
+				MODE_PRIVATE);
+		String recentStr = share.getString(RECENT_BOARD, "");
+		if(!StringUtil.isEmpty(recentStr)){
+			List<Board> recentList = JSON.parseArray(recentStr, Board.class);
+			if(recentList != null){
+				for(int j = 0;j< recentList.size();j++){
+					boards.add(recentList.get(j));
+				}
+			}
+		}
+		boards.addCategoryName(i, "最近访问");
+		i++;
 		
 		boards.add(new Board(i, "7", "艾泽拉斯议事厅", R.drawable.p7));
 		boards.add(new Board(i, "323", "台服讨论区", R.drawable.p323));
@@ -444,7 +457,9 @@ public class MainActivity extends ActionBarActivity
 				.setPositiveButton("知道了", null).show();
 				return;
 			}
-
+			
+			
+			addToRecent();
 			if (!StringUtil.isEmpty(url)) {
 				Intent intent = new Intent();
 				intent.putExtra("tab", "1");
@@ -462,6 +477,40 @@ public class MainActivity extends ActionBarActivity
 			position = arg2;
 			fidString=(String) arg0.getItemAtPosition(position);
 			onClick(arg1);
+			
+		}
+		
+		private void addToRecent() {
+			BoardCategory recent = boardInfo.getCategory(0);
+			if(recent != null)
+				recent.remove(fidString);
+			for (int i = 1; i < boardInfo.getCategoryCount(); i++) {
+				BoardCategory curr = boardInfo.getCategory(i);
+				for (int j = 0; j < curr.size(); j++) {
+					Board b = curr.get(j);
+					if (b.getUrl().equals(fidString)) {
+						Board b1 =new Board(0, b.getUrl(), b.getName(), b
+								.getIcon());
+						if(recent == null){
+							boardInfo.add(b1);
+						}else
+						{
+							recent.addFront(b1);
+						}
+						
+						recent = boardInfo.getCategory(0);
+						String rescentStr = JSON.toJSONString(recent
+								.getBoardList());
+						SharedPreferences share = getSharedPreferences(PERFERENCE,
+								MODE_PRIVATE);
+						Editor editor = share.edit();
+						editor.putString(RECENT_BOARD, rescentStr);
+						editor.commit();
+						pager.getAdapter().notifyDataSetChanged();
+						break;
+					}//if
+				}//for j
+			}//for i
 			
 		}
 	}
