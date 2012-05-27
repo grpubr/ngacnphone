@@ -96,12 +96,16 @@ public class ActivityUtil {
 	};
 
 	public void dismiss() {
-		synchronized( lock){
-		if (proDialog != null) {
-			Log.d(TAG, "dissmiss dialog");
-			proDialog.dismiss();
-			proDialog = null;
-		}
+		synchronized (lock) {
+			if (proDialog != null) {
+				Log.d(TAG, "dissmiss dialog");
+				try{
+				proDialog.dismiss();
+				}catch(Exception e){
+					
+				}
+				proDialog = null;
+			}
 		}
 	}
 

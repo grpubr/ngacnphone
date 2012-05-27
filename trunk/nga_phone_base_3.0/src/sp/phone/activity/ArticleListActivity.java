@@ -145,6 +145,14 @@ implements PagerOwnner{
 	}
 
 
+	@Override
+	protected void onDestroy() {
+		ActivityUtil.getInstance().dismiss();
+		super.onDestroy();
+	}
+
+
+
     
 
 }
