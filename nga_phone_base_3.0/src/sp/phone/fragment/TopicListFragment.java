@@ -1,4 +1,5 @@
 package sp.phone.fragment;
+import sp.phone.activity.ArticleListActivity;
 import sp.phone.activity.BookmarkActivity;
 import sp.phone.activity.MainActivity;
 import sp.phone.activity.PostActivity;
@@ -11,9 +12,7 @@ import sp.phone.task.TopicListLoadTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
-import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
-import sp.phone.utils.ThemeManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -51,7 +50,8 @@ public class TopicListFragment extends Fragment
 			Bundle savedInstanceState) {
 		Log.d(TAG,"onCreateView" + (1+getArguments().getInt("page")) );
 		listview = new ListView(getActivity());
-		listview.setOnItemClickListener(new ItemClicked(getActivity()));
+		listview.setOnItemClickListener(new EnterJsonArticle());
+		this.registerForContextMenu(listview);
 		return listview;
 	}
 
@@ -112,17 +112,13 @@ public class TopicListFragment extends Fragment
 		outState.putInt("page", this.getArguments().getInt("page"));
 	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.threadlist_menu, menu);
-		
-		final int flags = ThemeManager.ACTION_BAR_FLAG;
-		 ReflectionUtil.actionBar_setDisplayOption(this.getActivity(), flags);
-		super.onCreateOptionsMenu(menu, inflater);
-	}
+
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Log.d(TAG, "onOptionsItemSelected,fid="
+				+getArguments().getInt("id")+ 
+				",page="+ (1+getArguments().getInt("page")) );
 		switch( item.getItemId())
 		{
 			case R.id.threadlist_menu_newthread :
@@ -202,6 +198,41 @@ public class TopicListFragment extends Fragment
 	}
 
 
+	class EnterJsonArticle implements OnItemClickListener
+	{
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			String guid = (String) parent.getItemAtPosition(position);
+			guid = guid.trim();
+			String startTag = "tid=";
+			String endTag = "&";
+			int start = guid.indexOf(startTag);
+			if(start == -1){
+				return ;
+			}
+			start = start + startTag.length();
+			
+			int end = guid.indexOf(endTag);
+			if(end == -1)
+				end = guid.length();
+			String tidString = guid.substring(start,end);
+			Integer tid = Integer.valueOf(tidString);
+			
+			Intent intent = new Intent();
+			intent.putExtra("tab", "1");
+			intent.putExtra("tid",tid.intValue() );
+			intent.setClass(getActivity(), ArticleListActivity.class);
+			startActivity(intent);
+			getActivity().overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
+		
+			
+		}
+		
+	}
+	
+	
 	@Override
 	public void finishLoad(RSSFeed feed) {
 		if(feed !=null && getActivity() !=null )
@@ -209,7 +240,9 @@ public class TopicListFragment extends Fragment
 		adapter.finishLoad(feed);
 		
 	}
-	
+
+
+
 	
 	
 	

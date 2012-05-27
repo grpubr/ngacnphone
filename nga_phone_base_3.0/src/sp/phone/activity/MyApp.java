@@ -13,7 +13,6 @@ import sp.phone.bean.RSSFeed;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ThemeManager;
 import android.app.Application;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
@@ -21,7 +20,7 @@ import android.util.Log;
 
 public class MyApp extends Application implements PerferenceConstant {
 	final private static String TAG = MyApp.class.getSimpleName();
-	final static int version = 139;
+	final static int version = 177;
 	private RSSFeed rssFeed;
 	private ArticlePage articlePage;
 	private HashMap<Object, ArticlePage> map_article;
@@ -104,6 +103,8 @@ public class MyApp extends Application implements PerferenceConstant {
 		boolean notificationSound = share.getBoolean(NOTIFIACTION_SOUND, true);
 		config.notification = notification;
 		config.notificationSound = notificationSound;
+		
+		config.nikeWidth = share.getInt(NICK_WIDTH, 100);
 		
 		//bookmarks
 		String bookmarkJson = share.getString(BOOKMARKS, "");

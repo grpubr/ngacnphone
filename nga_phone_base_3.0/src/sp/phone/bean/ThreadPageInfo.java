@@ -6,7 +6,7 @@ public class ThreadPageInfo {
 	private int fid;
 	private int quote_from;
 	private String quote_to;
-	private int icon;
+	private String icon;
 	private String titlefont;
 	private String author;
 	private int authorid;
@@ -14,7 +14,8 @@ public class ThreadPageInfo {
 	private int ifmark;
 	private int type;
 	private int type_2;
-	private int postdate;
+	//private int postdate;
+	private String postdate;
 	private int lastpost;
 	private String lastposter;
 	private int replies;
@@ -48,10 +49,10 @@ public class ThreadPageInfo {
 	public void setQuote_to(String quote_to) {
 		this.quote_to = quote_to;
 	}
-	public int getIcon() {
+	public String getIcon() {
 		return icon;
 	}
-	public void setIcon(int icon) {
+	public void setIcon(String icon) {
 		this.icon = icon;
 	}
 	public String getTitlefont() {
@@ -96,10 +97,10 @@ public class ThreadPageInfo {
 	public void setType_2(int type_2) {
 		this.type_2 = type_2;
 	}
-	public int getPostdate() {
+	public String getPostdate() {
 		return postdate;
 	}
-	public void setPostdate(int postdate) {
+	public void setPostdate(String postdate) {
 		this.postdate = postdate;
 	}
 	public int getLastpost() {

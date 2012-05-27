@@ -9,10 +9,11 @@ import sp.phone.utils.PhoneConfiguration;
 import sp.phone.activity.R;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 
 public class JsonThreadLoadTask extends AsyncTask<String, Integer, ThreadData> {
-
+	static final String TAG = JsonThreadLoadTask.class.getSimpleName();
 	final private Context context;
 	private String errorStr;
 	final private OnThreadPageLoadFinishedListener notifier;
@@ -29,8 +30,9 @@ public class JsonThreadLoadTask extends AsyncTask<String, Integer, ThreadData> {
 	protected ThreadData doInBackground(String... params) {
 		if(params.length == 0)
 			return null;
-		final String url = params[0];
 		
+		final String url = params[0];
+		Log.d(TAG, "start to load:" + url);
 		String js = HttpUtil.getHtml(url, PhoneConfiguration.getInstance().getCookie());
 		if(null == js){
 			errorStr = context.getString(R.string.network_error);

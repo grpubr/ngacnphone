@@ -12,7 +12,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TabHost;
-import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
@@ -25,21 +24,13 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 	private final ViewPager mViewPager;
 	//private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
 	private int offset = 0;
-	private final int id;
+	private final int id;//fid for topiclist, tid for topic list.
+	private int pid = 0;
+	private int authorid = 0;
 	private final Class<?> clss;
 	private int pageCount=100;
 	
-	/*static final class TabInfo {
-		private final String tag;
-		private final Class<?> clss;
-		private final Bundle args;
 
-		TabInfo(String _tag, Class<?> _class, Bundle _args) {
-			tag = _tag;
-			clss = _class;
-			args = _args;
-		}
-	}*/
 
 	static class DummyTabFactory implements TabHost.TabContentFactory {
 		private final Context mContext;
@@ -108,6 +99,8 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 		Bundle args = new Bundle();
 		args.putInt("page", position);
 		args.putInt("id", id);
+		args.putInt("pid", pid);
+		args.putInt("authorid", authorid);
 		Fragment f = Fragment.instantiate(mContext, clss.getName(), args);
 		
 		return f;
@@ -137,7 +130,6 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 	@Override
 	public void onPageScrolled(int position, float positionOffset,
 			int positionOffsetPixels) {
-		Log.d(TAG,"onPageScrolled:");
 	}
 
 	@Override
@@ -153,6 +145,10 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 		widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 		int tab_count = mTabHost.getTabWidget().getChildCount();
 		offset = position/ tab_count * tab_count;// & ~(mTabHost.getTabWidget().getChildCount() -1);
+		if(offset + MAX_TAB >pageCount && offset >0){
+			offset = pageCount - MAX_TAB;
+			
+		}
 		mTabHost.setCurrentTab(position-offset);
 		widget.setDescendantFocusability(oldFocusability);
 	}
@@ -160,4 +156,14 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 	@Override
 	public void onPageScrollStateChanged(int state) {
 	}
+
+	public void setPid(int pid) {
+		this.pid = pid;
+	}
+
+	public void setAuthorid(int authorid) {
+		this.authorid = authorid;
+	}
+	
+	
 }
