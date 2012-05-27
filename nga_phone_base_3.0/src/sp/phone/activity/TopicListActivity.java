@@ -84,6 +84,8 @@ public class TopicListActivity extends FragmentActivity {
 				orentation ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 		{
 			setRequestedOrientation(orentation);
+		}else{
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}
 		super.onResume();
 	}
