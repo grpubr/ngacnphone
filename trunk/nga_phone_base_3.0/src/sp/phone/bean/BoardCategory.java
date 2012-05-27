@@ -52,19 +52,14 @@ public class BoardCategory{
 	public void add(Board board) {
 		boardList.add(board);
 		
+		
 	}
 	
-	/*public void convert(){
+	public void addFront(Board board) {
+		boardList.add(0,board);
 		
-		int i = 0;
-		for( i = 0 ; i < boardList.size(); ++i){
-			Object o = boardList.get(i);
-			if( o instanceof JSONObject)
-			{
-				boardList.remove(i);
-				boardList.add(i, JSON.toJavaObject((JSONObject)o, Board.class));
-			}
-			
-		}
-	}*/
+		
+	}
+	
+
 }
