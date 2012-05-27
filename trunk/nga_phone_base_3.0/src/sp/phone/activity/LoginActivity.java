@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.forumoperation.HttpPostClient;
+import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.ThemeManager;
 
@@ -201,7 +202,10 @@ public class LoginActivity extends Activity
 				editor.putString(CID, cid);
 				editor.putString(USER_NAME, userText.getText().toString());
 				editor.commit();
-
+				
+				PhoneConfiguration.getInstance().setUid(uid);
+				PhoneConfiguration.getInstance().setCid(cid);
+				
 				startActivity(intent);
 				super.onPostExecute(result);
 				}else{
