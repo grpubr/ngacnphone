@@ -255,7 +255,7 @@ public class ArticleListFragment extends Fragment
 			return true;
 		}
 		if(father.getCurrentPage() != page){
-			return true;
+			return false;
 		}
 		
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();

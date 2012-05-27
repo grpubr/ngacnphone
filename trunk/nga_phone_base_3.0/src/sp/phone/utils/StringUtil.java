@@ -389,7 +389,7 @@ public class StringUtil {
 		}
 		return ret;
 	}
-	final static String tips = "头像大小修改现在在设置里";
+	final static String tips = "头像大小修改现在在设置里\n在帖子里按menu可以禁止屏幕旋转，再看不到就是瞎了";
 	public static String getTips(){
 		
 		return tips;

@@ -102,44 +102,40 @@ public class ArticleListAdapter extends BaseAdapter {
 		
 	}
 	
-	private void handleAvatar(ImageView avatarIV,ThreadRowInfo row){
+	private void handleAvatar(ImageView avatarIV, ThreadRowInfo row) {
 
-		final int lou =  row.getLou();
+		final int lou = row.getLou();
 		final String floor = String.valueOf(lou);
 		avatarIV.setTag(floor);// ÉèÖÃ tag ÎªÂ¥²ã
 		final String avatarUrl = row.getJs_escap_avatar();// Í·Ïñ
-		final String userId =  String.valueOf(row.getAuthorid());
+		final String userId = String.valueOf(row.getAuthorid());
 		if (!StringUtil.isEmpty(avatarUrl)) {
 			final String avatarPath = ImageUtil.newImage(avatarUrl, userId);
 			if (avatarPath != null) {
-			File f = new File(avatarPath);
-			if(f.exists()){
-				try {
-					InputStream is = new FileInputStream(avatarPath);
-					Bitmap bitmap = BitmapFactory
-							.decodeStream(is);
-					avatarIV.setImageBitmap(bitmap);
-					is.close();
-				} catch (Exception e) {
-					
-				}
-				
-				
-			}
-			else
-			{
-				final boolean downImg = isInWifi()
-						|| PhoneConfiguration.getInstance()
-								.isDownAvatarNoWifi();
-				
+				File f = new File(avatarPath);
+				if (f.exists()) {
+					try {
+						InputStream is = new FileInputStream(avatarPath);
+						Bitmap bitmap = BitmapFactory.decodeStream(is);
+						avatarIV.setImageBitmap(bitmap);
+						is.close();
+					} catch (Exception e) {
+
+					}
+
+				} else {
+					final boolean downImg = isInWifi()
+							|| PhoneConfiguration.getInstance()
+									.isDownAvatarNoWifi();
+
 					avatarIV.setImageResource(R.drawable.default_avatar);
 					new AvatarLoadTask(avatarIV, null, downImg).execute(
 							avatarUrl, avatarPath, userId);
-				
-			}
+
+				}
 			}
 		}
-		
+
 	}
 	
 	public View getView(int position, View view, ViewGroup parent) {
@@ -162,6 +158,18 @@ public class ArticleListAdapter extends BaseAdapter {
 			
 		}else{
 			holder = (ViewHolder) view.getTag();
+			if(holder.contentTV.getHeight() > 300){
+				view = LayoutInflater.from(activity).inflate(R.layout.relative_aritclelist, null);
+				holder = new ViewHolder();
+				holder.nickNameTV =(TextView) view.findViewById(R.id.nickName);
+				holder.avatarIV = (ImageView) view.findViewById(R.id.avatarImage);
+				holder.contentTV = (WebView) view.findViewById(R.id.content);
+				holder.floorTV = (TextView) view.findViewById(R.id.floor);
+				holder.postTimeTV = (TextView)view.findViewById(R.id.postTime);
+				holder.titleTV = (TextView) view.findViewById(R.id.floor_title);
+				view.setTag(holder);
+				
+			}
 			
 		}
 		
