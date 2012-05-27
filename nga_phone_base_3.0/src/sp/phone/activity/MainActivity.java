@@ -154,13 +154,7 @@ public class MainActivity extends ActionBarActivity
 			this.jumpToSetting();
 			break;
 		case R.id.mainmenu_exit:
-			Intent intent = new Intent();
-			intent.putExtra("tab", "1");
-			intent.putExtra("tid", 5197602);
-			intent.setClass(MainActivity.this, ArticleListActivity.class);
-			startActivity(intent);
-			overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
-			break;
+			//break;
 		default:
 		//case android.R.id.home: //this is a system id
 			this.finish();
