@@ -8,6 +8,7 @@ import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ThemeManager;
 import android.content.Context;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ import android.widget.TextView;
 
 public class TopicListAdapter extends BaseAdapter
 	implements OnTopListLoadFinishedListener{
-
+	private SparseArray<View> m = new SparseArray< View>();
 	private LayoutInflater inflater;
 	private RSSFeed rssFeed=null;
 
@@ -58,8 +59,8 @@ public class TopicListAdapter extends BaseAdapter
 		
 		View convertView = view;//m.get(position);
 		ViewHolder holder = null;
-		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.topic_list, null);
+		if (convertView == null ) {
+			convertView = inflater.inflate(R.layout.linear_topic_list, null);
 			TextView num = (TextView) convertView.findViewById(R.id.num);
 			TextView title = (TextView) convertView
 					.findViewById(R.id.title);
@@ -73,8 +74,10 @@ public class TopicListAdapter extends BaseAdapter
 			holder.author = author;
 			holder.lastReply = lastReply;
 			convertView.setTag(holder);
+			m.put(position, convertView);
 		}else{
 			holder = (ViewHolder) convertView.getTag();
+			
 		}
 			int colorId = ThemeManager.getInstance().getBackgroundColor();
 			convertView.setBackgroundResource(colorId);
