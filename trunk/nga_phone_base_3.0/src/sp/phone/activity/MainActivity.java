@@ -40,7 +40,7 @@ import com.example.android.actionbarcompat.ActionBarActivity;
 
 
 public class MainActivity extends ActionBarActivity
-	implements PerferenceConstant{
+	implements PerferenceConstant,OnItemClickListener{
 	
 	ActivityUtil activityUtil =ActivityUtil.getInstance();
 	private MyApp app;
@@ -49,9 +49,6 @@ public class MainActivity extends ActionBarActivity
 	//boolean newVersion = false;
 	OnItemClickListener onItemClickListenerlistener = new EnterToplistLintener();
 	
-	public OnItemClickListener getOnItemClickListener(){
-		return onItemClickListenerlistener;
-	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -115,8 +112,10 @@ public class MainActivity extends ActionBarActivity
 		intent.setClass(MainActivity.this, LoginActivity.class);
 		try {
 			startActivity(intent);
-			overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
-			// MainActivity.this.finish();
+			if(PhoneConfiguration.getInstance().showAnimation)
+			{
+				overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
+			}
 		} catch (Exception e) {
 
 			// /System.out.print("123");
@@ -129,11 +128,12 @@ public class MainActivity extends ActionBarActivity
 		intent.setClass(MainActivity.this, SettingsActivity.class);
 		try {
 			startActivity(intent);
-			overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
-			// MainActivity.this.finish();
+			if(PhoneConfiguration.getInstance().showAnimation)
+				overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
+			
 		} catch (Exception e) {
 
-			// /System.out.print("123");
+			
 		}
 
 	}
@@ -318,6 +318,19 @@ public class MainActivity extends ActionBarActivity
 		boards.addCategoryName(i, "其他游戏");
 		i++;
 		
+		boards.add(new Board(i, "318", "暗黑破坏神3", R.drawable.p318));
+		boards.add(new Board(i, "403", "购买/安装/共享", R.drawable.pdefault));
+		boards.add(new Board(i, "351", "装备交易", R.drawable.p401));
+		boards.add(new Board(i, "393", "背景故事与文艺作品", R.drawable.p393));
+		boards.add(new Board(i, "400", "职业讨论区", R.drawable.pdefault));
+		boards.add(new Board(i, "395", "野蛮人", R.drawable.p395));
+		boards.add(new Board(i, "396", "猎魔人", R.drawable.p396));
+		boards.add(new Board(i, "397", "武僧", R.drawable.p397));
+		boards.add(new Board(i, "398", "巫医", R.drawable.p398));
+		boards.add(new Board(i, "399", "魔法师", R.drawable.p399));
+		boards.addCategoryName(i, "暗黑破坏神");
+		i++;
+		
 		boards.add(new Board(i, "-152678", "英雄联盟 Let's Gank", R.drawable.p152678));
 		boards.add(new Board(i, "-1068355", "晴风村", R.drawable.pdefault));
 		boards.add(new Board(i, "-447601", " 二次元国家地理 - NG2", R.drawable.pdefault));
@@ -386,8 +399,9 @@ public class MainActivity extends ActionBarActivity
 						intent.setClass(MainActivity.this,
 								TopicListActivity1.class);
 						startActivity(intent);
-						overridePendingTransition(R.anim.zoom_enter,
-								R.anim.zoom_exit);
+						if(PhoneConfiguration.getInstance().showAnimation)
+							overridePendingTransition(R.anim.zoom_enter,
+									R.anim.zoom_exit);
 					}
 
 				});
@@ -460,8 +474,10 @@ public class MainActivity extends ActionBarActivity
 				intent.putExtra("fid", fid);
 				intent.setClass(MainActivity.this, TopicListActivity.class);
 				startActivity(intent);
-				overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
-				//getData(url);
+				if(PhoneConfiguration.getInstance().showAnimation)
+				{
+					overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
+				}
 			}
 		}
 
@@ -507,6 +523,16 @@ public class MainActivity extends ActionBarActivity
 			}//for i
 			
 		}
+	}
+
+
+
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		this.onItemClickListenerlistener.onItemClick(parent, view, position, id);
+		
 	}
 
 }

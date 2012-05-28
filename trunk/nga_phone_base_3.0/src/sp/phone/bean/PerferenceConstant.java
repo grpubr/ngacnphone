@@ -19,4 +19,5 @@ public interface PerferenceConstant {
 	final String SCREEN_ORENTATION = "screenOrentation";
 	final String NICK_WIDTH = "nickWidth";
 	final String RECENT_BOARD = "recentBoard";
+	final String SHOW_ANIMATION = "showAnimation";
 }

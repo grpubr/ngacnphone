@@ -14,10 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 
 
@@ -27,6 +26,7 @@ public class SettingsActivity extends Activity{
 	private CompoundButton checkBoxDownimgNowifi;
 	private CompoundButton checkBoxDownAvatarNowifi;
 	private CompoundButton nightMode;
+	private CompoundButton showAnimation;
 	private CompoundButton notification;
 	private CompoundButton notificationSound;
 	private SeekBar fontSizeBar;
@@ -35,7 +35,6 @@ public class SettingsActivity extends Activity{
 	private int defaultWebSize;
 	private SeekBar webSizebar;
 	private WebView websizeView;
-	private ImageView avatarImageView;
 	private TextView avatarSizeTextView;
 	private SeekBar avatarSeekBar;
 	//private MyGestureListener gestureListener;
@@ -69,6 +68,10 @@ public class SettingsActivity extends Activity{
 		nightMode = (CompoundButton) findViewById(R.id.checkBox_night_mode);
 		nightMode.setChecked(ThemeManager.getInstance().getMode() ==ThemeManager.MODE_NIGHT);
 		nightMode.setOnCheckedChangeListener(new NightModeListener());
+		
+		showAnimation = (CompoundButton) findViewById(R.id.checkBox_show_animation);
+		showAnimation.setChecked(PhoneConfiguration.getInstance().showAnimation);
+		showAnimation.setOnCheckedChangeListener(new ShowAnimationListener());
 		
 
 		
@@ -110,7 +113,7 @@ public class SettingsActivity extends Activity{
 
 		
 		
-		avatarImageView = (ImageView) findViewById(R.id.avatarImage);
+		
 		this.avatarSizeTextView = (TextView) findViewById(R.id.textView_avatarsize);
 		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) avatarSizeTextView.getLayoutParams();
 		params.width = PhoneConfiguration.getInstance().nikeWidth;
@@ -186,6 +189,24 @@ public class SettingsActivity extends Activity{
 		
 	}
 
+	class ShowAnimationListener implements OnCheckedChangeListener, PerferenceConstant{
+
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView,
+				boolean isChecked) {
+			PhoneConfiguration.getInstance().showAnimation = isChecked;
+			SharedPreferences  share = 
+				getSharedPreferences(PERFERENCE, MODE_PRIVATE);
+
+			Editor editor = share.edit();
+			editor.putBoolean(SHOW_ANIMATION, isChecked);
+			editor.commit();
+			
+		}
+		
+		
+	}
+	
 	class DownImgNoWifiChangedListener 
 		implements OnCheckedChangeListener, PerferenceConstant{
 

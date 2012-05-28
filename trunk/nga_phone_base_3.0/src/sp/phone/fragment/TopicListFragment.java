@@ -19,11 +19,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -51,6 +51,12 @@ public class TopicListFragment extends Fragment
 		Log.d(TAG,"onCreateView" + (1+getArguments().getInt("page")) );
 		listview = new ListView(getActivity());
 		listview.setOnItemClickListener(new EnterJsonArticle());
+		if(PhoneConfiguration.getInstance().showAnimation)
+		{
+			LayoutAnimationController anim = AnimationUtils.loadLayoutAnimation
+					(getActivity(), R.anim.topic_list_anim);
+			listview.setLayoutAnimation(anim);
+		}
 		this.registerForContextMenu(listview);
 		return listview;
 	}
@@ -166,8 +172,11 @@ public class TopicListFragment extends Fragment
 		
 		intent.setClass(this.getActivity(), PostActivity.class);
 		startActivity(intent);
-		getActivity().overridePendingTransition(R.anim.zoom_enter,
-				R.anim.zoom_exit);
+		if(PhoneConfiguration.getInstance().showAnimation)
+		{
+			getActivity().overridePendingTransition(R.anim.zoom_enter,
+					R.anim.zoom_exit);
+		}
 		return true;
 	}
 	
@@ -225,7 +234,8 @@ public class TopicListFragment extends Fragment
 			intent.putExtra("tid",tid.intValue() );
 			intent.setClass(getActivity(), ArticleListActivity.class);
 			startActivity(intent);
-			getActivity().overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
+			if(PhoneConfiguration.getInstance().showAnimation)
+				getActivity().overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
 		
 			
 		}

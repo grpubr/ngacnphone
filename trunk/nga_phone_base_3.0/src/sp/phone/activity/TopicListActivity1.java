@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Gravity;
@@ -206,8 +205,11 @@ public class TopicListActivity1 extends Activity {
 		
 		intent.setClass(this, PostActivity.class);
 		startActivity(intent);
-		overridePendingTransition(R.anim.zoom_enter,
+		if(PhoneConfiguration.getInstance().showAnimation)
+		{
+			overridePendingTransition(R.anim.zoom_enter,
 				R.anim.zoom_exit);
+		}
 		return true;
 	}
 

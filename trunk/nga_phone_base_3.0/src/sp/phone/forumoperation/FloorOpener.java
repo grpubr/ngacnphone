@@ -88,8 +88,9 @@ public 	class FloorOpener {
 								Intent intent = new Intent(activity,
 										ArticleListActivity1.class);
 								activity.startActivity(intent);
-								activity.overridePendingTransition(R.anim.zoom_enter,
-										R.anim.zoom_exit);
+								if(PhoneConfiguration.getInstance().showAnimation)
+									activity.overridePendingTransition(R.anim.zoom_enter,
+											R.anim.zoom_exit);
 
 							}
 

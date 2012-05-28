@@ -10,7 +10,6 @@ import java.util.Map;
 import sp.phone.bean.Article;
 import sp.phone.bean.ArticlePage;
 import sp.phone.bean.PerferenceConstant;
-import sp.phone.bean.ThreadPage;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
@@ -42,8 +41,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.View.OnTouchListener;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -262,8 +259,9 @@ public class ArticleListActivity1 extends ActionBarActivity
 				
 				intent.setClass(ArticleListActivity1.this, PostActivity.class);
 				startActivity(intent);
-				overridePendingTransition(R.anim.zoom_enter,
-						R.anim.zoom_exit);
+				if(PhoneConfiguration.getInstance().showAnimation)
+					overridePendingTransition(R.anim.zoom_enter,
+							R.anim.zoom_exit);
 				break;
 			case R.id.article_menuitem_refresh:
 				//final String url = HttpUtil.Server + articlePage.getPage().get("current");
@@ -444,7 +442,8 @@ public class ArticleListActivity1 extends ActionBarActivity
 			intent.putExtra("action", "reply");	
 			intent.setClass(ArticleListActivity1.this, PostActivity.class);
 			startActivity(intent);
-			overridePendingTransition(R.anim.zoom_enter,
+			if(PhoneConfiguration.getInstance().showAnimation)
+				overridePendingTransition(R.anim.zoom_enter,
 					R.anim.zoom_exit);
 			break;
 		case SHOW_MODIFY_ORDER :
