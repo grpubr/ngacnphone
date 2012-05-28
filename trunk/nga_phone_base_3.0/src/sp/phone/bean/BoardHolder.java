@@ -1,8 +1,5 @@
 package sp.phone.bean;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.util.SparseArray;
 
 
@@ -58,7 +55,7 @@ public class BoardHolder {
 	}*/
 	
 	public int getCategoryCount(){
-		return boardInfo.size();
+		return categoryName.size();
 	}
 	
 	public int size(int categoryid){
