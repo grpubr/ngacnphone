@@ -172,11 +172,11 @@ public class BookmarkActivity extends Activity
 	
 	private String getTid(String url){
 		String tid = "";
-		tid = url.substring(tid.indexOf("tid=")+4);
-		int end = url.indexOf("&");
+		tid = url.substring(url.indexOf("tid=")+4);
+		int end = tid.indexOf("&");
 		if(end == -1)
-			end = url.length();
-		tid = url.substring(0,end);
+			end = tid.length();
+		tid = tid.substring(0,end);
 		return tid;
 	}
 	
