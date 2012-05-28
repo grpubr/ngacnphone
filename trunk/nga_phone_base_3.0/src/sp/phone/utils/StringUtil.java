@@ -12,7 +12,9 @@ import java.util.regex.Pattern;
 
 public class StringUtil {
 	private final static String HOST = "http://bbs.ngacn.cc/";
-
+	private static final String lesserNukeStyle = "<div style='border:1px solid #B63F32;margin:10px 10px 10px 10px;padding:10px' > <span style='color:#EE8A9E'>用户因此贴被暂时禁言，此效果不会累加</span><br/>";
+	private static final String endDiv = "</div>";
+	
 	/** 验证是否是邮箱 */
 	public static boolean isEmail(String email) {
 		String pattern1 = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
@@ -121,19 +123,19 @@ public class StringUtil {
 		final String styleRight = "<div style='float:right' >";
 		
 		s = s.replaceAll("\\[l\\]", styleLeft);
-		s = s.replaceAll("\\[/l\\]", "</div>");
+		s = s.replaceAll("\\[/l\\]", endDiv);
 		
 		s = s.replaceAll("\\[r\\]", styleRight);
-		s = s.replaceAll("\\[/r\\]", "</div>");
+		s = s.replaceAll("\\[/r\\]", endDiv);
 		
 		final String styleAlignRight = "<div style='text-align:right' >";
 		final String styleAlignLeft = "<div style='text-align:left' >";
 		s = s.replaceAll("\\[align=right\\]", styleAlignRight);
 		s = s.replaceAll("\\[align=left\\]", styleAlignLeft);
-		s = s.replaceAll("\\[/align\\]", "</div>");
+		s = s.replaceAll("\\[/align\\]", endDiv);
 		
 		s = s.replaceAll("\\[quote\\]",quoteStyle);
-		s = s.replaceAll("\\[/quote\\]", "</div>");
+		s = s.replaceAll("\\[/quote\\]", endDiv);
 		//reply
 		s = s.replaceAll(
 				"\\[pid=\\d+\\]Reply\\[/pid\\]", "Reply");
@@ -164,6 +166,11 @@ public class StringUtil {
 		
 		s = s.replaceAll("\\[color=([^\\[|\\]]+)\\]\\s*(.+?)\\s*\\[/color\\]"
 				,"<b style=\"color:$1\">$2</b>");
+		
+		
+		//lessernuke
+		s = s.replaceAll("\\[lessernuke\\]", lesserNukeStyle);
+		s = s.replaceAll("\\[/lessernuke\\]", endDiv);
 		
 		s = s.replaceAll("\\[table\\]","<table style='color:green'>");
 		s = s.replaceAll("\\[/table\\]","</table>");
@@ -198,6 +205,8 @@ public class StringUtil {
 				"<a href='$1'><img src='$1' style= 'max-width:100%;' ></a>");
 		//s = s.replaceAll("\\[img\\]\\s*(http[^\\[|\\]]+)\\s*\\[/img\\]", 
 		//		"<img src='$1' width=\"100%\">");
+		
+		
 		return s;
 	}
 
@@ -389,7 +398,7 @@ public class StringUtil {
 		}
 		return ret;
 	}
-	final static String tips = "头像大小修改现在在设置里\n在帖子里按menu可以禁止屏幕旋转，再看不到就是瞎了";
+	final static String tips = "1.头像大小修改现在在设置里\n2.不喜欢动画的在设置里关掉\n3.在帖子里按menu可以禁止屏幕旋转，再看不到就是瞎了";
 	public static String getTips(){
 		
 		return tips;
