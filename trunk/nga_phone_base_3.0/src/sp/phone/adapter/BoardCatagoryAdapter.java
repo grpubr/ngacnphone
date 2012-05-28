@@ -5,14 +5,10 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSON;
-
 import sp.phone.activity.R;
 import sp.phone.bean.BoardCategory;
-import sp.phone.bean.BoardHolder;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.ReflectionUtil;
-import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,6 +21,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.alibaba.fastjson.JSON;
 
 public class BoardCatagoryAdapter extends BaseAdapter {
 

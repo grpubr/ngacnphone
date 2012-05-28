@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,6 +42,14 @@ public class LoginActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		int orentation = ThemeManager.getInstance().screenOrentation;
+		if(orentation ==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||
+				orentation ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+		{
+			setRequestedOrientation(orentation);
+		}else{
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+		}
 		ThemeManager.SetContextTheme(this);
 		
 		view = LayoutInflater.from(this).inflate(R.layout.login, null);

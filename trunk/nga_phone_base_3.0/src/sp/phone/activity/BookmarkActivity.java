@@ -10,8 +10,10 @@ import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.ThemeManager;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -35,8 +37,14 @@ public class BookmarkActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		 //getLayoutInflater().inflate(R.layout.bookmarks, null);
-		//view.setBackgroundResource(ThemeManager.getInstance().getBackgroundColor());
+		int orentation = ThemeManager.getInstance().screenOrentation;
+		if(orentation ==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||
+				orentation ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+		{
+			setRequestedOrientation(orentation);
+		}else{
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+		}
 		ThemeManager.SetContextTheme(this);
 		this.setContentView(R.layout.bookmarks);
 		 view = (ListView)findViewById(R.id.bookmark_listview);
@@ -146,8 +154,30 @@ public class BookmarkActivity extends Activity
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		new FloorOpener(this).handleFloor(bookmarks.get(position).getUrl());
+		String url = bookmarks.get(position).getUrl();
+		String tidString = getTid(url);
+		int tid = Integer.valueOf(tidString);
+		Intent intent = new Intent();
+		intent.putExtra("tab", "1");
+		intent.putExtra("tid",tid);
+		intent.setClass(this, ArticleListActivity.class);
+		startActivity(intent);
+		if(PhoneConfiguration.getInstance().showAnimation)
+			overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
+	
 		
+		
+		
+	}
+	
+	private String getTid(String url){
+		String tid = "";
+		tid = url.substring(tid.indexOf("tid=")+4);
+		int end = url.indexOf("&");
+		if(end == -1)
+			end = url.length();
+		tid = url.substring(0,end);
+		return tid;
 	}
 	
 	

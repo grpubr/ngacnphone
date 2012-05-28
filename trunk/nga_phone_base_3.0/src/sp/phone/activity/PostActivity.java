@@ -16,6 +16,7 @@ import sp.phone.utils.ThemeManager;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
@@ -55,6 +56,15 @@ public class PostActivity extends Activity
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		
+		int orentation = ThemeManager.getInstance().screenOrentation;
+		if(orentation ==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||
+				orentation ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+		{
+			setRequestedOrientation(orentation);
+		}else{
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+		}
 
 		ThemeManager.SetContextTheme(this);
 		super.onCreate(savedInstanceState);
