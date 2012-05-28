@@ -80,6 +80,15 @@ public class PostActivity extends Activity
 		Intent intent = this.getIntent();
 		prefix = intent.getStringExtra("prefix");
 		action = intent.getStringExtra("action");
+		if(action.equals("new")){
+			this.setTitle(R.string.new_thread);
+		}else if(action.equals("reply")){
+			setTitle(R.string.reply_thread);
+			
+		}else if(action.equals("modify")){
+			setTitle(R.string.modify_thread);
+			
+		}
 		tid = intent.getStringExtra("tid");
 		fid = intent.getIntExtra("fid", -7);
 		String title = intent.getStringExtra("title");
