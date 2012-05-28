@@ -2,19 +2,22 @@ package sp.phone.fragment;
 
 import sp.phone.activity.R;
 import sp.phone.adapter.BoardCatagoryAdapter;
-import sp.phone.utils.ReflectionUtil;
+import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ThemeManager;
-//import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 
 public class BoardPagerFragment extends Fragment {
+	private static final String TAG = BoardPagerFragment.class.getSimpleName();
 	String category;
 	GridView listview;
 	BaseAdapter adapter;
@@ -51,10 +54,13 @@ public class BoardPagerFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		listview =  (GridView) inflater.inflate(R.layout.category_grid, container,false);
-		//listview= new GridView(getActivity());
-		 //listview =(GridView) v;//= (GridView)v.findViewById(R.id.gride);
 		adapter = new BoardCatagoryAdapter(getResources(), inflater, category);
-		//View v = new ImageView(inflater.getContext());
+		if(PhoneConfiguration.getInstance().showAnimation)
+		{
+			LayoutAnimationController anim = AnimationUtils.loadLayoutAnimation
+				(this.getActivity(), R.anim.grid_wave_scale);
+			listview.setLayoutAnimation(anim);
+		}
 		listview.setBackgroundResource(
 				ThemeManager.getInstance().getBackgroundColor());
 		
@@ -65,7 +71,13 @@ public class BoardPagerFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		OnItemClickListener listener = ReflectionUtil.getOnItemClickListener(getActivity());
+		OnItemClickListener listener = null;
+		try{
+			listener = (OnItemClickListener) getActivity();
+		}catch(ClassCastException e){
+			Log.e(TAG, "activty should implements " + OnItemClickListener.class.getSimpleName());
+		}
+		
 		listview.setOnItemClickListener(listener);
 		listview.setAdapter(adapter);
 		

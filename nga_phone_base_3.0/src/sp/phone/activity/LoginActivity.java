@@ -1,5 +1,6 @@
 package sp.phone.activity;
 
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 
@@ -118,10 +119,15 @@ public class LoginActivity extends Activity
 			// TODO Auto-generated method stub
 			StringBuffer bodyBuffer = new StringBuffer();
 			bodyBuffer.append("type=username&email=");
-			bodyBuffer.append(URLEncoder.encode(userText.getText().toString()));
-			bodyBuffer.append("&password=");
-			bodyBuffer.append(URLEncoder.encode(passwordText.getText()
-					.toString()));
+			
+			try {
+				bodyBuffer.append(URLEncoder.encode(userText.getText().toString(),"utf-8"));
+				bodyBuffer.append("&password=");
+				bodyBuffer.append(URLEncoder.encode(passwordText.getText()
+						.toString(),"utf-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 			new LoginTask(v).execute(loginUrl,bodyBuffer.toString());
 			
 

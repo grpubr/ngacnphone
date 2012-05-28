@@ -20,7 +20,7 @@ import android.util.Log;
 
 public class MyApp extends Application implements PerferenceConstant {
 	final private static String TAG = MyApp.class.getSimpleName();
-	final static int version = 182;
+	final static int version = 186;
 	private RSSFeed rssFeed;
 	private ArticlePage articlePage;
 	private HashMap<Object, ArticlePage> map_article;
@@ -78,7 +78,7 @@ public class MyApp extends Application implements PerferenceConstant {
 			Editor editor = share.edit();
 			editor.putInt(VERSION, version);
 			editor.putBoolean(REFRESH_AFTER_POST, false);
-
+			editor.putString(RECENT_BOARD,"");
 			editor.commit();
 			
 		}
@@ -89,6 +89,8 @@ public class MyApp extends Application implements PerferenceConstant {
 		config.setRefreshAfterPost(
 				share.getBoolean(REFRESH_AFTER_POST,false));
 		config.setRefreshAfterPost(false);
+		
+		config.showAnimation = share.getBoolean(SHOW_ANIMATION, true);
 		
 		//font
 		final float defTextSize = 21.0f;//new TextView(this).getTextSize();

@@ -32,6 +32,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -67,6 +69,13 @@ public class ArticleListFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		listview = new ListView(this.getActivity());
+		
+		if(PhoneConfiguration.getInstance().showAnimation)
+		{
+			LayoutAnimationController anim = AnimationUtils.loadLayoutAnimation
+					(getActivity(), R.anim.article_list_anim);
+			listview.setLayoutAnimation(anim);
+		}
 		this.registerForContextMenu(listview);
 		return listview;
 	}
@@ -146,8 +155,9 @@ public class ArticleListFragment extends Fragment
 				
 				intent.setClass(getActivity(), PostActivity.class);
 				startActivity(intent);
-				getActivity().overridePendingTransition(R.anim.zoom_enter,
-						R.anim.zoom_exit);
+				if(PhoneConfiguration.getInstance().showAnimation)
+					getActivity().overridePendingTransition(R.anim.zoom_enter,
+							R.anim.zoom_exit);
 				break;
 			case R.id.article_menuitem_refresh:
 				this.task = null;
@@ -277,13 +287,12 @@ public class ArticleListFragment extends Fragment
 			content = content.replaceAll(quote_regex, "");
 			final String postTime = row.getPostdate();
 			// final String url = map.get("url");
-			boolean endWithUrl = false;
-			if(content.endsWith("[/url]"))
-				endWithUrl = true;
-			if (content.length() > 100) {
-				content = content.substring(0, 99) + ".......";
-				if(endWithUrl)
-					content += "[/url]";
+			
+			if(!content.trim().endsWith("]"))
+			{
+				if (content.length() > 100) 
+					content = content.substring(0, 99) + ".......";
+				
 					
 			}
 			mention = name;
@@ -309,8 +318,9 @@ public class ArticleListFragment extends Fragment
 			intent.putExtra("action", "reply");	
 			intent.setClass(getActivity(), PostActivity.class);
 			startActivity(intent);
-			getActivity().overridePendingTransition(R.anim.zoom_enter,
-					R.anim.zoom_exit);
+			if(PhoneConfiguration.getInstance().showAnimation)
+				getActivity().overridePendingTransition(R.anim.zoom_enter,
+						R.anim.zoom_exit);
 			break;
 		case SHOW_MODIFY_ORDER :
 			Intent intentModify = new Intent();

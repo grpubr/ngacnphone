@@ -18,6 +18,7 @@ public class PhoneConfiguration {
 	public long lastMessageCheck = 0;
 	public String cid;
 	public String uid;
+	public boolean showAnimation=false;
 	
 	
 	

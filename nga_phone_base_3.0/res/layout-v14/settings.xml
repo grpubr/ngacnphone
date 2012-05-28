@@ -29,6 +29,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="@string/nightmode" />
+        
+       <Switch
+            android:id="@+id/checkBox_show_animation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/showAnimation" />
 
         <Switch
             android:id="@+id/checkBox_notification"
