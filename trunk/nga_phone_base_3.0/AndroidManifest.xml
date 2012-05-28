@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="sp.phone.activity" android:versionCode="38"
-	android:versionName="1.1.91" android:installLocation="auto">
+	package="sp.phone.activity" android:versionCode="39"
+	android:versionName="1.1.92" android:installLocation="auto">
 	
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
