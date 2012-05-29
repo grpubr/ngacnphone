@@ -10,6 +10,7 @@ import sp.phone.bean.ThreadPageInfo;
 import sp.phone.bean.ThreadRowInfo;
 import sp.phone.interfaces.OnThreadPageLoadFinishedListener;
 import sp.phone.interfaces.PagerOwnner;
+import sp.phone.interfaces.ResetableArticle;
 import sp.phone.task.JsonThreadLoadTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
@@ -48,6 +49,7 @@ public class ArticleListFragment extends Fragment
 	static final int COPY_CLIPBOARD_ORDER = 2;
 	static final int SHOW_THISONLY_ORDER = 3;
 	static final int SHOW_MODIFY_ORDER = 4;
+	static final int SHOW_ALL = 5;
 	private ListView listview=null;
 	private ArticleListAdapter articleAdpater;
 	private JsonThreadLoadTask task;
@@ -144,6 +146,16 @@ public class ArticleListFragment extends Fragment
 		
 		Log.d(TAG, "onOptionsItemSelected,tid="
 				+tid+ ",page="+page );
+		
+		ResetableArticle restNotifier = null;
+		try{
+			
+			 restNotifier= (ResetableArticle)getActivity();
+		}catch(ClassCastException e){
+			Log.e(TAG,"father activity does not implements interface " 
+					+ ResetableArticle.class.getName());
+			return true;
+		}
 		switch( item.getItemId())
 		{
 			case R.id.article_menuitem_reply:
@@ -160,9 +172,15 @@ public class ArticleListFragment extends Fragment
 							R.anim.zoom_exit);
 				break;
 			case R.id.article_menuitem_refresh:
-				this.task = null;
-				ActivityUtil.getInstance().noticeSaying(getActivity());
-				this.loadPage();
+				if(this.tid == 0 && this.authorid ==0)
+				{
+					this.task = null;
+					ActivityUtil.getInstance().noticeSaying(getActivity());
+					this.loadPage();
+				}else{
+					restNotifier.reset(0, 0);
+					ActivityUtil.getInstance().noticeSaying(getActivity());
+				}
 				break;
 			case R.id.article_menuitem_addbookmark:
 				ThreadPageInfo info = articleAdpater.getData().getThreadInfo();
@@ -242,11 +260,15 @@ public class ArticleListFragment extends Fragment
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
+		if(this.pid == 0){
 		menu.add(0,QUOTE_ORDER,0, "喷之");
 		menu.add(0,REPLY_ORDER,0, "回帖");
 		menu.add(0,COPY_CLIPBOARD_ORDER,0, "复制到剪切板");
 		menu.add(0,SHOW_THISONLY_ORDER,0, "只看此人");
 		menu.add(0,SHOW_MODIFY_ORDER,0, "编辑");
+		}else{
+			menu.add(0,SHOW_ALL,0, "显示整个帖子");
+		}
 		super.onCreateContextMenu(menu, v, menuInfo);
 	}
 	
@@ -257,8 +279,10 @@ public class ArticleListFragment extends Fragment
 		Log.d(TAG, "onContextItemSelected,tid="
 				+tid+ ",page="+page );
 		PagerOwnner father = null;
+		ResetableArticle restNotifier = null;
 		try{
 			 father = (PagerOwnner) getActivity();
+			 restNotifier= (ResetableArticle)getActivity();
 		}catch(ClassCastException e){
 			Log.e(TAG,"father activity does not implements interface " 
 					+ PagerOwnner.class.getName());
@@ -348,10 +372,15 @@ public class ArticleListFragment extends Fragment
 			Toast.makeText(getActivity(), "已经复制到剪切板", Toast.LENGTH_SHORT).show();
 			break;
 		case SHOW_THISONLY_ORDER:
-			this.task = null;
-			this.authorid = row.getAuthorid();
+			//this.task = null;
+			//this.authorid = row.getAuthorid();
+			restNotifier.reset(0, row.getAuthorid());
 			ActivityUtil.getInstance().noticeSaying(getActivity());
-			this.loadPage();
+			//this.loadPage();
+			break;
+		case SHOW_ALL:
+			restNotifier.reset(0, 0);
+			ActivityUtil.getInstance().noticeSaying(getActivity());
 			break;
 
 			
@@ -368,7 +397,8 @@ public class ArticleListFragment extends Fragment
 			articleAdpater.notifyDataSetChanged();
 			
 			int exactCount = 1 + data.getThreadInfo().getReplies()/20;
-			if(father.getmTabsAdapter().getCount() != exactCount){
+			if(father.getmTabsAdapter().getCount() != exactCount
+					&&this.authorid == 0){
 				father.getmTabsAdapter().setCount(exactCount);
 			}
 			father.setTitle(data.getThreadInfo().getSubject());

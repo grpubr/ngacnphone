@@ -2,23 +2,27 @@ package sp.phone.activity;
 
 import sp.phone.adapter.TabsAdapter;
 import sp.phone.fragment.TopicListFragment;
+import sp.phone.task.CheckReplyNotificationTask;
 import sp.phone.utils.ActivityUtil;
+import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.ThemeManager;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.widget.TabHost;
 import android.widget.TextView;
 
 public class TopicListActivity extends FragmentActivity {
-
+	private String TAG = TopicListActivity.class.getSimpleName();
 	TabHost tabhost;
 	ViewPager mViewPager;
 	TabsAdapter mTabsAdapter;
+	private CheckReplyNotificationTask asynTask;
 	int fid;
 
 	@Override
@@ -86,6 +90,20 @@ public class TopicListActivity extends FragmentActivity {
 			setRequestedOrientation(orentation);
 		}else{
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+		}
+		
+		
+		if(asynTask !=null){
+			asynTask.cancel(true);
+			asynTask = null;
+		}
+		long now = System.currentTimeMillis();
+		PhoneConfiguration config = PhoneConfiguration.getInstance();
+		if(now - config.lastMessageCheck > 60*1000 && config.notification)
+		{
+			Log.d(TAG, "start to check Reply Notification");
+			asynTask = new CheckReplyNotificationTask(this);
+			asynTask.execute(config.getCookie());
 		}
 		super.onResume();
 	}
