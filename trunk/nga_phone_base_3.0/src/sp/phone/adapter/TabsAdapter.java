@@ -68,14 +68,17 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 	}
 
 	public void setCount(int pageCount){
+		Log.i(TAG, "setCount current page count:" + this.pageCount );
 		this.pageCount = pageCount;
-		int tabCount = mTabHost.getChildCount();
+		int tabCount = mTabHost.getTabWidget().getChildCount();
+		Log.i(TAG, "setCount current tab count:" + tabCount );
 		int tabsToDisplay = MAX_TAB < pageCount ? MAX_TAB: pageCount;
+		Log.i(TAG, "setCount set page count  Count to:" + pageCount);
 		if(tabCount<tabsToDisplay ){
 			for(int i = tabCount; i < tabsToDisplay; ++i){	
 				TextView tv = new TextView(mContext);
 				tv.setTextSize(20);
-				Log.d(TAG, "add tab:" + (i+1));
+				Log.i(TAG, "add tab:" + (i+1));
 				String tag = String.valueOf(i+1);
 				tv.setText(tag);
 				tv.setGravity(Gravity.CENTER);
@@ -120,7 +123,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 			v.setText(String.valueOf(i+offset+1));
 			if (mTabHost.getCurrentTab() == i) {
 				Log.d(TAG, "set tab:" + (i+offset+1) + "to black");
-				v.setTextColor(R.color.black);
+				v.setTextColor(mContext.getResources().getColor(R.color.black));
 			} else {
 				Log.d(TAG, "set tab:" + (i+offset+1) + "to default color");
 				v.setTextColor(defaultColor);
