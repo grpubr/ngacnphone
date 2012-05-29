@@ -30,7 +30,7 @@ public class MyApp extends Application implements PerferenceConstant {
 	
 	@Override
 	public void onCreate() {
-		Log.d(TAG,"androind start");
+		Log.w(TAG,"app nga androind start");
 		config = PhoneConfiguration.getInstance();
 		initUserInfo();
 		loadConfig();
