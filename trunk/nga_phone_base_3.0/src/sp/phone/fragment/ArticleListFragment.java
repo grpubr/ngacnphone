@@ -234,9 +234,9 @@ public class ArticleListFragment extends Fragment
 		}else{
 			newOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 			Display dis = getActivity().getWindowManager().getDefaultDisplay();
-			Point p = new Point();
-			dis.getSize(p);
-			if(p.x < p.y){
+			//Point p = new Point();
+			//dis.getSize(p);
+			if(dis.getWidth() < dis.getHeight()){
 				newOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 			}
 			
