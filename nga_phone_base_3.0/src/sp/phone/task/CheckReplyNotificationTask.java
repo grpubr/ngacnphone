@@ -2,6 +2,7 @@ package sp.phone.task;
 
 
 
+import sp.phone.activity.ArticleListActivity;
 import sp.phone.activity.MessageArticleActivity;
 import sp.phone.activity.R;
 import sp.phone.utils.HttpUtil;
@@ -89,9 +90,9 @@ public class CheckReplyNotificationTask extends
 	void showNotification(String nickName, String tid, String pid, String title){
 		NotificationManager nm = 
 				(NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-		Intent intent = new Intent(context,MessageArticleActivity.class); 
-		intent.putExtra("tid", tid);
-		intent.putExtra("pid", pid);
+		Intent intent = new Intent(context,ArticleListActivity.class); 
+		intent.putExtra("tid", Integer.valueOf(tid).intValue());
+		intent.putExtra("pid", Integer.valueOf(pid).intValue());
 		//intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK );
 		intent.addFlags(Intent.FILL_IN_DATA);
 		

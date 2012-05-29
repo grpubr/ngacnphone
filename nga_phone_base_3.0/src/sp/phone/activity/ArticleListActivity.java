@@ -3,6 +3,7 @@ package sp.phone.activity;
 import sp.phone.adapter.TabsAdapter;
 import sp.phone.fragment.ArticleListFragment;
 import sp.phone.interfaces.PagerOwnner;
+import sp.phone.interfaces.ResetableArticle;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.ThemeManager;
@@ -19,7 +20,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 public class ArticleListActivity extends FragmentActivity
-implements PagerOwnner{
+implements PagerOwnner,ResetableArticle {
 	TabHost tabhost;
 	ViewPager  mViewPager;
     TabsAdapter mTabsAdapter;
@@ -153,6 +154,20 @@ implements PagerOwnner{
 	protected void onDestroy() {
 		ActivityUtil.getInstance().dismiss();
 		super.onDestroy();
+	}
+
+	@Override
+	public void reset(int pid, int authorid) {
+		this.pid = pid;
+		this.authorid = authorid;
+		mTabsAdapter.setAuthorid(authorid);
+		mTabsAdapter.setPid(pid);
+		tabhost.getTabWidget().removeAllViews();
+		mTabsAdapter.setCount(1);
+		mTabsAdapter.notifyDataSetChanged();
+		mViewPager.setAdapter(mTabsAdapter);
+		
+		
 	}
 
 
