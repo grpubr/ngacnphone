@@ -74,7 +74,10 @@ implements PagerOwnner{
 		
 		
         if (savedInstanceState != null) {
+        	int pageCount = savedInstanceState.getInt("tab");
+        	mTabsAdapter.setCount(pageCount);
         	mViewPager.setCurrentItem(savedInstanceState.getInt("tab"));
+        	
         }
 		
 	}
@@ -83,6 +86,7 @@ implements PagerOwnner{
     protected void onSaveInstanceState(Bundle outState) {
     	
         super.onSaveInstanceState(outState);
+        outState.putInt("pageCount",mViewPager.getChildCount());
         outState.putInt("tab",mViewPager.getCurrentItem());
      //   outState.putInt("tid",tid);
         
