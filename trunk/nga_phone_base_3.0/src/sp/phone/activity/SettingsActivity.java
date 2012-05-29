@@ -141,6 +141,7 @@ public class SettingsActivity extends Activity{
 		checkBoxDownimgNowifi.setTextColor(fgColor);
 		checkBoxDownAvatarNowifi.setTextColor(fgColor);
 		nightMode.setTextColor(fgColor);
+		showAnimation.setTextColor(fgColor);
 		notification.setTextColor(fgColor);
 		notificationSound.setTextColor(fgColor);
 		fontTextView.setTextColor(fgColor);
