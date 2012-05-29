@@ -504,6 +504,7 @@ public class MainActivity extends ActionBarActivity
 			if(recent != null)
 				recent.remove(fidString);
 			for (int i = 1; i < boardInfo.getCategoryCount(); i++) {
+				boolean exit = false;
 				BoardCategory curr = boardInfo.getCategory(i);
 				for (int j = 0; j < curr.size(); j++) {
 					Board b = curr.get(j);
@@ -526,9 +527,14 @@ public class MainActivity extends ActionBarActivity
 						editor.putString(RECENT_BOARD, rescentStr);
 						editor.commit();
 						pager.getAdapter().notifyDataSetChanged();
+						exit = true;
 						break;
 					}//if
 				}//for j
+				if(exit)
+				{
+					break;
+				}
 			}//for i
 			
 		}
