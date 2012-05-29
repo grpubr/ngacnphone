@@ -72,9 +72,10 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 		int tabCount = mTabHost.getChildCount();
 		int tabsToDisplay = MAX_TAB < pageCount ? MAX_TAB: pageCount;
 		if(tabCount<tabsToDisplay ){
-			for(int i = tabCount; i < tabsToDisplay; ++i){
+			for(int i = tabCount; i < tabsToDisplay; ++i){	
 				TextView tv = new TextView(mContext);
 				tv.setTextSize(20);
+				Log.d(TAG, "add tab:" + (i+1));
 				String tag = String.valueOf(i+1);
 				tv.setText(tag);
 				tv.setGravity(Gravity.CENTER);
@@ -93,9 +94,8 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 	@Override
 	public Fragment getItem(int position) {
 		Log.d(TAG, "get framgent:" + position);
-		int tab_count = mTabHost.getTabWidget().getChildCount();
-		offset = position/ tab_count * tab_count;
-		//TabInfo info = mTabs.get(position-offset);
+		offset = position/ MAX_TAB * MAX_TAB;
+		Log.i(TAG, "getItem "+ position + "current offset=" + offset );
 		Bundle args = new Bundle();
 		args.putInt("page", position);
 		args.putInt("id", id);
@@ -110,7 +110,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 	public void onTabChanged(String tabId) {
 		int position = mTabHost.getCurrentTab();
 
-		Log.d(TAG,"onTabChanged:" + tabId);
+		Log.d(TAG,"onTabChanged:" + tabId+",current offset=" + offset);
 
 		
 		TextView v = (TextView) mTabHost.getCurrentTabView();
@@ -119,8 +119,10 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 			v = (TextView)mTabHost.getTabWidget().getChildAt(i);
 			v.setText(String.valueOf(i+offset+1));
 			if (mTabHost.getCurrentTab() == i) {
+				Log.d(TAG, "set tab:" + (i+offset+1) + "to black");
 				v.setTextColor(R.color.black);
 			} else {
+				Log.d(TAG, "set tab:" + (i+offset+1) + "to default color");
 				v.setTextColor(defaultColor);
 			}
 		}
@@ -144,9 +146,11 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 		int oldFocusability = widget.getDescendantFocusability();
 		widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 		int tab_count = mTabHost.getTabWidget().getChildCount();
-		offset = position/ tab_count * tab_count;// & ~(mTabHost.getTabWidget().getChildCount() -1);
+		offset = position/ MAX_TAB * MAX_TAB;// & ~(mTabHost.getTabWidget().getChildCount() -1);
+		Log.d(TAG, "onPageSelected current offset=" + offset );
 		if(offset + MAX_TAB >pageCount && offset >0){
 			offset = pageCount - MAX_TAB;
+			Log.i(TAG, "onPageSelected current offset=" + offset );
 			
 		}
 		mTabHost.setCurrentTab(position-offset);
