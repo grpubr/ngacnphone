@@ -74,7 +74,7 @@ implements PagerOwnner{
 		
 		
         if (savedInstanceState != null) {
-        	int pageCount = savedInstanceState.getInt("tab");
+        	int pageCount = savedInstanceState.getInt("pageCount");
         	mTabsAdapter.setCount(pageCount);
         	mViewPager.setCurrentItem(savedInstanceState.getInt("tab"));
         	
