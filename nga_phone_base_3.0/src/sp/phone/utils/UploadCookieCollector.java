@@ -1,14 +1,11 @@
 package sp.phone.utils;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-
-import sp.phone.forumoperation.HttpPostClient;
 
 import android.util.Log;
 
