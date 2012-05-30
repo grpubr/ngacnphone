@@ -259,23 +259,13 @@ public class ArticleUtil {
 		int rows = (Integer) o.get("__R__ROWS");
 		data.setRowNum(rows);
 		
-		List<ThreadRowInfo> __R = new ArrayList<ThreadRowInfo>();
+		;
 		o1 = (JSONObject) o.get("__R");
 		
 		if(o1 == null)
 			return null;
-		for(int i = 0; i <rows; i++){
-			JSONObject rowObj  = (JSONObject) o1.get(String.valueOf(i));
-			ThreadRowInfo row =JSONObject.toJavaObject(rowObj, ThreadRowInfo.class);
-			JSONObject commObj  = (JSONObject)rowObj.get("comment");
-			
-			if(commObj != null)
-			{
-				
-				row.setComments(commObj);
-			}
-			__R.add(row);
-		}
+		
+		List<ThreadRowInfo> __R =  convertJSobjToList(o1,rows);
 		data.setRowList(__R);
 
 		o1 =  (JSONObject) o.get("__F");
@@ -286,4 +276,32 @@ public class ArticleUtil {
 		
 	}
 
+	
+	static private List<ThreadRowInfo> convertJSobjToList(JSONObject rowMap,int count){
+		List<ThreadRowInfo> __R = new ArrayList<ThreadRowInfo>();
+
+		
+		if(rowMap == null)
+			return null;
+		for(int i = 0; i <count; i++){
+			JSONObject rowObj  = (JSONObject) rowMap.get(String.valueOf(i));
+			ThreadRowInfo row =JSONObject.toJavaObject(rowObj, ThreadRowInfo.class);
+			JSONObject commObj  = (JSONObject)rowObj.get("comment");
+			
+			if(commObj != null)
+			{
+				
+				row.setComments(convertJSobjToList(commObj));
+			}
+			__R.add(row);
+		}
+		return __R;
+	}
+	
+private static  List<ThreadRowInfo> convertJSobjToList(JSONObject rowMap){
+		
+		return convertJSobjToList(rowMap,rowMap.size());
+	}
+	
+	
 }
