@@ -20,4 +20,5 @@ public interface PerferenceConstant {
 	final String NICK_WIDTH = "nickWidth";
 	final String RECENT_BOARD = "recentBoard";
 	final String SHOW_ANIMATION = "showAnimation";
+	final String SHOW_SIGNATURE = "showSignature";
 }
