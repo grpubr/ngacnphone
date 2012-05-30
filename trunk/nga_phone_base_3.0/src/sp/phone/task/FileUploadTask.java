@@ -2,6 +2,7 @@ package sp.phone.task;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -9,16 +10,15 @@ import java.net.URLEncoder;
 import org.apache.commons.io.IOUtils;
 
 import sp.phone.utils.ActivityUtil;
-import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.UploadCookieCollector;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 public class FileUploadTask extends
 AsyncTask<String, Integer, String> {
+	private static final String TAG = FileUploadTask.class.getSimpleName();
 	private static final String BOUNDARY =
 					"-----------------------------7db1c5232222b";
 	private static final String ATTACHMENT_SERVER = "http://upload.ngacn.cc:8080/attach.php?";
@@ -70,7 +70,6 @@ AsyncTask<String, Integer, String> {
 
 	@Override
 	protected void onPostExecute(String result) {
-		boolean error = true;
 		do
 		{
 			if(StringUtil.isEmpty(result))
@@ -83,7 +82,11 @@ AsyncTask<String, Integer, String> {
 			if(end == -1)
 				break;
 			String attachments = result.substring(start, end);
-			attachments = URLEncoder.encode(attachments + "\t");
+			try {
+				attachments = URLEncoder.encode(attachments + "\t","utf-8");
+			} catch (UnsupportedEncodingException e1) {
+				Log.e(TAG, "invalid attachments string" + attachments);
+			}
 			
 			start = result.indexOf(attachmentsCheckStartFlag);
 			if(start == -1)
@@ -93,7 +96,12 @@ AsyncTask<String, Integer, String> {
 			if(end == -1)
 				break;
 			String attachmentsCheck = result.substring(start, end);
-			attachmentsCheck = URLEncoder.encode(attachmentsCheck + "\t");
+			try {
+				attachmentsCheck = URLEncoder.encode(attachmentsCheck + "\t","utf-8");
+			} catch (UnsupportedEncodingException e) {
+				Log.e(TAG, "invalid attachmentsCheck string" + attachmentsCheck);
+				break;
+			}
 			
 			start = result.indexOf(picUrlStartTag);
 			if(start == -1)
@@ -103,7 +111,6 @@ AsyncTask<String, Integer, String> {
 			if(end == -1)
 				break;
 			String picUrl = result.substring(start, end);
-			error =  false;
 			notifier.finishUpload(attachments, attachmentsCheck, picUrl);
 		}while(false);
 		ActivityUtil.getInstance().dismiss();
@@ -143,9 +150,7 @@ AsyncTask<String, Integer, String> {
 	  
 	    is.close(); 
 	    InputStream httpInputStream = conn.getInputStream();
-		String key = null;
-		String cookieVal = null;
-		for (int i = 1; (key = conn.getHeaderFieldKey(i)) != null; i++) {
+		for (int i = 1; (conn.getHeaderFieldKey(i)) != null; i++) {
 			Log.d(LOG_TAG, conn.getHeaderFieldKey(i) + ":"
 					+ conn.getHeaderField(i));
 
