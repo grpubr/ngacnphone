@@ -19,6 +19,7 @@ public class PhoneConfiguration {
 	public String cid;
 	public String uid;
 	public boolean showAnimation=false;
+	public boolean showSignature = true;
 	
 	
 	
