@@ -121,7 +121,8 @@ public class ArticleListAdapter extends BaseAdapter {
 		}
 		
 		String ngaHtml = StringUtil.decodeForumTag(row.getContent());
-		ngaHtml = ngaHtml + buildComment(row) + buildAttachment(row);
+		ngaHtml = ngaHtml + buildComment(row) + buildAttachment(row)
+				+ buildSignature(row);
 		ngaHtml = "<HTML> <HEAD><META   http-equiv=Content-Type   content= \"text/html;   charset=utf-8 \">" 
 			+ "<body bgcolor= '#"+ bgcolorStr +"'>"
 			+ "<font color='#"+ fgColorStr + "' size='2'>"
@@ -181,6 +182,17 @@ public class ArticleListAdapter extends BaseAdapter {
 
 	}
 	
+	private ViewHolder initHolder(View view){
+		ViewHolder holder = new ViewHolder();
+		holder.nickNameTV =(TextView) view.findViewById(R.id.nickName);
+		holder.avatarIV = (ImageView) view.findViewById(R.id.avatarImage);
+		holder.contentTV = (WebView) view.findViewById(R.id.content);
+		holder.floorTV = (TextView) view.findViewById(R.id.floor);
+		holder.postTimeTV = (TextView)view.findViewById(R.id.postTime);
+		holder.titleTV = (TextView) view.findViewById(R.id.floor_title);
+		return holder;
+	}
+	
 	public View getView(int position, View view, ViewGroup parent) {
 		if(position ==0){
 			start = System.currentTimeMillis();
@@ -189,13 +201,7 @@ public class ArticleListAdapter extends BaseAdapter {
 		ViewHolder holder = null;
 		if(view== null){
 			view = LayoutInflater.from(activity).inflate(R.layout.relative_aritclelist, null);
-			holder = new ViewHolder();
-			holder.nickNameTV =(TextView) view.findViewById(R.id.nickName);
-			holder.avatarIV = (ImageView) view.findViewById(R.id.avatarImage);
-			holder.contentTV = (WebView) view.findViewById(R.id.content);
-			holder.floorTV = (TextView) view.findViewById(R.id.floor);
-			holder.postTimeTV = (TextView)view.findViewById(R.id.postTime);
-			holder.titleTV = (TextView) view.findViewById(R.id.floor_title);
+			holder = initHolder(view);
 			view.setTag(holder);
 			
 			
@@ -203,13 +209,7 @@ public class ArticleListAdapter extends BaseAdapter {
 			holder = (ViewHolder) view.getTag();
 			if(holder.contentTV.getHeight() > 300){
 				view = LayoutInflater.from(activity).inflate(R.layout.relative_aritclelist, null);
-				holder = new ViewHolder();
-				holder.nickNameTV =(TextView) view.findViewById(R.id.nickName);
-				holder.avatarIV = (ImageView) view.findViewById(R.id.avatarImage);
-				holder.contentTV = (WebView) view.findViewById(R.id.content);
-				holder.floorTV = (TextView) view.findViewById(R.id.floor);
-				holder.postTimeTV = (TextView)view.findViewById(R.id.postTime);
-				holder.titleTV = (TextView) view.findViewById(R.id.floor_title);
+				holder =initHolder(view);
 				view.setTag(holder);
 				
 			}
@@ -243,44 +243,8 @@ public class ArticleListAdapter extends BaseAdapter {
 			int bgColor = parent.getContext().getResources().getColor(colorId);
 			
 			WebView contentTV = holder.contentTV;//(WebView) rowView.findViewById(R.id.content);
-			
 			handleContentTV(contentTV,row,colorId,bgColor,fgColor);
-			/*contentTV.setBackgroundColor(0);
-			contentTV.setBackgroundResource(colorId);
-			contentTV.setFocusable(false);
-			
-			bgColor = bgColor & 0xffffff;
-			String bgcolorStr = String.format("%06x",bgColor);
-			
-			int htmlfgColor = fgColor & 0xffffff;
-			String fgColorStr = String.format("%06x",htmlfgColor);
-			if(row.getContent()== null){
-				row.setContent(row.getSubject());
-				row.setSubject(null);
-			}
-			
-			String ngaHtml = StringUtil.decodeForumTag(row.getContent());
-			ngaHtml = ngaHtml + buildAttachment(row);
-			ngaHtml = "<HTML> <HEAD><META   http-equiv=Content-Type   content= \"text/html;   charset=utf-8 \">" 
-				+ "<body bgcolor= '#"+ bgcolorStr +"'>"
-				+ "<font color='#"+ fgColorStr + "' size='2'>"
-				+ ngaHtml + 
-				"</font></div></body>";
 
-			
-
-				
-			
-			WebSettings setting = contentTV.getSettings();
-			if(!PhoneConfiguration.getInstance().isDownImgNoWifi() && !isInWifi() )
-				setting.setBlockNetworkImage(true);
-			else
-				setting.setBlockNetworkImage(false);
-			//contentTV.loadData(ngaHtml, "text/html; charset=UTF-8", null);
-			contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
-			//contentTV.setOnTouchListener(gestureListener);
-			contentTV.getSettings().setDefaultFontSize(
-					PhoneConfiguration.getInstance().getWebSize());*/
 			
 			final int lou =  row.getLou();
 			final String floor = String.valueOf(lou);
@@ -318,7 +282,7 @@ public class ArticleListAdapter extends BaseAdapter {
 			return "";
 		}
 		StringBuilder  ret = new StringBuilder();
-		ret.append("<br/>附件<hr/><br/>");
+		ret.append("<br/><br/>附件<hr/><br/>");
 		//ret.append("<table style='background:#e1c8a7;border:1px solid #b9986e;margin:0px 0px 10px 30px;padding:10px;color:#6b2d25;max-width:100%;'>");
 		ret.append("<table style='background:#e1c8a7;border:1px solid #b9986e;padding:10px;color:#6b2d25;'>");
 		ret.append("<tbody>");
@@ -374,7 +338,7 @@ public class ArticleListAdapter extends BaseAdapter {
 		}
 		
 		StringBuilder  ret = new StringBuilder();
-		ret.append("<br/>评论<hr/><br/>");
+		ret.append("<br/></br>评论<hr/><br/>");
 		ret.append("<table  border='1px' cellspacing='0px' style='border-collapse:collapse'>");
 		ret.append("<tbody>");
 		
@@ -398,4 +362,15 @@ public class ArticleListAdapter extends BaseAdapter {
 		ret.append("</tbody></table>");
 		return ret.toString();
 	}
+
+	private String buildSignature(ThreadRowInfo row){
+		if(row ==null || row.getSignature() == null 
+				|| row.getSignature().length() == 0
+				|| !PhoneConfiguration.getInstance().showSignature){
+			return "";
+		}
+		return "<br/></br>签名<hr/><br/>"
+				+StringUtil.decodeForumTag(row.getSignature());
+	}
+
 }

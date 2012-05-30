@@ -124,9 +124,11 @@ public class StringUtil {
 		
 		s = s.replaceAll("\\[l\\]", styleLeft);
 		s = s.replaceAll("\\[/l\\]", endDiv);
+		s = s.replaceAll("\\[L\\]", styleLeft);
+		s = s.replaceAll("\\[/L\\]", endDiv);
 		
-		s = s.replaceAll("\\[r\\]", styleRight);
-		s = s.replaceAll("\\[/r\\]", endDiv);
+		s = s.replaceAll("\\[R\\]", styleRight);
+		s = s.replaceAll("\\[/R\\]", endDiv);
 		
 		final String styleAlignRight = "<div style='text-align:right' >";
 		final String styleAlignLeft = "<div style='text-align:left' >";
@@ -198,13 +200,13 @@ public class StringUtil {
 		//[img]./ddd.jpg[/img]
 		s = s.replaceAll("\\[img\\]\\s*\\.(/[^\\[|\\]]+)\\s*\\[/img\\]", 
 				"<a href='http://img.ngacn.cc/attachments$1'><img src='http://img.ngacn.cc/attachments$1' style= 'max-width:100%;' ></a>");
-		//s = s.replaceAll("\\[img\\]\\s*\\.(/[^\\[|\\]]+)\\s*\\[/img\\]", 
-		//		"<img src=\"http://img.ngacn.cc/attachments$1\" width=\"100%\">");
-		//[img]http://[/img]
 		s = s.replaceAll("\\[img\\]\\s*(http[^\\[|\\]]+)\\s*\\[/img\\]", 
 				"<a href='$1'><img src='$1' style= 'max-width:100%;' ></a>");
-		//s = s.replaceAll("\\[img\\]\\s*(http[^\\[|\\]]+)\\s*\\[/img\\]", 
-		//		"<img src='$1' width=\"100%\">");
+		
+		s = s.replaceAll("\\[IMG\\]\\s*\\.(/[^\\[|\\]]+)\\s*\\[/IMG\\]", 
+				"<a href='http://img.ngacn.cc/attachments$1'><img src='http://img.ngacn.cc/attachments$1' style= 'max-width:100%;' ></a>");
+		s = s.replaceAll("\\[IMG\\]\\s*(http[^\\[|\\]]+)\\s*\\[/IMG\\]", 
+				"<a href='$1'><img src='$1' style= 'max-width:100%;' ></a>");
 		
 		
 		return s;
