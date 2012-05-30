@@ -71,8 +71,8 @@ public class AppUpdateCheckTask extends AsyncTask<String, Integer, String> {
 				c.setTime(d);
 				long gap = System.currentTimeMillis() - c.getTimeInMillis();//utc
 				long hour = gap/(1000*3600);
-				if(hour < (8+2))
-					break;
+				//if(hour < (8+2))
+				//	break;
 			
 			} catch (ParseException e) {
 				Log.e(TAG, "invalid date:" + date);
@@ -115,7 +115,9 @@ public class AppUpdateCheckTask extends AsyncTask<String, Integer, String> {
 				(NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 
 		Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.setData(Uri.parse(result));
+		String url = "http://ngacnphone.googlecode.com/files/nga_phone" +
+				id+ ".apk";
+		intent.setData(Uri.parse(url));
 		
 		intent.addFlags(Intent.FILL_IN_DATA);
 		
