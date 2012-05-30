@@ -1,11 +1,9 @@
 package sp.phone.activity;
 
 import java.util.List;
-import com.alibaba.fastjson.JSON;
 
 import sp.phone.bean.Bookmark;
 import sp.phone.bean.PerferenceConstant;
-import sp.phone.forumoperation.FloorOpener;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.ThemeManager;
@@ -23,11 +21,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.TextView;
+
+import com.alibaba.fastjson.JSON;
 
 public class BookmarkActivity extends Activity 
 	implements OnItemClickListener, PerferenceConstant {
@@ -46,8 +46,10 @@ public class BookmarkActivity extends Activity
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}
 		ThemeManager.SetContextTheme(this);
-		this.setContentView(R.layout.bookmarks);
-		 view = (ListView)findViewById(R.id.bookmark_listview);
+		//this.setContentView(R.layout.bookmarks);
+		// view = (ListView)findViewById(R.id.bookmark_listview);
+		view = new ListView(this);
+		this.setContentView(view);
 		bookmarks = 
 				PhoneConfiguration.getInstance().getBookmarks();
 
