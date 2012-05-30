@@ -172,7 +172,7 @@ public class ArticleListFragment extends Fragment
 							R.anim.zoom_exit);
 				break;
 			case R.id.article_menuitem_refresh:
-				if(this.tid == 0 && this.authorid ==0)
+				if(this.pid == 0 && this.authorid ==0)
 				{
 					this.task = null;
 					ActivityUtil.getInstance().noticeSaying(getActivity());
