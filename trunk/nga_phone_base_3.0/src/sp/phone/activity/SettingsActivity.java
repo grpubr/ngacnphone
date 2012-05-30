@@ -28,6 +28,7 @@ public class SettingsActivity extends Activity{
 	private CompoundButton checkBoxDownAvatarNowifi;
 	private CompoundButton nightMode;
 	private CompoundButton showAnimation;
+	private CompoundButton showSignature;
 	private CompoundButton notification;
 	private CompoundButton notificationSound;
 	private SeekBar fontSizeBar;
@@ -80,6 +81,10 @@ public class SettingsActivity extends Activity{
 		showAnimation = (CompoundButton) findViewById(R.id.checkBox_show_animation);
 		showAnimation.setChecked(PhoneConfiguration.getInstance().showAnimation);
 		showAnimation.setOnCheckedChangeListener(new ShowAnimationListener());
+		
+		showSignature = (CompoundButton) findViewById(R.id.checkBox_show_signature);
+		showSignature.setChecked(PhoneConfiguration.getInstance().showSignature);
+		showSignature.setOnCheckedChangeListener(new ShowSignatureListener());
 		
 
 		
@@ -142,6 +147,7 @@ public class SettingsActivity extends Activity{
 		checkBoxDownAvatarNowifi.setTextColor(fgColor);
 		nightMode.setTextColor(fgColor);
 		showAnimation.setTextColor(fgColor);
+		showSignature.setTextColor(fgColor);
 		notification.setTextColor(fgColor);
 		notificationSound.setTextColor(fgColor);
 		fontTextView.setTextColor(fgColor);
@@ -209,6 +215,24 @@ public class SettingsActivity extends Activity{
 
 			Editor editor = share.edit();
 			editor.putBoolean(SHOW_ANIMATION, isChecked);
+			editor.commit();
+			
+		}
+		
+		
+	}
+	
+	class ShowSignatureListener implements OnCheckedChangeListener, PerferenceConstant{
+
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView,
+				boolean isChecked) {
+			PhoneConfiguration.getInstance().showSignature = isChecked;
+			SharedPreferences  share = 
+				getSharedPreferences(PERFERENCE, MODE_PRIVATE);
+
+			Editor editor = share.edit();
+			editor.putBoolean(SHOW_SIGNATURE, isChecked);
 			editor.commit();
 			
 		}
