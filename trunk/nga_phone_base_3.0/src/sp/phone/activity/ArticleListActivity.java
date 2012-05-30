@@ -7,6 +7,7 @@ import sp.phone.interfaces.ResetableArticle;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.ThemeManager;
+import android.app.NotificationManager;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -49,8 +50,10 @@ implements PagerOwnner,ResetableArticle {
 		//	tid = savedInstanceState.getInt("tid");
 		
 		pid = this.getIntent().getIntExtra("pid", 0);
-		//if(null != savedInstanceState)
-		//	tid = savedInstanceState.getInt("pid");
+		if(0 != pid){
+			NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+	        nm.cancel(R.layout.message_article);
+		}
 		
 		authorid = this.getIntent().getIntExtra("authorid", 0);
 		//if(null != savedInstanceState)
