@@ -1,5 +1,6 @@
 package sp.phone.bean;
 
+import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
@@ -51,7 +52,7 @@ public class ThreadRowInfo {
 	private int thisvisit;
 	private String signature;
 	private String nickname;
-	private Map comments;
+	private List<ThreadRowInfo> comments;
 	
 	public int getTid() {
 		return tid;
@@ -324,13 +325,14 @@ public class ThreadRowInfo {
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
-	public Map getComments() {
+	public List<ThreadRowInfo> getComments() {
 		return comments;
 	}
-	public void setComments(Map comments) {
+	public void setComments(List<ThreadRowInfo> comments) {
 		this.comments = comments;
 	}
-	
+
+
 	
 
 

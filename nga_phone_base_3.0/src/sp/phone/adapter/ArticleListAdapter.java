@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class ArticleListAdapter extends BaseAdapter {
+	private static final  String TAG = ArticleListAdapter.class.getSimpleName();
 	private ThreadData data;
 	private Context activity;
 	
@@ -92,6 +93,7 @@ public class ArticleListAdapter extends BaseAdapter {
 	}
 	long start;
 	long end;
+	
 	class ViewHolder{
 		TextView nickNameTV;
 		ImageView avatarIV;
@@ -102,12 +104,53 @@ public class ArticleListAdapter extends BaseAdapter {
 		
 	}
 	
+	private void handleContentTV(WebView contentTV,ThreadRowInfo row,int bgColorId,int bgColor,int fgColor){
+		
+		contentTV.setBackgroundColor(0);
+		contentTV.setBackgroundResource(bgColorId);
+		contentTV.setFocusable(false);
+		
+		bgColor = bgColor & 0xffffff;
+		String bgcolorStr = String.format("%06x",bgColor);
+		
+		int htmlfgColor = fgColor & 0xffffff;
+		String fgColorStr = String.format("%06x",htmlfgColor);
+		if(row.getContent()== null){
+			row.setContent(row.getSubject());
+			row.setSubject(null);
+		}
+		
+		String ngaHtml = StringUtil.decodeForumTag(row.getContent());
+		ngaHtml = ngaHtml + buildComment(row) + buildAttachment(row);
+		ngaHtml = "<HTML> <HEAD><META   http-equiv=Content-Type   content= \"text/html;   charset=utf-8 \">" 
+			+ "<body bgcolor= '#"+ bgcolorStr +"'>"
+			+ "<font color='#"+ fgColorStr + "' size='2'>"
+			+ ngaHtml + 
+			"</font></div></body>";
+
+		
+
+			
+		
+		WebSettings setting = contentTV.getSettings();
+		if(!PhoneConfiguration.getInstance().isDownImgNoWifi() && !isInWifi() )
+			setting.setBlockNetworkImage(true);
+		else
+			setting.setBlockNetworkImage(false);
+		//contentTV.loadData(ngaHtml, "text/html; charset=UTF-8", null);
+		contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
+		//contentTV.setOnTouchListener(gestureListener);
+		contentTV.getSettings().setDefaultFontSize(
+				PhoneConfiguration.getInstance().getWebSize());
+		
+	}
+	
 	private void handleAvatar(ImageView avatarIV, ThreadRowInfo row) {
 
 		final int lou = row.getLou();
 		final String floor = String.valueOf(lou);
 		avatarIV.setTag(floor);// 设置 tag 为楼层
-		final String avatarUrl = row.getJs_escap_avatar();// 头像
+		final String avatarUrl = parseAvatarUrl(row.getJs_escap_avatar());// 头像
 		final String userId = String.valueOf(row.getAuthorid());
 		if (!StringUtil.isEmpty(avatarUrl)) {
 			final String avatarPath = ImageUtil.newImage(avatarUrl, userId);
@@ -198,8 +241,11 @@ public class ArticleListAdapter extends BaseAdapter {
 			//nickNameTV.setLayoutParams(params);//其他组件是根据这个来定位的
 
 			int bgColor = parent.getContext().getResources().getColor(colorId);
+			
 			WebView contentTV = holder.contentTV;//(WebView) rowView.findViewById(R.id.content);
-			contentTV.setBackgroundColor(0);
+			
+			handleContentTV(contentTV,row,colorId,bgColor,fgColor);
+			/*contentTV.setBackgroundColor(0);
 			contentTV.setBackgroundResource(colorId);
 			contentTV.setFocusable(false);
 			
@@ -234,7 +280,7 @@ public class ArticleListAdapter extends BaseAdapter {
 			contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
 			//contentTV.setOnTouchListener(gestureListener);
 			contentTV.getSettings().setDefaultFontSize(
-					PhoneConfiguration.getInstance().getWebSize());
+					PhoneConfiguration.getInstance().getWebSize());*/
 			
 			final int lou =  row.getLou();
 			final String floor = String.valueOf(lou);
@@ -294,12 +340,62 @@ public class ArticleListAdapter extends BaseAdapter {
 			
 			ret.append("' style= 'max-width:70%;'></a>");
 			
-			ret.append("</td></tr></tbody>");
+			ret.append("</td></tr>");
 			
 		}
+		ret.append("</tbody></table>");
 		
 		return ret.toString();
 	}
 
-
+	private String parseAvatarUrl(String js_escap_avatar){
+		//"js_escap_avatar":"{ \"t\":1,\"l\":2,\"0\":{ \"0\":\"http://pic2.178.com/53/533387/month_1109/93ba4788cc8c7d6c75453fa8a74f3da6.jpg\",\"cX\":0.47,\"cY\":0.78},\"1\":{ \"0\":\"http://pic2.178.com/53/533387/month_1108/8851abc8674af3adc622a8edff731213.jpg\",\"cX\":0.49,\"cY\":0.68}}"
+		if(null == js_escap_avatar)
+			return null;
+		
+		int start = js_escap_avatar.indexOf("http");
+		if(start == 0|| start == -1)
+			return js_escap_avatar;
+		int end = js_escap_avatar.indexOf("\"",start);//
+		if(end == -1)
+			end = js_escap_avatar.length();
+		String ret= null;
+		try{
+			ret = js_escap_avatar.substring(start, end);
+		}catch(Exception e){
+			Log.e(TAG, "cann't handle avatar url "+ js_escap_avatar);
+		}
+		return ret;
+	}
+	
+	private String buildComment(ThreadRowInfo row){
+		if(row ==null || row.getComments() == null || row.getComments().size() == 0){
+			return "";
+		}
+		
+		StringBuilder  ret = new StringBuilder();
+		ret.append("<br/>评论<hr/><br/>");
+		ret.append("<table  border='1px' cellspacing='0px' style='border-collapse:collapse'>");
+		ret.append("<tbody>");
+		
+		Iterator<ThreadRowInfo> it = row.getComments().iterator();
+		while(it.hasNext()){
+			ThreadRowInfo comment = it.next();
+			ret.append("<tr><td>");
+			ret.append("<span style='font-weight:bold' >");
+			ret.append(comment.getAuthor());
+			ret.append("</span><br/>");
+			ret.append("<img src='");
+			String avatarUrl = parseAvatarUrl(comment.getJs_escap_avatar());
+			ret.append(avatarUrl);
+			ret.append("' style= 'max-width:32;'>");
+			
+			ret.append("</td><td>");
+			ret.append(comment.getContent());
+			ret.append("</td></tr>");
+			
+		}
+		ret.append("</tbody></table>");
+		return ret.toString();
+	}
 }
