@@ -6,6 +6,7 @@ import sp.phone.task.CheckReplyNotificationTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
+import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -33,9 +34,20 @@ public class TopicListActivity extends FragmentActivity {
 		tabhost.setup();
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 
-		fid = 7;
-
-		fid = this.getIntent().getIntExtra("fid", 7);
+		fid = -7;
+		int pageInUrl = 0;
+		String url = this.getIntent().getDataString();
+		if(url != null){
+			
+			fid = getUrlParameter(url,"fid");
+			pageInUrl =getUrlParameter(url,"page");
+		}
+		else
+		{
+			fid = this.getIntent().getIntExtra("fid", 7);
+			
+		}
+		
 		if (null != savedInstanceState)
 			fid = savedInstanceState.getInt("fid");
 
@@ -57,6 +69,8 @@ public class TopicListActivity extends FragmentActivity {
 
 		if (savedInstanceState != null) {
 			mViewPager.setCurrentItem(savedInstanceState.getInt("tab"));
+		}else if(pageInUrl !=0){
+			mViewPager.setCurrentItem(pageInUrl -1);
 		}
 
 	}
@@ -112,6 +126,30 @@ public class TopicListActivity extends FragmentActivity {
 	protected void onDestroy() {
 		ActivityUtil.getInstance().dismiss();
 		super.onDestroy();
+	}
+	
+	private int getUrlParameter(String url, String paraName){
+		if(StringUtil.isEmpty(url))
+		{
+			return 0;
+		}
+		final String pattern = paraName+"=" ;
+		int start = url.indexOf(pattern);
+		if(start == -1)
+			return 0;
+		start +=pattern.length();
+		int end = url.indexOf("&",start);
+		if(end == -1)
+			end = url.length();
+		String value = url.substring(start,end);
+		int ret = 0;
+		try{
+			ret = Integer.parseInt(value);
+		}catch(Exception e){
+			Log.e(TAG, "invalid url:" + url);
+		}
+		
+		return ret;
 	}
 
 

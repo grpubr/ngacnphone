@@ -6,12 +6,14 @@ import sp.phone.interfaces.PagerOwnner;
 import sp.phone.interfaces.ResetableArticle;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.ReflectionUtil;
+import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.app.NotificationManager;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +30,7 @@ implements PagerOwnner,ResetableArticle {
     int tid;
     int pid;
     int authorid;
+	private static final String TAG= ArticleListActivity.class.getSimpleName();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,20 +47,26 @@ implements PagerOwnner,ResetableArticle {
 
 
 		tid = 7;
-		
-		tid = this.getIntent().getIntExtra("tid", 7);
-		//if(null != savedInstanceState)
-		//	tid = savedInstanceState.getInt("tid");
-		
+		int pageFromUrl = 0;
+		String url = this.getIntent().getDataString();
+		if(null != url){
+			tid = this.getUrlParameter(url, "tid");		
+			pid = this.getUrlParameter(url, "pid");		
+			authorid = this.getUrlParameter(url, "authorid");
+			pageFromUrl = this.getUrlParameter(url, "page");
+		}else
+		{
+		tid = this.getIntent().getIntExtra("tid", 7);		
 		pid = this.getIntent().getIntExtra("pid", 0);
+		authorid = this.getIntent().getIntExtra("authorid", 0);
+		}
 		if(0 != pid){
 			NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 	        nm.cancel(R.layout.message_article);
 		}
 		
-		authorid = this.getIntent().getIntExtra("authorid", 0);
-		//if(null != savedInstanceState)
-		//	authorid = savedInstanceState.getInt("authorid");
+		
+
 		
 		mTabsAdapter = new TabsAdapter(this, tabhost, mViewPager,tid,ArticleListFragment.class);
 		mTabsAdapter.setAuthorid(authorid);
@@ -82,8 +91,37 @@ implements PagerOwnner,ResetableArticle {
         	mTabsAdapter.setCount(pageCount);
         	mViewPager.setCurrentItem(savedInstanceState.getInt("tab"));
         	
+        }else if( 0 != getUrlParameter(url, "page"))
+        {
+        	
+        	mTabsAdapter.setCount(pageFromUrl);
+        	mViewPager.setCurrentItem(pageFromUrl);
         }
 		
+	}
+	
+	private int getUrlParameter(String url, String paraName){
+		if(StringUtil.isEmpty(url))
+		{
+			return 0;
+		}
+		final String pattern = paraName+"=" ;
+		int start = url.indexOf(pattern);
+		if(start == -1)
+			return 0;
+		start +=pattern.length();
+		int end = url.indexOf("&",start);
+		if(end == -1)
+			end = url.length();
+		String value = url.substring(start,end);
+		int ret = 0;
+		try{
+			ret = Integer.parseInt(value);
+		}catch(Exception e){
+			Log.e(TAG, "invalid url:" + url);
+		}
+		
+		return ret;
 	}
 	
     @Override

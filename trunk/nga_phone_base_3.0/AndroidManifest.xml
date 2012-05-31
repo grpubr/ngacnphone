@@ -23,8 +23,23 @@
 		<activity android:name="SettingsActivity"></activity>
 		<activity android:name="BookmarkActivity"></activity>
 		<activity android:name="MessageArticleActivity"></activity>
-		<activity android:name="TopicListActivity"></activity>
-		<activity android:name="ArticleListActivity"></activity>
+		<activity android:name="TopicListActivity">
+		    <intent-filter>
+		        <action android:name="android.intent.action.VIEW" /> 
+		        <category android:name="android.intent.category.DEFAULT" /> 
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="http" android:host="bbs.ngacn.cc" android:path="/thread.php"/>
+			</intent-filter>
+		</activity>
+		<activity android:name="ArticleListActivity">
+		    <intent-filter>
+		        <action android:name="android.intent.action.VIEW" /> 
+		        <category android:name="android.intent.category.DEFAULT" /> 
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="http" android:host="bbs.ngacn.cc" android:path="/read.php"/>
+			</intent-filter>
+		    
+		</activity>
 	</application>
 
 </manifest> 
