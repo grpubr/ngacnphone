@@ -46,12 +46,12 @@ import com.example.android.actionbarcompat.ActionBarActivity;
 
 public class MainActivity extends ActionBarActivity
 	implements PerferenceConstant,OnItemClickListener{
-	
+	static final String TAG = MainActivity.class.getSimpleName();
 	ActivityUtil activityUtil =ActivityUtil.getInstance();
 	private MyApp app;
 	ViewPager pager;
 	View view;
-	//boolean newVersion = false;
+	AppUpdateCheckTask task = null;
 	OnItemClickListener onItemClickListenerlistener = new EnterToplistLintener();
 	
 	
@@ -64,11 +64,21 @@ public class MainActivity extends ActionBarActivity
 		loadConfig(intent);
 		initDate();
 		initView();
-		
+
 		ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
-		if(wifi == State.CONNECTED)
-			new AppUpdateCheckTask(this).execute("");
+		if(wifi == State.CONNECTED){
+		//if(task == null)
+		//{
+			Log.d(TAG,"in wifi,start check");
+			if(task == null){
+				task = new AppUpdateCheckTask(this);
+				task.execute("");
+			}
+			
+		}else{
+			Log.d(TAG,"not in wifi,skip check");
+		}
 
 	}
 
@@ -80,6 +90,18 @@ public class MainActivity extends ActionBarActivity
 			
 		
 	}
+
+	
+	@Override
+	protected void onStop() {
+		if(task != null){
+			Log.d(TAG,"cancel update check task");
+			task.cancel(true);
+			task= null;
+		}
+		super.onStop();
+	}
+
 
 	/*
 	 * (non-Javadoc)
