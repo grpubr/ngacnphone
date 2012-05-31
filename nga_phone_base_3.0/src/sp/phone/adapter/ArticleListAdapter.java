@@ -101,6 +101,7 @@ public class ArticleListAdapter extends BaseAdapter {
 		TextView floorTV;
 		TextView postTimeTV;
 		TextView titleTV;
+		int position=-1;
 		
 	}
 	
@@ -121,13 +122,13 @@ public class ArticleListAdapter extends BaseAdapter {
 		}
 		
 		String ngaHtml = StringUtil.decodeForumTag(row.getContent());
-		ngaHtml = ngaHtml + buildComment(row) + buildAttachment(row)
+		ngaHtml = ngaHtml + buildComment(row,fgColorStr) + buildAttachment(row)
 				+ buildSignature(row);
 		ngaHtml = "<HTML> <HEAD><META   http-equiv=Content-Type   content= \"text/html;   charset=utf-8 \">" 
 			+ "<body bgcolor= '#"+ bgcolorStr +"'>"
 			+ "<font color='#"+ fgColorStr + "' size='2'>"
 			+ ngaHtml + 
-			"</font></div></body>";
+			"</font></body>";
 
 		
 
@@ -207,6 +208,9 @@ public class ArticleListAdapter extends BaseAdapter {
 			
 		}else{
 			holder = (ViewHolder) view.getTag();
+			if(holder.position == position){
+				return view;
+			}
 			if(holder.contentTV.getHeight() > 300){
 				view = LayoutInflater.from(activity).inflate(R.layout.relative_aritclelist, null);
 				holder =initHolder(view);
@@ -215,6 +219,10 @@ public class ArticleListAdapter extends BaseAdapter {
 			}
 			
 		}
+		
+		Log.d(TAG, "handle floor " + position);
+		
+		holder.position = position;
 		
 			int colorId = ThemeManager.getInstance().getBackgroundColor();
 			view.setBackgroundResource(colorId);
@@ -332,14 +340,18 @@ public class ArticleListAdapter extends BaseAdapter {
 		return ret;
 	}
 	
-	private String buildComment(ThreadRowInfo row){
+	private String buildComment(ThreadRowInfo row, String fgColor){
 		if(row ==null || row.getComments() == null || row.getComments().size() == 0){
 			return "";
 		}
 		
 		StringBuilder  ret = new StringBuilder();
 		ret.append("<br/></br>ÆÀÂÛ<hr/><br/>");
-		ret.append("<table  border='1px' cellspacing='0px' style='border-collapse:collapse'>");
+		ret.append("<table  border='1px' cellspacing='0px' style='border-collapse:collapse;");
+		ret.append("color:");
+		ret.append(fgColor);
+		ret.append("'>");
+		
 		ret.append("<tbody>");
 		
 		Iterator<ThreadRowInfo> it = row.getComments().iterator();
