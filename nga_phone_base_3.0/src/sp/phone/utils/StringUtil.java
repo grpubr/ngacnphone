@@ -13,8 +13,12 @@ import java.util.regex.Pattern;
 public class StringUtil {
 	private final static String HOST = "http://bbs.ngacn.cc/";
 	private static final String lesserNukeStyle = "<div style='border:1px solid #B63F32;margin:10px 10px 10px 10px;padding:10px' > <span style='color:#EE8A9E'>用户因此贴被暂时禁言，此效果不会累加</span><br/>";
-	private static final String endDiv = "</div>";
+	private static final String styleAlignRight = "<div style='text-align:right' >";
+	private static final String styleAlignLeft = "<div style='text-align:left' >";
+	private static final String styleColor = "<div style='color:$1' >";
 	
+	private static final String endDiv = "</div>";
+
 	/** 验证是否是邮箱 */
 	public static boolean isEmail(String email) {
 		String pattern1 = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
@@ -130,8 +134,7 @@ public class StringUtil {
 		s = s.replaceAll("\\[R\\]", styleRight);
 		s = s.replaceAll("\\[/R\\]", endDiv);
 		
-		final String styleAlignRight = "<div style='text-align:right' >";
-		final String styleAlignLeft = "<div style='text-align:left' >";
+		
 		s = s.replaceAll("\\[align=right\\]", styleAlignRight);
 		s = s.replaceAll("\\[align=left\\]", styleAlignLeft);
 		s = s.replaceAll("\\[/align\\]", endDiv);
@@ -166,8 +169,10 @@ public class StringUtil {
 				"<a href=\"$1\"><img src='file:///android_asset/flash.png' style= 'max-width:100%;' ></a>");
 		//color
 		
-		s = s.replaceAll("\\[color=([^\\[|\\]]+)\\]\\s*(.+?)\\s*\\[/color\\]"
-				,"<b style=\"color:$1\">$2</b>");
+		//s = s.replaceAll("\\[color=([^\\[|\\]]+)\\]\\s*(.+?)\\s*\\[/color\\]"
+		//		,"<b style=\"color:$1\">$2</b>");
+		s=s.replaceAll("\\[color=([^\\[|\\]]+)\\]",styleColor);
+		s = s.replaceAll("\\[/color\\]", endDiv);
 		
 		
 		//lessernuke
@@ -188,11 +193,10 @@ public class StringUtil {
 		s = s.replaceAll("\\[del\\]", "<del class=\"gray\">");
 		s = s.replaceAll("\\[/del\\]","</del>");
 		
-		s = s.replaceAll("\\[font=(\\w+?)\\]","<span style=\"font-family:$1\">");
+		s = s.replaceAll("\\[font=([^\\[|\\]]+)\\]","<span style=\"font-family:$1\">");
 		s = s.replaceAll("\\[/font\\]","</span>");
 		
-		s = s.replaceAll("\\[/font\\]","</span>");
-		s = s.replaceAll("\\[/font\\]","</span>");
+
 		
 		s = s.replaceAll("\\[size=(\\d+)%\\]","<span style=\"font-size:$1%;line-height:$1%\">");
 		s = s.replaceAll("\\[/size\\]","</span>");
