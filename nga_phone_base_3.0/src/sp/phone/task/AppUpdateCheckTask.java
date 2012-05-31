@@ -40,6 +40,7 @@ public class AppUpdateCheckTask extends AsyncTask<String, Integer, String> {
 	
 	@Override
 	protected String doInBackground(String... params) {
+		Log.d(TAG, "start to check new app version");
 		String rssString = HttpUtil.getHtml(url,"");
 		String apkUrl = null;
 		String apkId = null;
@@ -108,9 +109,10 @@ public class AppUpdateCheckTask extends AsyncTask<String, Integer, String> {
 		id = Integer.parseInt(result);
 
 		if(id <= MyApp.version){
+			Log.i(TAG, "application alread up to date");
 			return;
 		}
-
+		Log.i(TAG, "new version found:" + id);
 		NotificationManager nm = 
 				(NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 
