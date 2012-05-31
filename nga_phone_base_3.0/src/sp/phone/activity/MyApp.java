@@ -91,7 +91,7 @@ public class MyApp extends Application implements PerferenceConstant {
 		config.setRefreshAfterPost(false);
 		
 		config.showAnimation = share.getBoolean(SHOW_ANIMATION, true);
-		config.showAnimation = share.getBoolean(SHOW_SIGNATURE, true);
+		config.showSignature = share.getBoolean(SHOW_SIGNATURE, true);
 		
 		//font
 		final float defTextSize = 21.0f;//new TextView(this).getTextSize();
