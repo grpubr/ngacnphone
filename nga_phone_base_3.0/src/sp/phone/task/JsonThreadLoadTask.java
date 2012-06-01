@@ -35,7 +35,11 @@ public class JsonThreadLoadTask extends AsyncTask<String, Integer, ThreadData> {
 		Log.d(TAG, "start to load:" + url);
 		
 		ThreadData result = this.loadAndParseJsonPage(url);
-		int orignalTid  = result.getThreadInfo().getQuote_from();
+		int orignalTid  = 0;
+		if(null != result && null !=result.getThreadInfo())
+		{
+			orignalTid = result.getThreadInfo().getQuote_from();
+		}
 		if(null != result &&  orignalTid !=0){
 			
 			String origUrl = url.replaceAll("tid=(\\d+)", "tid=" +orignalTid);
