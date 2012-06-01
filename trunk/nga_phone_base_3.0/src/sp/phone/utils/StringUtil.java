@@ -131,8 +131,11 @@ public class StringUtil {
 		s = s.replaceAll("\\[L\\]", styleLeft);
 		s = s.replaceAll("\\[/L\\]", endDiv);
 		
+		s = s.replaceAll("\\[r\\]", styleRight);
+		s = s.replaceAll("\\[/r\\]", endDiv);
 		s = s.replaceAll("\\[R\\]", styleRight);
 		s = s.replaceAll("\\[/R\\]", endDiv);
+		
 		
 		
 		s = s.replaceAll("\\[align=right\\]", styleAlignRight);
