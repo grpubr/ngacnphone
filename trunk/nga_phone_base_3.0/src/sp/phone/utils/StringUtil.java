@@ -199,8 +199,10 @@ public class StringUtil {
 		s = s.replaceAll("\\[font=([^\\[|\\]]+)\\]","<span style=\"font-family:$1\">");
 		s = s.replaceAll("\\[/font\\]","</span>");
 		
+		//collapse
+		s = s.replaceAll("\\[collapse([^\\[|\\]])*\\]([\\d|\\D])+?\\[/collapse\\]","[ÕÛµþ´úÂë]");
 
-		
+		//size
 		s = s.replaceAll("\\[size=(\\d+)%\\]","<span style=\"font-size:$1%;line-height:$1%\">");
 		s = s.replaceAll("\\[/size\\]","</span>");
 		
