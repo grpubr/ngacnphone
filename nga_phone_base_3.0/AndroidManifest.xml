@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="sp.phone.activity" android:versionCode="47"
-	android:versionName="1.2.2" android:installLocation="auto">
+	package="sp.phone.activity" android:versionCode="48"
+	android:versionName="1.2.25" android:installLocation="auto">
 	
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -9,7 +9,7 @@
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="14"/>
 	
-	<application android:name=".MyApp" android:label="@string/app_name" android:icon="@drawable/p7">
+	<application android:name=".MyApp" android:label="@string/app_name" android:icon="@drawable/skeleton_bg">
 		<activity android:name=".MainActivity" android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
