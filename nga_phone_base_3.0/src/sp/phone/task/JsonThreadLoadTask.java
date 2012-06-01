@@ -33,7 +33,23 @@ public class JsonThreadLoadTask extends AsyncTask<String, Integer, ThreadData> {
 		
 		final String url = params[0];
 		Log.d(TAG, "start to load:" + url);
-		String js = HttpUtil.getHtml(url, PhoneConfiguration.getInstance().getCookie());
+		
+		ThreadData result = this.loadAndParseJsonPage(url);
+		int orignalTid  = result.getThreadInfo().getQuote_from();
+		if(null != result &&  orignalTid !=0){
+			
+			String origUrl = url.replaceAll("tid=(\\d+)", "tid=" +orignalTid);
+			Log.i(TAG,"quoted page,load from orignal article,tid=" + orignalTid);
+			result = loadAndParseJsonPage(origUrl);
+		}
+		
+		
+		return result;
+	}
+	
+	private ThreadData loadAndParseJsonPage(String uri){
+		Log.d(TAG, "start to load:" + uri);
+		String js = HttpUtil.getHtml(uri, PhoneConfiguration.getInstance().getCookie());
 		if(null == js){
 			errorStr = context.getString(R.string.network_error);
 			return null;
@@ -45,7 +61,10 @@ public class JsonThreadLoadTask extends AsyncTask<String, Integer, ThreadData> {
 			errorStr = context.getResources().getString(R.string.thread_load_error);
 		}
 		
+		
 		return result;
+		
+		
 	}
 
 
