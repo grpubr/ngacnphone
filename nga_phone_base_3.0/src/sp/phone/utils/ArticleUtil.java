@@ -234,8 +234,13 @@ public class ArticleUtil {
 	}
 
 	public static ThreadData parseJsonThreadPage(String js){
-		//Log.d(TAG, js);
-		JSONObject o =  (JSONObject) JSON.parseObject(js).get("data");
+		js = js.replaceAll("\"content\":\\+(\\d+),", "\"content\":\"+$1\",");
+		JSONObject o = null;
+		try{
+				o = (JSONObject) JSON.parseObject(js).get("data");
+		}catch(Exception e){
+			Log.e(TAG, "can not parse :\n" +js );
+		}
 		if(o == null)
 			return null;
 
