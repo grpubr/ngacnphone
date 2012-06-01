@@ -16,6 +16,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo.State;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -28,6 +30,8 @@ public class AppUpdateCheckTask extends AsyncTask<String, Integer, String> {
 	}
 	static final String TAG = AppUpdateCheckTask.class.getSimpleName();
 	static final String url = "http://code.google.com/feeds/p/ngacnphone/downloads/basic";
+	static final String ipurl = "http://74.125.71.102/feeds/p/ngacnphone/downloads/basic";
+	static final String host = "code.google.com";
 	static final String entryStartTag = "<entry>";
 	static final String updateStartTag = "<updated>";
 	static final String updateEndtTag = "</updated>";
@@ -41,11 +45,24 @@ public class AppUpdateCheckTask extends AsyncTask<String, Integer, String> {
 	@Override
 	protected String doInBackground(String... params) {
 		Log.d(TAG, "start to check new app version");
-		String rssString = HttpUtil.getHtml(url,"");
+		ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+		if(wifi != State.CONNECTED)
+		{
+			Log.d(TAG, "not in wifi,return");
+			return null;
+		}
+		Log.d(TAG, "start to get html data");
+		String rssString = HttpUtil.getHtml(url,"",null,2000);
+		if(StringUtil.isEmpty(rssString)){
+			Log.w(TAG, "seems gfwed, try ip");
+			rssString = HttpUtil.getHtml(ipurl,"",host,2000);
+		}
 		String apkUrl = null;
 		String apkId = null;
 		do
 		{
+			Log.d(TAG,"start to check");
 			if(StringUtil.isEmpty(rssString))
 				break;
 			int start = 0; 
@@ -72,6 +89,7 @@ public class AppUpdateCheckTask extends AsyncTask<String, Integer, String> {
 				c.setTime(d);
 				long gap = System.currentTimeMillis() - c.getTimeInMillis();//utc
 				long hour = gap/(1000*3600);
+				
 				//if(hour < (8+2))
 				//	break;
 			

@@ -184,6 +184,38 @@ public class HttpUtil {
 			conn.setRequestProperty("User-Agent", USER_AGENT);
 			conn.setRequestProperty("Accept-Charset", "GBK");
 			conn.setRequestProperty("Accept-Encoding", "gzip,deflate");
+			conn.setConnectTimeout(2000);
+			conn.connect();
+			is = conn.getInputStream();
+			if( "gzip".equals(conn.getHeaderField("Content-Encoding")) )
+				is = new GZIPInputStream(is);
+			//is = url.openStream();
+			return IOUtils.toString(is, "gbk");
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(is);
+		}
+		return null;
+	}
+	
+	public static String getHtml(String uri, String cookie,String host,int timeout) {
+		InputStream is = null;
+		try {
+			URL url = new URL(uri);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestProperty("Cookie", cookie);
+			conn.setRequestProperty("User-Agent", USER_AGENT);
+			conn.setRequestProperty("Accept-Charset", "GBK");
+			conn.setRequestProperty("Accept-Encoding", "gzip,deflate");
+			if(!StringUtil.isEmpty(host)){
+				conn.setRequestProperty("Host", host);
+			}
+			if(timeout>0)
+				conn.setConnectTimeout(timeout);
+			
 			conn.connect();
 			is = conn.getInputStream();
 			if( "gzip".equals(conn.getHeaderField("Content-Encoding")) )

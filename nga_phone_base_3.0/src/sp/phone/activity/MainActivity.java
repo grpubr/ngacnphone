@@ -65,20 +65,9 @@ public class MainActivity extends ActionBarActivity
 		initDate();
 		initView();
 
-		ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
-		if(wifi == State.CONNECTED){
-		//if(task == null)
-		//{
-			Log.d(TAG,"in wifi,start check");
-			if(task == null){
-				task = new AppUpdateCheckTask(this);
-				task.execute("");
-			}
-			
-		}else{
-			Log.d(TAG,"not in wifi,skip check");
-		}
+		
+		task = new AppUpdateCheckTask(this);
+		task.execute("");
 
 	}
 
