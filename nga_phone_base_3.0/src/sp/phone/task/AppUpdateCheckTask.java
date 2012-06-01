@@ -37,7 +37,12 @@ public class AppUpdateCheckTask extends AsyncTask<String, Integer, String> {
 	static final String updateEndtTag = "</updated>";
 	static final String idStartTag = "<id>";
 	static final String idEndtTag = "</id>";
+	static final String contentStartTag = "&lt;pre&gt;";
+	//static final String contentStartTag = "<content type=\"html\">";
+	static final String contentEndtTag = "&lt;a";
+	
 	final private Context context;
+	private String content = null;
 	
 	
 	
@@ -115,6 +120,15 @@ public class AppUpdateCheckTask extends AsyncTask<String, Integer, String> {
 					"");
 			apkId = apkId.replace(".apk", "");
 			
+			start = rssString.indexOf(contentStartTag,end);
+			if(start == -1)
+				break;
+			start += contentStartTag.length();
+			end = rssString.indexOf(contentEndtTag,start);
+			if(end == -1)
+				break;
+			this.content = rssString.substring(start,end).trim();
+			this.content = StringUtil.unEscapeHtml(content);
 		}while(false);
 		
 		return apkId;
@@ -161,7 +175,7 @@ public class AppUpdateCheckTask extends AsyncTask<String, Integer, String> {
         notification.tickerText = tickerText;
         notification.when = System.currentTimeMillis();
         
-		 notification.setLatestEventInfo(context, "新版本", "", pending);
+		 notification.setLatestEventInfo(context, "更新内容", content, pending);
 		 nm.notify(sp.phone.activity.R.layout.message_article, notification);
 		super.onPostExecute(result);
 	}

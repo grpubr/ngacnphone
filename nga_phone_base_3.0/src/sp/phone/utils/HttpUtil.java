@@ -189,8 +189,8 @@ public class HttpUtil {
 			is = conn.getInputStream();
 			if( "gzip".equals(conn.getHeaderField("Content-Encoding")) )
 				is = new GZIPInputStream(is);
-			//is = url.openStream();
-			return IOUtils.toString(is, "gbk");
+			String encoding =  getCharset( conn, "GBK");
+			return IOUtils.toString(is, encoding);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -220,8 +220,9 @@ public class HttpUtil {
 			is = conn.getInputStream();
 			if( "gzip".equals(conn.getHeaderField("Content-Encoding")) )
 				is = new GZIPInputStream(is);
-			//is = url.openStream();
-			return IOUtils.toString(is, "gbk");
+			String encoding =  getCharset( conn, "GBK");
+			
+			return IOUtils.toString(is, encoding);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -231,7 +232,24 @@ public class HttpUtil {
 		}
 		return null;
 	}
-
+	private static String getCharset(HttpURLConnection conn, String defaultValue){
+		if(conn== null)
+			return defaultValue;
+		String contentType = conn.getHeaderField("Content-Type");
+		if(StringUtil.isEmpty(contentType))
+			return defaultValue;
+		String startTag = "charset=";
+		String endTag = " ";
+		int start = contentType.indexOf(startTag);
+		if( -1 == start)
+			return defaultValue;
+		start += startTag.length();
+		int end = contentType.indexOf( endTag, start);
+		if(-1==end)
+			end = contentType.length();
+		
+		return contentType.substring(start, end);
+	}
 	public static  ArticlePage getArticlePage(String uri, String cookie) {
 		ArticlePage ret= null;
 		try {
