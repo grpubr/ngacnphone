@@ -92,8 +92,8 @@ public class AppUpdateCheckTask extends AsyncTask<String, Integer, String> {
 				Date d = sdf.parse(date);
 				Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 				c.setTime(d);
-				long gap = System.currentTimeMillis() - c.getTimeInMillis();//utc
-				long hour = gap/(1000*3600);
+				//long gap = System.currentTimeMillis() - c.getTimeInMillis();//utc
+				//long hour = gap/(1000*3600);
 				
 				//if(hour < (8+2))
 				//	break;

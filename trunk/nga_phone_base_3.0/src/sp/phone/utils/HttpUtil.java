@@ -184,7 +184,7 @@ public class HttpUtil {
 			conn.setRequestProperty("User-Agent", USER_AGENT);
 			conn.setRequestProperty("Accept-Charset", "GBK");
 			conn.setRequestProperty("Accept-Encoding", "gzip,deflate");
-			conn.setConnectTimeout(2000);
+			conn.setConnectTimeout(4000);
 			conn.connect();
 			is = conn.getInputStream();
 			if( "gzip".equals(conn.getHeaderField("Content-Encoding")) )
