@@ -1,8 +1,10 @@
 package sp.phone.fragment;
 
 import sp.phone.activity.ArticleListActivity;
+import sp.phone.activity.MainActivity;
 import sp.phone.activity.PostActivity;
 import sp.phone.activity.R;
+import sp.phone.activity.TopicListActivity;
 import sp.phone.adapter.ArticleListAdapter;
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.bean.ThreadData;
@@ -209,8 +211,14 @@ public class ArticleListFragment extends Fragment
 				break;
 			case R.id.article_menuitem_back:
 			default:
-			//case android.R.id.home:
-				this.getActivity().finish();
+				Intent intent2 = new Intent(this.getActivity(), TopicListActivity.class);
+	            intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            if(articleAdpater.getData() !=null){
+	            	int fid = articleAdpater.getData().getThreadInfo().getFid();
+		            intent2.putExtra("fid", fid);
+	            }
+	            
+	            startActivity(intent2);
 				break;
 		}
 		return super.onOptionsItemSelected(item);

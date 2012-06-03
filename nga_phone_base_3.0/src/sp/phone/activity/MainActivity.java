@@ -183,10 +183,13 @@ public class MainActivity extends ActionBarActivity
 			this.jumpToSetting();
 			break;
 		case R.id.mainmenu_exit:
-			//break;
+			//case android.R.id.home: //this is a system id
+			//this.finish();
 		default:
-		//case android.R.id.home: //this is a system id
-			this.finish();
+			Intent MyIntent = new Intent(Intent.ACTION_MAIN);
+			MyIntent.addCategory(Intent.CATEGORY_HOME);
+			MyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(MyIntent);
 			break;
 
 		}

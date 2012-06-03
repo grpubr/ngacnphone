@@ -57,7 +57,7 @@ public class TopicListFragment extends Fragment
 					(getActivity(), R.anim.topic_list_anim);
 			listview.setLayoutAnimation(anim);
 		}
-		this.registerForContextMenu(listview);
+		//this.registerForContextMenu(listview);
 		return listview;
 	}
 

@@ -3,7 +3,6 @@ package sp.phone.task;
 
 
 import sp.phone.activity.ArticleListActivity;
-import sp.phone.activity.MessageArticleActivity;
 import sp.phone.activity.R;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
