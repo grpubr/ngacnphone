@@ -60,7 +60,7 @@ public class TopicListAdapter extends BaseAdapter
 		View convertView = view;//m.get(position);
 		ViewHolder holder = null;
 		if (convertView == null ) {
-			convertView = inflater.inflate(R.layout.topic_list, null);
+			convertView = inflater.inflate(R.layout.linear_topic_list, null);
 			TextView num = (TextView) convertView.findViewById(R.id.num);
 			TextView title = (TextView) convertView
 					.findViewById(R.id.title);

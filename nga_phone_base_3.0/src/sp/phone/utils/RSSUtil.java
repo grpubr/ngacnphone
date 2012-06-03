@@ -96,7 +96,7 @@ public class RSSUtil {
 			type = 0;
 			break;
 		case AUTHOR:
-			item.setAuthor(s);
+			item.setAuthor(s.trim());
 			type = 0;
 			break;
 		case LASTBUILDDATE:
