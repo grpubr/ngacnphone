@@ -33,7 +33,7 @@ public class CheckReplyNotificationTask extends
 		while(emptyMessage.equals(result))
 		{
 			result =HttpUtil.getHtml(url, cookie);
-			//result = "window.script_muti_get_var_store={0:[{0:7,1:2425614,2:\"meinibuxing\",3:\"\",4:\"\",5:\"[片总]安卓客户端列表显示\",9:1338649808,6:5225347,7:\"\"}]}";
+			//result = "{0:[{0:8,1:553736,2:\"吸片\",3:\"\",4:\"\",5:\"又一个客户端杀手贴\",9:1338737284,6:5222738,7:90295509},{0:8,1:553736,2:\"吸片\",3:\"\",4:\"\",5:\"又一个客户端杀手贴\",9:1338737301,6:5222738,7:90295522}]}";
 			PhoneConfiguration.getInstance().lastMessageCheck
 				= System.currentTimeMillis();
 			Log.i(this.getClass().getSimpleName(), "get message:"+result);
