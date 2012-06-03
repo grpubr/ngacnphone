@@ -34,6 +34,7 @@ public class CheckReplyNotificationTask extends
 		while(emptyMessage.equals(result))
 		{
 			result =HttpUtil.getHtml(url, cookie);
+			//result = "window.script_muti_get_var_store={0:[{0:7,1:2425614,2:\"meinibuxing\",3:\"\",4:\"\",5:\"[片总]安卓客户端列表显示\",9:1338649808,6:5225347,7:\"\"}]}";
 			PhoneConfiguration.getInstance().lastMessageCheck
 				= System.currentTimeMillis();
 			Log.i(this.getClass().getSimpleName(), "get message:"+result);
@@ -92,7 +93,8 @@ public class CheckReplyNotificationTask extends
 				(NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 		Intent intent = new Intent(context,ArticleListActivity.class); 
 		intent.putExtra("tid", Integer.valueOf(tid).intValue());
-		intent.putExtra("pid", Integer.valueOf(pid).intValue());
+		if(!StringUtil.isEmpty(pid))
+			intent.putExtra("pid", Integer.valueOf(pid).intValue());
 		//intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK );
 		intent.addFlags(Intent.FILL_IN_DATA);
 		
