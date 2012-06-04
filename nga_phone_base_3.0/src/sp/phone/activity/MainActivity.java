@@ -9,23 +9,18 @@ import sp.phone.bean.Board;
 import sp.phone.bean.BoardCategory;
 import sp.phone.bean.BoardHolder;
 import sp.phone.bean.PerferenceConstant;
-import sp.phone.bean.RSSFeed;
 import sp.phone.task.AppUpdateCheckTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
-import sp.phone.utils.RSSUtil;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo.State;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -407,48 +402,7 @@ public class MainActivity extends ActionBarActivity
 
 	
 
-	class GetToplistRssThread extends Thread {
-		final String url;
-
-		public GetToplistRssThread(String url) {
-			super();
-			this.url = url;
-		}
-
-		@Override
-		public void run() {
-			RSSUtil rssUtil = new RSSUtil();
-			rssUtil.parseXml(url);
-			RSSFeed rssFeed = rssUtil.getFeed();
-
-			if (rssFeed != null && rssFeed.getItems().size() != 0) {
-				app.setRssFeed(rssFeed);
-
-				activityUtil.dismiss();
-				runOnUiThread(new Runnable() {
-					public void run() {
-						Intent intent = new Intent();
-						intent.setClass(MainActivity.this,
-								TopicListActivity1.class);
-						startActivity(intent);
-						if(PhoneConfiguration.getInstance().showAnimation)
-							overridePendingTransition(R.anim.zoom_enter,
-									R.anim.zoom_exit);
-					}
-
-				});
-
-			} else if(rssUtil.getErrorCode() == RSSUtil.NETWORK_ERROR){
-				activityUtil.noticeError( "没有找到可用网络",MainActivity.this);
-			} else if(rssUtil.getErrorCode() == RSSUtil.DOCUMENT_ERROR){
-				activityUtil.noticeError( "请重新登录",MainActivity.this);
-			}else {
-				activityUtil.noticeError( "未知错误",MainActivity.this);
-			}
-			
-		}
-	}
-
+	
 
 	
 

@@ -6,7 +6,6 @@ import sp.phone.activity.PostActivity;
 import sp.phone.activity.R;
 import sp.phone.adapter.TopicListAdapter;
 import sp.phone.bean.RSSFeed;
-import sp.phone.forumoperation.FloorOpener;
 import sp.phone.interfaces.OnTopListLoadFinishedListener;
 import sp.phone.task.TopicListLoadTask;
 import sp.phone.utils.ActivityUtil;
@@ -181,30 +180,7 @@ public class TopicListFragment extends Fragment
 	}
 	
 	
-	class ItemClicked extends FloorOpener
-	implements OnItemClickListener{
-
-		public ItemClicked(Activity activity) {
-			super(activity);
-			
-		}
-
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-			String guid = (String) parent.getItemAtPosition(position);
-			 String url;
-			if (guid.indexOf("\n") != -1) {
-				url = guid.substring(0, guid.length() - 1);
-			} else {
-				url = guid;
-			}
-			handleFloor(url);
-			
-		}
-		
-		
-	}
+	
 
 
 	class EnterJsonArticle implements OnItemClickListener

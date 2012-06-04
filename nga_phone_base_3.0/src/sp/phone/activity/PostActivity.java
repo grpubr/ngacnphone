@@ -174,7 +174,8 @@ public class PostActivity extends Activity
 				 new FileUploadTask(is,filesize,this, this, contentType).execute();
 			} catch (FileNotFoundException e) {
 				
-				Log.wtf(LOG_TAG, "file not found", e);
+				Log.e(LOG_TAG, "file not found:" + Log.getStackTraceString(e));
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
