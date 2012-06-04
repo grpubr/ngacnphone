@@ -22,7 +22,7 @@ public class TopicListActivity extends FragmentActivity {
 	private String TAG = TopicListActivity.class.getSimpleName();
 	TabHost tabhost;
 	ViewPager mViewPager;
-	TabsAdapter mTabsAdapter;
+	TabsAdapter mTabsAdapter=null;
 	private CheckReplyNotificationTask asynTask;
 	int fid;
 
@@ -53,17 +53,8 @@ public class TopicListActivity extends FragmentActivity {
 
 		mTabsAdapter = new TabsAdapter(this, tabhost, mViewPager, fid,
 				TopicListFragment.class);
+		mTabsAdapter.setCount(100);
 
-		TextView tv = null;
-
-		for (int i = 1; i < 6; i++) {
-			tv = new TextView(this);
-			tv.setTextSize(20);
-			tv.setText(String.valueOf(i));
-			tv.setGravity(Gravity.CENTER);
-			mTabsAdapter.addTab(tabhost.newTabSpec(String.valueOf(i))
-					.setIndicator(tv));
-		}
 
 		ActivityUtil.getInstance().noticeSaying(this);
 

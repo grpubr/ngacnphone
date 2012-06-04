@@ -28,7 +28,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 	private int pid = 0;
 	private int authorid = 0;
 	private final Class<?> clss;
-	private int pageCount=100;
+	private int pageCount=1;
 	
 
 

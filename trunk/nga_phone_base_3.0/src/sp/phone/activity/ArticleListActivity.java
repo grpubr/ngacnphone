@@ -88,13 +88,16 @@ implements PagerOwnner,ResetableArticle {
 		
         if (savedInstanceState != null) {
         	int pageCount = savedInstanceState.getInt("pageCount");
-        	mTabsAdapter.setCount(pageCount);
-        	mViewPager.setCurrentItem(savedInstanceState.getInt("tab"));
+        	if(pageCount!=0)
+        	{
+        		mTabsAdapter.setCount(pageCount);
+        		mViewPager.setCurrentItem(savedInstanceState.getInt("tab"));
+        	}
         	
         }else if( 0 != getUrlParameter(url, "page"))
         {
         	
-        	mTabsAdapter.setCount(pageFromUrl);
+        	mTabsAdapter.setCount(pageFromUrl+1);
         	mViewPager.setCurrentItem(pageFromUrl);
         }
 		
@@ -128,7 +131,7 @@ implements PagerOwnner,ResetableArticle {
     protected void onSaveInstanceState(Bundle outState) {
     	
         super.onSaveInstanceState(outState);
-        outState.putInt("pageCount",mViewPager.getChildCount());
+        outState.putInt("pageCount",mTabsAdapter.getCount());
         outState.putInt("tab",mViewPager.getCurrentItem());
      //   outState.putInt("tid",tid);
         
