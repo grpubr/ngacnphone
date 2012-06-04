@@ -148,7 +148,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 		TabWidget widget = mTabHost.getTabWidget();
 		int oldFocusability = widget.getDescendantFocusability();
 		widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-		int tab_count = mTabHost.getTabWidget().getChildCount();
+		
 		offset = position/ MAX_TAB * MAX_TAB;// & ~(mTabHost.getTabWidget().getChildCount() -1);
 		Log.d(TAG, "onPageSelected current offset=" + offset );
 		if(offset + MAX_TAB >pageCount && offset >0){

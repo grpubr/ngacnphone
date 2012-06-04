@@ -3,8 +3,6 @@ package sp.phone.bean;
 import java.util.List;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSONObject;
-
 public class ThreadRowInfo {
 	
 	private int tid;

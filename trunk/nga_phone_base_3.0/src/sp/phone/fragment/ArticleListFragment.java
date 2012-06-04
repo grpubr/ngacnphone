@@ -1,7 +1,6 @@
 package sp.phone.fragment;
 
 import sp.phone.activity.ArticleListActivity;
-import sp.phone.activity.MainActivity;
 import sp.phone.activity.PostActivity;
 import sp.phone.activity.R;
 import sp.phone.activity.TopicListActivity;
@@ -24,7 +23,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
