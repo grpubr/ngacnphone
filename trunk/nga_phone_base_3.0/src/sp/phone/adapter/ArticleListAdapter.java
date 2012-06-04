@@ -108,7 +108,8 @@ public class ArticleListAdapter extends BaseAdapter {
 	private void handleContentTV(WebView contentTV,ThreadRowInfo row,int bgColorId,int bgColor,int fgColor){
 		
 		contentTV.setBackgroundColor(0);
-		contentTV.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
+		if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB)
+			contentTV.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
 		contentTV.setFocusable(false);
 		
 		bgColor = bgColor & 0xffffff;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="sp.phone.activity" android:versionCode="49"
-	android:versionName="1.2.29" android:installLocation="auto">
+	package="sp.phone.activity" android:versionCode="50"
+	android:versionName="1.2.32" android:installLocation="auto">
 	
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -16,13 +16,10 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".TopicListActivity1" android:label="@string/app_name" android:screenOrientation="sensor"/>
-		<activity android:name=".ArticleListActivity1" android:label="@string/app_name" android:screenOrientation="sensor"/>
 		<activity android:name="LoginActivity"></activity>
 		<activity android:name="PostActivity" android:launchMode="standard"></activity>
 		<activity android:name="SettingsActivity"></activity>
 		<activity android:name="BookmarkActivity"></activity>
-		<activity android:name="MessageArticleActivity"></activity>
 		<activity android:name="TopicListActivity">
 		    <intent-filter>
 		        <action android:name="android.intent.action.VIEW" /> 
