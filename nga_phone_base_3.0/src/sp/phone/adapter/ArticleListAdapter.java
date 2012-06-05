@@ -122,9 +122,10 @@ public class ArticleListAdapter extends BaseAdapter {
 			row.setSubject(null);
 		}
 		
-		String ngaHtml = StringUtil.decodeForumTag(row.getContent());
-		ngaHtml = ngaHtml + buildComment(row,fgColorStr) + buildAttachment(row)
-				+ buildSignature(row);
+		boolean showImage = PhoneConfiguration.getInstance().isDownImgNoWifi() || isInWifi();
+		String ngaHtml = StringUtil.decodeForumTag(row.getContent(),showImage);
+		ngaHtml = ngaHtml + buildComment(row,fgColorStr) + buildAttachment(row,showImage)
+				+ buildSignature(row,showImage);
 		ngaHtml = "<HTML> <HEAD><META   http-equiv=Content-Type   content= \"text/html;   charset=utf-8 \">" 
 			+ "<body bgcolor= '#"+ bgcolorStr +"'>"
 			+ "<font color='#"+ fgColorStr + "' size='2'>"
@@ -285,7 +286,7 @@ public class ArticleListAdapter extends BaseAdapter {
 		return view;
 	}
 
-	private String buildAttachment(ThreadRowInfo row){
+	private String buildAttachment(ThreadRowInfo row,boolean showImage){
 		
 		if(row ==null || row.getAttachs() == null || row.getAttachs().size() == 0){
 			return "";
@@ -302,15 +303,17 @@ public class ArticleListAdapter extends BaseAdapter {
 			ret.append("<tr><td><a href='http://img.ngacn.cc/attachments/");
 			ret.append(entry.getValue().getAttachurl());
 			ret.append("'>");
-			
-			ret.append("<img src='http://img.ngacn.cc/attachments/");
-			ret.append(entry.getValue().getAttachurl());
-			if(entry.getValue().getThumb() == 1)
-			{
-				ret.append(".thumb.jpg");
-				//ret.append(entry.getValue().getExt());
+			if (showImage) {
+				ret.append("<img src='http://img.ngacn.cc/attachments/");
+				ret.append(entry.getValue().getAttachurl());
+				if (entry.getValue().getThumb() == 1) {
+					ret.append(".thumb.jpg");
+					// ret.append(entry.getValue().getExt());
+				}
+			} else {
+				ret.append("<img src='file:///android_asset/ic_offline_image.png");
 			}
-			
+
 			ret.append("' style= 'max-width:70%;'></a>");
 			
 			ret.append("</td></tr>");
@@ -376,14 +379,14 @@ public class ArticleListAdapter extends BaseAdapter {
 		return ret.toString();
 	}
 
-	private String buildSignature(ThreadRowInfo row){
+	private String buildSignature(ThreadRowInfo row, boolean showImage){
 		if(row ==null || row.getSignature() == null 
 				|| row.getSignature().length() == 0
 				|| !PhoneConfiguration.getInstance().showSignature){
 			return "";
 		}
 		return "<br/></br>Ç©Ãû<hr/><br/>"
-				+StringUtil.decodeForumTag(row.getSignature());
+				+StringUtil.decodeForumTag(row.getSignature(),showImage);
 	}
 
 }
