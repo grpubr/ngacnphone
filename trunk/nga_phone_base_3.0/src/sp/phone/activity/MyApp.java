@@ -20,7 +20,7 @@ import android.util.Log;
 
 public class MyApp extends Application implements PerferenceConstant {
 	final private static String TAG = MyApp.class.getSimpleName();
-	public final static int version = 232;
+	public final static int version = 235;
 	private RSSFeed rssFeed;
 	private ArticlePage articlePage;
 	private HashMap<Object, ArticlePage> map_article;
