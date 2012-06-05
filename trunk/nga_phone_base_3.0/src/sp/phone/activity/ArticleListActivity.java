@@ -8,17 +8,21 @@ import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
+import android.app.AlertDialog;
 import android.app.NotificationManager;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.text.method.NumberKeyListener;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TextView;
 
@@ -163,6 +167,51 @@ implements PagerOwnner,ResetableArticle {
 	}
 	
 	
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if(item.getItemId() == R.id.goto_floor){
+			createGotoDialog();
+			return true;
+		}else
+		{
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	private void createGotoDialog(){
+		final AlertDialog.Builder alert = new AlertDialog.Builder(this);  
+        final EditText input = new EditText(this);
+        input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        alert.setView(input);  
+		alert.setTitle(R.string.goto_floor);
+		alert.setMessage(R.string.goto_floor_description);
+		
+		alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {  
+            public void onClick(DialogInterface dialog, int whichButton) { 
+            	if(null == mTabsAdapter)
+            		dialog.dismiss();
+                String value = input.getText().toString().trim(); 
+                try{
+                	int floor = Integer.valueOf(value);
+                	if(floor > mTabsAdapter.getCount() || floor <1)
+                		floor = mTabsAdapter.getCount();
+                	mViewPager.setCurrentItem(floor-1);
+                }catch(Exception e){
+                	dialog.dismiss();
+                }
+            }
+		});
+		
+		alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {  
+            public void onClick(DialogInterface dialog, int whichButton) {  
+                dialog.dismiss();
+            }
+		});
+		
+		alert.show();
+		
+	}
 
 	@Override
 	protected void onResume() {

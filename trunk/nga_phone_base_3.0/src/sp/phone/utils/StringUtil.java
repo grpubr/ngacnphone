@@ -422,7 +422,7 @@ public class StringUtil {
 		}
 		return ret;
 	}
-	final static String tips = "1.头像大小修改现在在设置里\n2.不喜欢动画的在设置里关掉\n3.签名可以在设置里关闭\n4.在帖子里按menu可以禁止屏幕旋转，再看不到就是瞎了";
+	final static String tips = "1.不要用cmwap和3gwap\n2.头像大小修改现在在设置里\n3.不喜欢动画的在设置里关掉\n4.签名可以在设置里关闭\n5.在帖子里按menu可以禁止屏幕旋转，再看不到就是瞎了";
 	public static String getTips(){
 		
 		return tips;
