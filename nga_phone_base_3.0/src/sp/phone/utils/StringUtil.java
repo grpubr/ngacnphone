@@ -155,8 +155,13 @@ public class StringUtil {
 		//s = s.replaceAll("\\[b\\]Reply to \\[pid=\\d+\\]Reply\\[/pid\\] (Post by .+ \\(\\d{4,4}-\\d\\d-\\d\\d \\d\\d:\\d\\d\\))\\[/b\\]"
 		//		, "Reply to Reply <b>$1</b>");
 		// ×ª»» tag
+		//[b]
 		s = s.replaceAll("\\[b\\]", "<b>");
 		s = s.replaceAll("\\[/b\\]","</b>"/* "</font>"*/);
+		
+		//item
+		s = s.replaceAll("\\[item\\]", "<b>");
+		s = s.replaceAll("\\[/item\\]","</b>");
 		
 		s = s.replaceAll("\\[u\\]", "<u>");
 		s = s.replaceAll("\\[/u\\]","</u>");
@@ -182,12 +187,11 @@ public class StringUtil {
 		s = s.replaceAll("\\[lessernuke\\]", lesserNukeStyle);
 		s = s.replaceAll("\\[/lessernuke\\]", endDiv);
 		
-		s = s.replaceAll("\\[table\\]","<table style='color:green'>");
-		s = s.replaceAll("\\[/table\\]","</table>");
+		s = s.replaceAll("\\[table\\]","<table border='1px' cellspacing='0px' style='border-collapse:collapse;color:blue'><tbody>");
+		s = s.replaceAll("\\[/table\\]","</tbody></table>");
 		s = s.replaceAll("\\[tr\\]","<tr>");
 		s = s.replaceAll("\\[/tr\\]","<tr>");
-		s = s.replaceAll("\\[td\\]",
-				"<td style=\"border:1px solid red\">");
+		s = s.replaceAll("\\[td\\]", "<td>");
 		s = s.replaceAll("\\[/td\\]","<td>");
 		//[i][/i]
 		s = s.replaceAll("\\[i\\]", "<i style=\"font-style:italic\">");
