@@ -110,7 +110,8 @@ public class HttpUtil {
 		try {
 			URL url = new URL(uri);
 			File file = new File(fileName);
-			FileUtils.copyURLToFile(url, file);
+			
+			FileUtils.copyURLToFile(url, file, 2000, 5000);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -185,6 +186,7 @@ public class HttpUtil {
 			conn.setRequestProperty("Accept-Charset", "GBK");
 			conn.setRequestProperty("Accept-Encoding", "gzip,deflate");
 			conn.setConnectTimeout(4000);
+			conn.setReadTimeout(8000);
 			conn.connect();
 			is = conn.getInputStream();
 			if( "gzip".equals(conn.getHeaderField("Content-Encoding")) )
@@ -213,8 +215,10 @@ public class HttpUtil {
 			if(!StringUtil.isEmpty(host)){
 				conn.setRequestProperty("Host", host);
 			}
-			if(timeout>0)
+			if(timeout>0){
 				conn.setConnectTimeout(timeout);
+				conn.setReadTimeout(timeout*2);
+			}
 			
 			conn.connect();
 			is = conn.getInputStream();
