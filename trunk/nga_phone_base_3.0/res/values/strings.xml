@@ -45,6 +45,6 @@
     <string name="showAnimation">显示动画</string>
     <string name="modify_thread">编辑帖子</string>
     <string name="showSignature">显示签名</string>
-    <string name="goto_floor">跳楼</string>
-    <string name="goto_floor_description">输入楼层，0表示最后一页</string>
+    <string name="goto_floor">跳页</string>
+    <string name="goto_floor_description">输入页数，0表示最后一页</string>
 </resources>
