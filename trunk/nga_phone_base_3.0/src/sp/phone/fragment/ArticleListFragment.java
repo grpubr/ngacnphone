@@ -266,8 +266,8 @@ public class ArticleListFragment extends Fragment
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
-		if(this.pid == 0){
 		menu.add(0,QUOTE_ORDER,0, "喷之");
+		if(this.pid == 0){
 		menu.add(0,REPLY_ORDER,0, "回帖");
 		menu.add(0,COPY_CLIPBOARD_ORDER,0, "复制到剪切板");
 		menu.add(0,SHOW_THISONLY_ORDER,0, "只看此人");
