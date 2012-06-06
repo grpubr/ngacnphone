@@ -32,7 +32,7 @@ public class CheckReplyNotificationTask extends
 		
 		while(emptyMessage.equals(result))
 		{
-			result =HttpUtil.getHtml(url, cookie);
+			result =HttpUtil.getHtml(url, cookie, null, 3000);
 			//result = "{0:[{0:8,1:553736,2:\"吸片\",3:\"\",4:\"\",5:\"又一个客户端杀手贴\",9:1338737284,6:5222738,7:90295509},{0:8,1:553736,2:\"吸片\",3:\"\",4:\"\",5:\"又一个客户端杀手贴\",9:1338737301,6:5222738,7:90295522}]}";
 			PhoneConfiguration.getInstance().lastMessageCheck
 				= System.currentTimeMillis();
