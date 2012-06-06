@@ -10,6 +10,7 @@ import sp.phone.bean.ArticlePage;
 import sp.phone.bean.Bookmark;
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.bean.RSSFeed;
+import sp.phone.utils.CrashHandler;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ThemeManager;
 import android.app.Application;
@@ -20,7 +21,7 @@ import android.util.Log;
 
 public class MyApp extends Application implements PerferenceConstant {
 	final private static String TAG = MyApp.class.getSimpleName();
-	public final static int version = 236;
+	public final static int version = 237;
 	private RSSFeed rssFeed;
 	private ArticlePage articlePage;
 	private HashMap<Object, ArticlePage> map_article;
@@ -31,6 +32,8 @@ public class MyApp extends Application implements PerferenceConstant {
 	@Override
 	public void onCreate() {
 		Log.w(TAG,"app nga androind start");
+		CrashHandler crashHandler = CrashHandler.getInstance();
+		crashHandler.init(getApplicationContext());
 		config = PhoneConfiguration.getInstance();
 		initUserInfo();
 		loadConfig();
