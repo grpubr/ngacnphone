@@ -176,7 +176,7 @@ public class AppUpdateCheckTask extends AsyncTask<String, Integer, String> {
         notification.when = System.currentTimeMillis();
         
 		 notification.setLatestEventInfo(context, "¸üÐÂÄÚÈÝ", content, pending);
-		 nm.notify( gov.pianzong.androidnga.R.layout.message_article, notification);
+		 nm.notify( gov.pianzong.androidnga.R.layout.pagerview_article_list, notification);
 		super.onPostExecute(result);
 	}
 	
