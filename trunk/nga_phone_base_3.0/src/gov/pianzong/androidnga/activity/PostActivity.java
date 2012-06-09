@@ -3,6 +3,7 @@ package gov.pianzong.androidnga.activity;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 
 import org.apache.commons.io.IOUtils;
 
@@ -242,7 +243,7 @@ public class PostActivity extends Activity
 		final View v;
 		private final String result_start_tag = "<span style='color:#aaa'>&gt;</span>";
 		private final String result_end_tag = "<br/>";
-		
+		private boolean keepActivity = false;
 		public ArticlePostTask(View v) {
 			super();
 			this.v = v;
@@ -256,12 +257,18 @@ public class PostActivity extends Activity
 
 		@Override
 		protected void onCancelled() {
+			synchronized(button_commit){
+				loading = false;
+			}
 			ActivityUtil.getInstance().dismiss();
 			super.onCancelled();
 		}
 
 		@Override
 		protected void onCancelled(String result) {
+			synchronized(button_commit){
+				loading = false;
+			}
 			ActivityUtil.getInstance().dismiss();
 			super.onCancelled(result);
 		}
@@ -280,14 +287,22 @@ public class PostActivity extends Activity
 			
 			try {
 				InputStream input = null;
-				input = c.post_body(body).getInputStream();
+				HttpURLConnection conn = c.post_body(body);
+				if(conn!=null)
+					input = conn.getInputStream();
+				else
+					keepActivity = true;
+				
 				if(input != null)
 				{
 				String html = IOUtils.toString(input, "gbk");
 				ret = getReplyResult(html);
 
 				}
+				else
+					keepActivity = true;
 			} catch (IOException e) {
+				keepActivity = true;
 				Log.e(LOG_TAG, Log.getStackTraceString(e));
 				
 			}
@@ -313,7 +328,12 @@ public class PostActivity extends Activity
 					Toast.LENGTH_LONG).show();
 			PhoneConfiguration.getInstance().setRefreshAfterPost(true);
 			ActivityUtil.getInstance().dismiss();
-			PostActivity.this.finish();
+			if(!keepActivity)
+				PostActivity.this.finish();
+			synchronized(button_commit){
+				loading = false;
+			}
+				
 			super.onPostExecute(result);
 		}
 		
