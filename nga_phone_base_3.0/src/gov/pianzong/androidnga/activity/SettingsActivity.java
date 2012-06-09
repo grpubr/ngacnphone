@@ -152,6 +152,7 @@ public class SettingsActivity extends Activity{
 		notification.setTextColor(fgColor);
 		notificationSound.setTextColor(fgColor);
 		fontTextView.setTextColor(fgColor);
+		avatarSizeTextView.setTextColor(fgColor);
 		
 		view.setBackgroundResource(ThemeManager.getInstance().getBackgroundColor());
 	}
