@@ -118,7 +118,7 @@ public class CheckReplyNotificationTask extends
         notification.when = System.currentTimeMillis();
         
 		 notification.setLatestEventInfo(context, nickName, title, pending);
-		 nm.notify(gov.pianzong.androidnga.R.layout.message_article, notification);
+		 nm.notify(gov.pianzong.androidnga.R.layout.pagerview_article_list, notification);
 	}
 	
 	
