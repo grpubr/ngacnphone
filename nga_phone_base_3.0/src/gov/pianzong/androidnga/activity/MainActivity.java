@@ -1,9 +1,10 @@
-package sp.phone.activity;
+package gov.pianzong.androidnga.activity;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import gov.pianzong.androidnga.R;
 import sp.phone.adapter.BoardPagerAdapter;
 import sp.phone.bean.Board;
 import sp.phone.bean.BoardCategory;

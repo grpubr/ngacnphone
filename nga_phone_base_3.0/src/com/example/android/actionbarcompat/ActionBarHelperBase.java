@@ -40,7 +40,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import sp.phone.activity.R;
+import gov.pianzong.androidnga.R;
 
 /**
  * A class that implements the action bar pattern for pre-Honeycomb devices.

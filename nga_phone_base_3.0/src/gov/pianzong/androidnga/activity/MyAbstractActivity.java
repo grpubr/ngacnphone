@@ -1,17 +1,19 @@
-package sp.phone.activity;
+package gov.pianzong.androidnga.activity;
 
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.ThemeManager;
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-public abstract class MyAbstractFragmentActivity extends FragmentActivity {
-protected View view;
+public abstract class MyAbstractActivity extends Activity {
+
+	
+	protected View view;
 	
 	abstract protected int getLayoutId();
 	abstract protected int getOptionMenuId();
@@ -62,4 +64,6 @@ protected View view;
 	protected View getLayoutView(){
 		return view;
 	}
+	
+	
 }

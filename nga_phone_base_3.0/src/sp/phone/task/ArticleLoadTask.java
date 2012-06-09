@@ -1,6 +1,6 @@
 package sp.phone.task;
 
-import sp.phone.activity.MyApp;
+import gov.pianzong.androidnga.activity.MyApp;
 import sp.phone.bean.ArticlePage;
 import sp.phone.bean.OnThreadLoadCompleteLinstener;
 import sp.phone.utils.HttpUtil;

@@ -1,6 +1,6 @@
 package sp.phone.fragment;
 
-import sp.phone.activity.R;
+import gov.pianzong.androidnga.R;
 import sp.phone.adapter.BoardCatagoryAdapter;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ThemeManager;

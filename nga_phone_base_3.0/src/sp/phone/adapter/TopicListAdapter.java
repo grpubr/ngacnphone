@@ -1,6 +1,6 @@
 package sp.phone.adapter;
 
-import sp.phone.activity.R;
+import gov.pianzong.androidnga.R;
 import sp.phone.bean.RSSFeed;
 import sp.phone.bean.RSSItem;
 import sp.phone.interfaces.OnTopListLoadFinishedListener;

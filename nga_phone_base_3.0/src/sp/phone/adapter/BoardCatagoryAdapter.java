@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
-import sp.phone.activity.R;
+import gov.pianzong.androidnga.R;
 import sp.phone.bean.BoardCategory;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.ReflectionUtil;

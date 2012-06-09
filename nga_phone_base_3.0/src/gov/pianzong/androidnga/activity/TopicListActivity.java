@@ -1,4 +1,4 @@
-package sp.phone.activity;
+package gov.pianzong.androidnga.activity;
 
 import sp.phone.adapter.TabsAdapter;
 import sp.phone.fragment.TopicListFragment;
@@ -15,6 +15,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.TabHost;
+import gov.pianzong.androidnga.R;
 
 public class TopicListActivity extends FragmentActivity {
 	private String TAG = TopicListActivity.class.getSimpleName();
