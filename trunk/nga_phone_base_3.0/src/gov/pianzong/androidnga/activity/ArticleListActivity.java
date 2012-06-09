@@ -67,7 +67,7 @@ implements PagerOwnner,ResetableArticle {
 		}
 		if(0 != pid){
 			NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-	        nm.cancel(R.layout.message_article);
+	        nm.cancel(R.layout.pagerview_article_list);
 		}
 		
 		
