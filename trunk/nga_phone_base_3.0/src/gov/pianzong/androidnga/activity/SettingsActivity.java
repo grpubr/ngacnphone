@@ -1,4 +1,4 @@
-package sp.phone.activity;
+package gov.pianzong.androidnga.activity;
 
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.utils.PhoneConfiguration;
@@ -19,6 +19,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import gov.pianzong.androidnga.R;
 
 
 public class SettingsActivity extends Activity{

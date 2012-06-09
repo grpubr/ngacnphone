@@ -1,4 +1,4 @@
-package sp.phone.activity;
+package gov.pianzong.androidnga.activity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,8 +32,8 @@ public class MyApp extends Application implements PerferenceConstant {
 	@Override
 	public void onCreate() {
 		Log.w(TAG,"app nga androind start");
-		CrashHandler crashHandler = CrashHandler.getInstance();
-		crashHandler.init(getApplicationContext());
+		//CrashHandler crashHandler = CrashHandler.getInstance();
+		//crashHandler.init(getApplicationContext());
 		config = PhoneConfiguration.getInstance();
 		initUserInfo();
 		loadConfig();

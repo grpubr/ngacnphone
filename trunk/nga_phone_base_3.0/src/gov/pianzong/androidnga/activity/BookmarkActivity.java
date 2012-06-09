@@ -1,4 +1,4 @@
-package sp.phone.activity;
+package gov.pianzong.androidnga.activity;
 
 import java.util.List;
 
@@ -26,6 +26,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import gov.pianzong.androidnga.R;
 
 import com.alibaba.fastjson.JSON;
 

@@ -6,8 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import sp.phone.activity.MyApp;
-import sp.phone.activity.R;
+import gov.pianzong.androidnga.R;
+import gov.pianzong.androidnga.activity.MyApp;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
@@ -176,7 +176,7 @@ public class AppUpdateCheckTask extends AsyncTask<String, Integer, String> {
         notification.when = System.currentTimeMillis();
         
 		 notification.setLatestEventInfo(context, "¸üÐÂÄÚÈÝ", content, pending);
-		 nm.notify(sp.phone.activity.R.layout.message_article, notification);
+		 nm.notify( gov.pianzong.androidnga.R.layout.message_article, notification);
 		super.onPostExecute(result);
 	}
 	

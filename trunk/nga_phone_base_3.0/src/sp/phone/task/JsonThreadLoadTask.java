@@ -6,7 +6,7 @@ import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.ArticleUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
-import sp.phone.activity.R;
+import gov.pianzong.androidnga.R;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;

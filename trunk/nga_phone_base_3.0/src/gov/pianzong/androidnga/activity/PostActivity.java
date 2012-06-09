@@ -1,4 +1,4 @@
-package sp.phone.activity;
+package gov.pianzong.androidnga.activity;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import gov.pianzong.androidnga.R;
 
 public class PostActivity extends Activity
 	implements FileUploadTask.onFileUploaded{

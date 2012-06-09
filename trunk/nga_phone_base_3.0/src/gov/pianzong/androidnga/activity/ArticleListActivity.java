@@ -1,4 +1,4 @@
-package sp.phone.activity;
+package gov.pianzong.androidnga.activity;
 
 import sp.phone.adapter.TabsAdapter;
 import sp.phone.fragment.ArticleListFragment;
@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TextView;
+import gov.pianzong.androidnga.R;
 
 public class ArticleListActivity extends FragmentActivity
 implements PagerOwnner,ResetableArticle {

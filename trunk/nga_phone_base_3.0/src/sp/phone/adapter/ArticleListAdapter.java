@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import sp.phone.activity.R;
+import gov.pianzong.androidnga.R;
 import sp.phone.bean.Attachment;
 import sp.phone.bean.ThreadData;
 import sp.phone.bean.ThreadRowInfo;

@@ -1,9 +1,9 @@
 package sp.phone.fragment;
 
-import sp.phone.activity.ArticleListActivity;
-import sp.phone.activity.PostActivity;
-import sp.phone.activity.R;
-import sp.phone.activity.TopicListActivity;
+import gov.pianzong.androidnga.R;
+import gov.pianzong.androidnga.activity.ArticleListActivity;
+import gov.pianzong.androidnga.activity.PostActivity;
+import gov.pianzong.androidnga.activity.TopicListActivity;
 import sp.phone.adapter.ArticleListAdapter;
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.bean.ThreadData;

@@ -1,9 +1,9 @@
 package sp.phone.fragment;
-import sp.phone.activity.ArticleListActivity;
-import sp.phone.activity.BookmarkActivity;
-import sp.phone.activity.MainActivity;
-import sp.phone.activity.PostActivity;
-import sp.phone.activity.R;
+import gov.pianzong.androidnga.R;
+import gov.pianzong.androidnga.activity.ArticleListActivity;
+import gov.pianzong.androidnga.activity.BookmarkActivity;
+import gov.pianzong.androidnga.activity.MainActivity;
+import gov.pianzong.androidnga.activity.PostActivity;
 import sp.phone.adapter.TopicListAdapter;
 import sp.phone.bean.RSSFeed;
 import sp.phone.interfaces.OnTopListLoadFinishedListener;

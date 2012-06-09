@@ -2,8 +2,8 @@ package sp.phone.task;
 
 
 
-import sp.phone.activity.ArticleListActivity;
-import sp.phone.activity.R;
+import gov.pianzong.androidnga.R;
+import gov.pianzong.androidnga.activity.ArticleListActivity;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
@@ -118,7 +118,7 @@ public class CheckReplyNotificationTask extends
         notification.when = System.currentTimeMillis();
         
 		 notification.setLatestEventInfo(context, nickName, title, pending);
-		 nm.notify(sp.phone.activity.R.layout.message_article, notification);
+		 nm.notify(gov.pianzong.androidnga.R.layout.message_article, notification);
 	}
 	
 	
