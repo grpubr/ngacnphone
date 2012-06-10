@@ -94,7 +94,7 @@ public class CheckReplyNotificationTask extends
 		intent.putExtra("tid", Integer.valueOf(tid).intValue());
 		if(!StringUtil.isEmpty(pid))
 			intent.putExtra("pid", Integer.valueOf(pid).intValue());
-		//intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK );
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK );
 		intent.addFlags(Intent.FILL_IN_DATA);
 		
 		PendingIntent pending=

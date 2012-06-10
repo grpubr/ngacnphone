@@ -66,6 +66,9 @@ public class AvatarLoadTask extends AsyncTask<String, Integer, Bitmap> {
 			HttpUtil.downImage(avatarUrl, avatarLocalPath);
 			try {
 				is = new FileInputStream(avatarLocalPath);
+				Log.d(this.getClass().getSimpleName(),
+						"download avatar from " + avatarLocalPath);
+			
 			} catch (FileNotFoundException e) {
 				Log.d(this.getClass().getSimpleName(),
 						"avatar " + avatarLocalPath + " is failed to download" );
