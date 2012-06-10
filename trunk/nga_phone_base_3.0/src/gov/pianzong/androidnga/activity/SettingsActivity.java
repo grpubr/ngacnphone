@@ -3,8 +3,10 @@ package gov.pianzong.androidnga.activity;
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
+import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -29,6 +31,7 @@ public class SettingsActivity extends Activity{
 	private CompoundButton checkBoxDownAvatarNowifi;
 	private CompoundButton nightMode;
 	private CompoundButton showAnimation;
+	private CompoundButton useViewCache;
 	private CompoundButton showSignature;
 	private CompoundButton notification;
 	private CompoundButton notificationSound;
@@ -83,6 +86,11 @@ public class SettingsActivity extends Activity{
 		showAnimation.setChecked(PhoneConfiguration.getInstance().showAnimation);
 		showAnimation.setOnCheckedChangeListener(new ShowAnimationListener());
 		
+		useViewCache = (CompoundButton) findViewById(R.id.checkBox_use_view_cache);
+		useViewCache.setChecked(PhoneConfiguration.getInstance().useViewCache);
+		useViewCache.setOnCheckedChangeListener(new UseViewCacheListener());
+		
+		 
 		showSignature = (CompoundButton) findViewById(R.id.checkBox_show_signature);
 		showSignature.setChecked(PhoneConfiguration.getInstance().showSignature);
 		showSignature.setOnCheckedChangeListener(new ShowSignatureListener());
@@ -148,6 +156,7 @@ public class SettingsActivity extends Activity{
 		checkBoxDownAvatarNowifi.setTextColor(fgColor);
 		nightMode.setTextColor(fgColor);
 		showAnimation.setTextColor(fgColor);
+		useViewCache.setTextColor(fgColor);
 		showSignature.setTextColor(fgColor);
 		notification.setTextColor(fgColor);
 		notificationSound.setTextColor(fgColor);
@@ -218,6 +227,30 @@ public class SettingsActivity extends Activity{
 			Editor editor = share.edit();
 			editor.putBoolean(SHOW_ANIMATION, isChecked);
 			editor.commit();
+			
+		}
+		
+		
+	}
+	
+	class UseViewCacheListener implements OnCheckedChangeListener, PerferenceConstant{
+
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView,
+				boolean isChecked) {
+			PhoneConfiguration.getInstance().useViewCache = isChecked;
+			SharedPreferences  share = 
+				getSharedPreferences(PERFERENCE, MODE_PRIVATE);
+
+			Editor editor = share.edit();
+			editor.putBoolean(USE_VIEW_CACHE, isChecked);
+			editor.commit();
+			
+			if(isChecked){
+				new AlertDialog.Builder(SettingsActivity.this).setTitle("提示")
+				.setMessage(R.string.view_cache_tips)
+				.setPositiveButton("知道了", null).show();
+			}
 			
 		}
 		

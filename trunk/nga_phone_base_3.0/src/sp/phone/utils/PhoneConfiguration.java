@@ -20,6 +20,7 @@ public class PhoneConfiguration {
 	public String uid;
 	public boolean showAnimation=false;
 	public boolean showSignature = true;
+	public boolean useViewCache;
 	
 	
 	

@@ -37,6 +37,13 @@
             android:layout_marginTop="15dp"
             android:text="@string/showAnimation" />
        
+		<Switch
+		    android:id="@+id/checkBox_use_view_cache"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginTop="15dp"
+		    android:text="@string/use_view_cache" />
+       
        <Switch
             android:id="@+id/checkBox_show_signature"
             android:layout_width="match_parent"
