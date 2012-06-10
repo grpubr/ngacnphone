@@ -188,6 +188,8 @@ public class ArticleListAdapter extends BaseAdapter {
 
 				}
 			}
+		}else{
+			avatarIV.setImageResource(R.drawable.default_avatar);
 		}
 
 	}
