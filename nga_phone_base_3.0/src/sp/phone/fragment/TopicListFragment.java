@@ -224,6 +224,7 @@ public class TopicListFragment extends Fragment
 		if(feed !=null && getActivity() !=null )
 			getActivity().setTitle(feed.getTitle());
 		adapter.finishLoad(feed);
+		listview.setAdapter(adapter);
 		
 	}
 
