@@ -45,7 +45,10 @@ public class ArticleListAdapter extends BaseAdapter {
 	public ArticleListAdapter(Context activity) {
 		super();
 		this.activity = activity;
-		this.viewCache = new SparseArray<View>();
+		if(PhoneConfiguration.getInstance().useViewCache)
+			this.viewCache = new SparseArray<View>();
+		else
+			this.viewCache = null;
 	}
 
 
@@ -204,7 +207,8 @@ public class ArticleListAdapter extends BaseAdapter {
 		if(position ==0){
 			start = System.currentTimeMillis();
 		}
-		if(viewCache.get(position) !=null){
+		PhoneConfiguration config = PhoneConfiguration.getInstance();
+		if(config.useViewCache && viewCache.get(position) !=null){
 			Log.d(TAG, "get view from cache ,floor " + position);
 			return viewCache.get(position);
 		}
@@ -224,7 +228,9 @@ public class ArticleListAdapter extends BaseAdapter {
 			}
 			if(holder.contentTV.getHeight() > 300){
 				Log.d(TAG, "skip and store a tall view ,floor " + position);
-				this.viewCache.put(holder.position, view);
+				if(config.useViewCache)
+					viewCache.put(holder.position, view);
+				
 				view = LayoutInflater.from(activity).inflate(R.layout.relative_aritclelist, null);
 				holder =initHolder(view);
 				view.setTag(holder);
