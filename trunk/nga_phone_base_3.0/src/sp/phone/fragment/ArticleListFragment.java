@@ -83,8 +83,8 @@ public class ArticleListFragment extends Fragment
 	}
 	
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+	public void onActivityCreated(Bundle savedInstanceState) {		
+		listview.setAdapter(articleAdpater);
 		super.onActivityCreated(savedInstanceState);
 	}
 	
@@ -109,7 +109,6 @@ public class ArticleListFragment extends Fragment
 			
 		}
 		this.loadPage();
-		listview.setAdapter(articleAdpater);
 		super.onResume();
 	}
 	
