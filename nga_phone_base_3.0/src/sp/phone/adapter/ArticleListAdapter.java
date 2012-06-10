@@ -1,12 +1,13 @@
 package sp.phone.adapter;
 
+import gov.pianzong.androidnga.R;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import gov.pianzong.androidnga.R;
 import sp.phone.bean.Attachment;
 import sp.phone.bean.ThreadData;
 import sp.phone.bean.ThreadRowInfo;
@@ -22,6 +23,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo.State;
 import android.text.TextPaint;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,12 +38,14 @@ public class ArticleListAdapter extends BaseAdapter {
 	private static final  String TAG = ArticleListAdapter.class.getSimpleName();
 	private ThreadData data;
 	private Context activity;
+	private final SparseArray<View> viewCache;
 	
 	
 	
 	public ArticleListAdapter(Context activity) {
 		super();
 		this.activity = activity;
+		this.viewCache = new SparseArray<View>();
 	}
 
 
@@ -200,9 +204,14 @@ public class ArticleListAdapter extends BaseAdapter {
 		if(position ==0){
 			start = System.currentTimeMillis();
 		}
-		//View rowView = m.get(position);
+		if(viewCache.get(position) !=null){
+			Log.d(TAG, "get view from cache ,floor " + position);
+			return viewCache.get(position);
+		}
+		
 		ViewHolder holder = null;
 		if(view== null){
+			Log.d(TAG, "inflater new view ,floor " + position);
 			view = LayoutInflater.from(activity).inflate(R.layout.relative_aritclelist, null);
 			holder = initHolder(view);
 			view.setTag(holder);
@@ -214,6 +223,8 @@ public class ArticleListAdapter extends BaseAdapter {
 				return view;
 			}
 			if(holder.contentTV.getHeight() > 300){
+				Log.d(TAG, "skip and store a tall view ,floor " + position);
+				this.viewCache.put(holder.position, view);
 				view = LayoutInflater.from(activity).inflate(R.layout.relative_aritclelist, null);
 				holder =initHolder(view);
 				view.setTag(holder);
@@ -222,7 +233,7 @@ public class ArticleListAdapter extends BaseAdapter {
 			
 		}
 		
-		Log.d(TAG, "handle floor " + position);
+		
 		
 		holder.position = position;
 		
