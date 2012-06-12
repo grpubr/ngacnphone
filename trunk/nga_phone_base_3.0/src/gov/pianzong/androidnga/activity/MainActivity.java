@@ -10,6 +10,7 @@ import sp.phone.bean.Board;
 import sp.phone.bean.BoardCategory;
 import sp.phone.bean.BoardHolder;
 import sp.phone.bean.PerferenceConstant;
+import sp.phone.interfaces.PageCategoryOwnner;
 import sp.phone.task.AppUpdateCheckTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
@@ -41,7 +42,7 @@ import com.example.android.actionbarcompat.ActionBarActivity;
 
 
 public class MainActivity extends ActionBarActivity
-	implements PerferenceConstant,OnItemClickListener{
+	implements PerferenceConstant,OnItemClickListener,PageCategoryOwnner{
 	static final String TAG = MainActivity.class.getSimpleName();
 	ActivityUtil activityUtil =ActivityUtil.getInstance();
 	private MyApp app;
@@ -126,7 +127,7 @@ public class MainActivity extends ActionBarActivity
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}
 		pager.setAdapter(
-				new BoardPagerAdapter( getSupportFragmentManager(),boardInfo) );	
+				new BoardPagerAdapter( getSupportFragmentManager(),this) );	
 
 		super.onResume();
 	}
@@ -246,7 +247,6 @@ public class MainActivity extends ActionBarActivity
 					try {
 						file.createNewFile();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				} 
@@ -256,6 +256,12 @@ public class MainActivity extends ActionBarActivity
 		}.start();
 	
 	}
+	
+	/*public BoardCategory getCategory(int page){
+		if(this.boardInfo == null)
+			return null;
+		return boardInfo.getCategory(page);
+	}*/
 	private BoardHolder loadDefaultBoard(){
 		
 		BoardHolder boards = new BoardHolder();
@@ -358,10 +364,10 @@ public class MainActivity extends ActionBarActivity
 		boards.addCategoryName(i, "暗黑破坏神");
 		i++;
 		
+		boards.add(new Board(i, "-522474", "综合体育讨论区", R.drawable.pdefault));
 		boards.add(new Board(i, "-152678", "英雄联盟 Let's Gank", R.drawable.p152678));
 		boards.add(new Board(i, "-1068355", "晴风村", R.drawable.pdefault));
 		boards.add(new Board(i, "-447601", " 二次元国家地理 - NG2", R.drawable.pdefault));
-		boards.add(new Board(i, "-152678", "英雄联盟 Let's Gank", R.drawable.pdefault));
 		boards.add(new Board(i, "-343809", "寂寞的车俱乐部", R.drawable.pdefault));
 		boards.add(new Board(i, "-131429", "红茶馆——小说馆", R.drawable.pdefault));
 		boards.add(new Board(i, "-46468", " 洛拉斯的坦克世界", R.drawable.pdefault));
@@ -371,6 +377,10 @@ public class MainActivity extends ActionBarActivity
 		boards.add(new Board(i, "-187579", " 大旋涡历史博物馆", R.drawable.pdefault));
 		boards.add(new Board(i, "-308670", "血库的个人空间", R.drawable.pdefault));
 		boards.add(new Board(i, "-112905", "八圣祠", R.drawable.pdefault));
+		boards.add(new Board(i, "-8725919", "小窗视界", R.drawable.pdefault));
+		boards.add(new Board(i, "-608808", " 弑熊主厨的血腥厨房", R.drawable.pdefault));
+		boards.add(new Board(i, "-469608", " 影视讨论", R.drawable.pdefault));
+		boards.add(new Board(i, "-55912", "音乐讨论", R.drawable.pdefault));
 		boards.addCategoryName(i, "个人版面");
 		i++;
 		
@@ -525,6 +535,30 @@ public class MainActivity extends ActionBarActivity
 			long id) {
 		this.onItemClickListenerlistener.onItemClick(parent, view, position, id);
 		
+	}
+
+
+	@Override
+	public int getCategoryCount() {
+		if(boardInfo == null)
+			return 0;
+		return boardInfo.getCategoryCount();
+	}
+
+
+	@Override
+	public String getCategoryName(int position) {
+		if(boardInfo == null)
+			return "";
+		return boardInfo.getCategoryName(position);
+	}
+
+
+	@Override
+	public BoardCategory getCategory(int category) {
+		if(boardInfo == null)
+			return null;
+		return boardInfo.getCategory(category);
 	}
 
 }

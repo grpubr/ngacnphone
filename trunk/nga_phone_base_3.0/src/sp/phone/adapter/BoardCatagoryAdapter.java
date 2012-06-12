@@ -27,7 +27,7 @@ import com.alibaba.fastjson.JSON;
 public class BoardCatagoryAdapter extends BaseAdapter {
 
 	
-	private Map<String,Drawable> iconMap;
+	//private Map<String,Drawable> iconMap;
 	Resources resources;
 	LayoutInflater layoutInflater;
 	BoardCategory category;
@@ -35,12 +35,12 @@ public class BoardCatagoryAdapter extends BaseAdapter {
 
 
 	public BoardCatagoryAdapter(Resources resources,
-			LayoutInflater layoutInflater, String category) {
+			LayoutInflater layoutInflater, BoardCategory category) {
 		super();
 		this.resources = resources;
 		this.layoutInflater = layoutInflater;
-		iconMap = new HashMap<String,Drawable>();
-		this.category = JSON.parseObject(category, BoardCategory.class);
+		//iconMap = new HashMap<String,Drawable>();
+		this.category = category;
 	}
 
 	public int getCount() {
@@ -97,24 +97,7 @@ public class BoardCatagoryAdapter extends BaseAdapter {
 		if (resId != 0) {// default board
 			d = getResources().getDrawable(resId);
 		} else {// optional board
-			d = iconMap.get(url);
-			if (d == null) {
-				final String iconFolder = HttpUtil.PATH_ICON;
-				String iconPath = iconFolder + "/" + url + ".png";
-
-				// def = getResources().getDrawable(R.drawable.pdefault);
-
-				try {
-					Bitmap bmp = BitmapFactory
-							.decodeStream(new FileInputStream(iconPath));
-					d = new BitmapDrawable(bmp);
-				} catch (FileNotFoundException e) {
-					d = getResources().getDrawable(R.drawable.pdefault);
-
-				}
-
-				iconMap.put(url, d);
-			}
+			d = getResources().getDrawable(R.drawable.pdefault);
 		}
 
 		return d;
