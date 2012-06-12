@@ -12,30 +12,31 @@ import sp.phone.fragment.BoardPagerFragment;
 //import android.app.Fragment;
 //import android.app.FragmentManager;
 //import android.support.v4.app.FragmentStatePagerAdapter;
+import sp.phone.interfaces.PageCategoryOwnner;
 
 public class BoardPagerAdapter extends FragmentStatePagerAdapter {
 	
-	private BoardHolder boardInfo;
-	public BoardPagerAdapter(FragmentManager fm, BoardHolder boardInfo) {
+	private PageCategoryOwnner pageCategoryOwnner;
+	public BoardPagerAdapter(FragmentManager fm, PageCategoryOwnner pageCategoryOwnner) {
 		super(fm);
-		this.boardInfo = boardInfo;
+		this.pageCategoryOwnner =  pageCategoryOwnner;
 	
 
 	}
 	@Override
-	public Fragment getItem(int arg0) {
-		BoardCategory category = boardInfo.getCategory(arg0);
-		return BoardPagerFragment.newInstance(JSON.toJSONString(category));
+	public Fragment getItem(int index) {
+		//BoardCategory category = boardInfo.getCategory(arg0);
+		return BoardPagerFragment.newInstance(index);
 	}
 	@Override
 	public int getCount() {
 
-		return boardInfo.getCategoryCount();
+		return pageCategoryOwnner.getCategoryCount();
 	}
 	@Override
 	public CharSequence getPageTitle(int position) {
 		
-		return boardInfo.getCategoryName(position);
+		return pageCategoryOwnner.getCategoryName(position);
 	}
 	
 	

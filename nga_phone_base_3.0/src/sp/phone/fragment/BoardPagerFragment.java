@@ -2,6 +2,8 @@ package sp.phone.fragment;
 
 import gov.pianzong.androidnga.R;
 import sp.phone.adapter.BoardCatagoryAdapter;
+import sp.phone.interfaces.PageCategoryOwnner;
+import sp.phone.interfaces.ResetableArticle;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ThemeManager;
 import android.os.Bundle;
@@ -18,11 +20,11 @@ import android.widget.GridView;
 
 public class BoardPagerFragment extends Fragment {
 	private static final String TAG = BoardPagerFragment.class.getSimpleName();
-	String category;
+	int category;
 	GridView listview;
 	BaseAdapter adapter;
 	//View v;
-	public static Fragment newInstance(String category)
+	public static Fragment newInstance(int category)
 	{
 		Fragment f = new BoardPagerFragment();
 
@@ -31,7 +33,7 @@ public class BoardPagerFragment extends Fragment {
         Bundle args = new Bundle();
        
 
-        args.putString("category", category);
+        args.putInt("category", category);
         f.setArguments(args);
         return f;
 		
@@ -46,7 +48,7 @@ public class BoardPagerFragment extends Fragment {
 		
 		super.onCreate(savedInstanceState);
 		category = getArguments() != null ? 
-				getArguments().getString("category") : "";
+				getArguments().getInt("category") : 0;
 	}
 
 
@@ -54,7 +56,8 @@ public class BoardPagerFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		listview =  (GridView) inflater.inflate(R.layout.category_grid, container,false);
-		adapter = new BoardCatagoryAdapter(getResources(), inflater, category);
+		
+		
 		if(PhoneConfiguration.getInstance().showAnimation)
 		{
 			LayoutAnimationController anim = AnimationUtils.loadLayoutAnimation
@@ -79,6 +82,23 @@ public class BoardPagerFragment extends Fragment {
 		}
 		
 		listview.setOnItemClickListener(listener);
+		
+		PageCategoryOwnner pageCategoryOwnner = null;
+		try{
+			
+			pageCategoryOwnner= (PageCategoryOwnner)getActivity();
+		}catch(ClassCastException e){
+			Log.e(TAG,"father activity does not implements interface " 
+					+ PageCategoryOwnner.class.getName());
+			
+		}
+		
+		
+		adapter = new BoardCatagoryAdapter(getResources(), 
+				getActivity().getLayoutInflater(), 
+				pageCategoryOwnner.getCategory(category));
+		
+		
 		listview.setAdapter(adapter);
 		
 		

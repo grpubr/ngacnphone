@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.alibaba.fastjson.JSON;
-
 import sp.phone.bean.ArticlePage;
 import sp.phone.bean.Bookmark;
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.bean.RSSFeed;
-import sp.phone.utils.CrashHandler;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ThemeManager;
 import android.app.Application;
@@ -19,9 +16,11 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
+
 public class MyApp extends Application implements PerferenceConstant {
 	final private static String TAG = MyApp.class.getSimpleName();
-	public final static int version = 251;
+	public final static int version = 255;
 	private RSSFeed rssFeed;
 	private ArticlePage articlePage;
 	private HashMap<Object, ArticlePage> map_article;
