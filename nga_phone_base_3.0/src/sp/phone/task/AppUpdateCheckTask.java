@@ -58,10 +58,10 @@ public class AppUpdateCheckTask extends AsyncTask<String, Integer, String> {
 			return null;
 		}
 		Log.d(TAG, "start to get html data");
-		String rssString = HttpUtil.getHtml(url,"",null,2000);
+		String rssString = HttpUtil.getHtml(url,"",null,1000);
 		if(StringUtil.isEmpty(rssString)){
 			Log.w(TAG, "seems gfwed, try ip");
-			rssString = HttpUtil.getHtml(ipurl,"",host,2000);
+			rssString = HttpUtil.getHtml(ipurl,"",host,1000);
 		}
 		String apkUrl = null;
 		String apkId = null;
