@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 public class TopicListAdapter extends BaseAdapter
 	implements OnTopListLoadFinishedListener{
-	private SparseArray<View> m = new SparseArray< View>();
+	//private SparseArray<View> m = new SparseArray< View>();
 	private LayoutInflater inflater;
 	private RSSFeed rssFeed=null;
 
@@ -74,7 +74,7 @@ public class TopicListAdapter extends BaseAdapter
 			holder.author = author;
 			holder.lastReply = lastReply;
 			convertView.setTag(holder);
-			m.put(position, convertView);
+
 		}else{
 			holder = (ViewHolder) convertView.getTag();
 			
