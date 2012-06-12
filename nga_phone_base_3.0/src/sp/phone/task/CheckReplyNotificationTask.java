@@ -92,8 +92,15 @@ public class CheckReplyNotificationTask extends
 				(NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 		Intent intent = new Intent(context,ArticleListActivity.class); 
 		intent.putExtra("tid", Integer.valueOf(tid).intValue());
-		if(!StringUtil.isEmpty(pid))
-			intent.putExtra("pid", Integer.valueOf(pid).intValue());
+		int pidValue = 0;
+		try
+		{
+			pidValue = Integer.valueOf(pid).intValue();
+		}catch(Exception e){
+			Log.e(this.getClass().getSimpleName(), "invalid pid: " + pid);
+		}
+		intent.putExtra("pid", pidValue);
+		
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK );
 		intent.addFlags(Intent.FILL_IN_DATA);
 		
