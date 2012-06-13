@@ -2,6 +2,7 @@ package gov.pianzong.androidnga.activity;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import gov.pianzong.androidnga.R;
@@ -44,6 +45,7 @@ import com.example.android.actionbarcompat.ActionBarActivity;
 public class MainActivity extends ActionBarActivity
 	implements PerferenceConstant,OnItemClickListener,PageCategoryOwnner{
 	static final String TAG = MainActivity.class.getSimpleName();
+	static final String RECENT = "最近访问";
 	ActivityUtil activityUtil =ActivityUtil.getInstance();
 	private MyApp app;
 	ViewPager pager;
@@ -70,7 +72,7 @@ public class MainActivity extends ActionBarActivity
 
 	private void loadConfig(Intent intent) {
 		//initUserInfo(intent);
-		this.boardInfo = this.loadDefaultBoard();;//this.loadBoardInfo();
+		this.boardInfo = this.loadDefaultBoard();
 		
 			
 		
@@ -271,16 +273,20 @@ public class MainActivity extends ActionBarActivity
 		SharedPreferences share = getSharedPreferences(PERFERENCE,
 				MODE_PRIVATE);
 		String recentStr = share.getString(RECENT_BOARD, "");
+		List<Board> recentList = null;
 		if(!StringUtil.isEmpty(recentStr)){
-			List<Board> recentList = JSON.parseArray(recentStr, Board.class);
+			recentList = JSON.parseArray(recentStr, Board.class);
 			if(recentList != null){
 				for(int j = 0;j< recentList.size();j++){
 					boards.add(recentList.get(j));
 				}
 			}
 		}
-		boards.addCategoryName(i, "最近访问");
+		if(recentList != null)
+		{
+		boards.addCategoryName(i, RECENT);
 		i++;
+		}
 		
 		boards.add(new Board(i, "7", "艾泽拉斯议事厅", R.drawable.p7));
 		boards.add(new Board(i, "323", "台服讨论区", R.drawable.p323));
@@ -486,12 +492,25 @@ public class MainActivity extends ActionBarActivity
 			
 		}
 		
+		private void saveRecent(List<Board> boardList){
+			String rescentStr = JSON.toJSONString(boardList);
+			SharedPreferences share = getSharedPreferences(PERFERENCE,
+					MODE_PRIVATE);
+			Editor editor = share.edit();
+			editor.putString(RECENT_BOARD, rescentStr);
+			editor.commit();
+			
+		}
+		
 		private void addToRecent() {
+			
+			boolean recentAlreadExist = boardInfo.getCategoryName(0).equals(RECENT);
+			
 			BoardCategory recent = boardInfo.getCategory(0);
-			if(recent != null)
+			if(recent != null && recentAlreadExist)
 				recent.remove(fidString);
-			for (int i = 1; i < boardInfo.getCategoryCount(); i++) {
-				boolean exit = false;
+			//int i = 0;
+			for (int i = 0; i < boardInfo.getCategoryCount(); i++) {
 				BoardCategory curr = boardInfo.getCategory(i);
 				for (int j = 0; j < curr.size(); j++) {
 					Board b = curr.get(j);
@@ -505,23 +524,20 @@ public class MainActivity extends ActionBarActivity
 							recent.addFront(b1);
 						}
 						
+						if(!recentAlreadExist){
+							List<Board> boardList = new ArrayList<Board>();
+							boardList.add(b1);
+							saveRecent(boardList);
+							boardInfo = loadDefaultBoard();
+							return;
+						}
 						recent = boardInfo.getCategory(0);
-						String rescentStr = JSON.toJSONString(recent
-								.getBoardList());
-						SharedPreferences share = getSharedPreferences(PERFERENCE,
-								MODE_PRIVATE);
-						Editor editor = share.edit();
-						editor.putString(RECENT_BOARD, rescentStr);
-						editor.commit();
-						pager.getAdapter().notifyDataSetChanged();
-						exit = true;
+						this.saveRecent(recent.getBoardList());
+
 						break;
 					}//if
 				}//for j
-				if(exit)
-				{
-					break;
-				}
+				
 			}//for i
 			
 		}
