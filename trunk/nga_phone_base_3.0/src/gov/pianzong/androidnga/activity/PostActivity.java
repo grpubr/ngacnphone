@@ -152,7 +152,7 @@ public class PostActivity extends Activity
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(resultCode == 0 )
+		if(resultCode == RESULT_CANCELED )
 			return;
 		switch(requestCode)
 		{
@@ -170,6 +170,11 @@ public class PostActivity extends Activity
 					 break;
 				 }
 				 String contentType = cr.getType(data.getData());
+				 if(StringUtil.isEmpty(contentType)){
+					 Toast.makeText(this, R.string.invalid_img_selected, Toast.LENGTH_LONG).show();
+					 return;
+				 }
+					 
 				 Log.d(LOG_TAG, "file size =" + filesize);
 				 pfd.close();
 				 InputStream is = cr.openInputStream(data.getData());
