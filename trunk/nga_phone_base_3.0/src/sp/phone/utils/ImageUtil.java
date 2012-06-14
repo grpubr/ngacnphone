@@ -8,6 +8,7 @@ import java.util.zip.ZipFile;
 import org.apache.commons.io.FilenameUtils;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PixelFormat;
@@ -247,4 +248,86 @@ public class ImageUtil {
 			return null;
 		}
 	}
+	
+	private static int computeSampleSize(BitmapFactory.Options options,
+	        int minSideLength, int maxNumOfPixels) {
+	    int initialSize = computeInitialSampleSize(options, minSideLength,
+	            maxNumOfPixels);
+
+	    int roundedSize;
+	    if (initialSize <= 8) {
+	        roundedSize = 1;
+	        while (roundedSize < initialSize) {
+	            roundedSize <<= 1;
+	        }
+	    } else {
+	        roundedSize = (initialSize + 7) / 8 * 8;
+	    }
+
+	    return roundedSize;
+	}
+
+	private static int computeInitialSampleSize(BitmapFactory.Options options,
+	        int minSideLength, int maxNumOfPixels) {
+	    double w = options.outWidth;
+	    double h = options.outHeight;
+
+	    int lowerBound = (maxNumOfPixels == -1) ? 1 : (int) Math.ceil(Math
+	            .sqrt(w * h / maxNumOfPixels));
+	    int upperBound = (minSideLength == -1) ? 128 : (int) Math.min(Math
+	            .floor(w / minSideLength), Math.floor(h / minSideLength));
+
+	    if (upperBound < lowerBound) {
+	        // return the larger one when there is no overlapping zone.
+	        return lowerBound;
+	    }
+
+	    if ((maxNumOfPixels == -1) && (minSideLength == -1)) {
+	        return 1;
+	    } else if (minSideLength == -1) {
+	        return lowerBound;
+	    } else {
+	        return upperBound;
+	    }
+	}
+	
+	//final static int max_avatar_width = 200;
+	final static  int max_avatar_height = 255;
+	
+	static public Bitmap loadAvatarFromSdcard(String avatarPath){
+
+		BitmapFactory.Options opts = new BitmapFactory.Options();
+		opts.inJustDecodeBounds = true;
+		Bitmap bitmap = BitmapFactory.decodeFile(avatarPath, opts);
+		final int avatarWidth = PhoneConfiguration.getInstance().getNikeWidth();
+
+		final int minSideLength = Math.min(avatarWidth, max_avatar_height);
+		opts.inSampleSize = ImageUtil.computeSampleSize(opts, minSideLength,
+				avatarWidth * max_avatar_height);
+        opts.inJustDecodeBounds = false;
+        opts.inInputShareable = true;
+        opts.inPurgeable = true;
+        bitmap = BitmapFactory.decodeFile(avatarPath, opts);
+        
+        return bitmap;
+	}
+	
+	static public Bitmap loadAvatarFromStream(InputStream is){
+
+		BitmapFactory.Options opts = new BitmapFactory.Options();
+		opts.inJustDecodeBounds = true;
+		Bitmap bitmap = BitmapFactory.decodeStream(is, null,opts);
+		final int avatarWidth = PhoneConfiguration.getInstance().getNikeWidth();
+		
+		final int minSideLength = Math.min(avatarWidth, max_avatar_height);
+		opts.inSampleSize = ImageUtil.computeSampleSize(opts, minSideLength,
+				avatarWidth * max_avatar_height);
+        opts.inJustDecodeBounds = false;
+        opts.inInputShareable = true;
+        opts.inPurgeable = true;
+        bitmap = BitmapFactory.decodeStream(is, null, opts);
+        
+        return bitmap;
+	}
+	
 }
