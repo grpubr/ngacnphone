@@ -4,6 +4,7 @@ package sp.phone.task;
 
 import gov.pianzong.androidnga.R;
 import gov.pianzong.androidnga.activity.ArticleListActivity;
+import sp.phone.bean.StringFindResult;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
@@ -12,6 +13,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -27,18 +30,16 @@ public class CheckReplyNotificationTask extends
 	protected String doInBackground(String... params) {
 		
 		final String cookie = params[0];
-		final String emptyMessage = "window.script_muti_get_var_store=null";
-		String result = emptyMessage;
+		//final String emptyMessage = "window.script_muti_get_var_store=null";
+		String result = null;//emptyMessage;
 		
-		while(emptyMessage.equals(result))
-		{
+
 			result =HttpUtil.getHtml(url, cookie, null, 3000);
 			//result = "{0:[{0:8,1:553736,2:\"吸片\",3:\"\",4:\"\",5:\"又一个客户端杀手贴\",9:1338737284,6:5222738,7:90295509},{0:8,1:553736,2:\"吸片\",3:\"\",4:\"\",5:\"又一个客户端杀手贴\",9:1338737301,6:5222738,7:90295522}]}";
 			PhoneConfiguration.getInstance().lastMessageCheck
 				= System.currentTimeMillis();
 			Log.i(this.getClass().getSimpleName(), "get message:"+result);
-			break;
-		}
+			result = "{0:[{0:8,1:1831521,2:\"片总\",3:\"\",4:\"\",5:\"打自己黑枪专用楼层\",9:1339680840,6:5271811,7:91025529},{0:8,1:1831521,2:\"片总\",3:\"\",4:\"\",5:\"打自己黑枪专用楼层\",9:1339680888,6:5271811,7:91025564}]}";
 		return result;
 	}
 
@@ -56,30 +57,61 @@ public class CheckReplyNotificationTask extends
 		 * 
 		 */
 		
-
+		if(StringUtil.isEmpty(result)){
+			return;
+		}
 		
 		int start = 0;
-		while(result != null && result.indexOf(",2:\"", start) !=-1)
+		
+		while(true)
 		{
-			start = result.indexOf(",2:\"", start)+4;
+			/*start = result.indexOf(",2:\"", start)+4;
 			int end = result.indexOf("\",3:",start);
 			String nickName = result.substring(start, end);
-			start = end;
+			start = end;*/
+			StringFindResult ret = StringUtil.getStringBetween(result,start, ",2:\"", "\",3:");
+			if(StringUtil.isEmpty(ret.result)||ret.position == -1)
+				break;
+			String nickName = ret.result;
+			start = ret.position;
 			
-			start = result.indexOf(",5:\"", start)+4;
+			
+			/*start = result.indexOf(",5:\"", start)+4;
 			end = result.indexOf("\",9:",start);
 			String title = result.substring(start, end);
-			start = end;
+			start = end;*/
+			
+			ret = StringUtil.getStringBetween(result,start, ",5:\"", "\",9:");
+			if(StringUtil.isEmpty(ret.result)||ret.position == -1)
+				break;
+			
+			String title = ret.result;
+			start = ret.position;
 					
-			start = result.indexOf(",6:", start)+3;
+			/*start = result.indexOf(",6:", start)+3;
 			end = result.indexOf(",7:",start);
 			String tid = result.substring(start, end);
-			start = end;
+			start = end;*/
+			ret = StringUtil.getStringBetween(result,start, ",6:", ",7");
+			if(StringUtil.isEmpty(ret.result)||ret.position == -1)
+				break;
 			
-			start = result.indexOf(",7:", start)+3;
+			String tid = ret.result;
+			start = ret.position;
+			
+			
+			/*start = result.indexOf(",7:", start)+3;
 			end = result.indexOf("}",start);
 			String pid = result.substring(start, end);
-			start = end;
+			start = end;*/
+			
+			ret = StringUtil.getStringBetween(result,start, ":", "}");
+			String pid = ret.result;
+			if(!StringUtil.isEmpty(ret.result))
+				start = ret.position;
+			
+			
+			
 			
 			title = StringUtil.unEscapeHtml(title);
 			showNotification(nickName,tid,pid, title);
@@ -88,20 +120,38 @@ public class CheckReplyNotificationTask extends
 
 
 	void showNotification(String nickName, String tid, String pid, String title){
+		if(StringUtil.isEmpty(tid))
+		{
+			return;
+		}
+		Log.i(this.getClass().getSimpleName(), "showNotification: pid="+pid +
+				",tid=" + tid);
+		
 		NotificationManager nm = 
 				(NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-		Intent intent = new Intent(context,ArticleListActivity.class); 
-		intent.putExtra("tid", Integer.valueOf(tid).intValue());
+		
+		//Intent intent = new Intent(context,ArticleListActivity.class); 
+		//intent.putExtra("tid", Integer.valueOf(tid).intValue());
+		Intent intent = new Intent(Intent.ACTION_VIEW);
+		
 		int pidValue = 0;
 		try
-		{
-			pidValue = Integer.valueOf(pid).intValue();
+		{	if(!StringUtil.isEmpty(pid))
+				pidValue = Integer.valueOf(pid).intValue();
 		}catch(Exception e){
 			Log.e(this.getClass().getSimpleName(), "invalid pid: " + pid);
 		}
-		intent.putExtra("pid", pidValue);
+		//intent.putExtra("pid", pidValue);
 		
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK );
+		Resources res = context.getResources();//.getString(R.string.myscheme)
+		String url = res.getString(R.string.myscheme) + "://"+res.getString(R.string.myhost) +
+				"/read.php?tid="+tid;
+		if(pidValue!=0){
+			url = url + "&pid="+pid;
+		}
+		intent.setData(Uri.parse(url));
+		
+		//intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK );
 		intent.addFlags(Intent.FILL_IN_DATA);
 		
 		PendingIntent pending=
@@ -111,21 +161,25 @@ public class CheckReplyNotificationTask extends
 
 
 		 Notification notification = new Notification(); 
-		 notification.icon = R.drawable.p7;
+		 notification.icon = R.drawable.nga_bg;
 		// notification.largeIcon = avatar;
 		// notification.number = 5;
 
 		 notification.defaults = Notification.DEFAULT_LIGHTS;
 		 if(PhoneConfiguration.getInstance().notificationSound)
 			 notification.defaults |=Notification.DEFAULT_SOUND;
+		 notification.flags = Notification.FLAG_AUTO_CANCEL;
 		
        // Notification notification = new Notification(sp.phone.activity.R.drawable.defult_img,tickerText,
         //        System.currentTimeMillis());
         notification.tickerText = tickerText;
         notification.when = System.currentTimeMillis();
+        int id = Integer.valueOf(tid).intValue();
+        if(pidValue !=0)
+        	id=pidValue ;
         
 		 notification.setLatestEventInfo(context, nickName, title, pending);
-		 nm.notify(gov.pianzong.androidnga.R.layout.pagerview_article_list, notification);
+		 nm.notify(id, notification);
 	}
 	
 	

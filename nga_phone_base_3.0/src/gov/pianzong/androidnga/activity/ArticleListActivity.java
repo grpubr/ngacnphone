@@ -15,7 +15,6 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.text.method.NumberKeyListener;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -65,10 +64,14 @@ implements PagerOwnner,ResetableArticle {
 		pid = this.getIntent().getIntExtra("pid", 0);
 		authorid = this.getIntent().getIntExtra("authorid", 0);
 		}
+		/*int notificationId = tid;
 		if(0 != pid){
-			NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-	        nm.cancel(R.layout.pagerview_article_list);
+			notificationId = pid;
 		}
+
+		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		Log.d(TAG, "notificationId = " + notificationId);
+		nm.cancel(notificationId);*/
 		
 		
 

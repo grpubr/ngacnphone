@@ -66,30 +66,14 @@ public class ActivityUtil {
 				String title = b.getString("title");
 				String content = b.getString("content");
 				synchronized( lock){
-				/*if (proDialog != null) {
 
-					if ("ERROR".equals(title)) {
-						System.out.println("sleep 3 error");
-						try {
-							Thread.sleep(3000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					} 
-					
-					if(!title.equals(""))
-						proDialog.setTitle(title);
-					
-					proDialog.setMessage(content);
-					proDialog.show();
-				} else {*/
 					try{
 					proDialog = ProgressDialog.show(context, title, content);
 					proDialog.setCanceledOnTouchOutside(true);
 					}catch(Exception e){
 						Log.e(this.getClass().getSimpleName(),Log.getStackTraceString(e));
 					}
-				//}
+
 				}//sync
 			}
 		};
