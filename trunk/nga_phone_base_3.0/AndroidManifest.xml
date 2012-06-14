@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="gov.pianzong.androidnga" android:versionCode="60"
-	android:versionName="1.2.55" android:installLocation="auto">
+	package="gov.pianzong.androidnga" android:versionCode="61"
+	android:versionName="1.2.59" android:installLocation="auto">
 	
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -27,6 +27,12 @@
 				<category android:name="android.intent.category.BROWSABLE" />
 				<data android:scheme="http" android:host="bbs.ngacn.cc" android:path="/thread.php"/>
 			</intent-filter>
+			<intent-filter>
+		        <action android:name="android.intent.action.VIEW" /> 
+		        <category android:name="android.intent.category.DEFAULT" /> 
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="http" android:host="nga.178.com" android:path="/thread.php"/>
+			</intent-filter>
 		</activity>
 		<activity android:name=".activity.ArticleListActivity">
 		    <intent-filter>
@@ -34,6 +40,18 @@
 		        <category android:name="android.intent.category.DEFAULT" /> 
 				<category android:name="android.intent.category.BROWSABLE" />
 				<data android:scheme="http" android:host="bbs.ngacn.cc" android:path="/read.php"/>
+			</intent-filter>
+			<intent-filter>
+		        <action android:name="android.intent.action.VIEW" /> 
+		        <category android:name="android.intent.category.DEFAULT" /> 
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="http" android:host="nga.178.com" android:path="/read.php"/>
+			</intent-filter>
+			<intent-filter>
+		        <action android:name="android.intent.action.VIEW" /> 
+		        <category android:name="android.intent.category.DEFAULT" /> 
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="@string/myscheme" android:host="bbs.ngacn.cc" android:path="/read.php"/>
 			</intent-filter>
 		    
 		</activity>
