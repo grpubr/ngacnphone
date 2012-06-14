@@ -39,7 +39,7 @@ public class CheckReplyNotificationTask extends
 			PhoneConfiguration.getInstance().lastMessageCheck
 				= System.currentTimeMillis();
 			Log.i(this.getClass().getSimpleName(), "get message:"+result);
-			result = "{0:[{0:8,1:1831521,2:\"片总\",3:\"\",4:\"\",5:\"打自己黑枪专用楼层\",9:1339680840,6:5271811,7:91025529},{0:8,1:1831521,2:\"片总\",3:\"\",4:\"\",5:\"打自己黑枪专用楼层\",9:1339680888,6:5271811,7:91025564}]}";
+			//result = "{0:[{0:8,1:1831521,2:\"片总\",3:\"\",4:\"\",5:\"打自己黑枪专用楼层\",9:1339680840,6:5271811,7:91025529},{0:8,1:1831521,2:\"片总\",3:\"\",4:\"\",5:\"打自己黑枪专用楼层\",9:1339680888,6:5271811,7:91025564}]}";
 		return result;
 	}
 
