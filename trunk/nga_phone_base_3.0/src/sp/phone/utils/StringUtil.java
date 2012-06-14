@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import sp.phone.bean.StringFindResult;
 
 
 public class StringUtil {
@@ -431,6 +431,32 @@ public class StringUtil {
 		
 		return tips;
 		
+	}
+
+
+	public static StringFindResult getStringBetween(String data,int begPosition,
+			String startStr, String endStr)
+	{
+		StringFindResult ret = new StringFindResult();
+		do{
+			if(isEmpty(data) || begPosition < 0 || data.length() <= begPosition
+					|| isEmpty(startStr) || isEmpty(startStr))
+				break;
+			
+			int start = data.indexOf( startStr,begPosition);
+			if(start == -1)
+				break;
+			
+			start +=startStr.length();
+			int end = data.indexOf(endStr, start);
+			if(end == -1)
+				end = data.length();
+			ret.result = data.substring(start,end);
+			ret.position = end + endStr.length(); 
+			
+		}while(false);
+		
+		return ret;
 	}
 }
 
