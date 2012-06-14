@@ -76,9 +76,15 @@ public class AvatarLoadTask extends AsyncTask<String, Integer, Bitmap> {
 		}
 		
 		if(is !=null){
-			bitmap = BitmapFactory
-					.decodeStream(is);
+			bitmap = ImageUtil.loadAvatarFromStream(is);
+			try {
+				is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+		
+		
 		
 		return bitmap;
 	}

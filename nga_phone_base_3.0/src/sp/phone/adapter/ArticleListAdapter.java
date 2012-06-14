@@ -168,14 +168,11 @@ public class ArticleListAdapter extends BaseAdapter {
 			if (avatarPath != null) {
 				File f = new File(avatarPath);
 				if (f.exists()) {
-					try {
-						InputStream is = new FileInputStream(avatarPath);
-						Bitmap bitmap = BitmapFactory.decodeStream(is);
+					
+						Bitmap bitmap = ImageUtil.loadAvatarFromSdcard(avatarPath);
+			            
 						avatarIV.setImageBitmap(bitmap);
-						is.close();
-					} catch (Exception e) {
-
-					}
+	
 
 				} else {
 					final boolean downImg = isInWifi()
