@@ -114,7 +114,7 @@ public class TopicListActivity extends FragmentActivity {
 
 	@Override
 	protected void onDestroy() {
-		ActivityUtil.getInstance().dismiss();
+		//SActivityUtil.getInstance().dismiss();
 		super.onDestroy();
 	}
 	

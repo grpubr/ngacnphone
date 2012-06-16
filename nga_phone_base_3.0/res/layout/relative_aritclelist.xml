@@ -10,7 +10,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/nickName"
-        android:layout_alignRight="@+id/nickName"
         android:layout_below="@+id/nickName"
         android:clickable="false"
         android:src="@drawable/default_avatar" android:contentDescription="@string/avatar">
@@ -26,6 +25,6 @@
 </TextView>
         <android.webkit.WebView android:layout_width="fill_parent" android:id="@+id/content" android:layout_height="wrap_content"></android.webkit.WebView>
     </LinearLayout>
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toRightOf="@+id/nickName" android:layout_alignTop="@+id/nickName" android:layout_alignBottom="@+id/nickName" android:id="@+id/floor"></TextView>
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignTop="@+id/floor" android:layout_alignBottom="@+id/floor" android:layout_alignParentRight="true" android:id="@+id/postTime"></TextView>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toRightOf="@+id/nickName" android:layout_alignTop="@+id/nickName" android:id="@+id/floor"></TextView>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignTop="@+id/floor" android:layout_alignParentRight="true" android:id="@+id/postTime"></TextView>
 </RelativeLayout>
