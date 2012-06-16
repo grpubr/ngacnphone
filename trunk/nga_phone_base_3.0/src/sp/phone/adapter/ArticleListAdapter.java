@@ -3,8 +3,6 @@ package sp.phone.adapter;
 import gov.pianzong.androidnga.R;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
@@ -18,7 +16,7 @@ import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo.State;
 import android.text.TextPaint;
@@ -31,7 +29,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class ArticleListAdapter extends BaseAdapter {
@@ -156,6 +153,7 @@ public class ArticleListAdapter extends BaseAdapter {
 		
 	}
 	
+	private Bitmap defaultAvatar = null;
 	private void handleAvatar(ImageView avatarIV, ThreadRowInfo row) {
 
 		final int lou = row.getLou();
@@ -163,6 +161,18 @@ public class ArticleListAdapter extends BaseAdapter {
 		avatarIV.setTag(floor);// 设置 tag 为楼层
 		final String avatarUrl = parseAvatarUrl(row.getJs_escap_avatar());// 头像
 		final String userId = String.valueOf(row.getAuthorid());
+		if(PhoneConfiguration.getInstance().nikeWidth < 3){
+			avatarIV.setImageBitmap(null);
+			return;
+		}
+		if(defaultAvatar == null || defaultAvatar.getWidth() != PhoneConfiguration.getInstance().nikeWidth){
+			Drawable defaultAvatarDrawable = avatarIV.getContext().getResources().getDrawable(R.drawable.default_avatar);
+			this.defaultAvatar = ImageUtil.zoomImageByWidth(defaultAvatarDrawable, 
+					PhoneConfiguration.getInstance().nikeWidth);
+		}
+		
+
+		
 		if (!StringUtil.isEmpty(avatarUrl)) {
 			final String avatarPath = ImageUtil.newImage(avatarUrl, userId);
 			if (avatarPath != null) {
@@ -178,15 +188,15 @@ public class ArticleListAdapter extends BaseAdapter {
 					final boolean downImg = isInWifi()
 							|| PhoneConfiguration.getInstance()
 									.isDownAvatarNoWifi();
-
-					avatarIV.setImageResource(R.drawable.default_avatar);
+					avatarIV.setImageBitmap(defaultAvatar);
 					new AvatarLoadTask(avatarIV, null, downImg).execute(
 							avatarUrl, avatarPath, userId);
 
 				}
 			}
 		}else{
-			avatarIV.setImageResource(R.drawable.default_avatar);
+
+			avatarIV.setImageBitmap(defaultAvatar);
 		}
 
 	}
@@ -262,8 +272,8 @@ public class ArticleListAdapter extends BaseAdapter {
             tp.setFakeBoldText(true);//bold for Chinese character
              
              
-			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) nickNameTV.getLayoutParams();
-			params.width = PhoneConfiguration.getInstance().nikeWidth;
+			//RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) nickNameTV.getLayoutParams();
+			//params.width = PhoneConfiguration.getInstance().nikeWidth;
 			//nickNameTV.setLayoutParams(params);//其他组件是根据这个来定位的
 
 			int bgColor = parent.getContext().getResources().getColor(colorId);

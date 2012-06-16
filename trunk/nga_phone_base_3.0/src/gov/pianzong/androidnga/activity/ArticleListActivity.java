@@ -1,5 +1,6 @@
 package gov.pianzong.androidnga.activity;
 
+import gov.pianzong.androidnga.R;
 import sp.phone.adapter.TabsAdapter;
 import sp.phone.fragment.ArticleListFragment;
 import sp.phone.interfaces.PagerOwnner;
@@ -9,22 +10,18 @@ import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.app.AlertDialog;
-import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TabHost;
-import android.widget.TextView;
-import gov.pianzong.androidnga.R;
 
 public class ArticleListActivity extends FragmentActivity
 implements PagerOwnner,ResetableArticle {
@@ -64,36 +61,13 @@ implements PagerOwnner,ResetableArticle {
 		pid = this.getIntent().getIntExtra("pid", 0);
 		authorid = this.getIntent().getIntExtra("authorid", 0);
 		}
-		/*int notificationId = tid;
-		if(0 != pid){
-			notificationId = pid;
-		}
-
-		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		Log.d(TAG, "notificationId = " + notificationId);
-		nm.cancel(notificationId);*/
-		
-		
-
-		
+	
 		mTabsAdapter = new TabsAdapter(this, tabhost, mViewPager,tid,ArticleListFragment.class);
 		mTabsAdapter.setAuthorid(authorid);
 		mTabsAdapter.setPid(pid);
-		
-		TextView tv = null;
-
-		//for(int i = 1; i < 6; i++){
-		tv = new TextView(this);
-		tv.setTextSize(20);
-		tv.setText("1");
-		tv.setGravity(Gravity.CENTER);
-		mTabsAdapter.addTab(tabhost.newTabSpec("1").setIndicator(tv));
 
 		ActivityUtil.getInstance().noticeSaying(this);
-		
-		
-		
-		
+
         if (savedInstanceState != null) {
         	int pageCount = savedInstanceState.getInt("pageCount");
         	if(pageCount!=0)
@@ -249,7 +223,7 @@ implements PagerOwnner,ResetableArticle {
 
 	@Override
 	protected void onDestroy() {
-		ActivityUtil.getInstance().dismiss();
+		//ActivityUtil.getInstance().dismiss();
 		super.onDestroy();
 	}
 

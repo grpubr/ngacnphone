@@ -1,9 +1,9 @@
 package gov.pianzong.androidnga.activity;
 
 import sp.phone.bean.PerferenceConstant;
+import sp.phone.utils.ImageUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
-import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +20,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import gov.pianzong.androidnga.R;
@@ -42,6 +44,7 @@ public class SettingsActivity extends Activity{
 	private SeekBar webSizebar;
 	private WebView websizeView;
 	private TextView avatarSizeTextView;
+	private ImageView avatarImage;
 	private SeekBar avatarSeekBar;
 	//private MyGestureListener gestureListener;
 	@Override
@@ -134,16 +137,17 @@ public class SettingsActivity extends Activity{
 		
 
 		
-		
-		
-		this.avatarSizeTextView = (TextView) findViewById(R.id.textView_avatarsize);
-		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) avatarSizeTextView.getLayoutParams();
-		params.width = PhoneConfiguration.getInstance().nikeWidth;
-		avatarSizeTextView.setLayoutParams(params);
+		progress = PhoneConfiguration.getInstance().nikeWidth;
+		avatarSizeTextView = (TextView) findViewById(R.id.textView_avatarsize);
+		avatarImage = (ImageView) findViewById(R.id.avatarsize);
+		Drawable defaultAvatar = getResources().getDrawable(R.drawable.default_avatar);
+		Bitmap bitmap = ImageUtil.zoomImageByWidth(defaultAvatar, 
+				progress);
+		avatarImage.setImageBitmap(bitmap);
 		
 		avatarSeekBar = (SeekBar) findViewById(R.id.avatarsize_seekBar);
 		avatarSeekBar.setMax(200);
-		avatarSeekBar.setProgress(PhoneConfiguration.getInstance().nikeWidth);
+		avatarSeekBar.setProgress(progress);
 		avatarSeekBar.setOnSeekBarChangeListener(
 				new AvatarSizeListener());
 		updateThemeUI();
@@ -433,9 +437,16 @@ public class SettingsActivity extends Activity{
 		public void onProgressChanged(SeekBar seekBar, int progress,
 				boolean fromUser) {
 			
-				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) avatarSizeTextView.getLayoutParams();
-				params.width =  progress;
-				avatarSizeTextView.setLayoutParams(params);
+			if(0==progress)
+				progress = 1;
+			Drawable defaultAvatar = getResources().getDrawable(R.drawable.default_avatar);
+			Bitmap bitmap = ImageUtil.zoomImageByWidth(defaultAvatar, 
+					progress);
+			try{
+			avatarImage.setImageBitmap(bitmap);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 				
 			
 			
@@ -450,6 +461,8 @@ public class SettingsActivity extends Activity{
 		@Override
 		public void onStopTrackingTouch(SeekBar seekBar) {
 			int progress = seekBar.getProgress(); 
+			if(0==progress)
+				progress = 1;
 			PhoneConfiguration.getInstance().nikeWidth = progress;
 			SharedPreferences  share = 
 					getSharedPreferences(PERFERENCE, MODE_PRIVATE);

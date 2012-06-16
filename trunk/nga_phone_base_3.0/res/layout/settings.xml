@@ -95,29 +95,22 @@
             android:layout_marginTop="15dp"
             android:paddingLeft="30dp"
             android:paddingRight="20dp" />
+        
+        <ImageView
+            android:id="@+id/avatarsize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/default_avatar" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <ImageView
-                android:id="@+id/avatarsize"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/textView_avatarsize"
-                android:layout_alignRight="@+id/textView_avatarsize"
-                android:layout_below="@+id/textView_avatarsize"
-                android:contentDescription="@string/avatar"
-                android:src="@drawable/default_avatar" />
-
-            <TextView
-                android:id="@+id/textView_avatarsize"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:text="@string/avatar_size" />
-
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/textView_avatarsize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/avatar_size" />
 
 		<SeekBar
             android:id="@+id/avatarsize_seekBar"

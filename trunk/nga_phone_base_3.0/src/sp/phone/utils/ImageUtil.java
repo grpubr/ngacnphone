@@ -12,27 +12,34 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PixelFormat;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 public class ImageUtil {
 	static final String LOG_TAG = ImageUtil.class.getSimpleName();
 	public static Bitmap zoomImageByWidth(Bitmap bitmap, int bookWidth) {
+		if(bitmap == null)
+			return null;
 		int width = bitmap.getWidth();
 		int height = bitmap.getHeight();
-		if (width > bookWidth) {
-			int newWidth = bookWidth;
-			float newHeight = ((height * newWidth) / width);
-			float scaleWidth = 1f * newWidth / width;
-			float scaleHeight = newHeight / height;
-			Matrix matrix = new Matrix();
-			matrix.postScale(scaleWidth, scaleHeight);
-			Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, width,
-					height, matrix, true);
-			return resizedBitmap;
-		} else {
-			return bitmap;
-		}
+		
+		/*if(width == bookWidth)
+			return bitmap;*/
+		
+		int newWidth = bookWidth;
+		float newHeight = ((height * newWidth) / width);
+		
+		if(newWidth <2 || newHeight < 1.01f)
+			return null;
+		
+		float scaleWidth = 1f * newWidth / width;
+		float scaleHeight = newHeight / height;
+
+		Matrix matrix = new Matrix();
+		matrix.postScale(scaleWidth, scaleHeight);
+		Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height,
+				matrix, true);
+		return resizedBitmap;
+
 	}
 
 	/**
@@ -43,32 +50,35 @@ public class ImageUtil {
 	 *            Ô¤¶¨ ¿í¶È
 	 * @return
 	 */
-	public static Drawable zoomImageByWidth(Drawable drawable, int bookWidth) {
-		int width = drawable.getIntrinsicWidth();
+	public static Bitmap zoomImageByWidth(Drawable drawable, int bookWidth) {
+		if(drawable==null)
+			return null;
+		
+		/*int width = drawable.getIntrinsicWidth();
 		int height = drawable.getIntrinsicHeight();
 
-		// System.out.println(width + ":width,height:" + height);
+
 
 		int newWidth = width;
 		int newHeight = height;
 
-		if (width > bookWidth) {
+		//if (width > bookWidth) {
 			newWidth = bookWidth;
 			newHeight = (height * newWidth) / width;
-		}
+		//}
 
 		float scaleWidth = ((float) newWidth) / width;
 		float scaleHeight = ((float) newHeight) / height;
 
 		Matrix matrix = new Matrix();
-		matrix.postScale(scaleWidth, scaleHeight);
+		matrix.postScale(scaleWidth, scaleHeight);*/
 
-		// System.out.println(scaleWidth + ":scaleWidth,scaleHeight:"
-		// + scaleHeight);
 
-		Bitmap newbmp = Bitmap.createBitmap(drawableToBitmap(drawable), 0, 0,
-				width, height, matrix, true);
-		return new BitmapDrawable(newbmp);
+		Bitmap origBmp = drawableToBitmap(drawable);
+		Bitmap newbmp = zoomImageByWidth(origBmp, bookWidth);
+		if(origBmp != newbmp)
+			origBmp.recycle();
+		return newbmp;
 	}
 
 	/**
@@ -308,6 +318,11 @@ public class ImageUtil {
         opts.inInputShareable = true;
         opts.inPurgeable = true;
         bitmap = BitmapFactory.decodeFile(avatarPath, opts);
+        if(bitmap != null &&  bitmap.getWidth() != avatarWidth){
+        	Bitmap tmp = bitmap;
+        	bitmap = zoomImageByWidth(tmp,avatarWidth);
+        	tmp.recycle();
+        }
         
         return bitmap;
 	}
@@ -326,6 +341,11 @@ public class ImageUtil {
         opts.inInputShareable = true;
         opts.inPurgeable = true;
         bitmap = BitmapFactory.decodeStream(is, null, opts);
+        if(bitmap != null && bitmap.getWidth() < avatarWidth){
+        	Bitmap tmp = bitmap;
+        	bitmap = zoomImageByWidth(tmp,avatarWidth);
+        	tmp.recycle();
+        }
         
         return bitmap;
 	}
