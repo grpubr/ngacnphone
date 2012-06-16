@@ -1,10 +1,17 @@
 package sp.phone.utils;
 
+
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 public class ActivityUtil {
@@ -24,6 +31,7 @@ public class ActivityUtil {
 		
 	}
 	private ProgressDialog proDialog;
+	private DialogFragment df = null;
 
 	/*private Context context;
 
@@ -68,8 +76,24 @@ public class ActivityUtil {
 				synchronized( lock){
 
 					try{
+						final String tag = "saying"; 
+						DialogFragment df = new SayingDialogFragment(); 
+						df.setArguments(b);
+						
+						FragmentActivity fa = (FragmentActivity)context;
+						FragmentManager fm = fa.getSupportFragmentManager();
+						FragmentTransaction ft = fm.beginTransaction();
+
+				        Fragment prev = fm.findFragmentByTag(tag);
+				        if (prev != null) {
+				            ft.remove(prev);
+				        }
+				        ft.addToBackStack(null);
+						df.show(fa.getSupportFragmentManager(), tag);
+						ActivityUtil.this.df = df;
+						/*
 					proDialog = ProgressDialog.show(context, title, content);
-					proDialog.setCanceledOnTouchOutside(true);
+					proDialog.setCanceledOnTouchOutside(true);*/
 					}catch(Exception e){
 						Log.e(this.getClass().getSimpleName(),Log.getStackTraceString(e));
 					}
@@ -90,7 +114,36 @@ public class ActivityUtil {
 				}
 				proDialog = null;
 			}
+			if(df !=null){
+				df.dismiss();
+				df= null;
+			}
 		}
+	}
+	
+	class SayingDialogFragment extends DialogFragment{
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			final ProgressDialog dialog = new ProgressDialog(getActivity());
+		    //
+			Bundle b = getArguments();
+			if (b != null) {
+				String title = b.getString("title");
+				String content = b.getString("content");
+				dialog.setTitle(title);
+				dialog.setMessage(content);
+			}
+		    
+		    dialog.setCanceledOnTouchOutside(true);
+		    dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		    dialog.setIndeterminate(true);
+		    dialog.setCancelable(true);
+		    // etc...
+		    this.setStyle(DialogFragment.STYLE_NO_FRAME, android.R.style.Theme);
+		    return dialog;
+		}
+		
 	}
 
 }

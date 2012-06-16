@@ -21,6 +21,7 @@ import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,7 +31,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import gov.pianzong.androidnga.R;
 
-public class PostActivity extends Activity
+public class PostActivity extends FragmentActivity
 	implements FileUploadTask.onFileUploaded{
 
 	private final String LOG_TAG = Activity.class.getSimpleName();
