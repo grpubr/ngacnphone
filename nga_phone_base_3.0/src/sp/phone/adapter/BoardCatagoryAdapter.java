@@ -1,18 +1,9 @@
 package sp.phone.adapter;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-
 import gov.pianzong.androidnga.R;
 import sp.phone.bean.BoardCategory;
-import sp.phone.utils.HttpUtil;
 import sp.phone.utils.ReflectionUtil;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.alibaba.fastjson.JSON;
 
 public class BoardCatagoryAdapter extends BaseAdapter {
 
@@ -92,7 +81,6 @@ public class BoardCatagoryAdapter extends BaseAdapter {
 
 	private Drawable getDrable(View convertView, int position) {
 		Drawable d = null;
-		final String url = category.get(position).getUrl();
 		int resId = category.get(position).getIcon();
 		if (resId != 0) {// default board
 			d = getResources().getDrawable(resId);

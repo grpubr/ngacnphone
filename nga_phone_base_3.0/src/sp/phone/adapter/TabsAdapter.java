@@ -28,7 +28,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 	private int pid = 0;
 	private int authorid = 0;
 	private final Class<?> clss;
-	private int pageCount=1;
+	private int pageCount=0;
 	
 
 
@@ -54,11 +54,13 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 		mContext = activity;
 		mTabHost = tabHost;
 		mViewPager = pager;
+		setCount(1);
 		mTabHost.setOnTabChangedListener(this);
-		mViewPager.setAdapter(this);
 		mViewPager.setOnPageChangeListener(this);
 		this.id = id;
 		this.clss = FragmentClass;
+		
+		mViewPager.setAdapter(this);
 	}
 
 	public void addTab(TabHost.TabSpec tabSpec) {
