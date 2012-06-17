@@ -88,6 +88,12 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 			}
 		}
 		
+		if(pageCount == 1 )
+		{
+			TextView v = (TextView) mTabHost.getTabWidget().getChildAt(0);
+			v.setTextColor(mContext.getResources().getColor(R.color.black));
+		}
+		
 		this.notifyDataSetChanged();
 	}
 	
