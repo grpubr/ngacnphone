@@ -1,5 +1,7 @@
 package gov.pianzong.androidnga.activity;
 
+import gov.pianzong.androidnga.R;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +11,8 @@ import org.apache.commons.io.IOUtils;
 
 import sp.phone.forumoperation.HttpPostClient;
 import sp.phone.forumoperation.ThreadPostAction;
+import sp.phone.fragment.EmotionDialogFragment;
+import sp.phone.listener.OnEmotionPickedListener;
 import sp.phone.task.FileUploadTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.PhoneConfiguration;
@@ -21,7 +25,10 @@ import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,10 +36,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
-import gov.pianzong.androidnga.R;
 
 public class PostActivity extends FragmentActivity
-	implements FileUploadTask.onFileUploaded{
+	implements FileUploadTask.onFileUploaded,OnEmotionPickedListener{
 
 	private final String LOG_TAG = Activity.class.getSimpleName();
 	private String prefix;
@@ -45,6 +51,7 @@ public class PostActivity extends FragmentActivity
 	private Button button_commit;
 	private Button button_cancel;
 	private ImageButton button_upload;
+	private ImageButton button_emotion;
 	private String REPLY_URL="http://bbs.ngacn.cc/post.php?";
 	final int REQUEST_CODE_SELECT_PIC = 1;
 	private String sig ="\n[url=http://code.google.com/p/ngacnphone/downloads/list]"
@@ -133,6 +140,7 @@ public class PostActivity extends FragmentActivity
 		 	}
 			}
 		);
+		
 		button_upload.setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -146,10 +154,33 @@ public class PostActivity extends FragmentActivity
 			
 		}
 		);
+		button_emotion = (ImageButton) findViewById(R.id.imageButton_emotion);
 		
+		button_emotion.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		        Fragment prev = getSupportFragmentManager().findFragmentByTag("emotion");
+		        if (prev != null) {
+		            ft.remove(prev);
+		        }
+		        ft.addToBackStack(null);
+
+		        // Create and show the dialog.
+		        DialogFragment newFragment = new EmotionDialogFragment();
+		        newFragment.show(ft, "emotion");
+				
+			}
+			
+		}
+		);
 	}
 	
-	
+	@Override
+	public void onEmotionPicked(String emotion){
+		bodyText.setText( bodyText.getText().toString() + emotion);
+	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -46,6 +46,13 @@
             android:layout_marginLeft="10dp"
             android:contentDescription="@string/upload"
             android:src="@android:drawable/stat_sys_upload" />
+        <ImageButton
+            android:id="@+id/imageButton_emotion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:contentDescription="@string/upload"
+            android:src="@drawable/emo_im_money_mouth" />
 
     </LinearLayout>
 

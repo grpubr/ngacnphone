@@ -71,8 +71,8 @@ public class ActivityUtil {
 			Context context = (Context) msg.obj;
 			Bundle b = msg.getData();
 			if (b != null) {
-				String title = b.getString("title");
-				String content = b.getString("content");
+				//String title = b.getString("title");
+				//String content = b.getString("content");
 				synchronized( lock){
 
 					try{
