@@ -4,6 +4,8 @@ package sp.phone.utils;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -114,12 +116,17 @@ public class ActivityUtil {
 				}
 				proDialog = null;
 			}
-			if(df !=null){
-				df.dismiss();
-				df= null;
+			if(df != null && df.getActivity() !=null){
+
+					df.dismiss();
+					df= null;
+
+			}else{
+				df = null;
 			}
 		}
 	}
+
 	
 	class SayingDialogFragment extends DialogFragment{
 
@@ -139,6 +146,8 @@ public class ActivityUtil {
 		    dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		    dialog.setIndeterminate(true);
 		    dialog.setCancelable(true);
+		    
+
 		    // etc...
 		    this.setStyle(DialogFragment.STYLE_NO_FRAME, android.R.style.Theme);
 		    return dialog;
