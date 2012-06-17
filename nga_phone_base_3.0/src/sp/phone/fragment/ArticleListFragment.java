@@ -158,7 +158,9 @@ public class ArticleListFragment extends Fragment
 		switch( item.getItemId())
 		{
 			case R.id.article_menuitem_reply:
-				String tid = "" + articleAdpater.getData().getThreadInfo().getTid();
+				//if(articleAdpater.getData() == null)
+				//	return false;
+				String tid = String.valueOf(this.tid);
 				Intent intent = new Intent();
 				intent.putExtra("prefix", "" );
 				intent.putExtra("tid", tid);
