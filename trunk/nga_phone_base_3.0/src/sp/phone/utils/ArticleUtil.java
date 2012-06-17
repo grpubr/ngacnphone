@@ -235,6 +235,7 @@ public class ArticleUtil {
 
 	public static ThreadData parseJsonThreadPage(String js){
 		js = js.replaceAll("\"content\":\\+(\\d+),", "\"content\":\"+$1\",");
+		js = js.replaceAll("\"subject\":\\+(\\d+),", "\"subject\":\"+$1\",");
 		JSONObject o = null;
 		try{
 				o = (JSONObject) JSON.parseObject(js).get("data");
