@@ -70,17 +70,17 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 	}
 
 	public void setCount(int pageCount){
-		Log.i(TAG, "setCount current page count:" + this.pageCount );
+		//Log.i(TAG, "setCount current page count:" + this.pageCount );
 		this.pageCount = pageCount;
 		int tabCount = mTabHost.getTabWidget().getChildCount();
-		Log.i(TAG, "setCount current tab count:" + tabCount );
+		//Log.i(TAG, "setCount current tab count:" + tabCount );
 		int tabsToDisplay = MAX_TAB < pageCount ? MAX_TAB: pageCount;
-		Log.i(TAG, "setCount set page count  Count to:" + pageCount);
+		//Log.i(TAG, "setCount set page count  Count to:" + pageCount);
 		if(tabCount<tabsToDisplay ){
 			for(int i = tabCount; i < tabsToDisplay; ++i){	
 				TextView tv = new TextView(mContext);
 				tv.setTextSize(20);
-				Log.i(TAG, "add tab:" + (i+1));
+			//	Log.i(TAG, "add tab:" + (i+1));
 				String tag = String.valueOf(i+1);
 				tv.setText(tag);
 				tv.setGravity(Gravity.CENTER);
@@ -104,7 +104,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 
 	@Override
 	public Fragment getItem(int position) {
-		Log.d(TAG, "get framgent:" + position);
+		//Log.d(TAG, "get framgent:" + position);
 		offset = position/ MAX_TAB * MAX_TAB;
 		Log.i(TAG, "getItem "+ position + "current offset=" + offset );
 		Bundle args = new Bundle();
