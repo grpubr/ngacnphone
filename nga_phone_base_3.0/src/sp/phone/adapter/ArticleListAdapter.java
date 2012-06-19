@@ -172,6 +172,7 @@ public class ArticleListAdapter extends BaseAdapter {
 		}
 		
 
+		avatarIV.setImageBitmap(defaultAvatar);
 		
 		if (!StringUtil.isEmpty(avatarUrl)) {
 			final String avatarPath = ImageUtil.newImage(avatarUrl, userId);
@@ -188,15 +189,12 @@ public class ArticleListAdapter extends BaseAdapter {
 					final boolean downImg = isInWifi()
 							|| PhoneConfiguration.getInstance()
 									.isDownAvatarNoWifi();
-					avatarIV.setImageBitmap(defaultAvatar);
+					
 					new AvatarLoadTask(avatarIV, null, downImg).execute(
 							avatarUrl, avatarPath, userId);
 
 				}
 			}
-		}else{
-
-			avatarIV.setImageBitmap(defaultAvatar);
 		}
 
 	}
