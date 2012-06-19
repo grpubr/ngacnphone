@@ -517,24 +517,20 @@ public class MainActivity extends ActionBarActivity
 					if (b.getUrl().equals(fidString)) {
 						Board b1 =new Board(0, b.getUrl(), b.getName(), b
 								.getIcon());
-						if(recent == null){
-							boardInfo.add(b1);
-						}else
-						{
-							recent.addFront(b1);
-						}
-						
+
 						if(!recentAlreadExist){
 							List<Board> boardList = new ArrayList<Board>();
 							boardList.add(b1);
 							saveRecent(boardList);
 							boardInfo = loadDefaultBoard();
 							return;
+						}else{
+							recent.addFront(b1);
 						}
 						recent = boardInfo.getCategory(0);
 						this.saveRecent(recent.getBoardList());
 
-						break;
+						return;
 					}//if
 				}//for j
 				
