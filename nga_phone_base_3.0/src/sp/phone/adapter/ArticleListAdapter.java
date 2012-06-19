@@ -1,6 +1,8 @@
 package sp.phone.adapter;
 
 import gov.pianzong.androidnga.R;
+import gov.pianzong.androidnga.activity.ArticleListActivity;
+import gov.pianzong.androidnga.activity.TopicListActivity;
 
 import java.io.File;
 import java.util.Iterator;
@@ -15,10 +17,12 @@ import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo.State;
+import android.net.Uri;
 import android.text.TextPaint;
 import android.util.Log;
 import android.util.SparseArray;
@@ -27,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -145,13 +150,46 @@ public class ArticleListAdapter extends BaseAdapter {
 			setting.setBlockNetworkImage(true);
 		else
 			setting.setBlockNetworkImage(false);
-		//contentTV.loadData(ngaHtml, "text/html; charset=UTF-8", null);
-		contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
-		//contentTV.setOnTouchListener(gestureListener);
-		contentTV.getSettings().setDefaultFontSize(
+		setting.setDefaultFontSize(
 				PhoneConfiguration.getInstance().getWebSize());
+		setting.setJavaScriptEnabled(false);
+		contentTV.setWebViewClient(this.client);
+		
+		contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
+
+		
 		
 	}
+	
+	WebViewClient client = new WebViewClient(){
+		private final static String NGACN_BOARD_PREFIX ="http://bbs.ngacn.cc/thread.php?"; 
+		private final static String NGA178_BOARD_PREFIX ="http://nga.178.com/thread.php?"; 
+		private final static String NGACN_THREAD_PREFIX ="http://bbs.ngacn.cc/read.php?"; 
+		private final static String NGA178_THREAD_PREFIX ="http://nga.178.com/read.php?"; 
+		@Override
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			if(url.startsWith(NGACN_BOARD_PREFIX)
+					|| url.startsWith(NGA178_BOARD_PREFIX ) ){
+				Intent intent = new Intent();
+				intent.setData(Uri.parse(url));
+				intent.setClass(view.getContext(), TopicListActivity.class);
+				view.getContext().startActivity(intent);
+				return true;
+			}else if(url.startsWith(NGACN_THREAD_PREFIX)
+					|| url.startsWith(NGA178_THREAD_PREFIX ) ){
+				Intent intent = new Intent();
+				intent.setData(Uri.parse(url));
+				intent.setClass(view.getContext(), ArticleListActivity.class);
+				view.getContext().startActivity(intent);
+				return true;
+				
+			}
+			return super.shouldOverrideUrlLoading(view, url);
+		}
+
+
+		
+	};
 	
 	private Bitmap defaultAvatar = null;
 	private void handleAvatar(ImageView avatarIV, ThreadRowInfo row) {
@@ -269,10 +307,15 @@ public class ArticleListAdapter extends BaseAdapter {
 			TextPaint tp = holder.nickNameTV.getPaint();
             tp.setFakeBoldText(true);//bold for Chinese character
              
-             
-			//RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) nickNameTV.getLayoutParams();
-			//params.width = PhoneConfiguration.getInstance().nikeWidth;
-			//nickNameTV.setLayoutParams(params);//其他组件是根据这个来定位的
+			TextView titleTV = holder.titleTV;
+			if (!StringUtil.isEmpty(row.getSubject()) && position!=0) {
+				titleTV.setText(row.getSubject());
+				titleTV.setTextColor(fgColor);
+				tp = titleTV.getPaint();
+	            tp.setFakeBoldText(true);//bold for Chinese character
+			} else {
+				titleTV.setVisibility(View.GONE);
+			} 
 
 			int bgColor = parent.getContext().getResources().getColor(colorId);
 			
@@ -288,15 +331,7 @@ public class ArticleListAdapter extends BaseAdapter {
 			TextView postTimeTV = holder.postTimeTV;
 			postTimeTV.setText(row.getPostdate());
 
-			TextView titleTV = holder.titleTV;
-			if (!StringUtil.isEmpty(row.getSubject()) && position!=0) {
-				titleTV.setText(row.getSubject());
-				titleTV.setTextColor(fgColor);
-				tp = titleTV.getPaint();
-	            tp.setFakeBoldText(true);//bold for Chinese character
-			} else {
-				titleTV.setVisibility(View.GONE);
-			}
+
 
 
 			if(position == this.getCount()-1){
