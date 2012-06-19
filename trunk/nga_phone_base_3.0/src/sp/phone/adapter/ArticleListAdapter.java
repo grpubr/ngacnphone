@@ -184,7 +184,10 @@ public class ArticleListAdapter extends BaseAdapter {
 				return true;
 				
 			}
-			return super.shouldOverrideUrlLoading(view, url);
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.setData(Uri.parse(url));
+			view.getContext().startActivity(intent);
+			return true;//super.shouldOverrideUrlLoading(view, url);
 		}
 
 

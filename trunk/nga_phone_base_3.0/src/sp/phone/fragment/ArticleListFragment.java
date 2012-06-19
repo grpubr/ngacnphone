@@ -24,7 +24,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -50,6 +52,7 @@ public class ArticleListFragment extends Fragment
 	static final int SHOW_THISONLY_ORDER = 3;
 	static final int SHOW_MODIFY_ORDER = 4;
 	static final int SHOW_ALL = 5;
+	static final int POST_COMMENT = 6;
 	private ListView listview=null;
 	private ArticleListAdapter articleAdpater;
 	private JsonThreadLoadTask task;
@@ -267,14 +270,22 @@ public class ArticleListFragment extends Fragment
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
-		menu.add(0,QUOTE_ORDER,0, "喷之");
+		menu.add(0,QUOTE_ORDER,0, R.string.quote_subject);
+		if(articleAdpater.getData() !=null){
+			ThreadPageInfo info = articleAdpater.getData().getThreadInfo();
+			
+			if(info!= null && String.valueOf(info.getAuthorid()).equals(PhoneConfiguration.getInstance().getUid()))
+			{
+				menu.add(0,POST_COMMENT,0, R.string.post_comment);	
+			}
+		}
 		if(this.pid == 0){
-		menu.add(0,REPLY_ORDER,0, "回帖");
-		menu.add(0,COPY_CLIPBOARD_ORDER,0, "复制到剪切板");
-		menu.add(0,SHOW_THISONLY_ORDER,0, "只看此人");
-		menu.add(0,SHOW_MODIFY_ORDER,0, "编辑");
+		menu.add(0,REPLY_ORDER,0, R.string.reply_thread);
+		menu.add(0,COPY_CLIPBOARD_ORDER,0, R.string.copy_to_clipboard);
+		menu.add(0,SHOW_THISONLY_ORDER,0, R.string.show_this_person_only);
+		menu.add(0,SHOW_MODIFY_ORDER,0, R.string.edit);
 		}else{
-			menu.add(0,SHOW_ALL,0, "显示整个帖子");
+			menu.add(0,SHOW_ALL,0, R.string.show_whole_thread);
 		}
 		super.onCreateContextMenu(menu, v, menuInfo);
 	}
@@ -389,6 +400,19 @@ public class ArticleListFragment extends Fragment
 			restNotifier.reset(0, 0);
 			ActivityUtil.getInstance().noticeSaying(getActivity());
 			break;
+		case POST_COMMENT:
+			final String dialog_tag = "post comment";
+			FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+	        Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag(dialog_tag);
+	        if (prev != null) {
+	            ft.remove(prev);
+	        }
+			DialogFragment df = new PostCommentDialogFragment();
+			
+			df.show(ft, dialog_tag);
+			
+			break;
+			
 
 			
 			
