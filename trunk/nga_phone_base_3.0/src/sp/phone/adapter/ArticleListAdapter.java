@@ -353,7 +353,7 @@ public class ArticleListAdapter extends BaseAdapter {
 		StringBuilder  ret = new StringBuilder();
 		ret.append("<br/><br/>¸½¼þ<hr/><br/>");
 		//ret.append("<table style='background:#e1c8a7;border:1px solid #b9986e;margin:0px 0px 10px 30px;padding:10px;color:#6b2d25;max-width:100%;'>");
-		ret.append("<table style='background:#e1c8a7;border:1px solid #b9986e;padding:10px;color:#6b2d25;'>");
+		ret.append("<table style='background:#e1c8a7;border:1px solid #b9986e;padding:10px;color:#6b2d25;font-size:2'>");
 		ret.append("<tbody>");
 		Iterator<Entry<String, Attachment>> it = row.getAttachs().entrySet().iterator();
 		while(it.hasNext()){
