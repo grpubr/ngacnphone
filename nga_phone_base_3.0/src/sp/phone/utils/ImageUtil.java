@@ -329,6 +329,8 @@ public class ImageUtil {
 	
 	static public Bitmap loadAvatarFromStream(InputStream is){
 
+		if(is== null)
+			return null;
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		opts.inJustDecodeBounds = true;
 		Bitmap bitmap = BitmapFactory.decodeStream(is, null,opts);
