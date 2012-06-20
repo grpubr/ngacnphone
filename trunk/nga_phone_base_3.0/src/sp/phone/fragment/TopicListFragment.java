@@ -6,12 +6,13 @@ import gov.pianzong.androidnga.activity.MainActivity;
 import gov.pianzong.androidnga.activity.PostActivity;
 import sp.phone.adapter.TopicListAdapter;
 import sp.phone.bean.RSSFeed;
+import sp.phone.bean.TopicListInfo;
 import sp.phone.interfaces.OnTopListLoadFinishedListener;
+import sp.phone.task.JsonTopicListLoadTask;
 import sp.phone.task.TopicListLoadTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
-import sp.phone.utils.StringUtil;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,7 +33,7 @@ public class TopicListFragment extends Fragment
 	static final String TAG = TopicListFragment.class.getSimpleName();
 	ListView listview=null;
 	TopicListAdapter adapter=null;
-	TopicListLoadTask task=null;
+	JsonTopicListLoadTask task=null;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -91,10 +92,12 @@ public class TopicListFragment extends Fragment
 		{
 			int index = getArguments().getInt("page");
 			Activity activity = getActivity();
-			task= new TopicListLoadTask(activity,this);
-			
-			String fidString = String.valueOf(getArguments().getInt("id"));
 			final String page = String.valueOf(1 + index );
+			String fidString = String.valueOf(getArguments().getInt("id"));
+			/*task= new TopicListLoadTask(activity,this);
+			
+			
+			
 			String url = HttpUtil.Server + "/thread.php?fid=" + fidString
 				+ "&page="+ page
 				+ "&rss=1";
@@ -103,7 +106,11 @@ public class TopicListFragment extends Fragment
 
 				url = url + "&" + config.getCookie().replace("; ", "&");
 			}
-			task.execute(url);
+			task.execute(url);*/
+			String jsonUri = HttpUtil.Server + "/thread.php?fid=" + fidString
+					+ "&page="+ page + "&lite=js&noprefix";
+			task = new JsonTopicListLoadTask(activity,this);
+			task.execute(jsonUri);
 		}else{
 			ActivityUtil.getInstance().dismiss();
 		}
@@ -226,6 +233,16 @@ public class TopicListFragment extends Fragment
 		adapter.finishLoad(feed);
 		listview.setAdapter(adapter);
 		
+	}
+
+	@Override
+	public void jsonfinishLoad(TopicListInfo result) {
+		if(result == null){
+			return;
+		}
+		
+		adapter.jsonfinishLoad(result);
+		listview.setAdapter(adapter);
 	}
 
 

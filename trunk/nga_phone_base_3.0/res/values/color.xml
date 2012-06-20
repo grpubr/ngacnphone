@@ -22,4 +22,6 @@
 	<color name="red">#FF0000</color>
 	<color name="actionbar_title_color">#ffffff</color>
 	<color name="night_fore_color">#BEBEBE</color>
+	<color name="green">#00ff00</color>
+	<color name="blue">#0000ff</color>
 </resources>
