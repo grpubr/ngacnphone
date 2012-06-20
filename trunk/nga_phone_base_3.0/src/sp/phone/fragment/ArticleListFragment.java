@@ -271,14 +271,14 @@ public class ArticleListFragment extends Fragment
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		menu.add(0,QUOTE_ORDER,0, R.string.quote_subject);
-		if(articleAdpater.getData() !=null){
+		//if(articleAdpater.getData() !=null){
 			ThreadPageInfo info = articleAdpater.getData().getThreadInfo();
 			
-			if(info!= null && String.valueOf(info.getAuthorid()).equals(PhoneConfiguration.getInstance().getUid()))
-			{
+			//if(info!= null && String.valueOf(info.getAuthorid()).equals(PhoneConfiguration.getInstance().getUid()))
+			//{
 				menu.add(0,POST_COMMENT,0, R.string.post_comment);	
-			}
-		}
+			//}
+		//}
 		if(this.pid == 0){
 		menu.add(0,REPLY_ORDER,0, R.string.reply_thread);
 		menu.add(0,COPY_CLIPBOARD_ORDER,0, R.string.copy_to_clipboard);
@@ -408,7 +408,10 @@ public class ArticleListFragment extends Fragment
 	            ft.remove(prev);
 	        }
 			DialogFragment df = new PostCommentDialogFragment();
-			
+			Bundle b = new Bundle();
+			b.putInt("pid",	row.getPid());
+			b.putInt("tid", this.tid);
+			df.setArguments(b);
 			df.show(ft, dialog_tag);
 			
 			break;
