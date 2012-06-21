@@ -4,7 +4,7 @@ package sp.phone.fragment;
 import java.io.IOException;
 import java.io.InputStream;
 
-import sp.phone.listener.OnEmotionPickedListener;
+import sp.phone.interfaces.OnEmotionPickedListener;
 import sp.phone.utils.ImageUtil;
 
 import gov.pianzong.androidnga.R;
