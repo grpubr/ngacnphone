@@ -65,7 +65,12 @@ public class JsonTopicListLoadTask extends AsyncTask<String, Integer, TopicListI
 			ret.set__ROWS(10000);
 		}
 		
-		ret.set__T__ROWS((Integer)o.get("__T__ROWS"));
+		rows = o.get("__T__ROWS");
+		if(rows != null)
+			ret.set__T__ROWS((Integer)rows);
+		else
+			return null;
+			
 		Integer forum = (Integer)o.get("__SELECTED_FORUM");
 		if(forum !=null)
 			ret.set__SELECTED_FORUM(forum);

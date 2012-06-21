@@ -55,7 +55,8 @@ public class TopicListActivity extends FragmentActivity
 		{
 			fid = this.getIntent().getIntExtra("fid", 0);
 			authorid = this.getIntent().getIntExtra("authorid", 0);
-			searchpost = getUrlParameter(url,"searchpost");
+			searchpost = this.getIntent().getIntExtra("searchpost", 0);
+
 			
 		}
 		
@@ -167,7 +168,20 @@ public class TopicListActivity extends FragmentActivity
 
 	@Override
 	public void jsonfinishLoad(TopicListInfo result) {
-		int pageCount = result.get__ROWS() / result.get__T__ROWS() +1;
+		int lines = 35;
+		if(authorid !=0)
+			lines = 20;
+		int pageCount = result.get__ROWS() / lines ;
+		if( pageCount * lines < result.get__ROWS() )
+			pageCount++;
+		
+		if(searchpost !=0)//can not get exact row counts
+		{
+			int page = result.get__ROWS();
+			pageCount = page;
+			if(result.get__T__ROWS() == lines)
+				pageCount++;
+		}
 		
 		if( mTabsAdapter.getCount() != pageCount)
 			mTabsAdapter.setCount(pageCount);

@@ -53,6 +53,8 @@ public class ArticleListFragment extends Fragment
 	static final int SHOW_MODIFY_ORDER = 4;
 	static final int SHOW_ALL = 5;
 	static final int POST_COMMENT = 6;
+	static final int SEARCH_POST = 7;
+	static final int SEARCH_SUBJECT = 8;
 	private ListView listview=null;
 	private ArticleListAdapter articleAdpater;
 	private JsonThreadLoadTask task;
@@ -276,14 +278,8 @@ public class ArticleListFragment extends Fragment
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		menu.add(0,QUOTE_ORDER,0, R.string.quote_subject);
-		//if(articleAdpater.getData() !=null){
-			ThreadPageInfo info = articleAdpater.getData().getThreadInfo();
-			
-			//if(info!= null && String.valueOf(info.getAuthorid()).equals(PhoneConfiguration.getInstance().getUid()))
-			//{
-				menu.add(0,POST_COMMENT,0, R.string.post_comment);	
-			//}
-		//}
+		menu.add(0,POST_COMMENT,0, R.string.post_comment);	
+
 		if(this.pid == 0){
 		menu.add(0,REPLY_ORDER,0, R.string.reply_thread);
 		menu.add(0,COPY_CLIPBOARD_ORDER,0, R.string.copy_to_clipboard);
@@ -292,6 +288,9 @@ public class ArticleListFragment extends Fragment
 		}else{
 			menu.add(0,SHOW_ALL,0, R.string.show_whole_thread);
 		}
+		menu.add(0,SEARCH_POST,0, R.string.search_post);
+		menu.add(0,SEARCH_SUBJECT,0, R.string.search_subject);
+		
 		super.onCreateContextMenu(menu, v, menuInfo);
 	}
 	
@@ -325,6 +324,7 @@ public class ArticleListFragment extends Fragment
 		String content = row.getContent();
 		final String name = row.getAuthor();
 		String mention=null;
+		Intent intent = new Intent();
 		switch(item.getItemId())
 		//if( REPLY_POST_ORDER ==item.getItemId())
 		{
@@ -357,7 +357,7 @@ public class ArticleListFragment extends Fragment
 			postPrefix.append(name);
 			postPrefix.append("]\n");
 		case REPLY_ORDER:	
-			Intent intent = new Intent();
+			
 			if(!StringUtil.isEmpty(mention))
 				intent.putExtra("mention", mention);
 			intent.putExtra("prefix", StringUtil.removeBrTag(postPrefix.toString()) );
@@ -428,6 +428,17 @@ public class ArticleListFragment extends Fragment
 			df.show(ft, dialog_tag);
 			
 			break;
+		case SEARCH_POST:
+			
+			intent.putExtra("searchpost", 1);
+		case SEARCH_SUBJECT:
+			intent.putExtra("authorid", row.getAuthorid());
+			intent.setClass(getActivity(), TopicListActivity.class);
+			startActivity(intent);
+			if(PhoneConfiguration.getInstance().showAnimation)
+				getActivity().overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
+		
+			
 			
 
 			
@@ -449,7 +460,7 @@ public class ArticleListFragment extends Fragment
 				father.getmTabsAdapter().setCount(exactCount);
 			}
 			father.setTitle(data.getThreadInfo().getSubject());
-			this.authorid = 0;
+			//this.authorid = 0;
 		}
 		
 	}
