@@ -238,7 +238,10 @@ public class TopicListFragment extends Fragment
 		
 		adapter.jsonfinishLoad(result);
 		listview.setAdapter(adapter);
-		
+		if(getArguments().getInt("searchpost",0) != 0){
+			int page = 1 + getArguments().getInt("page",0);
+			result.set__ROWS(page);
+		}
 		OnTopListLoadFinishedListener father = null;
 		try{
 			father = (OnTopListLoadFinishedListener)getActivity();

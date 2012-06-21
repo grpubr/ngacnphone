@@ -20,7 +20,7 @@ import com.alibaba.fastjson.JSON;
 
 public class MyApp extends Application implements PerferenceConstant {
 	final private static String TAG = MyApp.class.getSimpleName();
-	public final static int version = 279;
+	public final static int version = 284;
 	private RSSFeed rssFeed;
 	private ArticlePage articlePage;
 	private HashMap<Object, ArticlePage> map_article;
