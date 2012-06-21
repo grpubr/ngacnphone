@@ -32,6 +32,12 @@ public class TopicListAdapter extends BaseAdapter
 
 	public Object getItem(int arg0) {
 		if(topicListInfo!=null){
+			ThreadPageInfo entry = topicListInfo.getArticleEntryList().get(arg0);
+			if( entry== null ||entry.getTid()==0)
+			{
+				return null;
+			}
+			
 			return "tid="+topicListInfo.getArticleEntryList().get(arg0).getTid();
 		}
 		

@@ -13,6 +13,7 @@ import sp.phone.task.TopicListLoadTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
+import sp.phone.utils.StringUtil;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -197,6 +198,9 @@ public class TopicListFragment extends Fragment
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			String guid = (String) parent.getItemAtPosition(position);
+			if(StringUtil.isEmpty(guid))
+				return;
+			
 			guid = guid.trim();
 			String startTag = "tid=";
 			String endTag = "&";
