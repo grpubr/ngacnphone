@@ -38,7 +38,12 @@ public class TopicListAdapter extends BaseAdapter
 				return null;
 			}
 			
-			return "tid="+topicListInfo.getArticleEntryList().get(arg0).getTid();
+			String ret = "tid="+entry.getTid();
+			if(entry.getPid() != 0){
+				return ret + "&pid=" + entry.getPid();
+			}
+			
+			return ret;
 		}
 		
 		if(rssFeed==null){
@@ -147,17 +152,34 @@ public class TopicListAdapter extends BaseAdapter
 	
 	private void handleJsonList(ViewHolder holder, int position){
 		ThreadPageInfo entry = this.topicListInfo.getArticleEntryList().get(position);
-		
 		holder.author.setText("楼主:" + entry.getAuthor());
-		holder.lastReply.setText("最后回复:" + entry.getLastposter());
+		String lastPoster = entry.getLastposter_org();
+		if(StringUtil.isEmpty(lastPoster))
+			lastPoster = entry.getLastposter();
+		holder.lastReply.setText("最后回复:" + lastPoster);
 		holder.num.setText("" + entry.getReplies());
 		
 		Resources  res = inflater.getContext().getResources();
 		holder.title.setTextColor(res.getColor(
 				ThemeManager.getInstance().getForegroundColor()));
 		float size = PhoneConfiguration.getInstance().getTextSize();
+		
+		String titile = entry.getContent();
+		if(StringUtil.isEmpty(titile ))
+		{
+				titile = entry.getSubject();
+				holder.title.setText(StringUtil.unEscapeHtml(titile));
+				
+		}else
+		{
+			holder.title.setText(
+					StringUtil.removeBrTag(
+							StringUtil.unEscapeHtml(titile)));
+		}
+		
+		
+		
 		holder.title.setTextSize(size);
-		holder.title.setText(StringUtil.unEscapeHtml(entry.getSubject()));
 
 		if(!StringUtil.isEmpty(entry.getTitlefont()) )
 		{

@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import android.util.Log;
 import sp.phone.bean.StringFindResult;
 
 
@@ -239,6 +241,7 @@ public class StringUtil {
 	}
 
 	public static String removeBrTag(String s){
+		s =s.replaceAll("<br/><br/>", "\n");
 		s =s.replaceAll("<br/>", "\n");
 		return s;
 	}
@@ -458,6 +461,32 @@ public class StringUtil {
 		
 		return ret;
 	}
+
+	public static int getUrlParameter(String url, String paraName){
+		if(StringUtil.isEmpty(url))
+		{
+			return 0;
+		}
+		final String pattern = paraName+"=" ;
+		int start = url.indexOf(pattern);
+		if(start == -1)
+			return 0;
+		start +=pattern.length();
+		int end = url.indexOf("&",start);
+		if(end == -1)
+			end = url.length();
+		String value = url.substring(start,end);
+		int ret = 0;
+		try{
+			ret = Integer.parseInt(value);
+		}catch(Exception e){
+			Log.e("getUrlParameter", "invalid url:" + url);
+		}
+		
+		return ret;
+	}
+
+
 }
 
 

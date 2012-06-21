@@ -57,7 +57,7 @@ implements PagerOwnner,ResetableArticle {
 			pageFromUrl = this.getUrlParameter(url, "page");
 		}else
 		{
-		tid = this.getIntent().getIntExtra("tid", 7);		
+		tid = this.getIntent().getIntExtra("tid", 0);		
 		pid = this.getIntent().getIntExtra("pid", 0);
 		authorid = this.getIntent().getIntExtra("authorid", 0);
 		}

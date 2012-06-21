@@ -138,7 +138,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 		int defaultColor = v.getCurrentTextColor();
 		for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
 			v = (TextView)mTabHost.getTabWidget().getChildAt(i);
-			v.setText(String.valueOf(i+offset+1));
+			//v.setText(String.valueOf(i+offset+1));
 			if (mTabHost.getCurrentTab() == i) {
 				Log.d(TAG, "set tab:" + (i+offset+1) + "to black");
 				v.setTextColor(mContext.getResources().getColor(R.color.black));
@@ -167,13 +167,20 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 		int oldFocusability = widget.getDescendantFocusability();
 		widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 		
-		offset = position/ MAX_TAB * MAX_TAB;// & ~(mTabHost.getTabWidget().getChildCount() -1);
+		offset = position/ MAX_TAB * MAX_TAB;
 		Log.d(TAG, "onPageSelected current offset=" + offset );
 		if(offset + MAX_TAB >pageCount && offset >0){
 			offset = pageCount - MAX_TAB;
 			Log.i(TAG, "onPageSelected current offset=" + offset );
 			
 		}
+		
+		TextView v = null;
+		for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
+			v = (TextView)mTabHost.getTabWidget().getChildAt(i);
+			v.setText(String.valueOf(i+offset+1));
+		}
+		
 		mTabHost.setCurrentTab(position-offset);
 		widget.setDescendantFocusability(oldFocusability);
 	}
@@ -182,13 +189,6 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 	public void onPageScrollStateChanged(int state) {
 	}
 
-	/*public void setPid(int pid) {
-		this.pid = pid;
-	}
 
-	public void setAuthorid(int authorid) {
-		this.authorid = authorid;
-	}*/
-	
 	
 }

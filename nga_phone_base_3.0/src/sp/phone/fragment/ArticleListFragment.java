@@ -123,9 +123,11 @@ public class ArticleListFragment extends Fragment
 			Activity activity = getActivity();
 			task= new JsonThreadLoadTask(activity,this);
 			String url = HttpUtil.Server + 
-					"/read.php?tid=" + tid
+					"/read.php?"
 					+"&page="+page
 					+"&lite=js&noprefix";
+			if(tid !=0)
+				url = url + "&tid="+ tid;
 			if(pid !=0){
 				url = url + "&pid="+ pid;
 			}
@@ -176,6 +178,9 @@ public class ArticleListFragment extends Fragment
 							R.anim.zoom_exit);
 				break;
 			case R.id.article_menuitem_refresh:
+				this.task = null;
+				ActivityUtil.getInstance().noticeSaying(getActivity());
+				this.loadPage();/*
 				if(this.pid == 0 && this.authorid ==0)
 				{
 					this.task = null;
@@ -184,7 +189,7 @@ public class ArticleListFragment extends Fragment
 				}else{
 					restNotifier.reset(0, 0);
 					ActivityUtil.getInstance().noticeSaying(getActivity());
-				}
+				}*/
 				break;
 			case R.id.article_menuitem_addbookmark:
 				ThreadPageInfo info = articleAdpater.getData().getThreadInfo();
@@ -313,7 +318,7 @@ public class ArticleListFragment extends Fragment
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		
 		StringBuffer postPrefix = new StringBuffer();
-		String tid = String.valueOf(this.tid);
+		String tidStr = String.valueOf(this.tid);
 
 		
 		ThreadRowInfo row = (ThreadRowInfo) listview.getItemAtPosition(info.position);
@@ -339,7 +344,7 @@ public class ArticleListFragment extends Fragment
 			}
 			mention = name;
 			postPrefix.append("[quote][tid=");
-			postPrefix.append(tid);
+			postPrefix.append(tidStr);
 			postPrefix.append("]Topic[/pid] [b]Post by ");
 			postPrefix.append(name);
 			postPrefix.append(" (");
@@ -356,7 +361,7 @@ public class ArticleListFragment extends Fragment
 			if(!StringUtil.isEmpty(mention))
 				intent.putExtra("mention", mention);
 			intent.putExtra("prefix", StringUtil.removeBrTag(postPrefix.toString()) );
-			intent.putExtra("tid", tid);
+			intent.putExtra("tid", tidStr);
 			intent.putExtra("action", "reply");	
 			intent.setClass(getActivity(), PostActivity.class);
 			startActivity(intent);
@@ -367,7 +372,7 @@ public class ArticleListFragment extends Fragment
 		case SHOW_MODIFY_ORDER :
 			Intent intentModify = new Intent();
 			intentModify.putExtra("prefix", StringUtil.removeBrTag(content) );
-			intentModify.putExtra("tid", tid);
+			intentModify.putExtra("tid", tidStr);
 			String pid = String.valueOf(row.getPid());//getPid(map.get("url"));
 			intentModify.putExtra("pid", pid);
 			intentModify.putExtra("title",row.getSubject());
@@ -390,11 +395,19 @@ public class ArticleListFragment extends Fragment
 			Toast.makeText(getActivity(), "已经复制到剪切板", Toast.LENGTH_SHORT).show();
 			break;
 		case SHOW_THISONLY_ORDER:
-			//this.task = null;
-			//this.authorid = row.getAuthorid();
-			restNotifier.reset(0, row.getAuthorid());
-			ActivityUtil.getInstance().noticeSaying(getActivity());
-			//this.loadPage();
+			Intent intentThis = new Intent();
+			intentThis.putExtra("tab", "1");
+			intentThis.putExtra("tid",tid );
+			intentThis.putExtra("authorid",row.getAuthorid() );
+			
+			intentThis.setClass(getActivity(), ArticleListActivity.class);
+			startActivity(intentThis);
+			if(PhoneConfiguration.getInstance().showAnimation)
+				getActivity().overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
+		
+			//restNotifier.reset(0, row.getAuthorid());
+			//ActivityUtil.getInstance().noticeSaying(getActivity());
+
 			break;
 		case SHOW_ALL:
 			restNotifier.reset(0, 0);

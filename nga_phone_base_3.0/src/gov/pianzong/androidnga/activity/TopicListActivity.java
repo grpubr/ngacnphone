@@ -1,7 +1,10 @@
 package gov.pianzong.androidnga.activity;
 
 import sp.phone.adapter.TabsAdapter;
+import sp.phone.bean.RSSFeed;
+import sp.phone.bean.TopicListInfo;
 import sp.phone.fragment.TopicListFragment;
+import sp.phone.interfaces.OnTopListLoadFinishedListener;
 import sp.phone.task.CheckReplyNotificationTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.PhoneConfiguration;
@@ -17,13 +20,16 @@ import android.view.Menu;
 import android.widget.TabHost;
 import gov.pianzong.androidnga.R;
 
-public class TopicListActivity extends FragmentActivity {
+public class TopicListActivity extends FragmentActivity
+	implements OnTopListLoadFinishedListener{
 	private String TAG = TopicListActivity.class.getSimpleName();
 	TabHost tabhost;
 	ViewPager mViewPager;
 	TabsAdapter mTabsAdapter=null;
 	private CheckReplyNotificationTask asynTask;
 	int fid;
+	int authorid;
+	int searchpost;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,16 +40,22 @@ public class TopicListActivity extends FragmentActivity {
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 
 		fid = 0;
+		authorid = 0;
 		int pageInUrl = 0;
 		String url = this.getIntent().getDataString();
+		
 		if(url != null){
 			
 			fid = getUrlParameter(url,"fid");
 			pageInUrl =getUrlParameter(url,"page");
+			authorid = getUrlParameter(url,"authorid");
+			searchpost = getUrlParameter(url,"searchpost");
 		}
 		else
 		{
 			fid = this.getIntent().getIntExtra("fid", 0);
+			authorid = this.getIntent().getIntExtra("authorid", 0);
+			searchpost = getUrlParameter(url,"searchpost");
 			
 		}
 		
@@ -53,13 +65,17 @@ public class TopicListActivity extends FragmentActivity {
 		mTabsAdapter = new TabsAdapter(this, tabhost, mViewPager,
 				TopicListFragment.class);
 		mTabsAdapter.setArgument("id", fid);
-		mTabsAdapter.setCount(100);
+		mTabsAdapter.setArgument("authorid", authorid);
+		mTabsAdapter.setArgument("searchpost", searchpost);
+		//mTabsAdapter.setCount(100);
 
 
 		ActivityUtil.getInstance().noticeSaying(this);
 
 		if (savedInstanceState != null) {
-			mViewPager.setCurrentItem(savedInstanceState.getInt("tab"));
+			int currentPageInex = savedInstanceState.getInt("tab");
+			mTabsAdapter.setCount(currentPageInex + 1);
+			mViewPager.setCurrentItem(currentPageInex);
 		}else if(pageInUrl !=0){
 			mViewPager.setCurrentItem(pageInUrl -1);
 		}
@@ -142,6 +158,22 @@ public class TopicListActivity extends FragmentActivity {
 		
 		return ret;
 	}
+
+	@Override
+	public void finishLoad(RSSFeed feed) {
+
+		
+	}
+
+	@Override
+	public void jsonfinishLoad(TopicListInfo result) {
+		int pageCount = result.get__ROWS() / result.get__T__ROWS() +1;
+		
+		if( mTabsAdapter.getCount() != pageCount)
+			mTabsAdapter.setCount(pageCount);
+	}
+	
+	
 
 
 }
