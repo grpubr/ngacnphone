@@ -74,8 +74,17 @@ public class JsonTopicListLoadTask extends AsyncTask<String, Integer, TopicListI
 		List<ThreadPageInfo> articleEntryList = new  ArrayList<ThreadPageInfo>();
 		for(int i = 0; i <ret.get__T__ROWS(); i++){
 			JSONObject rowObj  = (JSONObject) o1.get(String.valueOf(i));
+			try{
 			ThreadPageInfo entry = JSONObject.toJavaObject(rowObj,ThreadPageInfo.class);
 			articleEntryList.add(entry);
+			}catch(Exception e){
+				ThreadPageInfo entry = new ThreadPageInfo();
+				String error = rowObj.getString("error");
+				entry.setSubject(error);
+				entry.setAuthor("");
+				entry.setLastposter("");
+				articleEntryList.add(entry);
+			}
 		}
 		
 		ret.setArticleEntryList(articleEntryList);
