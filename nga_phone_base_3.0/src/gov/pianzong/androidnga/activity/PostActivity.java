@@ -12,7 +12,7 @@ import org.apache.commons.io.IOUtils;
 import sp.phone.forumoperation.HttpPostClient;
 import sp.phone.forumoperation.ThreadPostAction;
 import sp.phone.fragment.EmotionDialogFragment;
-import sp.phone.listener.OnEmotionPickedListener;
+import sp.phone.interfaces.OnEmotionPickedListener;
 import sp.phone.task.FileUploadTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.PhoneConfiguration;

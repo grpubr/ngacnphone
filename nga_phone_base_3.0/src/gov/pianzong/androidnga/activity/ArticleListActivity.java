@@ -62,10 +62,10 @@ implements PagerOwnner,ResetableArticle {
 		authorid = this.getIntent().getIntExtra("authorid", 0);
 		}
 	
-		mTabsAdapter = new TabsAdapter(this, tabhost, mViewPager,tid,ArticleListFragment.class);
-		mTabsAdapter.setAuthorid(authorid);
-		mTabsAdapter.setPid(pid);
-
+		mTabsAdapter = new TabsAdapter(this, tabhost, mViewPager,ArticleListFragment.class);
+		mTabsAdapter.setArgument("id", tid);
+		mTabsAdapter.setArgument("pid", pid);
+		mTabsAdapter.setArgument("authorid", authorid);
 		ActivityUtil.getInstance().noticeSaying(this);
 
         if (savedInstanceState != null) {
@@ -231,11 +231,11 @@ implements PagerOwnner,ResetableArticle {
 	public void reset(int pid, int authorid) {
 		this.pid = pid;
 		this.authorid = authorid;
-		mTabsAdapter.setAuthorid(authorid);
-		mTabsAdapter.setPid(pid);
+		mTabsAdapter.setArgument("pid", pid);
+		mTabsAdapter.setArgument("authorid", authorid);
 		tabhost.getTabWidget().removeAllViews();
 		mTabsAdapter.setCount(1);
-		mTabsAdapter.notifyDataSetChanged();
+		//mTabsAdapter.notifyDataSetChanged();
 		mViewPager.setAdapter(mTabsAdapter);
 		
 		

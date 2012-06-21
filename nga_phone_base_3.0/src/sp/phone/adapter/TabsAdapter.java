@@ -24,11 +24,12 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 	private final ViewPager mViewPager;
 	//private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
 	private int offset = 0;
-	private final int id;//fid for topiclist, tid for topic list.
-	private int pid = 0;
-	private int authorid = 0;
+	//private final int id;//fid for topiclist, tid for topic list.
+	//private int pid = 0;
+	//private int authorid = 0;
 	private final Class<?> clss;
 	private int pageCount=0;
+	private Bundle arguments = new Bundle();
 	
 
 
@@ -49,7 +50,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 	}
 
 	public TabsAdapter(FragmentActivity activity, TabHost tabHost,
-			ViewPager pager, int id,Class<?> FragmentClass) {
+			ViewPager pager, Class<?> FragmentClass) {
 		super(activity.getSupportFragmentManager());
 		mContext = activity;
 		mTabHost = tabHost;
@@ -57,7 +58,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 		setCount(1);
 		mTabHost.setOnTabChangedListener(this);
 		mViewPager.setOnPageChangeListener(this);
-		this.id = id;
+		//this.id = id;
 		this.clss = FragmentClass;
 		
 		mViewPager.setAdapter(this);
@@ -102,16 +103,25 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 		return pageCount;//mTabs.size();
 	}
 
+	public void setArgument(String key, int value){
+		arguments.putInt(key, value);
+	}
+	
+	public void setArgument(String key, String value){
+		arguments.putString(key, value);
+	}
+	
+	
 	@Override
 	public Fragment getItem(int position) {
 		//Log.d(TAG, "get framgent:" + position);
 		offset = position/ MAX_TAB * MAX_TAB;
 		Log.i(TAG, "getItem "+ position + "current offset=" + offset );
-		Bundle args = new Bundle();
+		Bundle args = new Bundle(arguments);
 		args.putInt("page", position);
-		args.putInt("id", id);
-		args.putInt("pid", pid);
-		args.putInt("authorid", authorid);
+		//args.putInt("id", id);
+		//args.putInt("pid", pid);
+		//args.putInt("authorid", authorid);
 		Fragment f = Fragment.instantiate(mContext, clss.getName(), args);
 		
 		return f;
@@ -172,13 +182,13 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 	public void onPageScrollStateChanged(int state) {
 	}
 
-	public void setPid(int pid) {
+	/*public void setPid(int pid) {
 		this.pid = pid;
 	}
 
 	public void setAuthorid(int authorid) {
 		this.authorid = authorid;
-	}
+	}*/
 	
 	
 }

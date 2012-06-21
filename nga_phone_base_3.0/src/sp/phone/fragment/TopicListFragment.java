@@ -108,8 +108,12 @@ public class TopicListFragment extends Fragment
 				url = url + "&" + config.getCookie().replace("; ", "&");
 			}
 			task.execute(url);*/
-			String jsonUri = HttpUtil.Server + "/thread.php?fid=" + fidString
-					+ "&page="+ page + "&lite=js&noprefix";
+			String jsonUri = HttpUtil.Server + "/thread.php?";
+			if(!fidString.equals("0"))
+				jsonUri +="fid=" + fidString + "&";
+			
+			jsonUri += "page="+ page + "&lite=js&noprefix";
+			
 			task = new JsonTopicListLoadTask(activity,this);
 			task.execute(jsonUri);
 		}else{

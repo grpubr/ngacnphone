@@ -33,7 +33,7 @@ public class TopicListActivity extends FragmentActivity {
 		tabhost.setup();
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 
-		fid = -7;
+		fid = 0;
 		int pageInUrl = 0;
 		String url = this.getIntent().getDataString();
 		if(url != null){
@@ -43,15 +43,16 @@ public class TopicListActivity extends FragmentActivity {
 		}
 		else
 		{
-			fid = this.getIntent().getIntExtra("fid", 7);
+			fid = this.getIntent().getIntExtra("fid", 0);
 			
 		}
 		
 		if (null != savedInstanceState)
 			fid = savedInstanceState.getInt("fid");
 
-		mTabsAdapter = new TabsAdapter(this, tabhost, mViewPager, fid,
+		mTabsAdapter = new TabsAdapter(this, tabhost, mViewPager,
 				TopicListFragment.class);
+		mTabsAdapter.setArgument("id", fid);
 		mTabsAdapter.setCount(100);
 
 
