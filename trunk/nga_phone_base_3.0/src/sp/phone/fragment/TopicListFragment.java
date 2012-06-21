@@ -9,7 +9,6 @@ import sp.phone.bean.RSSFeed;
 import sp.phone.bean.TopicListInfo;
 import sp.phone.interfaces.OnTopListLoadFinishedListener;
 import sp.phone.task.JsonTopicListLoadTask;
-import sp.phone.task.TopicListLoadTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
@@ -94,23 +93,17 @@ public class TopicListFragment extends Fragment
 			int index = getArguments().getInt("page");
 			Activity activity = getActivity();
 			final String page = String.valueOf(1 + index );
-			String fidString = String.valueOf(getArguments().getInt("id"));
-			/*task= new TopicListLoadTask(activity,this);
+			String fidString = String.valueOf(getArguments().getInt("id",0));
+			String authoridString = String.valueOf(getArguments().getInt("authorid",0));
+			int searchpost = getArguments().getInt("searchpost",0);
 			
-			
-			
-			String url = HttpUtil.Server + "/thread.php?fid=" + fidString
-				+ "&page="+ page
-				+ "&rss=1";
-			PhoneConfiguration config = PhoneConfiguration.getInstance();
-			if ( !StringUtil.isEmpty(config.getCookie())) {
-
-				url = url + "&" + config.getCookie().replace("; ", "&");
-			}
-			task.execute(url);*/
 			String jsonUri = HttpUtil.Server + "/thread.php?";
 			if(!fidString.equals("0"))
 				jsonUri +="fid=" + fidString + "&";
+			if(!authoridString.equals("0"))
+				jsonUri +="authorid=" + authoridString + "&";
+			if(searchpost !=0)
+				jsonUri +="searchpost=" + searchpost + "&";
 			
 			jsonUri += "page="+ page + "&lite=js&noprefix";
 			
@@ -206,23 +199,17 @@ public class TopicListFragment extends Fragment
 				return;
 			
 			guid = guid.trim();
-			String startTag = "tid=";
-			String endTag = "&";
-			int start = guid.indexOf(startTag);
-			if(start == -1){
-				return ;
-			}
-			start = start + startTag.length();
-			
-			int end = guid.indexOf(endTag);
-			if(end == -1)
-				end = guid.length();
-			String tidString = guid.substring(start,end);
-			Integer tid = Integer.valueOf(tidString);
+
+			int pid = StringUtil.getUrlParameter(guid, "pid");
+			int tid = StringUtil.getUrlParameter(guid, "tid");
+			int authorid = StringUtil.getUrlParameter(guid, "authorid");
 			
 			Intent intent = new Intent();
 			intent.putExtra("tab", "1");
-			intent.putExtra("tid",tid.intValue() );
+			intent.putExtra("tid",tid );
+			intent.putExtra("pid",pid );
+			intent.putExtra("authorid",authorid );
+			
 			intent.setClass(getActivity(), ArticleListActivity.class);
 			startActivity(intent);
 			if(PhoneConfiguration.getInstance().showAnimation)
@@ -251,6 +238,14 @@ public class TopicListFragment extends Fragment
 		
 		adapter.jsonfinishLoad(result);
 		listview.setAdapter(adapter);
+		
+		OnTopListLoadFinishedListener father = null;
+		try{
+			father = (OnTopListLoadFinishedListener)getActivity();
+			father.jsonfinishLoad(result);
+		}catch(ClassCastException e){
+			Log.e(TAG, "father activity should implements " + OnTopListLoadFinishedListener.class.getCanonicalName());
+		}
 	}
 
 

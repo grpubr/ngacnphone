@@ -25,6 +25,16 @@ public class ThreadPageInfo {
 	private int lastmodify;
 	private int recommend;
 	private int view_count;
+	private String fid_no_match;
+	private String subject_org;
+	//private int postdate_org;
+	//private int lastpost_org;
+    private String lastposter_org;
+    private String tpcurl;
+    private String ispage;
+    private int pid;
+    private String adminbox;
+    private String content;
 	public int getTid() {
 		return tid;
 	}
@@ -156,6 +166,54 @@ public class ThreadPageInfo {
 	}
 	public void setView_count(int view_count) {
 		this.view_count = view_count;
+	}
+	public String getFid_no_match() {
+		return fid_no_match;
+	}
+	public void setFid_no_match(String fid_no_match) {
+		this.fid_no_match = fid_no_match;
+	}
+	public String getSubject_org() {
+		return subject_org;
+	}
+	public void setSubject_org(String subject_org) {
+		this.subject_org = subject_org;
+	}
+	public String getLastposter_org() {
+		return lastposter_org;
+	}
+	public void setLastposter_org(String lastposter_org) {
+		this.lastposter_org = lastposter_org;
+	}
+	public String getTpcurl() {
+		return tpcurl;
+	}
+	public void setTpcurl(String tpcurl) {
+		this.tpcurl = tpcurl;
+	}
+	public String getIspage() {
+		return ispage;
+	}
+	public void setIspage(String ispage) {
+		this.ispage = ispage;
+	}
+	public int getPid() {
+		return pid;
+	}
+	public void setPid(int pid) {
+		this.pid = pid;
+	}
+	public String getAdminbox() {
+		return adminbox;
+	}
+	public void setAdminbox(String adminbox) {
+		this.adminbox = adminbox;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
 	}
 	
 	
