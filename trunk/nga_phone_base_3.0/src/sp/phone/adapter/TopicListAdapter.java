@@ -151,7 +151,7 @@ public class TopicListAdapter extends BaseAdapter
 				ThemeManager.getInstance().getForegroundColor()));
 		float size = PhoneConfiguration.getInstance().getTextSize();
 		holder.title.setTextSize(size);
-		holder.title.setText(entry.getSubject());
+		holder.title.setText(StringUtil.unEscapeHtml(entry.getSubject()));
 
 		if(!StringUtil.isEmpty(entry.getTitlefont()) )
 		{
