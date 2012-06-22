@@ -47,10 +47,10 @@ public class ArticleListAdapter extends BaseAdapter {
 	public ArticleListAdapter(Context activity) {
 		super();
 		this.activity = activity;
-		if(PhoneConfiguration.getInstance().useViewCache)
+		//if(PhoneConfiguration.getInstance().useViewCache)
 			this.viewCache = new SparseArray<View>();
-		else
-			this.viewCache = null;
+		//else
+		//	this.viewCache = null;
 	}
 
 
@@ -255,14 +255,23 @@ public class ArticleListAdapter extends BaseAdapter {
 		if(position ==0){
 			start = System.currentTimeMillis();
 		}
-		PhoneConfiguration config = PhoneConfiguration.getInstance();
-		if(config.useViewCache && viewCache.get(position) !=null){
+		ViewHolder holder = null;
+		//PhoneConfiguration config = PhoneConfiguration.getInstance();
+		if(viewCache.get(position) !=null){
 			Log.d(TAG, "get view from cache ,floor " + position);
 			return viewCache.get(position);
+		} else {
+			Log.d(TAG, "inflater new view ,floor " + position);
+			view = LayoutInflater.from(activity).inflate(
+					R.layout.relative_aritclelist, null);
+			holder = initHolder(view);
+			view.setTag(holder);
+
 		}
+
 		
-		ViewHolder holder = null;
-		if(view== null){
+		
+		/*if(view== null){
 			Log.d(TAG, "inflater new view ,floor " + position);
 			view = LayoutInflater.from(activity).inflate(R.layout.relative_aritclelist, null);
 			holder = initHolder(view);
@@ -285,7 +294,7 @@ public class ArticleListAdapter extends BaseAdapter {
 				
 			}
 			
-		}
+		}*/
 		
 		
 		
