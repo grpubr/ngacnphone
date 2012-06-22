@@ -245,7 +245,8 @@ public class TopicListFragment extends Fragment
 		OnTopListLoadFinishedListener father = null;
 		try{
 			father = (OnTopListLoadFinishedListener)getActivity();
-			father.jsonfinishLoad(result);
+			if(father != null)
+				father.jsonfinishLoad(result);
 		}catch(ClassCastException e){
 			Log.e(TAG, "father activity should implements " + OnTopListLoadFinishedListener.class.getCanonicalName());
 		}
