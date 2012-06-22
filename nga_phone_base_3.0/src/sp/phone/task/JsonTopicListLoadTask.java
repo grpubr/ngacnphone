@@ -71,9 +71,9 @@ public class JsonTopicListLoadTask extends AsyncTask<String, Integer, TopicListI
 		else
 			return null;
 			
-		Integer forum = (Integer)o.get("__SELECTED_FORUM");
-		if(forum !=null)
-			ret.set__SELECTED_FORUM(forum);
+		Object forum = o.get("__SELECTED_FORUM");
+		if(forum instanceof Integer)
+			ret.set__SELECTED_FORUM((Integer)forum);
 		else
 			ret.set__SELECTED_FORUM(0);
 		
