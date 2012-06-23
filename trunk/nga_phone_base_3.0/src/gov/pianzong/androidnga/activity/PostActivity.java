@@ -9,6 +9,8 @@ import java.net.HttpURLConnection;
 
 import org.apache.commons.io.IOUtils;
 
+import sp.phone.adapter.SpinnerUserListAdapter;
+import sp.phone.bean.User;
 import sp.phone.forumoperation.HttpPostClient;
 import sp.phone.forumoperation.ThreadPostAction;
 import sp.phone.fragment.EmotionDialogFragment;
@@ -32,9 +34,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class PostActivity extends FragmentActivity
@@ -52,6 +57,7 @@ public class PostActivity extends FragmentActivity
 	private Button button_cancel;
 	private ImageButton button_upload;
 	private ImageButton button_emotion;
+	private Spinner userList;
 	private String REPLY_URL="http://bbs.ngacn.cc/post.php?";
 	final int REQUEST_CODE_SELECT_PIC = 1;
 	private String sig ="\n[url=http://code.google.com/p/ngacnphone/downloads/list]"
@@ -175,6 +181,28 @@ public class PostActivity extends FragmentActivity
 			
 		}
 		);
+		
+		userList = (Spinner) findViewById(R.id.user_list);
+		SpinnerUserListAdapter adapter = new SpinnerUserListAdapter(this);
+		userList.setAdapter(adapter);
+		userList.setOnItemSelectedListener(new OnItemSelectedListener(){
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				User u = (User) parent.getItemAtPosition(position);
+				MyApp app = (MyApp) getApplication();
+				app.addToUserList(u.getUserId(), u.getCid(), u.getNickName());
+				PhoneConfiguration.getInstance().setUid(u.getUserId());
+				PhoneConfiguration.getInstance().setCid(u.getCid());
+				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+			}
+			
+		});
 	}
 	
 	@Override

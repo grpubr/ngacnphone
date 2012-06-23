@@ -19,9 +19,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 import gov.pianzong.androidnga.R;
 
+import sp.phone.adapter.UserListAdapter;
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.forumoperation.HttpPostClient;
 import sp.phone.utils.PhoneConfiguration;
@@ -34,6 +36,7 @@ public class LoginActivity extends Activity
 	EditText userText;
 	EditText passwordText;
 	View view;
+	ListView userList ;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -60,7 +63,9 @@ public class LoginActivity extends Activity
 		Button button_login = (Button) findViewById(R.id.login_button);
 		userText = (EditText) findViewById(R.id.login_user_edittext);
 		passwordText = (EditText) findViewById(R.id.login_password_edittext);
-
+		userList = (ListView) findViewById(R.id.user_list);
+		userList.setAdapter(new UserListAdapter(this));
+		
 		String postUrl = "http://account.178.com/q_account.php?_act=login";
 
 		SharedPreferences share = LoginActivity.this.getSharedPreferences(
@@ -216,8 +221,11 @@ public class LoginActivity extends Activity
 				Editor editor = share.edit();
 				editor.putString(UID, uid);
 				editor.putString(CID, cid);
-				editor.putString(USER_NAME, userText.getText().toString());
+				final String name  = userText.getText().toString();
+				editor.putString(USER_NAME, name );
 				editor.commit();
+				MyApp app = (MyApp) LoginActivity.this.getApplication();
+				app.addToUserList(uid, cid, name);
 				
 				PhoneConfiguration.getInstance().setUid(uid);
 				PhoneConfiguration.getInstance().setCid(cid);

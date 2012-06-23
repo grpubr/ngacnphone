@@ -1,14 +1,13 @@
 package gov.pianzong.androidnga.activity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import sp.phone.bean.ArticlePage;
 import sp.phone.bean.Bookmark;
 import sp.phone.bean.PerferenceConstant;
-import sp.phone.bean.RSSFeed;
+import sp.phone.bean.User;
 import sp.phone.utils.PhoneConfiguration;
+import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.app.Application;
 import android.content.SharedPreferences;
@@ -21,9 +20,6 @@ import com.alibaba.fastjson.JSON;
 public class MyApp extends Application implements PerferenceConstant {
 	final private static String TAG = MyApp.class.getSimpleName();
 	public final static int version = 286;
-	private RSSFeed rssFeed;
-	private ArticlePage articlePage;
-	private HashMap<Object, ArticlePage> map_article;
 	private PhoneConfiguration config;
 	boolean newVersion = false;
 	
@@ -41,8 +37,7 @@ public class MyApp extends Application implements PerferenceConstant {
 
 	private void initUserInfo() {
 		
-		String uid = null;
-		String cid = null;
+
 		
 		PhoneConfiguration config = PhoneConfiguration.getInstance();
 
@@ -50,12 +45,19 @@ public class MyApp extends Application implements PerferenceConstant {
 				MODE_PRIVATE);
 
 		
-			uid = share.getString(UID, "");
-			cid = share.getString(CID, "");
-			if (uid != null && cid != null && uid != "" && cid != "") {
+			final String uid = share.getString(UID, "");
+			final String cid = share.getString(CID, "");
+			if (!StringUtil.isEmpty(uid) && !StringUtil.isEmpty(cid) ) {
 				config.setUid(uid);
 				config.setCid(cid);
+				String userListString = share.getString(USER_LIST, "");
+				if(StringUtil.isEmpty(userListString)){
+					final String name = share.getString(USER_NAME, "");
+					addToUserList(uid,cid,name);
+	
+				}
 			}
+
 			boolean downImgWithoutWifi = share.getBoolean(DOWNLOAD_IMG_NO_WIFI, false);
 			config.setDownImgNoWifi(downImgWithoutWifi);
 			boolean downAvatarNoWifi = share.getBoolean(DOWNLOAD_AVATAR_NO_WIFI, false);
@@ -63,6 +65,39 @@ public class MyApp extends Application implements PerferenceConstant {
 
 	}
 
+	public void addToUserList(String uid, String cid, String name){
+		SharedPreferences share = this.getSharedPreferences(PERFERENCE,
+				MODE_PRIVATE);
+		
+		String userListString = share.getString(USER_LIST, "");
+		
+		List<User> userList = null;
+		//new ArrayList<User>();
+		if(StringUtil.isEmpty(userListString)){
+			userList = new ArrayList<User>();
+		}else
+		{
+			userList = JSON.parseArray(userListString, User.class);
+			for( User u : userList){
+				if(u.getUserId().equals(uid)){
+					userList.remove(u);
+					break;
+				}
+					
+			}
+		}
+		
+		User user = new User();
+		user.setCid(cid);
+		user.setUserId(uid);
+		user.setNickName(name);
+		userList.add(0,user);
+		
+		userListString = JSON.toJSONString(userList);
+		
+		share.edit().putString(USER_LIST, userListString).commit();
+		
+	}
 	private void loadConfig(){
 		
 		SharedPreferences share = this.getSharedPreferences(PERFERENCE,
@@ -137,34 +172,7 @@ public class MyApp extends Application implements PerferenceConstant {
 		this.newVersion = newVersion;
 	}
 
-	public HashMap<Object, ArticlePage> getMap_article() {
-		if (map_article == null) {
-			return new HashMap<Object, ArticlePage>();
-		}
-		return map_article;
-	}
-
-	public void setMap_article(HashMap<Object, ArticlePage> mapArticle) {
-		map_article = mapArticle;
-	}
-
-	public ArticlePage getArticlePage() {
-		return articlePage;
-	}
-
-	public void setArticlePage(ArticlePage articlePage) {
-		this.articlePage = articlePage;
-	}
-
-
-
-	public RSSFeed getRssFeed() {
-		return rssFeed;
-	}
-
-	public void setRssFeed(RSSFeed rssFeed) {
-		this.rssFeed = rssFeed;
-	}
+	
 
 	
 
