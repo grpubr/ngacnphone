@@ -429,7 +429,7 @@ public class StringUtil {
 		}
 		return ret;
 	}
-	final static String tips = "1.设置里启用楼层缓存可以防止长贴跳动2.不要用cmwap和3gwap\n3.头像大小,动画,签名在设置修改\n4.在帖子里按menu可以禁止屏幕旋转\n6.设置默认无效的请先去应用里把其他浏览器清楚默认";
+	final static String tips = "1.支持多马甲，去登录里看看\n2.不要用cmwap和3gwap\n3.头像大小,动画,签名在设置修改\n4.在帖子里按menu可以禁止屏幕旋转\n";
 	public static String getTips(){
 		
 		return tips;
