@@ -1,33 +1,14 @@
 package sp.phone.utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import org.htmlparser.Node;
-import org.htmlparser.NodeFilter;
-import org.htmlparser.Parser;
-import org.htmlparser.filters.AndFilter;
-import org.htmlparser.filters.HasAttributeFilter;
-import org.htmlparser.filters.OrFilter;
-import org.htmlparser.filters.TagNameFilter;
-import org.htmlparser.tags.Div;
-import org.htmlparser.tags.HeadingTag;
-import org.htmlparser.tags.ImageTag;
-import org.htmlparser.tags.LinkTag;
-import org.htmlparser.tags.Span;
-import org.htmlparser.tags.TableColumn;
-import org.htmlparser.tags.TableRow;
-import org.htmlparser.tags.TableTag;
-import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
-import sp.phone.bean.Article;
 import sp.phone.bean.ArticlePage;
 import sp.phone.bean.ThreadData;
 import sp.phone.bean.ThreadPageInfo;
 import sp.phone.bean.ThreadRowInfo;
-import sp.phone.bean.User;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
@@ -39,7 +20,7 @@ public class ArticleUtil {
 	public static ArticlePage parserArticleList(String html)
 			throws ParserException {
 
-		AndFilter andFilter = new AndFilter(new TagNameFilter("table"),
+	/*	AndFilter andFilter = new AndFilter(new TagNameFilter("table"),
 				new HasAttributeFilter("class", "forumbox postbox"));
 		AndFilter andFilter2 = new AndFilter(new TagNameFilter("span"),
 				new HasAttributeFilter("class", "page_nav"));
@@ -111,9 +92,6 @@ public class ArticleUtil {
 
 					TableColumn td1 = tds0[1];
 					String lastPostTime = "";
-					/*Div avastarDiv = (Div)((Span)td0.getChild(2)).getChild(0);
-					String avatarImage = avastarDiv.getChild(0).getText();
-					avatarImage = avatarImage.substring(avatarImage.indexOf("urlc("+4),avatarImage.indexOf(")"));*/
 					
 					String content ="" ;
 					Node td1Children[] = td1.getChildrenAsNodeArray();
@@ -230,7 +208,8 @@ public class ArticleUtil {
 			articlePage = null;
 		else
 			articlePage.setListArticle(listArticle);
-		return articlePage;
+		return articlePage;*/
+		return null;
 	}
 
 	public static ThreadData parseJsonThreadPage(String js){

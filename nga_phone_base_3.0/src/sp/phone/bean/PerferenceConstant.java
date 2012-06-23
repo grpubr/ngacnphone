@@ -22,4 +22,5 @@ public interface PerferenceConstant {
 	final String SHOW_ANIMATION = "showAnimation";
 	final String SHOW_SIGNATURE = "showSignature";
 	final String USE_VIEW_CACHE = "useViewCache";
+	final String USER_LIST = "userList";
 }
