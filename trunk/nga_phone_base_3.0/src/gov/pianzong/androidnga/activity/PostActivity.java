@@ -60,7 +60,7 @@ public class PostActivity extends FragmentActivity
 	private Spinner userList;
 	private String REPLY_URL="http://bbs.ngacn.cc/post.php?";
 	final int REQUEST_CODE_SELECT_PIC = 1;
-	private String sig ="\n[url=http://code.google.com/p/ngacnphone/downloads/list]"
+	private String sig ="\n[url=https://play.google.com/store/apps/details?id=gov.pianzong.androidnga]"
 		+"----sent from my " + android.os.Build.MANUFACTURER
 		+ " " + android.os.Build.MODEL + ",Android "
 		+ android.os.Build.VERSION.RELEASE + "[/url]\n";
