@@ -266,6 +266,7 @@ public class ArticleListAdapter extends BaseAdapter {
 					R.layout.relative_aritclelist, null);
 			holder = initHolder(view);
 			view.setTag(holder);
+			viewCache.put(position, view);
 
 		}
 
@@ -459,5 +460,17 @@ public class ArticleListAdapter extends BaseAdapter {
 		return "<br/></br>Ç©Ãû<hr/><br/>"
 				+StringUtil.decodeForumTag(row.getSignature(),showImage);
 	}
+
+
+
+
+	@Override
+	public void notifyDataSetChanged() {
+		this.viewCache.clear();
+		super.notifyDataSetChanged();
+	}
+	
+	
+	
 
 }
