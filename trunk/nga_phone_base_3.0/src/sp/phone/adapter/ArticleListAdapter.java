@@ -2,6 +2,7 @@ package sp.phone.adapter;
 
 import gov.pianzong.androidnga.R;
 import gov.pianzong.androidnga.activity.ArticleListActivity;
+import gov.pianzong.androidnga.activity.ImageViewerActivity;
 import gov.pianzong.androidnga.activity.TopicListActivity;
 
 import java.io.File;
@@ -28,15 +29,17 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
-public class ArticleListAdapter extends BaseAdapter {
+public class ArticleListAdapter extends BaseAdapter implements OnLongClickListener {
 	private static final  String TAG = ArticleListAdapter.class.getSimpleName();
 	private ThreadData data;
 	private Context activity;
@@ -47,10 +50,8 @@ public class ArticleListAdapter extends BaseAdapter {
 	public ArticleListAdapter(Context activity) {
 		super();
 		this.activity = activity;
-		//if(PhoneConfiguration.getInstance().useViewCache)
-			this.viewCache = new SparseArray<View>();
-		//else
-		//	this.viewCache = null;
+		this.viewCache = new SparseArray<View>();
+
 	}
 
 
@@ -103,7 +104,7 @@ public class ArticleListAdapter extends BaseAdapter {
 	long start;
 	long end;
 	
-	class ViewHolder{
+	static class ViewHolder{
 		TextView nickNameTV;
 		ImageView avatarIV;
 		WebView contentTV;
@@ -114,12 +115,20 @@ public class ArticleListAdapter extends BaseAdapter {
 		
 	}
 	
+	static class WebViewTag{
+		public ListView lv;
+		public View holder;
+	}
+	
 	private void handleContentTV(WebView contentTV,ThreadRowInfo row,int bgColorId,int bgColor,int fgColor){
 		
 		contentTV.setBackgroundColor(0);
 		if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB)
 			contentTV.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
 		contentTV.setFocusable(false);
+		//contentTV.setClickable(false);
+		contentTV.setLongClickable(false);
+		contentTV.setFocusableInTouchMode(false);
 		
 		bgColor = bgColor & 0xffffff;
 		String bgcolorStr = String.format("%06x",bgColor);
@@ -154,7 +163,7 @@ public class ArticleListAdapter extends BaseAdapter {
 				PhoneConfiguration.getInstance().getWebSize());
 		setting.setJavaScriptEnabled(false);
 		contentTV.setWebViewClient(this.client);
-		
+		//contentTV.setOnLongClickListener(this);
 		contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
 
 		
@@ -168,6 +177,7 @@ public class ArticleListAdapter extends BaseAdapter {
 		private final static String NGA178_THREAD_PREFIX ="http://nga.178.com/read.php?"; 
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			url = url.toLowerCase();
 			if(url.startsWith(NGACN_BOARD_PREFIX)
 					|| url.startsWith(NGA178_BOARD_PREFIX ) ){
 				Intent intent = new Intent();
@@ -183,6 +193,16 @@ public class ArticleListAdapter extends BaseAdapter {
 				view.getContext().startActivity(intent);
 				return true;
 				
+			}else if(url.endsWith(".gif")||url.endsWith(".jpg")||
+					url.endsWith(".png")||url.endsWith(".jpeg")||
+					url.endsWith(".bmp")||
+					url.endsWith(".swf")
+					){
+				Intent intent = new Intent();
+				intent.putExtra("path", url);
+				intent.setClass(view.getContext(), ImageViewerActivity.class);
+				view.getContext().startActivity(intent);
+				return true;
 			}
 			Intent intent = new Intent(Intent.ACTION_VIEW);
 			intent.setData(Uri.parse(url));
@@ -222,8 +242,10 @@ public class ArticleListAdapter extends BaseAdapter {
 				if (f.exists()) {
 					
 						Bitmap bitmap = ImageUtil.loadAvatarFromSdcard(avatarPath);
-			            
-						avatarIV.setImageBitmap(bitmap);
+			            if(bitmap!=null)
+			            	avatarIV.setImageBitmap(bitmap);
+			            else
+			            	f.delete();
 	
 
 				} else {
@@ -252,109 +274,104 @@ public class ArticleListAdapter extends BaseAdapter {
 	}
 	
 	public View getView(int position, View view, ViewGroup parent) {
-		if(position ==0){
+		if (position == 0) {
 			start = System.currentTimeMillis();
 		}
+
 		ViewHolder holder = null;
-		//PhoneConfiguration config = PhoneConfiguration.getInstance();
-		if(viewCache.get(position) !=null){
+		PhoneConfiguration config = PhoneConfiguration.getInstance();
+		if (viewCache.get(position) != null) {
 			Log.d(TAG, "get view from cache ,floor " + position);
 			return viewCache.get(position);
 		} else {
-			Log.d(TAG, "inflater new view ,floor " + position);
-			view = LayoutInflater.from(activity).inflate(
-					R.layout.relative_aritclelist, null);
-			holder = initHolder(view);
-			view.setTag(holder);
-			viewCache.put(position, view);
+			if (view == null || config.useViewCache) {
+				Log.d(TAG, "inflater new view ,floor " + position);
+				view = LayoutInflater.from(activity).inflate(
+						R.layout.relative_aritclelist, parent,false);
+				holder = initHolder(view);
+				view.setTag(holder);
+				if (config.useViewCache)
+					viewCache.put(position, view);
+			} else {
+				holder = (ViewHolder) view.getTag();
+				if (holder.position == position) {
+					return view;
+				}
+				if (holder.contentTV.getHeight() > 300) {
+					Log.d(TAG, "skip and store a tall view ,floor " + position);
+					// if (config.useViewCache)
+					viewCache.put(holder.position, view);
+
+					view = LayoutInflater.from(activity).inflate(
+							R.layout.relative_aritclelist,  parent,false);
+					holder = initHolder(view);
+					view.setTag(holder);
+
+				}
+
+			}
 
 		}
 
-		
-		
-		/*if(view== null){
-			Log.d(TAG, "inflater new view ,floor " + position);
-			view = LayoutInflater.from(activity).inflate(R.layout.relative_aritclelist, null);
-			holder = initHolder(view);
-			view.setTag(holder);
-			
-			
-		}else{
-			holder = (ViewHolder) view.getTag();
-			if(holder.position == position){
-				return view;
-			}
-			if(holder.contentTV.getHeight() > 300){
-				Log.d(TAG, "skip and store a tall view ,floor " + position);
-				if(config.useViewCache)
-					viewCache.put(holder.position, view);
-				
-				view = LayoutInflater.from(activity).inflate(R.layout.relative_aritclelist, null);
-				holder =initHolder(view);
-				view.setTag(holder);
-				
-			}
-			
-		}*/
-		
-		
-		
+
+
 		holder.position = position;
-		
-			int colorId = ThemeManager.getInstance().getBackgroundColor();
-			view.setBackgroundResource(colorId);
-			
-			ThreadRowInfo row = data.getRowList().get(position);
-			
-			handleAvatar(holder.avatarIV, row);
-			
 
-			// 其他处理
-			int fgColorId = ThemeManager.getInstance().getForegroundColor();
-			int fgColor = parent.getContext().getResources().getColor(fgColorId);
-			
-			
-			TextView nickNameTV = holder.nickNameTV;
-			nickNameTV.setText(row.getAuthor());
-			nickNameTV.setTextColor(fgColor);
-			TextPaint tp = holder.nickNameTV.getPaint();
-            tp.setFakeBoldText(true);//bold for Chinese character
-             
-			TextView titleTV = holder.titleTV;
-			if (!StringUtil.isEmpty(row.getSubject()) && position!=0) {
-				titleTV.setText(row.getSubject());
-				titleTV.setTextColor(fgColor);
-				tp = titleTV.getPaint();
-	            tp.setFakeBoldText(true);//bold for Chinese character
-			} else {
-				titleTV.setVisibility(View.GONE);
-			} 
+		int colorId = ThemeManager.getInstance().getBackgroundColor();
+		view.setBackgroundResource(colorId);
 
-			int bgColor = parent.getContext().getResources().getColor(colorId);
-			
-			WebView contentTV = holder.contentTV;//(WebView) rowView.findViewById(R.id.content);
-			handleContentTV(contentTV,row,colorId,bgColor,fgColor);
+		ThreadRowInfo row = data.getRowList().get(position);
 
-			
-			final int lou =  row.getLou();
-			final String floor = String.valueOf(lou);
-			TextView floorTV = holder.floorTV;
-			floorTV.setText("[" + floor + " 楼]");
+		handleAvatar(holder.avatarIV, row);
 
-			TextView postTimeTV = holder.postTimeTV;
-			postTimeTV.setText(row.getPostdate());
+		// 其他处理
+		int fgColorId = ThemeManager.getInstance().getForegroundColor();
+		int fgColor = parent.getContext().getResources().getColor(fgColorId);
 
+		TextView nickNameTV = holder.nickNameTV;
+		nickNameTV.setText(row.getAuthor());
+		//nickNameTV.setTextColor(fgColor);
+		//TextPaint tp = holder.nickNameTV.getPaint();
+		//tp.setFakeBoldText(true);// bold for Chinese character
 
+		TextView titleTV = holder.titleTV;
+		if (!StringUtil.isEmpty(row.getSubject()) && position != 0) {
+			titleTV.setText(row.getSubject());
+			titleTV.setTextColor(fgColor);
+			//tp = titleTV.getPaint();
+		//	tp.setFakeBoldText(true);// bold for Chinese character
+		} else {
+			//titleTV.setVisibility(View.GONE);
+		}
 
+		int bgColor = parent.getContext().getResources().getColor(colorId);
 
-			if(position == this.getCount()-1){
-				end = System.currentTimeMillis();
-				Log.i(getClass().getSimpleName(),"render cost:" +(end-start));
-			}
-	
-		
-	
-		
+		WebView contentTV = holder.contentTV;
+		//WebViewTag tag = new WebViewTag();
+		//tag.lv = (ListView) parent;
+		//tag.holder = view;
+		//contentTV.setTag(tag);
+		//contentTV.setOnLongClickListener(this);
+		handleContentTV(contentTV, row, colorId, bgColor, fgColor);
+
+		final int lou = row.getLou();
+		final String floor = String.valueOf(lou);
+		TextView floorTV = holder.floorTV;
+		floorTV.setText("[" + floor + " 楼]");
+
+		TextView postTimeTV = holder.postTimeTV;
+		postTimeTV.setText(row.getPostdate());
+
+		if (position == this.getCount() - 1) {
+			end = System.currentTimeMillis();
+			Log.i(getClass().getSimpleName(), "render cost:" + (end - start));
+		}
+
+		/*
+		 * if(position ==0) { for(int i=1; i<this.getCount(); i++)
+		 * this.getView(i, null, parent); }
+		 */
+
 		return view;
 	}
 
@@ -468,6 +485,18 @@ public class ArticleListAdapter extends BaseAdapter {
 	public void notifyDataSetChanged() {
 		this.viewCache.clear();
 		super.notifyDataSetChanged();
+	}
+
+
+
+	@Override
+	public boolean onLongClick(View v) {
+		if(v instanceof WebView){
+			WebViewTag tag =  (WebViewTag) v.getTag();
+			tag.lv.showContextMenuForChild(tag.holder);
+			return true;
+		}
+		return false;
 	}
 	
 	
