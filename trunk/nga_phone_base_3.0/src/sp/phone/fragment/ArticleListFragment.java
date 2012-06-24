@@ -28,16 +28,21 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -63,6 +68,8 @@ public class ArticleListFragment extends Fragment
 	private int pid;
 	private int authorid;
 	
+	private ActionMode.Callback mActionModeCallback = null;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		page = getArguments().getInt("page") + 1;
@@ -83,7 +90,32 @@ public class ArticleListFragment extends Fragment
 					(getActivity(), R.anim.article_list_anim);
 			listview.setLayoutAnimation(anim);
 		}
-		this.registerForContextMenu(listview);
+		
+		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+			this.registerForContextMenu(listview);
+		} else {
+			activeActionMode();
+			listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+			listview.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+				@Override
+				public boolean onItemLongClick(AdapterView<?> parent,
+						View view, int position, long id) {
+					ListView lv = (ListView)parent;
+					lv.setItemChecked(position, true);
+					if (mActionModeCallback != null)
+					{
+						getActivity().startActionMode(mActionModeCallback);
+						return true;
+					}
+					return false;
+				}
+
+			});
+			
+
+		}
+		listview.setDescendantFocusability(ListView.FOCUS_AFTER_DESCENDANTS);
 		return listview;
 	}
 	
@@ -91,6 +123,44 @@ public class ArticleListFragment extends Fragment
 	public void onActivityCreated(Bundle savedInstanceState) {		
 		listview.setAdapter(articleAdpater);
 		super.onActivityCreated(savedInstanceState);
+	}
+	
+	private void activeActionMode(){
+		mActionModeCallback = new ActionMode.Callback() {
+			
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+				MenuInflater inflater = mode.getMenuInflater();
+				if(pid == 0){
+					inflater.inflate(R.menu.articlelist_context_menu, menu);
+					
+				}else{
+					inflater.inflate(R.menu.articlelist_context_menu_with_tid, menu);
+				}
+				return true;
+			}
+
+			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+				onContextItemSelected(item);
+				mode.finish();
+				return true;
+			}
+
+			@Override
+			public void onDestroyActionMode(ActionMode mode) {
+				int position = listview.getCheckedItemPosition();
+				listview.setItemChecked(position, false);
+				
+			}
+			
+		};
 	}
 	
 	@Override
@@ -277,6 +347,15 @@ public class ArticleListFragment extends Fragment
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		MenuInflater inflater = getActivity().getMenuInflater();
+		if(this.pid == 0){
+			inflater.inflate(R.menu.articlelist_context_menu, menu);
+			
+		}else{
+			inflater.inflate(R.menu.articlelist_context_menu_with_tid, menu);
+		}
+		/*
 		menu.add(0,QUOTE_ORDER,0, R.string.quote_subject);
 		menu.add(0,POST_COMMENT,0, R.string.post_comment);	
 
@@ -289,9 +368,9 @@ public class ArticleListFragment extends Fragment
 			menu.add(0,SHOW_ALL,0, R.string.show_whole_thread);
 		}
 		menu.add(0,SEARCH_POST,0, R.string.search_post);
-		menu.add(0,SEARCH_SUBJECT,0, R.string.search_subject);
+		menu.add(0,SEARCH_SUBJECT,0, R.string.search_subject);*/
 		
-		super.onCreateContextMenu(menu, v, menuInfo);
+		
 	}
 	
 	
@@ -314,13 +393,18 @@ public class ArticleListFragment extends Fragment
 			return false;
 		}
 		
+	
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		
+		int position = this.listview.getCheckedItemPosition();
+		if(info != null){
+			position = info.position;
+		}
 		StringBuffer postPrefix = new StringBuffer();
 		String tidStr = String.valueOf(this.tid);
 
 		
-		ThreadRowInfo row = (ThreadRowInfo) listview.getItemAtPosition(info.position);
+		ThreadRowInfo row = (ThreadRowInfo) listview.getItemAtPosition(position);
+		
 		String content = row.getContent();
 		final String name = row.getAuthor();
 		String mention=null;
@@ -328,7 +412,7 @@ public class ArticleListFragment extends Fragment
 		switch(item.getItemId())
 		//if( REPLY_POST_ORDER ==item.getItemId())
 		{
-		case QUOTE_ORDER:
+		case R.id.quote_subject:
 
 			final String quote_regex = "\\[quote\\]([\\s\\S])*\\[/quote\\]";
 			content = content.replaceAll(quote_regex, "");
@@ -356,7 +440,7 @@ public class ArticleListFragment extends Fragment
 			postPrefix.append("\n[@");
 			postPrefix.append(name);
 			postPrefix.append("]\n");
-		case REPLY_ORDER:	
+		//case R.id.r:	
 			
 			if(!StringUtil.isEmpty(mention))
 				intent.putExtra("mention", mention);
@@ -369,7 +453,7 @@ public class ArticleListFragment extends Fragment
 				getActivity().overridePendingTransition(R.anim.zoom_enter,
 						R.anim.zoom_exit);
 			break;
-		case SHOW_MODIFY_ORDER :
+		case R.id.edit :
 			Intent intentModify = new Intent();
 			intentModify.putExtra("prefix", StringUtil.removeBrTag(content) );
 			intentModify.putExtra("tid", tidStr);
@@ -382,7 +466,7 @@ public class ArticleListFragment extends Fragment
 			getActivity().overridePendingTransition(R.anim.zoom_enter,
 					R.anim.zoom_exit);
 			break;
-		case COPY_CLIPBOARD_ORDER:	
+		case R.id.copy_to_clipboard:	
 			//if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB )
 			//{
 				android.text.ClipboardManager  cbm = (android.text.ClipboardManager) getActivity().getSystemService(Activity.CLIPBOARD_SERVICE);
@@ -394,7 +478,7 @@ public class ArticleListFragment extends Fragment
 
 			Toast.makeText(getActivity(), "已经复制到剪切板", Toast.LENGTH_SHORT).show();
 			break;
-		case SHOW_THISONLY_ORDER:
+		case R.id.show_this_person_only:
 			Intent intentThis = new Intent();
 			intentThis.putExtra("tab", "1");
 			intentThis.putExtra("tid",tid );
@@ -409,11 +493,11 @@ public class ArticleListFragment extends Fragment
 			//ActivityUtil.getInstance().noticeSaying(getActivity());
 
 			break;
-		case SHOW_ALL:
+		case R.id.show_whole_thread:
 			restNotifier.reset(0, 0);
 			ActivityUtil.getInstance().noticeSaying(getActivity());
 			break;
-		case POST_COMMENT:
+		case R.id.post_comment:
 			final String dialog_tag = "post comment";
 			FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
 	        Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag(dialog_tag);
@@ -428,10 +512,10 @@ public class ArticleListFragment extends Fragment
 			df.show(ft, dialog_tag);
 			
 			break;
-		case SEARCH_POST:
+		case R.id.search_post:
 			
 			intent.putExtra("searchpost", 1);
-		case SEARCH_SUBJECT:
+		case R.id.search_subject:
 			intent.putExtra("authorid", row.getAuthorid());
 			intent.setClass(getActivity(), TopicListActivity.class);
 			startActivity(intent);
