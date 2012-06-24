@@ -183,10 +183,11 @@ public class TopicListAdapter extends BaseAdapter
 
 		if(!StringUtil.isEmpty(entry.getTitlefont()) )
 		{
+			final TextPaint tp = holder.title.getPaint();
 			final String font = entry.getTitlefont();
+			tp.setFakeBoldText(false);
 			if(font.equals("~1~~")){
-				TextPaint tp = holder.title.getPaint();
-	            tp.setFakeBoldText(true);
+				tp.setFakeBoldText(true);
 			}else if(font.startsWith("green")){
 				holder.title.setTextColor(res.getColor(R.color.green));
 			}else if(font.startsWith("blue")){
