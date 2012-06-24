@@ -180,12 +180,12 @@ public class TopicListAdapter extends BaseAdapter
 		
 		
 		holder.title.setTextSize(size);
-
+		final TextPaint tp = holder.title.getPaint();
+		tp.setFakeBoldText(false);
+		
 		if(!StringUtil.isEmpty(entry.getTitlefont()) )
 		{
-			final TextPaint tp = holder.title.getPaint();
 			final String font = entry.getTitlefont();
-			tp.setFakeBoldText(false);
 			if(font.equals("~1~~")){
 				tp.setFakeBoldText(true);
 			}else if(font.startsWith("green")){
