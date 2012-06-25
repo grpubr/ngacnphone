@@ -152,16 +152,30 @@ public class TopicListAdapter extends BaseAdapter
 	
 	private void handleJsonList(ViewHolder holder, int position){
 		ThreadPageInfo entry = this.topicListInfo.getArticleEntryList().get(position);
+		Resources  res = inflater.getContext().getResources();
+		ThemeManager theme = ThemeManager.getInstance();
+		boolean night = false;
+		int nightLinkColor = res.getColor(R.color.night_link_color);
+		if(theme.getMode() == ThemeManager.MODE_NIGHT )
+			night  = true;
 		holder.author.setText("楼主:" + entry.getAuthor());
+		if(night)
+			holder.author.setTextColor(nightLinkColor);
+			
 		String lastPoster = entry.getLastposter_org();
 		if(StringUtil.isEmpty(lastPoster))
 			lastPoster = entry.getLastposter();
 		holder.lastReply.setText("最后回复:" + lastPoster);
 		holder.num.setText("" + entry.getReplies());
+		if(night)
+		{
+			holder.lastReply.setTextColor(nightLinkColor);
+			holder.num.setTextColor(nightLinkColor);
+		}
 		
-		Resources  res = inflater.getContext().getResources();
+		
 		holder.title.setTextColor(res.getColor(
-				ThemeManager.getInstance().getForegroundColor()));
+				theme.getForegroundColor()));
 		float size = PhoneConfiguration.getInstance().getTextSize();
 		
 		String titile = entry.getContent();
