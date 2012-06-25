@@ -316,33 +316,36 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 
 
 		holder.position = position;
-
-		int colorId = ThemeManager.getInstance().getBackgroundColor();
+		ThemeManager theme = ThemeManager.getInstance();
+		int colorId = theme.getBackgroundColor();
 		view.setBackgroundResource(colorId);
 
 		ThreadRowInfo row = data.getRowList().get(position);
 
 		handleAvatar(holder.avatarIV, row);
 
+		
+
+		
 		// 其他处理
 		int fgColorId = ThemeManager.getInstance().getForegroundColor();
 		int fgColor = parent.getContext().getResources().getColor(fgColorId);
-
+		boolean night = false;
+		if(theme.getMode() == ThemeManager.MODE_NIGHT )
+			night  = true;
+		
 		TextView nickNameTV = holder.nickNameTV;
 		nickNameTV.setText(row.getAuthor());
-		//nickNameTV.setTextColor(fgColor);
-		//TextPaint tp = holder.nickNameTV.getPaint();
-		//tp.setFakeBoldText(true);// bold for Chinese character
+		nickNameTV.setTextColor(fgColor);
+		TextPaint tp = holder.nickNameTV.getPaint();
+		tp.setFakeBoldText(true);// bold for Chinese character
 
 		TextView titleTV = holder.titleTV;
 		if (!StringUtil.isEmpty(row.getSubject()) && position != 0) {
 			titleTV.setText(row.getSubject());
 			titleTV.setTextColor(fgColor);
-			//tp = titleTV.getPaint();
-		//	tp.setFakeBoldText(true);// bold for Chinese character
-		} else {
-			//titleTV.setVisibility(View.GONE);
-		}
+
+		} 
 
 		int bgColor = parent.getContext().getResources().getColor(colorId);
 
@@ -358,9 +361,11 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		final String floor = String.valueOf(lou);
 		TextView floorTV = holder.floorTV;
 		floorTV.setText("[" + floor + " 楼]");
+		floorTV.setTextColor(fgColor);
 
 		TextView postTimeTV = holder.postTimeTV;
 		postTimeTV.setText(row.getPostdate());
+		postTimeTV.setTextColor(fgColor);
 
 		if (position == this.getCount() - 1) {
 			end = System.currentTimeMillis();

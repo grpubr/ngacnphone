@@ -5,7 +5,7 @@ import gov.pianzong.androidnga.R;
 public class ThemeManager {
 	private static ThemeManager instance = null;
 	int foregroundColor[]={R.color.black,R.color.night_fore_color};
-	int backgroundColor[]={R.color.shit2,R.color.black};
+	int backgroundColor[]={R.color.shit2,R.color.night_bg_color};
 	int mode = 0;
 	private int cseq = 0;
 	static final public int MODE_NORMAL = 0;
