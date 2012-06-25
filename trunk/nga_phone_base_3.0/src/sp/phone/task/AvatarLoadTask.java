@@ -9,15 +9,13 @@ import java.util.zip.ZipFile;
 
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.ImageUtil;
-
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
 public class AvatarLoadTask extends AsyncTask<String, Integer, Bitmap> {
-
+	static final String TAG = AvatarLoadTask.class.getSimpleName();
 	final ImageView view ;
 	final ZipFile zipFile;
 	final boolean downImg;
@@ -43,7 +41,7 @@ public class AvatarLoadTask extends AsyncTask<String, Integer, Bitmap> {
 		try {
 			is = new FileInputStream(avatarLocalPath);
 		} catch (FileNotFoundException e) {
-			Log.d(this.getClass().getSimpleName(),
+			Log.d(TAG,
 					"avatar:" + avatarLocalPath + " is not cached" );
 		}
 		
@@ -55,7 +53,7 @@ public class AvatarLoadTask extends AsyncTask<String, Integer, Bitmap> {
 				try {
 					is = zipFile.getInputStream(entry);
 				} catch (IOException e) {
-					Log.d(this.getClass().getSimpleName(), "avatar "
+					Log.d(TAG, "avatar "
 							+ avatarLocalPath + " is not in zip");
 				}
 			}
@@ -66,16 +64,17 @@ public class AvatarLoadTask extends AsyncTask<String, Integer, Bitmap> {
 			HttpUtil.downImage(avatarUrl, avatarLocalPath);
 			try {
 				is = new FileInputStream(avatarLocalPath);
-				Log.d(this.getClass().getSimpleName(),
-						"download avatar from " + avatarLocalPath);
+				Log.d(TAG,
+						"download avatar from " + avatarUrl);
 			
 			} catch (FileNotFoundException e) {
-				Log.d(this.getClass().getSimpleName(),
-						"avatar " + avatarLocalPath + " is failed to download" );
+				Log.d(TAG,
+						"avatar " + avatarUrl + " is failed to download" );
 			}
 		}
 		
 		if(is !=null){
+			Log.d(TAG,"load avatar from file: " + avatarLocalPath);
 			bitmap = ImageUtil.loadAvatarFromStream(is);
 			try {
 				is.close();

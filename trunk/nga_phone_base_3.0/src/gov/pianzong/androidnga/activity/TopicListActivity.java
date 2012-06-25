@@ -1,5 +1,6 @@
 package gov.pianzong.androidnga.activity;
 
+import gov.pianzong.androidnga.R;
 import sp.phone.adapter.TabsAdapter;
 import sp.phone.bean.RSSFeed;
 import sp.phone.bean.TopicListInfo;
@@ -12,17 +13,24 @@ import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.content.pm.ActivityInfo;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcAdapter.CreateNdefMessageCallback;
+import android.nfc.NfcEvent;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.TabHost;
-import gov.pianzong.androidnga.R;
 
 public class TopicListActivity extends FragmentActivity
 	implements OnTopListLoadFinishedListener{
-	private String TAG = TopicListActivity.class.getSimpleName();
+	static final private String TAG = TopicListActivity.class.getSimpleName();
+	static final int MESSAGE_SENT = 1;
 	TabHost tabhost;
 	ViewPager mViewPager;
 	TabsAdapter mTabsAdapter=null;
@@ -38,7 +46,26 @@ public class TopicListActivity extends FragmentActivity
 		tabhost = (TabHost) findViewById(android.R.id.tabhost);
 		tabhost.setup();
 		mViewPager = (ViewPager) findViewById(R.id.pager);
+		if (VERSION.SDK_INT >= VERSION_CODES.ICE_CREAM_SANDWICH) {
+			NfcAdapter adapter = NfcAdapter.getDefaultAdapter(this);
+			CreateNdefMessageCallback callback = new CreateNdefMessageCallback(){
 
+				@Override
+				public NdefMessage createNdefMessage(NfcEvent event) {
+					final String url = getUrl();
+					NdefMessage msg = new NdefMessage(
+			                new NdefRecord[]{NdefRecord.createUri(url)}
+			                );
+					return msg;
+				}
+				
+			};
+			if (adapter != null) {
+				adapter.setNdefPushMessageCallback(callback, this);
+
+			}
+		}
+		
 		fid = 0;
 		authorid = 0;
 		int pageInUrl = 0;
@@ -136,6 +163,8 @@ public class TopicListActivity extends FragmentActivity
 		super.onDestroy();
 	}
 	
+	
+	
 	private int getUrlParameter(String url, String paraName){
 		if(StringUtil.isEmpty(url))
 		{
@@ -185,6 +214,35 @@ public class TopicListActivity extends FragmentActivity
 		
 		if( mTabsAdapter.getCount() != pageCount)
 			mTabsAdapter.setCount(pageCount);
+	}
+
+
+	public String getUrl() {
+		final String scheme = getResources().getString(R.string.myscheme);
+		final StringBuilder sb = new StringBuilder(scheme);
+		sb.append("://bbs.ngacn.cc/thread.php?");
+		if(fid!=0){
+			sb.append("fid=");
+			sb.append(fid);
+			sb.append('&');
+		}
+		if(authorid !=0){
+			sb.append("authorid=");
+			sb.append(authorid);
+			sb.append('&');
+		}
+		if(this.searchpost != 0){
+			sb.append("searchpost=");
+			sb.append(searchpost);
+			sb.append('&');
+		}
+		if(this.mViewPager.getCurrentItem() != 0){
+			sb.append("page=");
+			sb.append(mViewPager.getCurrentItem());
+			sb.append('&');
+		}
+
+		return sb.toString();
 	}
 	
 	

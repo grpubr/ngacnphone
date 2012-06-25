@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="gov.pianzong.androidnga" android:versionCode="295"
-	android:versionName="1.2.95" android:installLocation="auto">
+	package="gov.pianzong.androidnga" android:versionCode="296"
+	android:versionName="1.2.96" android:installLocation="auto">
 	
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="14"/>
+	<uses-permission android:name="android.permission.NFC"/>
 	
 	<application android:name=".activity.MyApp" android:label="@string/app_name" android:icon="@drawable/nga_bg" android:hardwareAccelerated="true" android:anyDensity="false">
 		<activity android:name=".activity.MainActivity" android:label="@string/app_name">
@@ -31,8 +32,13 @@
 		        <action android:name="android.intent.action.VIEW" /> 
 		        <category android:name="android.intent.category.DEFAULT" /> 
 				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:scheme="http" android:host="nga.178.com" android:path="/thread.php"/>
+				<data android:scheme="@string/myscheme" android:host="nga.178.com" android:path="/thread.php"/>
 			</intent-filter>
+			<intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="@string/myscheme" android:host="bbs.ngacn.cc" android:path="/thread.php"/>
+            </intent-filter>
 		</activity>
 		<activity android:name=".activity.ArticleListActivity">
 		    <intent-filter>
@@ -53,6 +59,11 @@
 				<category android:name="android.intent.category.BROWSABLE" />
 				<data android:scheme="@string/myscheme" android:host="bbs.ngacn.cc" android:path="/read.php"/>
 			</intent-filter>
+			<intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="@string/myscheme" android:host="bbs.ngacn.cc" android:path="/read.php"/>
+            </intent-filter>
 		    
 		</activity>
 		<activity android:name=".activity.ImageViewerActivity"></activity>

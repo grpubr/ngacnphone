@@ -12,7 +12,14 @@ import sp.phone.utils.ThemeManager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcAdapter.CreateNdefMessageCallback;
+import android.nfc.NfcEvent;
 import android.os.Bundle;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -45,7 +52,25 @@ implements PagerOwnner,ResetableArticle {
 		tabhost = (TabHost) findViewById(android.R.id.tabhost);
 		tabhost.setup();
 		mViewPager = (ViewPager)findViewById(R.id.pager);
+		if (VERSION.SDK_INT >= VERSION_CODES.ICE_CREAM_SANDWICH) {
+			NfcAdapter adapter = NfcAdapter.getDefaultAdapter(this);
+			CreateNdefMessageCallback callback = new CreateNdefMessageCallback(){
 
+				@Override
+				public NdefMessage createNdefMessage(NfcEvent event) {
+					final String url = getUrl();
+					NdefMessage msg = new NdefMessage(
+			                new NdefRecord[]{NdefRecord.createUri(url)}
+			                );
+					return msg;
+				}
+				
+			};
+			if (adapter != null) {
+				adapter.setNdefPushMessageCallback(callback, this);
+
+			}
+		}
 
 		tid = 7;
 		int pageFromUrl = 0;
@@ -242,7 +267,37 @@ implements PagerOwnner,ResetableArticle {
 	}
 
 
+	public String getUrl(){
+		final String scheme = getResources().getString(R.string.myscheme);
+		final StringBuilder sb = new StringBuilder(scheme);
+		sb.append("://bbs.ngacn.cc/read.php?");
+		if(tid!=0){
+			sb.append("tid=");
+			sb.append(tid);
+			sb.append('&');
+		}
+		if(authorid !=0){
+			sb.append("authorid=");
+			sb.append(authorid);
+			sb.append('&');
+		}
+		if(pid != 0){
+			sb.append("pid=");
+			sb.append(pid);
+			sb.append('&');
+		}
+		if(this.mViewPager.getCurrentItem() != 0){
+			sb.append("page=");
+			sb.append(mViewPager.getCurrentItem());
+			sb.append('&');
+		}
 
+		return sb.toString();
+	}
+
+
+
+	
     
 
 }
