@@ -195,8 +195,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 				
 			}else if(url.endsWith(".gif")||url.endsWith(".jpg")||
 					url.endsWith(".png")||url.endsWith(".jpeg")||
-					url.endsWith(".bmp")||
-					url.endsWith(".swf")
+					url.endsWith(".bmp")
 					){
 				Intent intent = new Intent();
 				intent.putExtra("path", url);
