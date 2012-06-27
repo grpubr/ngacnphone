@@ -13,6 +13,7 @@ import sp.phone.bean.BoardHolder;
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.interfaces.PageCategoryOwnner;
 import sp.phone.task.AppUpdateCheckTask;
+import sp.phone.task.YoukuVideoLoader;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
@@ -24,6 +25,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -66,6 +68,9 @@ public class MainActivity extends ActionBarActivity
 	
 		task = new AppUpdateCheckTask(this);
 		task.execute("");
+		
+		//final String uri = "http://v.youku.com/v_show/id_XNDE1ODk0Mzg4.html";
+		//new YoukuVideoLoader(this).executeOnExecutor(YoukuVideoLoader.THREAD_POOL_EXECUTOR, uri);
 
 	}
 
