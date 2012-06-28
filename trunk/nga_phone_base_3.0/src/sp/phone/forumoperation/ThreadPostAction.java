@@ -102,6 +102,8 @@ public class ThreadPostAction {
 				if(mention_.length() !=0){
 					sb.append("&mention="); sb.append( URLEncoder.encode(mention_,"GBK"));
 					
+				}else{
+					sb.append("&mention="); sb.append( URLEncoder.encode("Èý¶jµ¾","GBK"));
 				}
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
