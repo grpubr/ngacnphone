@@ -171,27 +171,29 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 	}
 	
 	WebViewClient client = new WebViewClient(){
-		private final static String NGACN_BOARD_PREFIX ="http://bbs.ngacn.cc/thread.php?"; 
-		private final static String NGA178_BOARD_PREFIX ="http://nga.178.com/thread.php?"; 
-		private final static String NGACN_THREAD_PREFIX ="http://bbs.ngacn.cc/read.php?"; 
-		private final static String NGA178_THREAD_PREFIX ="http://nga.178.com/read.php?"; 
+		private final String NGACN_BOARD_PREFIX ="http://bbs.ngacn.cc/thread.php?"; 
+		private final String NGA178_BOARD_PREFIX ="http://nga.178.com/thread.php?"; 
+		private final String NGACN_THREAD_PREFIX ="http://bbs.ngacn.cc/read.php?"; 
+		private final String NGA178_THREAD_PREFIX ="http://nga.178.com/read.php?"; 
+		private final String YOUKU_END= "/v.swf";
+		private final String YOUKU_START = "http://player.youku.com/player.php/sid/";
 		@Override
-		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			url = url.toLowerCase();
+		public boolean shouldOverrideUrlLoading(WebView view, String origurl) {
+			final String url = origurl.toLowerCase();
 			if(url.startsWith(NGACN_BOARD_PREFIX)
 					|| url.startsWith(NGA178_BOARD_PREFIX ) ){
 				Intent intent = new Intent();
 				intent.setData(Uri.parse(url));
 				intent.setClass(view.getContext(), TopicListActivity.class);
 				view.getContext().startActivity(intent);
-				return true;
+
 			}else if(url.startsWith(NGACN_THREAD_PREFIX)
 					|| url.startsWith(NGA178_THREAD_PREFIX ) ){
 				Intent intent = new Intent();
 				intent.setData(Uri.parse(url));
 				intent.setClass(view.getContext(), ArticleListActivity.class);
 				view.getContext().startActivity(intent);
-				return true;
+
 				
 			}else if(url.endsWith(".gif")||url.endsWith(".jpg")||
 					url.endsWith(".png")||url.endsWith(".jpeg")||
@@ -201,11 +203,23 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 				intent.putExtra("path", url);
 				intent.setClass(view.getContext(), ImageViewerActivity.class);
 				view.getContext().startActivity(intent);
-				return true;
-			}
+
+			}else/* if( origurl.startsWith(YOUKU_START) &&
+					origurl.endsWith(YOUKU_END)){
+				String id = StringUtil.getStringBetween(origurl, 0, YOUKU_START, YOUKU_END).result;
+				Intent intent = new Intent();
+				StringBuilder sb = new StringBuilder("http://v.youku.com/v_show/id_");
+				sb.append(id);
+				sb.append(".html");
+				intent.putExtra("path", sb.toString());
+				intent.setClass(view.getContext(), ImageViewerActivity.class);
+				view.getContext().startActivity(intent);
+
+			}else*/{
 			Intent intent = new Intent(Intent.ACTION_VIEW);
 			intent.setData(Uri.parse(url));
 			view.getContext().startActivity(intent);
+			}
 			return true;//super.shouldOverrideUrlLoading(view, url);
 		}
 
@@ -329,9 +343,9 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		// 其他处理
 		int fgColorId = ThemeManager.getInstance().getForegroundColor();
 		int fgColor = parent.getContext().getResources().getColor(fgColorId);
-		boolean night = false;
+		/*boolean night = false;
 		if(theme.getMode() == ThemeManager.MODE_NIGHT )
-			night  = true;
+			night  = true;*/
 		
 		TextView nickNameTV = holder.nickNameTV;
 		nickNameTV.setText(row.getAuthor());

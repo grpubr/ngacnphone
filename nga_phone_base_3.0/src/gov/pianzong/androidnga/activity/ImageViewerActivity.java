@@ -16,6 +16,7 @@ import android.webkit.WebView;
 
 public class ImageViewerActivity extends FragmentActivity {
 	private WebView wv;
+	private final String IPHONE_UA = "Mozilla/5.0 (iPad; CPU OS 5_1 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9B176 Safari/7534.48.3";
 	@Override
 	protected void onCreate(Bundle arg0) {
 
@@ -54,6 +55,7 @@ public class ImageViewerActivity extends FragmentActivity {
 			settings.setBuiltInZoomControls(true);	
 			settings.setUseWideViewPort(true); 
 			settings.setLoadWithOverviewMode(true);
+			settings.setUserAgentString(IPHONE_UA);
 			wv.loadUrl(uri);
 		}
 		
