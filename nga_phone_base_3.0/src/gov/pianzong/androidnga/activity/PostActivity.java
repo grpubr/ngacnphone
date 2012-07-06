@@ -335,7 +335,7 @@ public class PostActivity extends FragmentActivity
 				loading = false;
 			}
 			ActivityUtil.getInstance().dismiss();
-			super.onCancelled(result);
+			super.onCancelled();
 		}
 
 		@Override

@@ -44,7 +44,7 @@ public class ImageViewerActivity extends FragmentActivity {
 			//final String html = "<embed src='"
 			//		+uri+
 			//	"' allowFullScreen='true' quality='high'  align='middle' allowScriptAccess='always' type='application/x-shockwave-flash'></embed>";
-			settings.setJavaScriptEnabled(true);
+			//settings.setJavaScriptEnabled(true);
 			wv.setWebChromeClient(new WebChromeClient());
 			settings.setPluginState(PluginState.ON);
 			wv.loadUrl(uri);

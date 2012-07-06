@@ -355,20 +355,7 @@ public class ArticleListFragment extends Fragment
 		}else{
 			inflater.inflate(R.menu.articlelist_context_menu_with_tid, menu);
 		}
-		/*
-		menu.add(0,QUOTE_ORDER,0, R.string.quote_subject);
-		menu.add(0,POST_COMMENT,0, R.string.post_comment);	
 
-		if(this.pid == 0){
-		menu.add(0,REPLY_ORDER,0, R.string.reply_thread);
-		menu.add(0,COPY_CLIPBOARD_ORDER,0, R.string.copy_to_clipboard);
-		menu.add(0,SHOW_THISONLY_ORDER,0, R.string.show_this_person_only);
-		menu.add(0,SHOW_MODIFY_ORDER,0, R.string.edit);
-		}else{
-			menu.add(0,SHOW_ALL,0, R.string.show_whole_thread);
-		}
-		menu.add(0,SEARCH_POST,0, R.string.search_post);
-		menu.add(0,SEARCH_SUBJECT,0, R.string.search_subject);*/
 		
 		
 	}
@@ -399,12 +386,20 @@ public class ArticleListFragment extends Fragment
 		if(info != null){
 			position = info.position;
 		}
+		if(position <0 || position >= listview.getAdapter().getCount()){
+			Toast.makeText(getActivity(), "无法确定楼层，选择0楼", 
+					Toast.LENGTH_LONG	).show();
+			position = 0;
+		}
 		StringBuffer postPrefix = new StringBuffer();
 		String tidStr = String.valueOf(this.tid);
 
 		
 		ThreadRowInfo row = (ThreadRowInfo) listview.getItemAtPosition(position);
-		
+		if(row == null){
+			Toast.makeText(getActivity(), "客户端发生未知错误", Toast.LENGTH_LONG	).show();
+			return true;
+		}
 		String content = row.getContent();
 		final String name = row.getAuthor();
 		String mention=null;

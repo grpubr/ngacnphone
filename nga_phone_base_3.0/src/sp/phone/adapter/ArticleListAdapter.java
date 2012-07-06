@@ -165,7 +165,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		contentTV.setWebViewClient(this.client);
 		//contentTV.setOnLongClickListener(this);
 		contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
-
+		//contentTV.loadData(ngaHtml, "text/html; charset=utf-8", "UTF-8");
 		
 		
 	}
@@ -204,23 +204,13 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 				intent.setClass(view.getContext(), ImageViewerActivity.class);
 				view.getContext().startActivity(intent);
 
-			}else/* if( origurl.startsWith(YOUKU_START) &&
-					origurl.endsWith(YOUKU_END)){
-				String id = StringUtil.getStringBetween(origurl, 0, YOUKU_START, YOUKU_END).result;
-				Intent intent = new Intent();
-				StringBuilder sb = new StringBuilder("http://v.youku.com/v_show/id_");
-				sb.append(id);
-				sb.append(".html");
-				intent.putExtra("path", sb.toString());
-				intent.setClass(view.getContext(), ImageViewerActivity.class);
+			}else{
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+				intent.setData(Uri.parse(url));
 				view.getContext().startActivity(intent);
-
-			}else*/{
-			Intent intent = new Intent(Intent.ACTION_VIEW);
-			intent.setData(Uri.parse(url));
-			view.getContext().startActivity(intent);
+				//return false;
 			}
-			return true;//super.shouldOverrideUrlLoading(view, url);
+			return true;
 		}
 
 
@@ -310,11 +300,12 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 				if (holder.position == position) {
 					return view;
 				}
+				holder.contentTV.stopLoading();
 				if (holder.contentTV.getHeight() > 300) {
 					Log.d(TAG, "skip and store a tall view ,floor " + position);
 					// if (config.useViewCache)
 					viewCache.put(holder.position, view);
-
+					
 					view = LayoutInflater.from(activity).inflate(
 							R.layout.relative_aritclelist,  parent,false);
 					holder = initHolder(view);
@@ -343,9 +334,6 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		// 其他处理
 		int fgColorId = ThemeManager.getInstance().getForegroundColor();
 		int fgColor = parent.getContext().getResources().getColor(fgColorId);
-		/*boolean night = false;
-		if(theme.getMode() == ThemeManager.MODE_NIGHT )
-			night  = true;*/
 		
 		TextView nickNameTV = holder.nickNameTV;
 		nickNameTV.setText(row.getAuthor());
@@ -363,11 +351,6 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		int bgColor = parent.getContext().getResources().getColor(colorId);
 
 		WebView contentTV = holder.contentTV;
-		//WebViewTag tag = new WebViewTag();
-		//tag.lv = (ListView) parent;
-		//tag.holder = view;
-		//contentTV.setTag(tag);
-		//contentTV.setOnLongClickListener(this);
 		handleContentTV(contentTV, row, colorId, bgColor, fgColor);
 
 		final int lou = row.getLou();
@@ -385,10 +368,6 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 			Log.i(getClass().getSimpleName(), "render cost:" + (end - start));
 		}
 
-		/*
-		 * if(position ==0) { for(int i=1; i<this.getCount(); i++)
-		 * this.getView(i, null, parent); }
-		 */
 
 		return view;
 	}

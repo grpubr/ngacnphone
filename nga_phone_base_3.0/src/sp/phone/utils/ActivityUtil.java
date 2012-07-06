@@ -31,7 +31,7 @@ public class ActivityUtil {
 	}
 
 	private DialogFragment df = null;
-
+	private ProgressDialog pd = null;
 
 	public void noticeSaying(Context context){
 		
@@ -80,11 +80,12 @@ public class ActivityUtil {
 	            ft.remove(prev);
 	        }
 
-	        ft.commit();
+	        //ft.commit();
 			df.show(fm, dialogTag);
 			this.df = df;
 			}catch(Exception e){
 				Log.e(this.getClass().getSimpleName(),Log.getStackTraceString(e));
+				pd = ProgressDialog.show(c, title, content);
 			}
 			
 		}
@@ -127,6 +128,16 @@ public class ActivityUtil {
 
 			} else {
 				df = null;
+			}
+			if(pd != null)
+			{
+				try{
+				pd.dismiss();
+				}catch(Exception e){
+					Log.e(this.getClass().getSimpleName(),Log.getStackTraceString(e));
+				}
+				pd = null;
+				
 			}
 		}
 	}

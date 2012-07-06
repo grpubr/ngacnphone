@@ -65,7 +65,7 @@ AsyncTask<String, Integer, String> {
 	@Override
 	protected void onCancelled(String result) {
 		ActivityUtil.getInstance().dismiss();
-		super.onCancelled(result);
+		super.onCancelled();
 	}
 
 	@Override
@@ -127,7 +127,7 @@ AsyncTask<String, Integer, String> {
 		URL url;
 		try {
 			url = new URL(ATTACHMENT_SERVER);
-			Log.d(LOG_TAG, "cookie:" + cookie);
+			//Log.d(LOG_TAG, "cookie:" + cookie);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("POST");
 		conn.setRequestProperty("Content-Type",
@@ -151,12 +151,12 @@ AsyncTask<String, Integer, String> {
 	    is.close(); 
 	    InputStream httpInputStream = conn.getInputStream();
 		for (int i = 1; (conn.getHeaderFieldKey(i)) != null; i++) {
-			Log.d(LOG_TAG, conn.getHeaderFieldKey(i) + ":"
-					+ conn.getHeaderField(i));
+			//Log.d(LOG_TAG, conn.getHeaderFieldKey(i) + ":"
+			//		+ conn.getHeaderField(i));
 
 		}
 	    html = IOUtils.toString(httpInputStream, "gbk");
-	    Log.d(LOG_TAG, "get response" + html);
+	   // Log.d(LOG_TAG, "get response" + html);
 	    out.close();
 	    
 		} catch (Exception e) {
