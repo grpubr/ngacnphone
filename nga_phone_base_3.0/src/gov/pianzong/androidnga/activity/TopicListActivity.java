@@ -2,7 +2,6 @@ package gov.pianzong.androidnga.activity;
 
 import gov.pianzong.androidnga.R;
 import sp.phone.adapter.TabsAdapter;
-import sp.phone.bean.RSSFeed;
 import sp.phone.bean.TopicListInfo;
 import sp.phone.fragment.TopicListFragment;
 import sp.phone.interfaces.OnTopListLoadFinishedListener;
@@ -189,11 +188,7 @@ public class TopicListActivity extends FragmentActivity
 		return ret;
 	}
 
-	@Override
-	public void finishLoad(RSSFeed feed) {
 
-		
-	}
 
 	@Override
 	public void jsonfinishLoad(TopicListInfo result) {

@@ -1,8 +1,6 @@
 package sp.phone.adapter;
 
 import gov.pianzong.androidnga.R;
-import sp.phone.bean.RSSFeed;
-import sp.phone.bean.RSSItem;
 import sp.phone.bean.ThreadPageInfo;
 import sp.phone.bean.TopicListInfo;
 import sp.phone.interfaces.OnTopListLoadFinishedListener;
@@ -12,7 +10,6 @@ import sp.phone.utils.ThemeManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.text.TextPaint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +21,6 @@ public class TopicListAdapter extends BaseAdapter
 
 	private LayoutInflater inflater;
 	private TopicListInfo topicListInfo=null;
-	private RSSFeed rssFeed=null;
 
 	public TopicListAdapter(Context context) {
 		this.inflater = LayoutInflater.from(context);
@@ -46,20 +42,14 @@ public class TopicListAdapter extends BaseAdapter
 			return ret;
 		}
 		
-		if(rssFeed==null){
-			return null;
-		}
-		return rssFeed.getItems().get(arg0).getGuid();
+		return null;
 	}
 
 	public int getCount() {
 		if(topicListInfo!=null)
 			return topicListInfo.get__T__ROWS();
 		
-		if(rssFeed == null){
-			return 0;
-		}
-		return rssFeed.getItems().size();
+		return 0;
 	}
 
 	public long getItemId(int arg0) {
@@ -105,49 +95,13 @@ public class TopicListAdapter extends BaseAdapter
 		int colorId = ThemeManager.getInstance().getBackgroundColor();
 		convertView.setBackgroundResource(colorId);
 
-		if(topicListInfo != null){
+
 			handleJsonList( holder,position);
 			return convertView;
-		}
+
 		
 		
-		RSSItem item = rssFeed.getItems().get(position);
-
-		String description = item.getDescription();
-		String[] arr = description.split("\n");
-
-		holder.author.setText("楼主:" + item.getAuthor());
-		if (arr[1] != null) {
-			int start = arr[1].indexOf('(') + 1;// 93个回复 于 (hgfan)
-			int end = arr[1].indexOf(')');
-			String lastReplyUser = arr[1].substring(start, end);
-			holder.lastReply.setText("最后回复:" + lastReplyUser);
-		}
-		int last_index = arr.length - 1;
-		String reply_count = "0";
-		int count_in_desc = arr[last_index].indexOf("个");
-		if (count_in_desc != -1)
-			reply_count = arr[last_index].substring(0,
-					arr[last_index].indexOf("个"));
-		holder.num.setText("" + reply_count);
-		// replies.setText("[" + reply_count + " RE]");
-		try {
-			holder.title.setTextColor(parent.getResources().getColor(
-					ThemeManager.getInstance().getForegroundColor()));
-			float size = PhoneConfiguration.getInstance().getTextSize();
-			holder.title.setTextSize(size);
-		} catch (Exception e) {
-			Log.e(getClass().getSimpleName(), Log.getStackTraceString(e));
-		}
-		holder.title.setText(arr[0]);
-
-		// }
-
-		if (position == this.getCount() - 1) {
-			end = System.currentTimeMillis();
-			Log.i(getClass().getSimpleName(), "render cost:" + (end - start));
-		}
-		return convertView;
+		
 	}
 	
 	private void handleJsonList(ViewHolder holder, int position){
@@ -217,12 +171,7 @@ public class TopicListAdapter extends BaseAdapter
 		
 	}
 
-	@Override
-	public void finishLoad(RSSFeed feed) {
-		this.rssFeed = feed;
-		this.notifyDataSetChanged();
-		
-	}
+
 
 	@Override
 	public void jsonfinishLoad(TopicListInfo result) {
