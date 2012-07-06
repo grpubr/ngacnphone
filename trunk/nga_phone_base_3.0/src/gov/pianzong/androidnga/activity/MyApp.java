@@ -19,8 +19,8 @@ import com.alibaba.fastjson.JSON;
 
 public class MyApp extends Application implements PerferenceConstant {
 	final private static String TAG = MyApp.class.getSimpleName();
-	public final static int version = 297;
-	private PhoneConfiguration config;
+	public final static int version = 301;
+	private PhoneConfiguration config = null;
 	boolean newVersion = false;
 	
 	
@@ -29,9 +29,11 @@ public class MyApp extends Application implements PerferenceConstant {
 		Log.w(TAG,"app nga androind start");
 		//CrashHandler crashHandler = CrashHandler.getInstance();
 		//crashHandler.init(getApplicationContext());
-		config = PhoneConfiguration.getInstance();
+		if(config == null)
+			config = PhoneConfiguration.getInstance();
 		initUserInfo();
 		loadConfig();
+		
 		super.onCreate();
 	}
 

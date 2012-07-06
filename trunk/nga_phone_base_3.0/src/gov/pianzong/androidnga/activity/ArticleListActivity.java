@@ -52,7 +52,7 @@ implements PagerOwnner,ResetableArticle {
 		tabhost = (TabHost) findViewById(android.R.id.tabhost);
 		tabhost.setup();
 		mViewPager = (ViewPager)findViewById(R.id.pager);
-		if (VERSION.SDK_INT >= VERSION_CODES.ICE_CREAM_SANDWICH) {
+		if (VERSION.SDK_INT >= VERSION_CODES.ICE_CREAM_SANDWICH) {			
 			NfcAdapter adapter = NfcAdapter.getDefaultAdapter(this);
 			CreateNdefMessageCallback callback = new CreateNdefMessageCallback(){
 

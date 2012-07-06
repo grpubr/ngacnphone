@@ -169,6 +169,7 @@ public class StringUtil {
 		s = s.replaceAll("\\[/u\\]","</u>");
 		
 		s = s.replaceAll("\\[s:(\\d+)\\]", "<img src='file:///android_asset/a$1.gif'>");
+		s = s.replace("<br/><br/>", "<br/>");
 		//[url][/url]
 		s = s.replaceAll("\\[url\\](http[^\\[|\\]]+)\\[/url\\]",
 				"<a href=\"$1\">$1</a>");
@@ -215,13 +216,13 @@ public class StringUtil {
 		//[img]./ddd.jpg[/img]
 		if(showImage){
 			s = s.replaceAll("\\[img\\]\\s*\\.(/[^\\[|\\]]+)\\s*\\[/img\\]", 
-				"<a href='http://img.ngacn.cc/attachments$1'><img src='http://img.ngacn.cc/attachments$1' style= 'max-width:100%;' ></a>");
+				"<a href='http://img.ngacn.cc/attachments$1'><img src='http://img.ngacn.cc/attachments$1' style= 'max-width:100%' ></a>");
 			s = s.replaceAll("\\[img\\]\\s*(http[^\\[|\\]]+)\\s*\\[/img\\]", 
-				"<a href='$1'><img src='$1' style= 'max-width:100%;' ></a>");
+				"<a href='$1'><img src='$1' style= 'max-width:100%' ></a>");
 			s = s.replaceAll("\\[IMG\\]\\s*\\.(/[^\\[|\\]]+)\\s*\\[/IMG\\]", 
-					"<a href='http://img.ngacn.cc/attachments$1'><img src='http://img.ngacn.cc/attachments$1' style= 'max-width:100%;' ></a>");
+					"<a href='http://img.ngacn.cc/attachments$1'><img src='http://img.ngacn.cc/attachments$1' style= 'max-width:100%' ></a>");
 			s = s.replaceAll("\\[IMG\\]\\s*(http[^\\[|\\]]+)\\s*\\[/IMG\\]", 
-					"<a href='$1'><img src='$1' style= 'max-width:100%;' ></a>");
+					"<a href='$1'><img src='$1' style= 'max-width:100%' ></a>");
 		}else{
 			s = s.replaceAll("\\[img\\]\\s*\\.(/[^\\[|\\]]+)\\s*\\[/img\\]", 
 					"<a href='http://img.ngacn.cc/attachments$1'><img src='file:///android_asset/ic_offline_image.png' style= 'max-width:100%;' ></a>");

@@ -10,13 +10,9 @@
     <string name="login">登录</string>
     <string name="login_successfully">登录成功</string>
     <string name="login_failed">登录失败</string>
-    <string name="login_post_url">http://account.178.com/q_account.php?_act=login</string>
-    <string name="subject">主题</string>
     <string name="title">标题</string>
     <string name="commit">提交</string>
     <string name="cancel">取消</string>
-    <string name="thread_reply_url">http://bbs.ngacn.cc/post.php?</string>
-    <string name="error">出错了</string>
     <string name="nowifi_downimg">没wifi也下载帖子图片</string>
     <string name="nightmode">夜间模式</string>
     <string name="refresh">刷新</string>
@@ -24,12 +20,10 @@
     <string name="new_thread">发帖</string>
     <string name="reply_thread">回帖</string>
     <string name="bookmark">收藏本帖</string>
-    <string name="showbookmark">查看收藏夹</string>
     <string name="goto_bookmark">收藏夹</string>
     <string name="text_size">帖子列表字体大小</string>
     <string name="lock_orientation">锁定屏幕</string>
     <string name="unlock_orientation">解除屏幕锁定</string>
-    <string name="tip">随便长按上面的图标，就能添加板块。板块id就是浏览器地址栏里“tid=\&quot;后面的数字</string>
     <string name="thread_load_error">可能遇到了一个广告或者帖子被删除</string>
     <string name="notification_on">启用被喷提示</string>
     <string name="notification_sound">提示声音</string>
@@ -38,8 +32,7 @@
     <string name="avoidWindfury">防止风怒机制</string>
     <string name="avatar">头像</string>
     <string name="network_error">网络错误</string>
-    <string name="thread_page_load_error">可能遇到了一个广告或者帖子被删除</string>
-    <string name="book_mark_successfully">收藏成功</string>
+  	<string name="book_mark_successfully">收藏成功</string>
     <string name="already_bookmarked">链接已经在收藏夹里了</string>
     <string name="avatar_size">头像大小</string>
     <string name="showAnimation">显示动画</string>
@@ -59,4 +52,5 @@
     <string name="show_whole_thread">显示全部</string>
     <string name="search_post">搜索回复</string>
     <string name="search_subject">搜索发帖</string>
+    <string name="avatar_description">头像</string>
 </resources>

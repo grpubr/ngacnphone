@@ -95,13 +95,15 @@
             android:layout_marginTop="15dp"
             android:paddingLeft="30dp"
             android:paddingRight="20dp" />
+
                <ImageView
-            android:id="@+id/avatarsize"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="15dp"
-            android:src="@drawable/default_avatar" />
+                   android:id="@+id/avatarsize"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginLeft="16dp"
+                   android:layout_marginTop="15dp"
+                   android:contentDescription="@string/avatar_description"
+                   android:src="@drawable/default_avatar" />
 
         <TextView
             android:id="@+id/textView_avatarsize"

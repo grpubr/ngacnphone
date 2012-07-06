@@ -69,7 +69,10 @@ public class JsonTopicListLoadTask extends AsyncTask<String, Integer, TopicListI
 		if(rows != null)
 			ret.set__T__ROWS((Integer)rows);
 		else
+		{
+			error = "二哥玩坏了或者你需要重新登录";
 			return null;
+		}
 			
 		Object forum = o.get("__SELECTED_FORUM");
 		if(forum instanceof Integer)

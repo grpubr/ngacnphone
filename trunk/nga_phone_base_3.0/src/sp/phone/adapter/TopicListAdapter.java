@@ -152,6 +152,9 @@ public class TopicListAdapter extends BaseAdapter
 	
 	private void handleJsonList(ViewHolder holder, int position){
 		ThreadPageInfo entry = this.topicListInfo.getArticleEntryList().get(position);
+		if(entry == null){
+			return;
+		}
 		Resources  res = inflater.getContext().getResources();
 		ThemeManager theme = ThemeManager.getInstance();
 		boolean night = false;
