@@ -11,8 +11,6 @@ import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.htmlparser.util.ParserException;
-
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
@@ -264,7 +262,7 @@ public class HttpUtil {
 			 ret = ArticleUtil.parserArticleList(html);
 			 long end2  = System.currentTimeMillis(); 
 			 Log.i("ArticlePage","parse action const:" + (end2-end));
-		} catch (ParserException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return ret;

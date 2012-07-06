@@ -5,7 +5,6 @@ import gov.pianzong.androidnga.activity.BookmarkActivity;
 import gov.pianzong.androidnga.activity.MainActivity;
 import gov.pianzong.androidnga.activity.PostActivity;
 import sp.phone.adapter.TopicListAdapter;
-import sp.phone.bean.RSSFeed;
 import sp.phone.bean.TopicListInfo;
 import sp.phone.interfaces.OnTopListLoadFinishedListener;
 import sp.phone.task.JsonTopicListLoadTask;
@@ -223,14 +222,7 @@ public class TopicListFragment extends Fragment
 	}
 	
 	
-	@Override
-	public void finishLoad(RSSFeed feed) {
-		if(feed !=null && getActivity() !=null )
-			getActivity().setTitle(feed.getTitle());
-		adapter.finishLoad(feed);
-		listview.setAdapter(adapter);
-		
-	}
+
 
 	@Override
 	public void jsonfinishLoad(TopicListInfo result) {

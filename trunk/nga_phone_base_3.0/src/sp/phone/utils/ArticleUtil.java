@@ -3,8 +3,6 @@ package sp.phone.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.htmlparser.util.ParserException;
-
 import sp.phone.bean.ArticlePage;
 import sp.phone.bean.ThreadData;
 import sp.phone.bean.ThreadPageInfo;
@@ -18,7 +16,7 @@ import com.alibaba.fastjson.JSONObject;
 public class ArticleUtil {
 	private final static String TAG = ArticleUtil.class.getSimpleName();
 	public static ArticlePage parserArticleList(String html)
-			throws ParserException {
+{
 
 	/*	AndFilter andFilter = new AndFilter(new TagNameFilter("table"),
 				new HasAttributeFilter("class", "forumbox postbox"));
