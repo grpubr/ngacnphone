@@ -325,6 +325,11 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		view.setBackgroundResource(colorId);
 
 		ThreadRowInfo row = data.getRowList().get(position);
+		
+		if(row == null){
+			holder.titleTV.setText("´íÎóÂ¥²ã");
+			return view;
+		}
 
 		handleAvatar(holder.avatarIV, row);
 

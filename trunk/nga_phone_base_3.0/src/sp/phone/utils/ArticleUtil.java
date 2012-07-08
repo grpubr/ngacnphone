@@ -260,21 +260,24 @@ public class ArticleUtil {
 	}
 
 	
-	static private List<ThreadRowInfo> convertJSobjToList(JSONObject rowMap,int count){
+	static private List<ThreadRowInfo> convertJSobjToList(JSONObject rowMap,
+			int count) {
 		List<ThreadRowInfo> __R = new ArrayList<ThreadRowInfo>();
 
-		
-		if(rowMap == null)
+		if (rowMap == null)
 			return null;
-		for(int i = 0; i <count; i++){
-			JSONObject rowObj  = (JSONObject) rowMap.get(String.valueOf(i));
-			ThreadRowInfo row =JSONObject.toJavaObject(rowObj, ThreadRowInfo.class);
-			JSONObject commObj  = (JSONObject)rowObj.get("comment");
-			
-			if(commObj != null)
-			{
-				
-				row.setComments(convertJSobjToList(commObj));
+		for (int i = 0; i < count; i++) {
+			JSONObject rowObj = (JSONObject) rowMap.get(String.valueOf(i));
+			ThreadRowInfo row = null;
+			if (rowObj != null) {
+
+				row = JSONObject.toJavaObject(rowObj, ThreadRowInfo.class);
+				JSONObject commObj = (JSONObject) rowObj.get("comment");
+
+				if (commObj != null) {
+
+					row.setComments(convertJSobjToList(commObj));
+				}
 			}
 			__R.add(row);
 		}

@@ -60,7 +60,8 @@ public class ActivityUtil {
 
 	private void notice(String title, String content,Context c) {
 
-
+		if(c == null)
+			return;
 		Log.d(TAG, "saying dialog");
 		Bundle b = new Bundle();
 		b.putString("title", title);
