@@ -223,15 +223,7 @@ public class ArticleListFragment extends Fragment
 		Log.d(TAG, "onOptionsItemSelected,tid="
 				+tid+ ",page="+page );
 		
-		ResetableArticle restNotifier = null;
-		try{
-			
-			 restNotifier= (ResetableArticle)getActivity();
-		}catch(ClassCastException e){
-			Log.e(TAG,"father activity does not implements interface " 
-					+ ResetableArticle.class.getName());
-			return true;
-		}
+
 		switch( item.getItemId())
 		{
 			case R.id.article_menuitem_reply:
