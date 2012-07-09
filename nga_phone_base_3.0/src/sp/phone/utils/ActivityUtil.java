@@ -14,7 +14,25 @@ import android.util.Log;
 
 public class ActivityUtil {
 
-
+	public static boolean isGreaterThan_3_0(){
+		return android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.HONEYCOMB;
+	}
+	public static boolean isGreaterThan_2_2(){
+		return android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.FROYO;
+	}
+	public static boolean isGreaterThan_2_1(){
+		return android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.ECLAIR;
+	}
+	public static boolean isGreaterThan_1_6(){
+		return android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.DONUT;
+	}
+	public static boolean isGreaterThan_2_3(){
+		return android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.GINGERBREAD;
+	}
+	public static boolean isGreaterThan_4_0(){
+		return android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+	}
+	
 	static ActivityUtil instance;
 	static final String TAG = ActivityUtil.class.getSimpleName();
 	static final String dialogTag = "saying"; 

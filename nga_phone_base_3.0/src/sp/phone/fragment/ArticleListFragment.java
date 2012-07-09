@@ -2,6 +2,7 @@ package sp.phone.fragment;
 
 import gov.pianzong.androidnga.R;
 import gov.pianzong.androidnga.activity.ArticleListActivity;
+import gov.pianzong.androidnga.activity.ImageViewerActivity;
 import gov.pianzong.androidnga.activity.PostActivity;
 import gov.pianzong.androidnga.activity.TopicListActivity;
 import sp.phone.adapter.ArticleListAdapter;
@@ -18,6 +19,7 @@ import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -68,7 +70,7 @@ public class ArticleListFragment extends Fragment
 	private int pid;
 	private int authorid;
 	
-	private ActionMode.Callback mActionModeCallback = null;
+	private Object mActionModeCallback = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -91,7 +93,7 @@ public class ArticleListFragment extends Fragment
 			listview.setLayoutAnimation(anim);
 		}
 		
-		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+		if (!ActivityUtil.isGreaterThan_2_3()) {
 			this.registerForContextMenu(listview);
 		} else {
 			activeActionMode();
@@ -105,7 +107,7 @@ public class ArticleListFragment extends Fragment
 					lv.setItemChecked(position, true);
 					if (mActionModeCallback != null)
 					{
-						getActivity().startActionMode(mActionModeCallback);
+						getActivity().startActionMode((ActionMode.Callback)mActionModeCallback);
 						return true;
 					}
 					return false;
@@ -125,6 +127,7 @@ public class ArticleListFragment extends Fragment
 		super.onActivityCreated(savedInstanceState);
 	}
 	
+	@TargetApi(11)
 	private void activeActionMode(){
 		mActionModeCallback = new ActionMode.Callback() {
 			
@@ -396,6 +399,13 @@ public class ArticleListFragment extends Fragment
 		final String name = row.getAuthor();
 		String mention=null;
 		Intent intent = new Intent();
+		/*if(ActivityUtil.isGreaterThan_4_0()){
+		intent.putExtra("path", "http://bbs.ngacn.cc/read.php?pid=" + row.getPid());
+		intent.setClass(getActivity(), ImageViewerActivity.class);
+		startActivity(intent);
+		return true;
+		}*/
+		
 		switch(item.getItemId())
 		//if( REPLY_POST_ORDER ==item.getItemId())
 		{
