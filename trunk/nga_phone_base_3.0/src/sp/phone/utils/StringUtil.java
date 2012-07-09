@@ -119,7 +119,7 @@ public class StringUtil {
 	}
 
 	public static String decodeForumTag(String s,boolean showImage) {
-		if(s==null)
+		if(StringUtil.isEmpty(s))
 			return "";
 		//quote
 		String quoteStyle = "<div style='background:#E8E8E8;border:1px solid #888' >";
