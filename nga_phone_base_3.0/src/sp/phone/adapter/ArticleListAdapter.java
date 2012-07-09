@@ -143,6 +143,8 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		
 		boolean showImage = PhoneConfiguration.getInstance().isDownImgNoWifi() || isInWifi();
 		String ngaHtml = StringUtil.decodeForumTag(row.getContent(),showImage);
+		if(StringUtil.isEmpty(ngaHtml))
+			ngaHtml = row.getAlterinfo();
 		ngaHtml = ngaHtml + buildComment(row,fgColorStr) + buildAttachment(row,showImage)
 				+ buildSignature(row,showImage);
 		ngaHtml = "<HTML> <HEAD><META   http-equiv=Content-Type   content= \"text/html;   charset=utf-8 \">" 
