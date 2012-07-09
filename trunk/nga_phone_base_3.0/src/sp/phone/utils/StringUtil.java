@@ -18,6 +18,7 @@ public class StringUtil {
 	private static final String styleAlignRight = "<div style='text-align:right' >";
 	private static final String styleAlignLeft = "<div style='text-align:left' >";
 	private static final String styleColor = "<div style='color:$1' >";
+	private static final String collapseStart= "<div style='border:1px solid #888' >";
 	
 	private static final String endDiv = "</div>";
 
@@ -207,7 +208,8 @@ public class StringUtil {
 		s = s.replaceAll("\\[/font\\]","</span>");
 		
 		//collapse
-		s = s.replaceAll("\\[collapse([^\\[|\\]])*\\]([\\d|\\D])+?\\[/collapse\\]","[ÕÛµþ´úÂë]");
+		s = s.replaceAll("\\[collapse([^\\[|\\]])*\\](([\\d|\\D])+?)\\[/collapse\\]",
+				collapseStart + "$2" + endDiv);
 
 		//size
 		s = s.replaceAll("\\[size=(\\d+)%\\]","<span style=\"font-size:$1%;line-height:$1%\">");
