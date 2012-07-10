@@ -240,9 +240,8 @@ public class ArticleUtil {
 		
 
 		int rows = (Integer) o.get("__R__ROWS");
-		data.setRowNum(rows);
 		
-		;
+
 		o1 = (JSONObject) o.get("__R");
 		
 		if(o1 == null)
@@ -250,6 +249,7 @@ public class ArticleUtil {
 		
 		List<ThreadRowInfo> __R =  convertJSobjToList(o1,rows);
 		data.setRowList(__R);
+		data.setRowNum(__R.size());
 
 		o1 =  (JSONObject) o.get("__F");
 		
@@ -278,8 +278,9 @@ public class ArticleUtil {
 
 					row.setComments(convertJSobjToList(commObj));
 				}
+				__R.add(row);
 			}
-			__R.add(row);
+			
 		}
 		return __R;
 	}
