@@ -1,5 +1,8 @@
 package sp.phone.task;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 import sp.phone.bean.ThreadData;
 import sp.phone.interfaces.OnThreadPageLoadFinishedListener;
 import sp.phone.utils.ActivityUtil;
@@ -63,7 +66,29 @@ public class JsonThreadLoadTask extends AsyncTask<String, Integer, ThreadData> {
 		
 		if(null == result){
 			errorStr = context.getResources().getString(R.string.thread_load_error);
+			do{
+			try{
+			JSONObject o = (JSONObject) JSON.parseObject(js);
+			if(o == null)
+				break;
+			 o = (JSONObject) o.get("data");
+			 if(o == null)
+					break;
+			 String message =  (String) o.get("__MESSAGE");
+			 if(message == null)
+					break;
+			 
+			 errorStr = message.replace("<br/>", "\n");
+			}catch(Exception e){
+				
+			}
+			 
+			}while(false);
+			
 		}
+			
+			
+
 		
 		
 		return result;
