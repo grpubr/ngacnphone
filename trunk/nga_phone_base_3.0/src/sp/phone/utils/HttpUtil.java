@@ -1,5 +1,7 @@
 package sp.phone.utils;
 
+import gov.pianzong.androidnga.activity.MyApp;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,22 +28,23 @@ public class HttpUtil {
 	public final static String PATH_ICON = PATH_SD + "nga_cache/icon";
 	public final static String PATH_WEB_CACHE = PATH_SD + "nga_cache/web_cache";
 	public final static String PATH_NOMEDIA = PATH_SD + "nga_cache/.nomedia";
-	public static String PATH_ZIP = "";
+	public static  final String PATH_ZIP = "";
 
 	public final static String Server = "http://bbs.ngacn.cc";
-	private static String TAG = HttpUtil.class.getSimpleName();
+	private static final String TAG = HttpUtil.class.getSimpleName();
 	/*private static String[] host_arr = { "http://aa121077313.gicp.net:8099",
 			"http://aa121077313.gicp.net:8098", "http://10.0.2.2:8099",
 			"http://10.0.2.2:8098" };*/
-	private static String[] host_arr = {};
+	private static final String[] host_arr = {};
 
 	public static String HOST = "";
-	public static String Servlet_phone = "/servlet/PhoneServlet";
-	public static String Servlet_timer = "/servlet/TimerServlet";
+	public static final String Servlet_phone = "/servlet/PhoneServlet";
+	public static final String Servlet_timer = "/servlet/TimerServlet";
 
 	public static String HOST_PORT = "";
-	public static String USER_AGENT = 
-			"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.30 Safari/536.5";
+	//public static String USER_AGENT = 
+	//		"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.30 Safari/536.5";
+	public static final String USER_AGENT = "AndroidNga/" + MyApp.version;
 	public static void selectServer2() {
 		for (String host : host_arr) {
 			HttpURLConnection conn = null;
