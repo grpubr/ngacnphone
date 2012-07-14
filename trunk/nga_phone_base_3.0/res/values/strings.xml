@@ -20,7 +20,7 @@
     <string name="new_thread">发帖</string>
     <string name="reply_thread">回帖</string>
     <string name="bookmark">收藏本帖</string>
-    <string name="goto_bookmark">收藏夹</string>
+    <string name="bookmark_title">已收藏的主题</string><string name="goto_bookmark">收藏夹</string>
     <string name="text_size">帖子列表字体大小</string>
     <string name="lock_orientation">锁定屏幕</string>
     <string name="unlock_orientation">解除屏幕锁定</string>
@@ -39,7 +39,7 @@
     <string name="modify_thread">编辑帖子</string>
     <string name="showSignature">显示签名</string>
     <string name="goto_floor">跳页</string>
-    <string name="goto_floor_description">输入页数，0表示最后一页</string>
+    <string name="goto_floor_description">输入页数，直接确定跳到最后一页</string>
     <string name="use_view_cache">启用楼层缓存</string>
     <string name="view_cache_tips">开启楼层缓存可以防止楼层滚动的时候遇到长帖子时跳动的问题，但是会占用更多的内存，如果体验不佳，请关闭这个选项</string>
     <string name="myscheme">ngacn</string>
@@ -53,4 +53,6 @@
     <string name="search_post">搜索回复</string>
     <string name="search_subject">搜索发帖</string>
     <string name="avatar_description">头像</string>
+    <string name="search_hint">输入要搜索的关键字</string>
+    
 </resources>

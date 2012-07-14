@@ -7,7 +7,6 @@ import gov.pianzong.androidnga.activity.TopicListActivity;
 import sp.phone.adapter.ArticleListAdapter;
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.bean.ThreadData;
-import sp.phone.bean.ThreadPageInfo;
 import sp.phone.bean.ThreadRowInfo;
 import sp.phone.interfaces.OnThreadPageLoadFinishedListener;
 import sp.phone.interfaces.PagerOwnner;
@@ -48,8 +47,6 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.alibaba.fastjson.JSON;
 
 public class ArticleListFragment extends Fragment
 	implements OnThreadPageLoadFinishedListener,PerferenceConstant{

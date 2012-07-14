@@ -11,6 +11,7 @@ import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
+import android.annotation.TargetApi;
 import android.content.pm.ActivityInfo;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -26,6 +27,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.widget.TabHost;
 
+
 public class TopicListActivity extends FragmentActivity
 	implements OnTopListLoadFinishedListener{
 	static final private String TAG = TopicListActivity.class.getSimpleName();
@@ -37,7 +39,8 @@ public class TopicListActivity extends FragmentActivity
 	int fid;
 	int authorid;
 	int searchpost;
-
+	int favor;
+	String key;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,23 +49,7 @@ public class TopicListActivity extends FragmentActivity
 		tabhost.setup();
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		if (VERSION.SDK_INT >= VERSION_CODES.ICE_CREAM_SANDWICH) {
-			NfcAdapter adapter = NfcAdapter.getDefaultAdapter(this);
-			CreateNdefMessageCallback callback = new CreateNdefMessageCallback(){
-
-				@Override
-				public NdefMessage createNdefMessage(NfcEvent event) {
-					final String url = getUrl();
-					NdefMessage msg = new NdefMessage(
-			                new NdefRecord[]{NdefRecord.createUri(url)}
-			                );
-					return msg;
-				}
-				
-			};
-			if (adapter != null) {
-				adapter.setNdefPushMessageCallback(callback, this);
-
-			}
+			setNfcCallBack();
 		}
 		
 		fid = 0;
@@ -76,14 +63,16 @@ public class TopicListActivity extends FragmentActivity
 			pageInUrl =getUrlParameter(url,"page");
 			authorid = getUrlParameter(url,"authorid");
 			searchpost = getUrlParameter(url,"searchpost");
+			favor = getUrlParameter(url,"favor");
+			key = StringUtil.getStringBetween(url, 0, "key=", "&").result;
 		}
 		else
 		{
 			fid = this.getIntent().getIntExtra("fid", 0);
 			authorid = this.getIntent().getIntExtra("authorid", 0);
 			searchpost = this.getIntent().getIntExtra("searchpost", 0);
-
-			
+			favor = getIntent().getIntExtra("favor", 0);
+			key = getIntent().getStringExtra("key");
 		}
 		
 		if (null != savedInstanceState)
@@ -94,8 +83,20 @@ public class TopicListActivity extends FragmentActivity
 		mTabsAdapter.setArgument("id", fid);
 		mTabsAdapter.setArgument("authorid", authorid);
 		mTabsAdapter.setArgument("searchpost", searchpost);
+		mTabsAdapter.setArgument("favor", favor);
+		mTabsAdapter.setArgument("key", key);
 		//mTabsAdapter.setCount(100);
-
+		
+		if(favor != 0){
+			this.setTitle(R.string.bookmark_title);
+		}
+		
+		if(!StringUtil.isEmpty(key))
+		{
+			final String title = this.getResources().getString(android.R.string.search_go)
+					+ ":"+key;
+			setTitle(title);
+		}
 
 		ActivityUtil.getInstance().noticeSaying(this);
 
@@ -107,6 +108,28 @@ public class TopicListActivity extends FragmentActivity
 			mViewPager.setCurrentItem(pageInUrl -1);
 		}
 
+	}
+	
+	@TargetApi(14)
+	void setNfcCallBack(){
+		NfcAdapter adapter = NfcAdapter.getDefaultAdapter(this);
+		CreateNdefMessageCallback callback = new CreateNdefMessageCallback(){
+
+			@Override
+			public NdefMessage createNdefMessage(NfcEvent event) {
+				final String url = getUrl();
+				NdefMessage msg = new NdefMessage(
+		                new NdefRecord[]{NdefRecord.createUri(url)}
+		                );
+				return msg;
+			}
+			
+		};
+		if (adapter != null) {
+			adapter.setNdefPushMessageCallback(callback, this);
+
+		}
+		
 	}
 
 	@Override

@@ -410,7 +410,7 @@ public class StringUtil {
 			"少林图书馆经常失窃……", "一个人喝完闷酒一定会下暴雨。", "团体组合流行：四大?#，四大%￥，四大*(……",
 			"拔剑时，有时会有剑气，有时会拔不出来……", "朝廷的大将军是坨屎，公公才是高手。",
 			"妓院都是怡红院(我怀疑是悦来集团的子公司……)。", "美女到处都是，这是最郁闷的…… ",
-			"大漩涡里不能黑小日本和AKB"
+			"大漩涡里不能黑小日本和AKB","67.220.90.30"
 
 	};
 
@@ -432,7 +432,7 @@ public class StringUtil {
 		}
 		return ret;
 	}
-	final static String tips = "1.支持多马甲，去登录里看看\n2.不要用cmwap和3gwap\n3.头像大小,动画,签名在设置修改\n4.在帖子里按menu可以禁止屏幕旋转\n";
+	final static String tips = "1.支持多马甲，去登录里看看\n2.不要用cmwap和3gwap\n3.头像大小,动画,签名在设置修改\n4.在帖子里按menu可以禁止屏幕旋转\n5. 4.0很卡的去开发里关掉gpu渲染";
 	public static String getTips(){
 		
 		return tips;

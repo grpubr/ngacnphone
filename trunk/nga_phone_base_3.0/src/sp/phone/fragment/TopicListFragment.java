@@ -1,9 +1,13 @@
 package sp.phone.fragment;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import gov.pianzong.androidnga.R;
 import gov.pianzong.androidnga.activity.ArticleListActivity;
 import gov.pianzong.androidnga.activity.BookmarkActivity;
 import gov.pianzong.androidnga.activity.MainActivity;
 import gov.pianzong.androidnga.activity.PostActivity;
+import gov.pianzong.androidnga.activity.TopicListActivity;
 import sp.phone.adapter.TopicListAdapter;
 import sp.phone.bean.TopicListInfo;
 import sp.phone.interfaces.OnTopListLoadFinishedListener;
@@ -15,7 +19,10 @@ import sp.phone.utils.StringUtil;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -33,6 +40,7 @@ public class TopicListFragment extends Fragment
 	ListView listview=null;
 	TopicListAdapter adapter=null;
 	JsonTopicListLoadTask task=null;
+	String key = null;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -97,6 +105,8 @@ public class TopicListFragment extends Fragment
 			String fidString = String.valueOf(getArguments().getInt("id",0));
 			String authoridString = String.valueOf(getArguments().getInt("authorid",0));
 			int searchpost = getArguments().getInt("searchpost",0);
+			int favor = getArguments().getInt("favor", 0);
+			key = getArguments().getString("key");
 			
 			String jsonUri = HttpUtil.Server + "/thread.php?";
 			if(!fidString.equals("0"))
@@ -105,6 +115,16 @@ public class TopicListFragment extends Fragment
 				jsonUri +="authorid=" + authoridString + "&";
 			if(searchpost !=0)
 				jsonUri +="searchpost=" + searchpost + "&";
+			if(favor !=0)
+				jsonUri +="favor=" + favor + "&";
+			if(!StringUtil.isEmpty(key)){
+				try {
+					jsonUri += "key=" + URLEncoder.encode(key, "GBK") + "&";
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			
 			jsonUri += "page="+ page + "&lite=js&noprefix";
 			
@@ -144,8 +164,12 @@ public class TopicListFragment extends Fragment
 				loadPage();
 				break;
 			case R.id.goto_bookmark_item:
-				Intent intent_bookmark = new Intent(this.getActivity(), BookmarkActivity.class);
+				Intent intent_bookmark = new Intent(this.getActivity(), TopicListActivity.class);
+				intent_bookmark.putExtra("favor", 1);
 				startActivity(intent_bookmark);
+				break;
+			case R.id.search:
+				handleSearch();
 				break;
 			case R.id.threadlist_menu_item3 :
 			default:
@@ -156,6 +180,27 @@ public class TopicListFragment extends Fragment
 				break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	private void handleSearch(){
+		Bundle arg  = new Bundle();
+		arg.putInt("id",getArguments().getInt("id",-7));
+		arg.putInt("authorid", getArguments().getInt("authorid",0));
+		DialogFragment df = new SearchDialogFragment();
+		df.setArguments(arg);
+		final String dialogTag = "search_dialog";
+		FragmentManager fm = getActivity().getSupportFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
+		Fragment prev = fm.findFragmentByTag(dialogTag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+
+        try{
+        	df.show(ft, dialogTag);
+		}catch(Exception e){
+			Log.e(this.getClass().getSimpleName(),Log.getStackTraceString(e));
+
+		}
 	}
 	
 	private boolean handlePostThread(MenuItem item){

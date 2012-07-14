@@ -26,7 +26,7 @@
 		        <action android:name="android.intent.action.VIEW" /> 
 		        <category android:name="android.intent.category.DEFAULT" /> 
 				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:scheme="http" android:host="bbs.ngacn.cc" android:path="/thread.php"/>
+				<data android:scheme="@string/myscheme" android:host="bbs.ngacn.cc" android:path="/thread.php"/>
 			</intent-filter>
 			<intent-filter>
 		        <action android:name="android.intent.action.VIEW" /> 
@@ -41,17 +41,17 @@
             </intent-filter>
 		</activity>
 		<activity android:name=".activity.ArticleListActivity" android:exported="false">
-		    <intent-filter>
+		    <!-- intent-filter>
 		        <action android:name="android.intent.action.VIEW" /> 
 		        <category android:name="android.intent.category.DEFAULT" /> 
 				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:scheme="http" android:host="bbs.ngacn.cc" android:path="/read.php"/>
-			</intent-filter>
+				<data android:scheme="@string/myscheme" android:host="bbs.ngacn.cc" android:path="/read.php"/>
+			</intent-filter -->
 			<intent-filter>
 		        <action android:name="android.intent.action.VIEW" /> 
 		        <category android:name="android.intent.category.DEFAULT" /> 
 				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:scheme="http" android:host="nga.178.com" android:path="/read.php"/>
+				<data android:scheme="@string/myscheme" android:host="nga.178.com" android:path="/read.php"/>
 			</intent-filter>
 			<intent-filter>
 		        <action android:name="android.intent.action.VIEW" /> 
