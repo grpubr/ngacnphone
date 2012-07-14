@@ -9,6 +9,7 @@ import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
@@ -53,23 +54,7 @@ implements PagerOwnner,ResetableArticle {
 		tabhost.setup();
 		mViewPager = (ViewPager)findViewById(R.id.pager);
 		if (VERSION.SDK_INT >= VERSION_CODES.ICE_CREAM_SANDWICH) {			
-			NfcAdapter adapter = NfcAdapter.getDefaultAdapter(this);
-			CreateNdefMessageCallback callback = new CreateNdefMessageCallback(){
-
-				@Override
-				public NdefMessage createNdefMessage(NfcEvent event) {
-					final String url = getUrl();
-					NdefMessage msg = new NdefMessage(
-			                new NdefRecord[]{NdefRecord.createUri(url)}
-			                );
-					return msg;
-				}
-				
-			};
-			if (adapter != null) {
-				adapter.setNdefPushMessageCallback(callback, this);
-
-			}
+			setNfcCallBack();
 		}
 
 		tid = 7;
@@ -134,6 +119,28 @@ implements PagerOwnner,ResetableArticle {
 		return ret;
 	}
 	
+	@TargetApi(14)
+	private void setNfcCallBack(){
+		NfcAdapter adapter = NfcAdapter.getDefaultAdapter(this);
+		CreateNdefMessageCallback callback = new CreateNdefMessageCallback(){
+
+			@Override
+			public NdefMessage createNdefMessage(NfcEvent event) {
+				final String url = getUrl();
+				NdefMessage msg = new NdefMessage(
+		                new NdefRecord[]{NdefRecord.createUri(url)}
+		                );
+				return msg;
+			}
+			
+		};
+		if (adapter != null) {
+			adapter.setNdefPushMessageCallback(callback, this);
+
+		}
+		
+	}
+	
     @Override
     protected void onSaveInstanceState(Bundle outState) {
     	
@@ -195,14 +202,17 @@ implements PagerOwnner,ResetableArticle {
             	if(null == mTabsAdapter)
             		dialog.dismiss();
                 String value = input.getText().toString().trim(); 
+                int floor = mTabsAdapter.getCount();
                 try{
-                	int floor = Integer.valueOf(value);
+                	
+                	floor = Integer.valueOf(value);
                 	if(floor > mTabsAdapter.getCount() || floor <1)
                 		floor = mTabsAdapter.getCount();
-                	mViewPager.setCurrentItem(floor-1);
+                	
                 }catch(Exception e){
-                	dialog.dismiss();
+                	
                 }
+                mViewPager.setCurrentItem(floor-1);
             }
 		});
 		

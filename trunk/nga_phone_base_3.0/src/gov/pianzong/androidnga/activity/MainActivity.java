@@ -1,11 +1,12 @@
 package gov.pianzong.androidnga.activity;
 
+import gov.pianzong.androidnga.R;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import gov.pianzong.androidnga.R;
 import sp.phone.adapter.BoardPagerAdapter;
 import sp.phone.bean.Board;
 import sp.phone.bean.BoardCategory;
@@ -13,7 +14,6 @@ import sp.phone.bean.BoardHolder;
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.interfaces.PageCategoryOwnner;
 import sp.phone.task.AppUpdateCheckTask;
-import sp.phone.task.YoukuVideoLoader;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
@@ -25,7 +25,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;

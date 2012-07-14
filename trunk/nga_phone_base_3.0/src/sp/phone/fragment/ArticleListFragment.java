@@ -12,12 +12,14 @@ import sp.phone.bean.ThreadRowInfo;
 import sp.phone.interfaces.OnThreadPageLoadFinishedListener;
 import sp.phone.interfaces.PagerOwnner;
 import sp.phone.interfaces.ResetableArticle;
+import sp.phone.task.BookmarkTask;
 import sp.phone.task.JsonThreadLoadTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,6 +31,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.ActionMode;
+import android.view.ActionMode.Callback;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Display;
@@ -68,7 +71,7 @@ public class ArticleListFragment extends Fragment
 	private int pid;
 	private int authorid;
 	
-	private ActionMode.Callback mActionModeCallback = null;
+	private Object mActionModeCallback = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -105,7 +108,7 @@ public class ArticleListFragment extends Fragment
 					lv.setItemChecked(position, true);
 					if (mActionModeCallback != null)
 					{
-						getActivity().startActionMode(mActionModeCallback);
+						getActivity().startActionMode((Callback) mActionModeCallback);
 						return true;
 					}
 					return false;
@@ -125,6 +128,7 @@ public class ArticleListFragment extends Fragment
 		super.onActivityCreated(savedInstanceState);
 	}
 	
+	@TargetApi(11)
 	private void activeActionMode(){
 		mActionModeCallback = new ActionMode.Callback() {
 			
@@ -244,37 +248,11 @@ public class ArticleListFragment extends Fragment
 			case R.id.article_menuitem_refresh:
 				this.task = null;
 				ActivityUtil.getInstance().noticeSaying(getActivity());
-				this.loadPage();/*
-				if(this.pid == 0 && this.authorid ==0)
-				{
-					this.task = null;
-					ActivityUtil.getInstance().noticeSaying(getActivity());
-					this.loadPage();
-				}else{
-					restNotifier.reset(0, 0);
-					ActivityUtil.getInstance().noticeSaying(getActivity());
-				}*/
+				this.loadPage();
 				break;
-			case R.id.article_menuitem_addbookmark:
-				ThreadPageInfo info = articleAdpater.getData().getThreadInfo();
-				String bookmarkUrl = "http://bbs.ngacn.cc/read.php?tid="
-						+info.getTid();
-				
-				String title = info.getSubject();
-				boolean ret = PhoneConfiguration.getInstance().addBookmark(bookmarkUrl, title);
-				if(ret){
-					Toast.makeText(getActivity(), R.string.book_mark_successfully, Toast.LENGTH_LONG).show();
-				}else{
-					Toast.makeText(getActivity(), R.string.already_bookmarked, Toast.LENGTH_LONG).show();
-					break;
-				}
-				
-				SharedPreferences share = getActivity().getSharedPreferences(PERFERENCE,
-						Activity.MODE_PRIVATE);
-				Editor editor = share.edit();
-				String bookmarks = JSON.toJSONString(PhoneConfiguration.getInstance().getBookmarks());
-				editor.putString(BOOKMARKS, bookmarks);
-				editor.commit();
+			case R.id.article_menuitem_addbookmark:				
+				BookmarkTask bt = new BookmarkTask(getActivity());
+				bt.execute(String.valueOf(this.tid));
 				break;
 			case R.id.article_menuitem_lock:
 				
@@ -530,7 +508,7 @@ public class ArticleListFragment extends Fragment
 					&&this.authorid == 0){
 				father.getmTabsAdapter().setCount(exactCount);
 			}
-			father.setTitle(data.getThreadInfo().getSubject());
+			father.setTitle(StringUtil.unEscapeHtml(data.getThreadInfo().getSubject()));
 			//this.authorid = 0;
 		}
 		

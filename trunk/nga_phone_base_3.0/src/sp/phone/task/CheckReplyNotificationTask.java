@@ -3,7 +3,6 @@ package sp.phone.task;
 
 
 import gov.pianzong.androidnga.R;
-import gov.pianzong.androidnga.activity.ArticleListActivity;
 import sp.phone.bean.StringFindResult;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
