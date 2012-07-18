@@ -134,7 +134,10 @@ public class TopicListActivity extends FragmentActivity
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.threadlist_menu, menu);
+		int menuId= R.menu.threadlist_menu;
+		if(ActivityUtil.isMeizu())
+			menuId = R.menu.meizu_threadlist_menu;
+		getMenuInflater().inflate(menuId, menu);
 		
 		final int flags = ThemeManager.ACTION_BAR_FLAG;
 		 ReflectionUtil.actionBar_setDisplayOption(this, flags);
