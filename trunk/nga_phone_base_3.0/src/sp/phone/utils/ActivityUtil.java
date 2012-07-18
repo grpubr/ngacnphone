@@ -33,6 +33,10 @@ public class ActivityUtil {
 		return android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 	}
 	
+	public static boolean isMeizu(){
+		return "Meizu".equalsIgnoreCase(android.os.Build.MANUFACTURER);
+	}
+	
 	static ActivityUtil instance;
 	static final String TAG = ActivityUtil.class.getSimpleName();
 	static final String dialogTag = "saying"; 

@@ -18,8 +18,8 @@ public class ThemeManager {
 	flags |= ActionBar.DISPLAY_HOME_AS_UP;//4*/
 	
 	static final public int ACTION_IF_ROOM = 1;//SHOW_AS_ACTION_IF_ROOM
-	static final public int Theme_Holo = 16973931;//android.R$style.class
-	public static final int Theme = 16973829;//android.R$style.class
+	//static final public int Theme_Holo = 16973931;//android.R$style.class
+	//public static final int Theme = 16973829;//android.R$style.class
 	
 	public int screenOrentation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 	public static ThemeManager getInstance(){

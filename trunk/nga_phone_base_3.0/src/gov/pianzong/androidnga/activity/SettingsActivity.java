@@ -1,6 +1,7 @@
 package gov.pianzong.androidnga.activity;
 
 import sp.phone.bean.PerferenceConstant;
+import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.ImageUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
@@ -66,8 +67,10 @@ public class SettingsActivity extends Activity{
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}
 		ThemeManager.SetContextTheme(this);
-
-		view = getLayoutInflater().inflate(R.layout.settings, null);
+		int layoutId = R.layout.settings;
+		if(ActivityUtil.isMeizu())
+			layoutId = R.layout.meizu_settings;
+		view = getLayoutInflater().inflate(layoutId, null);
 
 		this.setContentView(view);
 		
