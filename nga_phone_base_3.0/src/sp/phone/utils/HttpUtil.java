@@ -115,7 +115,7 @@ public class HttpUtil {
 			FileUtils.copyURLToFile(url, file, 2000, 5000);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Log.e(TAG, "failed to download img:" + uri+ "," + e.getMessage());
 		}
 	}

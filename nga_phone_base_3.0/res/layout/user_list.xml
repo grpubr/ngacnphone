@@ -8,14 +8,13 @@
         android:id="@+id/delete_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="点击删除"
-        android:src="@android:drawable/presence_busy" />
-
-    <TextView
+        android:contentDescription="@string/click_to_delete"
+        android:src="@drawable/ic_action_delete" /><TextView
         android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
+        android:gravity="fill_vertical"
         android:text="" />
 
 </LinearLayout>
