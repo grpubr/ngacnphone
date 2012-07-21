@@ -21,7 +21,7 @@
 		<activity android:name=".activity.PostActivity" android:launchMode="standard"></activity>
 		<activity android:name=".activity.SettingsActivity"></activity>
 		<activity android:name=".activity.BookmarkActivity"></activity>
-		<activity android:name=".activity.TopicListActivity" android:exported="false" android:uiOptions="splitActionBarWhenNarrow">
+		<activity android:name=".activity.TopicListActivity" android:exported="false">
 		    <intent-filter>
 		        <action android:name="android.intent.action.VIEW" /> 
 		        <category android:name="android.intent.category.DEFAULT" /> 

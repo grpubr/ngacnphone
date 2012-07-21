@@ -68,9 +68,6 @@ public class MainActivity extends ActionBarActivity
 		task = new AppUpdateCheckTask(this);
 		task.execute("");
 		
-		//final String uri = "http://v.youku.com/v_show/id_XNDE1ODk0Mzg4.html";
-		//new YoukuVideoLoader(this).executeOnExecutor(YoukuVideoLoader.THREAD_POOL_EXECUTOR, uri);
-
 	}
 
 
@@ -377,7 +374,7 @@ public class MainActivity extends ActionBarActivity
 		boards.add(new Board(i, "-522474", "综合体育讨论区", R.drawable.pdefault));
 		boards.add(new Board(i, "-152678", "英雄联盟 Let's Gank", R.drawable.p152678));
 		boards.add(new Board(i, "-1068355", "晴风村", R.drawable.pdefault));
-		boards.add(new Board(i, "-447601", " 二次元国家地理 - NG2", R.drawable.pdefault));
+		boards.add(new Board(i, "-447601", " 二次元国家地理 - NG2", R.drawable.houzi));
 		boards.add(new Board(i, "-343809", "寂寞的车俱乐部", R.drawable.pdefault));
 		boards.add(new Board(i, "-131429", "红茶馆——小说馆", R.drawable.pdefault));
 		boards.add(new Board(i, "-46468", " 洛拉斯的坦克世界", R.drawable.pdefault));
@@ -391,6 +388,9 @@ public class MainActivity extends ActionBarActivity
 		boards.add(new Board(i, "-608808", " 弑熊主厨的血腥厨房", R.drawable.pdefault));
 		boards.add(new Board(i, "-469608", " 影视讨论", R.drawable.pdefault));
 		boards.add(new Board(i, "-55912", "音乐讨论", R.drawable.pdefault));
+		boards.add(new Board(i, "-60341", "宠物嘉年华", R.drawable.pdefault));
+		boards.add(new Board(i, "-538800", "乙女向二次元", R.drawable.pdefault));
+		boards.add(new Board(i, "-522679", "Battlefield 3讨论版", R.drawable.pdefault));
 		boards.addCategoryName(i, "个人版面");
 		i++;
 		
