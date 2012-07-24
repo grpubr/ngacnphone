@@ -1,13 +1,13 @@
 package sp.phone.fragment;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import gov.pianzong.androidnga.R;
 import gov.pianzong.androidnga.activity.ArticleListActivity;
-import gov.pianzong.androidnga.activity.BookmarkActivity;
 import gov.pianzong.androidnga.activity.MainActivity;
 import gov.pianzong.androidnga.activity.PostActivity;
 import gov.pianzong.androidnga.activity.TopicListActivity;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import sp.phone.adapter.TopicListAdapter;
 import sp.phone.bean.TopicListInfo;
 import sp.phone.interfaces.OnTopListLoadFinishedListener;
