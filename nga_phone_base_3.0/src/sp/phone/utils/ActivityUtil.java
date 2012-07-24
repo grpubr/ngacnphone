@@ -102,7 +102,7 @@ public class ActivityUtil {
 	            ft.remove(prev);
 	        }
 
-	        //ft.commit();
+	        ft.commit();
 			df.show(fm, dialogTag);
 			this.df = df;
 			}catch(Exception e){
