@@ -12,7 +12,10 @@
         android:layout_alignLeft="@+id/nickName"
         android:layout_below="@+id/nickName"
         android:clickable="false"
-        android:src="@drawable/default_avatar" android:contentDescription="@string/avatar" android:longClickable="false" android:focusable="false">
+        android:contentDescription="@string/avatar"
+        android:focusable="false"
+        android:longClickable="false"
+        android:src="@drawable/open" >
 
 </ImageView>
 
