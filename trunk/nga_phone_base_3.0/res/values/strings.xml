@@ -55,5 +55,6 @@
     <string name="avatar_description">头像</string>
     <string name="search_hint">输入要搜索的关键字</string>
     <string name="click_to_delete">点击删除</string>
+    <string name="load_tudou_video">载入土豆视频中</string>
     
 </resources>

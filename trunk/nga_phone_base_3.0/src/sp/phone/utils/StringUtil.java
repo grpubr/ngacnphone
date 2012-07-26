@@ -432,7 +432,10 @@ public class StringUtil {
 		}
 		return ret;
 	}
-	final static String tips = "1.支持多马甲，去登录里看看\n2.不要用cmwap和3gwap\n3.头像大小,动画,签名在设置修改\n4.在帖子里按menu可以禁止屏幕旋转\n5. 4.0很卡的去开发里关掉gpu渲染";
+	final static String tips = 
+			"1.不要用wap\n"
+			+ "2. 4.0很卡的去开发里开启/关闭gpu渲染\n"
+			+ "3. 优库和土豆的视频用外部播放器打开,比如MX 播放器,并在设置->解码器里勾选第2个";
 	public static String getTips(){
 		
 		return tips;

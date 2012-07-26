@@ -29,6 +29,9 @@ public class ActivityUtil {
 	public static boolean isGreaterThan_2_3(){
 		return android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.GINGERBREAD;
 	}
+	public static boolean isGreaterThan_2_3_3(){
+		return android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.GINGERBREAD_MR1;
+	}
 	public static boolean isGreaterThan_4_0(){
 		return android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 	}
