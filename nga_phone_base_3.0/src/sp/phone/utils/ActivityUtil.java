@@ -78,7 +78,7 @@ public class ActivityUtil {
 	}
 	
 	public void noticeError(String error,Context context){
-		
+		HttpUtil.switchServer();
 		notice("´íÎó", error,context);
 	}
 

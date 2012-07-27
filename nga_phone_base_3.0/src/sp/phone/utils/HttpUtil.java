@@ -30,7 +30,8 @@ public class HttpUtil {
 	public final static String PATH_NOMEDIA = PATH_SD + "nga_cache/.nomedia";
 	public static  final String PATH_ZIP = "";
 
-	public final static String Server = "http://bbs.ngacn.cc";
+	public static String Server = "http://bbs.ngacn.cc";
+	private static final String servers[] = {"http://nga.178.com","http://bbs.ngacn.cc"};
 	private static final String TAG = HttpUtil.class.getSimpleName();
 	/*private static String[] host_arr = { "http://aa121077313.gicp.net:8099",
 			"http://aa121077313.gicp.net:8098", "http://10.0.2.2:8099",
@@ -74,7 +75,15 @@ public class HttpUtil {
 
 		}
 	}
-
+	public static void switchServer(){
+		int i = 0;
+		for(; i< servers.length; ++i){
+			if(Server.equals(servers[i]))
+				break;
+		}
+		i = (i+1)%servers.length;
+		Server = servers[i];
+	}
 	public static boolean selectServer() {
 		boolean status = false;
 		for (String host : host_arr) {
