@@ -90,7 +90,7 @@ public class TopicListFragment extends Fragment
 
 	@Override
 	public void onResume() {
-		this.setHasOptionsMenu(true);
+		//this.setHasOptionsMenu(true);
 		Log.d(TAG,"onResume" + (1+getArguments().getInt("page")) );
 		
 		super.onResume();
@@ -145,92 +145,6 @@ public class TopicListFragment extends Fragment
 
 
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.d(TAG, "onOptionsItemSelected,fid="
-				+getArguments().getInt("id")+ 
-				",page="+ (1+getArguments().getInt("page")) );
-		switch( item.getItemId())
-		{
-			case R.id.threadlist_menu_newthread :
-				handlePostThread(item);
-				break;
-			case R.id.threadlist_menu_item2 :
-				if(task != null){
-					task.cancel(false);
-					task = null;
-				}
-				ActivityUtil.getInstance().noticeSaying(getActivity());
-				loadPage();
-				break;
-			case R.id.goto_bookmark_item:
-				Intent intent_bookmark = new Intent(this.getActivity(), TopicListActivity.class);
-				intent_bookmark.putExtra("favor", 1);
-				startActivity(intent_bookmark);
-				break;
-			case R.id.search:
-				handleSearch();
-				break;
-			case R.id.threadlist_menu_item3 :
-			default:
-				//case android.R.id.home:
-				Intent intent = new Intent(this.getActivity(), MainActivity.class);
-	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(intent);
-				break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-	private void handleSearch(){
-		Bundle arg  = new Bundle();
-		arg.putInt("id",getArguments().getInt("id",-7));
-		arg.putInt("authorid", getArguments().getInt("authorid",0));
-		DialogFragment df = new SearchDialogFragment();
-		df.setArguments(arg);
-		final String dialogTag = "search_dialog";
-		FragmentManager fm = getActivity().getSupportFragmentManager();
-		FragmentTransaction ft = fm.beginTransaction();
-		Fragment prev = fm.findFragmentByTag(dialogTag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-
-        try{
-        	df.show(ft, dialogTag);
-		}catch(Exception e){
-			Log.e(this.getClass().getSimpleName(),Log.getStackTraceString(e));
-
-		}
-	}
-	
-	private boolean handlePostThread(MenuItem item){
-		
-	
-		String fid = String.valueOf(getArguments().getInt("id"));
-		
-		int intFid=0;
-		try{
-		intFid = Integer.parseInt(fid);
-		}catch(Exception e){
-
-			return false;
-		}
-		Intent intent = new Intent();
-		//intent.putExtra("prefix",postPrefix.toString());
-		intent.putExtra("fid", intFid);
-		intent.putExtra("action", "new");
-		
-		intent.setClass(this.getActivity(), PostActivity.class);
-		startActivity(intent);
-		if(PhoneConfiguration.getInstance().showAnimation)
-		{
-			getActivity().overridePendingTransition(R.anim.zoom_enter,
-					R.anim.zoom_exit);
-		}
-		return true;
-	}
-	
-	
 	
 
 

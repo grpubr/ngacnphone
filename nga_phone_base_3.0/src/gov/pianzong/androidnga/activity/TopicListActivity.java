@@ -3,6 +3,7 @@ package gov.pianzong.androidnga.activity;
 import gov.pianzong.androidnga.R;
 import sp.phone.adapter.TabsAdapter;
 import sp.phone.bean.TopicListInfo;
+import sp.phone.fragment.SearchDialogFragment;
 import sp.phone.fragment.TopicListFragment;
 import sp.phone.interfaces.OnTopListLoadFinishedListener;
 import sp.phone.task.CheckReplyNotificationTask;
@@ -12,6 +13,7 @@ import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -21,10 +23,15 @@ import android.nfc.NfcEvent;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TabHost;
 
 
@@ -135,14 +142,86 @@ public class TopicListActivity extends FragmentActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		int menuId= R.menu.threadlist_menu;
-		if(ActivityUtil.isMeizu())
-			menuId = R.menu.meizu_threadlist_menu;
 		getMenuInflater().inflate(menuId, menu);
 		
 		final int flags = ThemeManager.ACTION_BAR_FLAG;
 		 ReflectionUtil.actionBar_setDisplayOption(this, flags);
 		
 		return super.onCreateOptionsMenu(menu);
+	}
+	
+	private void handleSearch(){
+		Bundle arg  = new Bundle();
+		arg.putInt("id",fid);
+		arg.putInt("authorid", authorid);
+		DialogFragment df = new SearchDialogFragment();
+		df.setArguments(arg);
+		final String dialogTag = "search_dialog";
+		FragmentManager fm = getSupportFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
+		Fragment prev = fm.findFragmentByTag(dialogTag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+
+        try{
+        	df.show(ft, dialogTag);
+		}catch(Exception e){
+			Log.e(this.getClass().getSimpleName(),Log.getStackTraceString(e));
+
+		}
+	}
+	
+	private boolean handlePostThread(MenuItem item){
+		
+		
+		
+		Intent intent = new Intent();
+		//intent.putExtra("prefix",postPrefix.toString());
+		intent.putExtra("fid", fid);
+		intent.putExtra("action", "new");
+		
+		intent.setClass(this, PostActivity.class);
+		startActivity(intent);
+		if(PhoneConfiguration.getInstance().showAnimation)
+		{
+			overridePendingTransition(R.anim.zoom_enter,
+					R.anim.zoom_exit);
+		}
+		return true;
+	}
+	
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch( item.getItemId())
+		{
+			case R.id.threadlist_menu_newthread :
+				handlePostThread(item);
+				break;
+			case R.id.threadlist_menu_item2 :
+				int current = this.mViewPager.getCurrentItem();
+				ActivityUtil.getInstance().noticeSaying(this);
+				this.mViewPager.setAdapter(this.mTabsAdapter);
+				this.mViewPager.setCurrentItem(current, true);
+				break;
+			case R.id.goto_bookmark_item:
+				Intent intent_bookmark = new Intent(this, TopicListActivity.class);
+				intent_bookmark.putExtra("favor", 1);
+				startActivity(intent_bookmark);
+				break;
+			case R.id.search:
+				handleSearch();
+				break;
+			case R.id.threadlist_menu_item3 :
+			default:
+				//case android.R.id.home:
+				Intent intent = new Intent(this, MainActivity.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            startActivity(intent);
+				break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
