@@ -160,12 +160,14 @@ public class TopicListAdapter extends BaseAdapter
 			if(font.equals("~1~~") || font.equals("~~~1")){
 				tp.setFakeBoldText(true);
 			}else if(font.startsWith("green")){
-				holder.title.setTextColor(res.getColor(R.color.green));
+				holder.title.setTextColor(res.getColor(R.color.title_green));
 			}else if(font.startsWith("blue")){
-				holder.title.setTextColor(res.getColor(R.color.blue));
+				holder.title.setTextColor(res.getColor(R.color.title_blue));
 			}else if(font.startsWith("red"))
 			{
-				holder.title.setTextColor(res.getColor(R.color.red));
+				holder.title.setTextColor(res.getColor(R.color.title_red));
+			}else if(font.startsWith("orange")){
+				holder.title.setTextColor(res.getColor(R.color.title_orange));
 			}
 		}
 		

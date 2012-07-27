@@ -28,6 +28,10 @@
 	<color name="blue_hover">#00039E</color>
 	<color name="nga_text_color">#121C46</color>
 	<color name="nga_title_color">#e51400</color>
+	<color name="title_green">#3D9F0E</color>
+	<color name="title_red">#FF0E55</color>
+	<color name="title_blue">#00039E</color>
+	<color name="title_orange">#A06700</color>
 	
 	
 </resources>

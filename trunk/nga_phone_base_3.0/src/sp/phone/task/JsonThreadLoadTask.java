@@ -78,7 +78,12 @@ public class JsonThreadLoadTask extends AsyncTask<String, Integer, ThreadData> {
 			 if(message == null)
 					break;
 			 
-			 errorStr = message.replace("<br/>", "\n");
+			 int pos = message.indexOf("<a href=");
+			 if(pos >0){
+				 message = message.substring(0, pos);
+			 }
+			 errorStr = message.replace("<br/>", "");
+			 
 			}catch(Exception e){
 				
 			}
