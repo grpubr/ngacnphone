@@ -19,12 +19,14 @@ public class AvatarLoadTask extends AsyncTask<String, Integer, Bitmap> {
 	final ImageView view ;
 	final ZipFile zipFile;
 	final boolean downImg;
+	final int floor;
 	
-	public AvatarLoadTask(ImageView view,ZipFile zipFile,boolean downImg) {
+	public AvatarLoadTask(ImageView view,ZipFile zipFile,boolean downImg, int floor) {
 		super();
 		this.view = view;
 		this.zipFile  = zipFile;
 		this.downImg = downImg;
+		this.floor = floor;
 	}
 
 
@@ -45,7 +47,7 @@ public class AvatarLoadTask extends AsyncTask<String, Integer, Bitmap> {
 					"avatar:" + avatarLocalPath + " is not cached" );
 		}
 		
-		if(bitmap ==null && zipFile != null){
+		/*if(bitmap ==null && zipFile != null){
 			String extension = ImageUtil.getImageType(avatarUrl);
 			ZipEntry entry = zipFile.getEntry("avatarImage/" + userId + "."
 					+ extension);
@@ -58,7 +60,7 @@ public class AvatarLoadTask extends AsyncTask<String, Integer, Bitmap> {
 				}
 			}
 
-		}
+		}*/
 		
 		if (is == null && downImg) {
 			HttpUtil.downImage(avatarUrl, avatarLocalPath);
@@ -75,12 +77,7 @@ public class AvatarLoadTask extends AsyncTask<String, Integer, Bitmap> {
 		
 		if(is !=null){
 			Log.d(TAG,"load avatar from file: " + avatarLocalPath);
-			bitmap = ImageUtil.loadAvatarFromStream(is);
-			try {
-				is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			bitmap = ImageUtil.loadAvatarFromSdcard(avatarLocalPath);
 		}
 		
 		
@@ -92,7 +89,9 @@ public class AvatarLoadTask extends AsyncTask<String, Integer, Bitmap> {
 	@Override
 	protected void onPostExecute(Bitmap result) {
 		if(result !=null){
-			view.setImageBitmap(result);
+			int floor =(Integer) view.getTag();
+			if(floor == this.floor)
+				view.setImageBitmap(result);
 		}
 	}
 	

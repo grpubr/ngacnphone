@@ -1,5 +1,6 @@
 package sp.phone.utils;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
@@ -327,12 +328,11 @@ public class ImageUtil {
         return bitmap;
 	}
 	
-	static public Bitmap loadAvatarFromStream(InputStream is){
-
+	static public Bitmap loadAvatarFromStream(InputStream is,InputStream is2){
 		if(is== null)
 			return null;
 		BitmapFactory.Options opts = new BitmapFactory.Options();
-		opts.inJustDecodeBounds = true;
+		opts.inJustDecodeBounds = false;
 		Bitmap bitmap = BitmapFactory.decodeStream(is, null,opts);
 		final int avatarWidth = PhoneConfiguration.getInstance().getNikeWidth();
 		
