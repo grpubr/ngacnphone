@@ -190,9 +190,9 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 					PhoneConfiguration.getInstance().nikeWidth);
 		}
 		
-
-		avatarIV.setImageBitmap(defaultAvatar);
 		
+		avatarIV.setImageBitmap(defaultAvatar);
+		avatarIV.setTag(lou);
 		if (!StringUtil.isEmpty(avatarUrl)) {
 			final String avatarPath = ImageUtil.newImage(avatarUrl, userId);
 			if (avatarPath != null) {
@@ -211,7 +211,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 							|| PhoneConfiguration.getInstance()
 									.isDownAvatarNoWifi();
 					
-					new AvatarLoadTask(avatarIV, null, downImg).execute(
+					new AvatarLoadTask(avatarIV, null, downImg,lou).execute(
 							avatarUrl, avatarPath, userId);
 
 				}
