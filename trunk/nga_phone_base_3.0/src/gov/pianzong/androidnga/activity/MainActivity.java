@@ -295,6 +295,7 @@ public class MainActivity extends ActionBarActivity
 		boards.add(new Board(i, "10", "银色黎明裁判所", R.drawable.p10));
 		boards.add(new Board(i, "230", "艾泽拉斯风纪委员会", R.drawable.p230));
 		boards.add(new Board(i, "387", "潘大力亚之迷雾", R.drawable.p387));
+		boards.add(new Board(i, "411", "宠物讨论", R.drawable.p411));
 		boards.addCategoryName(i, "综合讨论");
 		i++;
 		
@@ -326,9 +327,10 @@ public class MainActivity extends ActionBarActivity
 		boards.add(new Board(i, "333", "DKP系统", R.drawable.p333));
 		boards.add(new Board(i, "327", "成就讨论", R.drawable.p327));
 		boards.add(new Board(i, "388", "幻化讨论", R.drawable.p388));
+		boards.add(new Board(i, "411", "宠物讨论", R.drawable.p411));
 		boards.add(new Board(i, "255", "公会管理", R.drawable.p10));
 		boards.add(new Board(i, "306", "人员招募", R.drawable.p10));
-		boards.addCategoryName(i, "心得讨论");
+		boards.addCategoryName(i, "冒险心得");
 		i++;
 		
 		boards.add(new Board(i, "264", "卡拉赞剧院", R.drawable.p264));
@@ -338,7 +340,7 @@ public class MainActivity extends ActionBarActivity
 		boards.add(new Board(i, "254", "镶金玫瑰", R.drawable.p254));
 		boards.add(new Board(i, "355", "龟岩兄弟会", R.drawable.p355));
 		boards.add(new Board(i, "116", "奇迹之泉", R.drawable.p116));
-		boards.addCategoryName(i, "周边讨论");
+		boards.addCategoryName(i, "麦迪文之塔");
 		i++;
 		
 		
