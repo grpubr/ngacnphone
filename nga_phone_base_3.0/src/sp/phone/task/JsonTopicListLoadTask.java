@@ -70,7 +70,22 @@ public class JsonTopicListLoadTask extends AsyncTask<String, Integer, TopicListI
 			ret.set__T__ROWS((Integer)rows);
 		else
 		{
-			error = "二哥玩坏了或者你需要重新登录";
+			
+			String message =  (String) o.get("__MESSAGE");
+			 if(message == null)
+			 {
+				 
+				 error = "二哥玩坏了或者你需要重新登录";
+			 }
+			 else{
+				 int pos = message.indexOf("<a href=");
+				 if(pos >0){
+					 message = message.substring(0, pos);
+				 }
+				 error = message.replace("<br/>", "");
+			 
+			 }
+
 			return null;
 		}
 			
