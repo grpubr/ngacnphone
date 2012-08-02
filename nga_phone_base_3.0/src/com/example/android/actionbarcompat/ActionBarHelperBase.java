@@ -186,9 +186,13 @@ public class ActionBarHelperBase extends ActionBarHelper {
                                 ? R.dimen.actionbar_compat_button_home_width
                                 : R.dimen.actionbar_compat_button_width),
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        /*if (itemId == R.id.menu_refresh) {
+       /* if (itemId == R.id.menu_refresh) {
             actionButton.setId(R.id.actionbar_compat_item_refresh);
         }*/
+        if (itemId == R.id.article_menuitem_lock) {
+            actionButton.setId(R.id.actionbar_compat_item_lock);
+        }
+        
         actionButton.setImageDrawable(item.getIcon());
         actionButton.setScaleType(ImageView.ScaleType.CENTER);
         actionButton.setContentDescription(item.getTitle());
