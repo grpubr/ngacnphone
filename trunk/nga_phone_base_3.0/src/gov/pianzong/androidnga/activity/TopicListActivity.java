@@ -1,5 +1,7 @@
 package gov.pianzong.androidnga.activity;
 
+import com.example.android.actionbarcompat.ActionBarActivity;
+
 import gov.pianzong.androidnga.R;
 import sp.phone.adapter.TabsAdapter;
 import sp.phone.bean.TopicListInfo;
@@ -35,7 +37,7 @@ import android.view.MenuItem;
 import android.widget.TabHost;
 
 
-public class TopicListActivity extends FragmentActivity
+public class TopicListActivity extends ActionBarActivity
 	implements OnTopListLoadFinishedListener{
 	static final private String TAG = TopicListActivity.class.getSimpleName();
 	static final int MESSAGE_SENT = 1;

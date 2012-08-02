@@ -1,5 +1,7 @@
 package gov.pianzong.androidnga.activity;
 
+import com.example.android.actionbarcompat.ActionBarActivity;
+
 import gov.pianzong.androidnga.R;
 import sp.phone.adapter.TabsAdapter;
 import sp.phone.fragment.ArticleListFragment;
@@ -31,7 +33,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TabHost;
 
-public class ArticleListActivity extends FragmentActivity
+public class ArticleListActivity extends ActionBarActivity
 implements PagerOwnner,ResetableArticle {
 	TabHost tabhost;
 	ViewPager  mViewPager;
@@ -168,7 +170,7 @@ implements PagerOwnner,ResetableArticle {
 				orentation ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 		{
 			lock.setTitle(R.string.unlock_orientation);
-			lock.setIcon(android.R.drawable.ic_menu_always_landscape_portrait);
+			lock.setIcon(R.drawable.ic_menu_always_landscape_portrait);
 			
 		}
 		
@@ -187,6 +189,7 @@ implements PagerOwnner,ResetableArticle {
 		{
 			return super.onOptionsItemSelected(item);
 		}
+
 	}
 	
 	private void createGotoDialog(){

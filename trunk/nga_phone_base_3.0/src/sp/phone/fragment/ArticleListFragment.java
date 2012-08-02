@@ -45,6 +45,7 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -270,9 +271,20 @@ public class ArticleListFragment extends Fragment
 		return super.onOptionsItemSelected(item);
 	}
 	
+	private ImageButton getActionItem(int id){
+		View actionbar_compat = getActivity().findViewById(R.id.actionbar_compat);
+		View ret = null;
+		if(actionbar_compat != null)
+		{
+			ret = actionbar_compat.findViewById(id);
+		}
+		return (ImageButton) ret;
+	}
+	
 	private void handleLockOrientation(MenuItem item){
 		int preOrentation = ThemeManager.getInstance().screenOrentation;
 		int newOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+		ImageButton compat_item = getActionItem(R.id.actionbar_compat_item_lock);
 		
 		if(preOrentation ==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||
 				preOrentation ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
@@ -282,8 +294,9 @@ public class ArticleListFragment extends Fragment
 			
 			getActivity().setRequestedOrientation(newOrientation);
 			item.setTitle(R.string.lock_orientation);
-			item.setIcon(android.R.drawable.ic_lock_idle_lock);
-
+			item.setIcon(R.drawable.ic_lock_screen);
+			if(compat_item !=null)
+				compat_item.setImageResource(R.drawable.ic_lock_screen);
 			
 		}else{
 			newOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
@@ -297,8 +310,12 @@ public class ArticleListFragment extends Fragment
 			ThemeManager.getInstance().screenOrentation = newOrientation;
 			getActivity().setRequestedOrientation(newOrientation);			
 			item.setTitle(R.string.unlock_orientation);
-			item.setIcon(android.R.drawable.ic_menu_always_landscape_portrait);
+			item.setIcon(R.drawable.ic_menu_always_landscape_portrait);
+			if(compat_item !=null)
+				compat_item.setImageResource(R.drawable.ic_menu_always_landscape_portrait);
 		}
+		
+		
 		
 		SharedPreferences share = getActivity().getSharedPreferences(PERFERENCE,
 				Activity.MODE_PRIVATE);

@@ -125,8 +125,11 @@ public class MainActivity extends ActionBarActivity
 		if(orentation ==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||
 				orentation ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 		{
-			setRequestedOrientation(orentation);
+			if( getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+				setRequestedOrientation(orentation);
 		}else{
+			if(getRequestedOrientation() ==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||
+					getRequestedOrientation() ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}
 		pager.setAdapter(
@@ -224,6 +227,13 @@ public class MainActivity extends ActionBarActivity
 	
 	
 	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+	}
+
+
 	private void initDate() {
 
 
