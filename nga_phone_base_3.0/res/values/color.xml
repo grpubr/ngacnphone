@@ -32,6 +32,8 @@
 	<color name="title_red">#FF0E55</color>
 	<color name="title_blue">#00039E</color>
 	<color name="title_orange">#A06700</color>
+	<color name="holo_blue_light">#ff33b5e5</color>
+	<color name="hint_foreground_holo_light">#808080</color>
 	
 	
 </resources>

@@ -145,7 +145,6 @@ public class TopicListActivity extends ActionBarActivity
 	public boolean onCreateOptionsMenu(Menu menu) {
 		int menuId= R.menu.threadlist_menu;
 		getMenuInflater().inflate(menuId, menu);
-		
 		final int flags = ThemeManager.ACTION_BAR_FLAG;
 		 ReflectionUtil.actionBar_setDisplayOption(this, flags);
 		
