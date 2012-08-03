@@ -45,12 +45,13 @@ implements PagerOwnner,ResetableArticle {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		View v = this.getLayoutInflater().inflate(R.layout.pagerview_article_list, null);
+		/*View v = this.getLayoutInflater().inflate(R.layout.pagerview_article_list, null);
 		//setContentView(R.layout.pagerview_article_list);
 		int bg = this.getResources().getColor(
 				ThemeManager.getInstance().getBackgroundColor());
-		v.setBackgroundColor(bg);
-		setContentView(v);
+		v.setBackgroundColor(bg);*/
+		setContentView(R.layout.pagerview_article_list);
+
 		
 		tabhost = (TabHost) findViewById(android.R.id.tabhost);
 		tabhost.setup();
