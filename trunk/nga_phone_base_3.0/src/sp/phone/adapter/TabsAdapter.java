@@ -92,7 +92,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 		if(pageCount == 1 )
 		{
 			TextView v = (TextView) mTabHost.getTabWidget().getChildAt(0);
-			v.setTextColor(mContext.getResources().getColor(R.color.black));
+			v.setTextColor(mContext.getResources().getColor(android.R.color.holo_blue_light));
 		}
 		
 		this.notifyDataSetChanged();
@@ -141,7 +141,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 			//v.setText(String.valueOf(i+offset+1));
 			if (mTabHost.getCurrentTab() == i) {
 				Log.d(TAG, "set tab:" + (i+offset+1) + "to black");
-				v.setTextColor(mContext.getResources().getColor(R.color.black));
+				v.setTextColor(mContext.getResources().getColor(android.R.color.holo_blue_light));
 			} else {
 				Log.d(TAG, "set tab:" + (i+offset+1) + "to default color");
 				v.setTextColor(defaultColor);

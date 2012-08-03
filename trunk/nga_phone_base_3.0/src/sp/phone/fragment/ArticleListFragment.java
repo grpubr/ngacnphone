@@ -91,6 +91,8 @@ public class ArticleListFragment extends Fragment
 					(getActivity(), R.anim.article_list_anim);
 			listview.setLayoutAnimation(anim);
 		}
+		listview.setBackgroundResource(R.color.shit1);
+		listview.setDivider(null);
 		
 		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
 			this.registerForContextMenu(listview);
