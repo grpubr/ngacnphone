@@ -213,6 +213,15 @@ public class ArticleUtil {
 	public static ThreadData parseJsonThreadPage(String js){
 		js = js.replaceAll("\"content\":\\+(\\d+),", "\"content\":\"+$1\",");
 		js = js.replaceAll("\"subject\":\\+(\\d+),", "\"subject\":\"+$1\",");
+		final String start = "\"__P\":{\"aid\":";
+		final String end = "\"this_visit_rows\":";
+		if(js.indexOf(start) != -1 && js.indexOf(end) != -1){
+			Log.w(TAG, "here comes an invalid response");
+			String validJs = js.substring(0, js.indexOf(start));
+			validJs += js.substring(js.indexOf(end));
+			js = validJs;
+			
+		}
 		JSONObject o = null;
 		try{
 				o = (JSONObject) JSON.parseObject(js).get("data");
