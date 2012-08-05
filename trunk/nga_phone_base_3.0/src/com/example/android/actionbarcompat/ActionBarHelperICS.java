@@ -16,10 +16,9 @@
 
 package com.example.android.actionbarcompat;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
-import android.view.Menu;
-import android.view.MenuItem;
 
 /**
  * An extension of {@link com.example.android.actionbarcompat.ActionBarHelper} that provides Android
@@ -30,7 +29,8 @@ public class ActionBarHelperICS extends ActionBarHelperHoneycomb {
         super(activity);
     }
 
-    @Override
+    @TargetApi(14)
+	@Override
     protected Context getActionBarThemedContext() {
         return mActivity.getActionBar().getThemedContext();
     }

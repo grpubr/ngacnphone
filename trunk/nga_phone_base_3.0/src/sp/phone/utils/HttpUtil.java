@@ -28,6 +28,7 @@ public class HttpUtil {
 	public final static String PATH_ICON = PATH_SD + "nga_cache/icon";
 	public final static String PATH_WEB_CACHE = PATH_SD + "nga_cache/web_cache";
 	public final static String PATH_NOMEDIA = PATH_SD + "nga_cache/.nomedia";
+	public final static String PATH_IMAGES = PATH_SD + "nga_cache/images";
 	public static  final String PATH_ZIP = "";
 
 	public static String Server = "http://bbs.ngacn.cc";

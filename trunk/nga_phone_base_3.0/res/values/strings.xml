@@ -56,5 +56,9 @@
     <string name="search_hint">输入要搜索的关键字</string>
     <string name="click_to_delete">点击删除</string>
     <string name="load_tudou_video">载入土豆视频中</string>
+    <string name="save">保存</string>
+    <string name="image_saved">图片已经保存在</string>
+    <string name="invalid_url">链接不合法</string>
+    <string name="mkdir_fail">无法创建目录，sd卡未挂载？</string>
     
 </resources>

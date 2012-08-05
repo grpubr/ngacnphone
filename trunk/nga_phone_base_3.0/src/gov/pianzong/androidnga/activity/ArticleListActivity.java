@@ -1,7 +1,5 @@
 package gov.pianzong.androidnga.activity;
 
-import com.example.android.actionbarcompat.ActionBarActivity;
-
 import gov.pianzong.androidnga.R;
 import sp.phone.adapter.TabsAdapter;
 import sp.phone.fragment.ArticleListFragment;
@@ -20,18 +18,18 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.nfc.NfcEvent;
-import android.os.Bundle;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
-import android.support.v4.app.FragmentActivity;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TabHost;
+
+import com.example.android.actionbarcompat.ActionBarActivity;
 
 public class ArticleListActivity extends ActionBarActivity
 implements PagerOwnner,ResetableArticle {

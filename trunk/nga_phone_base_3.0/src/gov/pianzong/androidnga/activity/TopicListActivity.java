@@ -1,7 +1,5 @@
 package gov.pianzong.androidnga.activity;
 
-import com.example.android.actionbarcompat.ActionBarActivity;
-
 import gov.pianzong.androidnga.R;
 import sp.phone.adapter.TabsAdapter;
 import sp.phone.bean.TopicListInfo;
@@ -27,7 +25,6 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -35,6 +32,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TabHost;
+
+import com.example.android.actionbarcompat.ActionBarActivity;
 
 
 public class TopicListActivity extends ActionBarActivity

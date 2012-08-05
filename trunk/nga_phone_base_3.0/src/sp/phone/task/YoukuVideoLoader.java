@@ -10,7 +10,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
 
 public class YoukuVideoLoader extends AsyncTask<String, Integer, String> {
 	static final String TAG = YoukuVideoLoader.class.getSimpleName();

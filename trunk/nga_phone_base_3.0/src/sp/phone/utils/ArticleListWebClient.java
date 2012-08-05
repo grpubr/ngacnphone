@@ -4,6 +4,7 @@ import sp.phone.task.TudouVideoLoadTask;
 import gov.pianzong.androidnga.activity.ArticleListActivity;
 import gov.pianzong.androidnga.activity.ImageViewerActivity;
 import gov.pianzong.androidnga.activity.TopicListActivity;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
@@ -69,7 +70,7 @@ public class ArticleListWebClient extends WebViewClient {
 			
 			TudouVideoLoadTask loader = new TudouVideoLoadTask(fa);
 			if(ActivityUtil.isGreaterThan_2_3_3()){
-				loader.executeOnExecutor(TudouVideoLoadTask.THREAD_POOL_EXECUTOR, id);
+				runOnExcutor(loader,id);
 			}else{
 				loader.execute(id);
 			}
@@ -81,6 +82,12 @@ public class ArticleListWebClient extends WebViewClient {
 			//return false;
 		}
 		return true;
+	}
+	
+	@TargetApi(11)
+	private void runOnExcutor(TudouVideoLoadTask loader, String id){
+		loader.executeOnExecutor(TudouVideoLoadTask.THREAD_POOL_EXECUTOR, id);
+		
 	}
 
 
