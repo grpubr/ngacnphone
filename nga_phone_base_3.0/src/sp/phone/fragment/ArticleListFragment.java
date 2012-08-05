@@ -91,7 +91,7 @@ public class ArticleListFragment extends Fragment
 					(getActivity(), R.anim.article_list_anim);
 			listview.setLayoutAnimation(anim);
 		}
-		listview.setBackgroundResource(R.color.shit1);
+		listview.setBackgroundResource(ThemeManager.getInstance().getBackgroundColor());
 		listview.setDivider(null);
 		
 		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
@@ -101,6 +101,7 @@ public class ArticleListFragment extends Fragment
 			listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 			listview.setOnItemLongClickListener(new OnItemLongClickListener() {
 
+				@TargetApi(11)
 				@Override
 				public boolean onItemLongClick(AdapterView<?> parent,
 						View view, int position, long id) {

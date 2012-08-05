@@ -132,6 +132,14 @@ public class PostActivity extends FragmentActivity
 		bodyText.setText(prefix);
 		if(prefix != null)
 			bodyText.setSelection(prefix.length());
+		ThemeManager tm = ThemeManager.getInstance();
+		if(tm.getMode() == ThemeManager.MODE_NIGHT ){
+			bodyText.setBackgroundResource(tm.getBackgroundColor());
+			titleText.setBackgroundResource(tm.getBackgroundColor());
+			int textColor = this.getResources().getColor(tm.getForegroundColor());
+			bodyText.setTextColor(textColor);
+			titleText.setTextColor(textColor);
+		}
 
 		
 		button_commit = (Button)findViewById(R.id.reply_commit_button);

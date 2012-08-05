@@ -3,7 +3,6 @@ package sp.phone.fragment;
 import gov.pianzong.androidnga.R;
 import sp.phone.adapter.BoardCatagoryAdapter;
 import sp.phone.interfaces.PageCategoryOwnner;
-import sp.phone.interfaces.ResetableArticle;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ThemeManager;
 import android.os.Bundle;

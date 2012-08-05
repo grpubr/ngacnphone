@@ -160,8 +160,7 @@ AsyncTask<String, Integer, String> {
 	    out.close();
 	    
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(LOG_TAG, Log.getStackTraceString(e));
 		}
 		
 		return html;

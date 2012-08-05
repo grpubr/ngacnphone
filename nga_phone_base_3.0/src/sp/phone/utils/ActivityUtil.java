@@ -35,7 +35,9 @@ public class ActivityUtil {
 	public static boolean isGreaterThan_4_0(){
 		return android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 	}
-	
+	public static boolean islessThan_4_1(){
+		return android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN;
+	}
 	public static boolean isMeizu(){
 		return "Meizu".equalsIgnoreCase(android.os.Build.MANUFACTURER);
 	}

@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:contentDescription="@string/upload"
-            android:src="@android:drawable/stat_sys_upload" />
+            android:src="@drawable/ic_menu_upload" />
         <ImageButton
             android:id="@+id/imageButton_emotion"
             android:layout_width="wrap_content"

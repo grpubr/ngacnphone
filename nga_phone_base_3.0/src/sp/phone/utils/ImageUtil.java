@@ -1,6 +1,5 @@
 package sp.phone.utils;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
@@ -23,8 +22,7 @@ public class ImageUtil {
 		int width = bitmap.getWidth();
 		int height = bitmap.getHeight();
 		
-		/*if(width == bookWidth)
-			return bitmap;*/
+
 		
 		int newWidth = bookWidth;
 		float newHeight = ((height * newWidth) / width);
@@ -258,6 +256,20 @@ public class ImageUtil {
 		} else {
 			return null;
 		}
+	}
+	
+	static public String getImageName(String uri){
+		if(StringUtil.isEmpty(uri))
+			return null;
+		String ret = FilenameUtils.getName(uri);
+		if(StringUtil.isEmpty(ret))
+			return null;
+		int pos = ret.indexOf("?");
+		if(pos != -1){
+			
+			ret = ret.substring(0,pos);
+		}
+		return ret ;
 	}
 	
 	private static int computeSampleSize(BitmapFactory.Options options,

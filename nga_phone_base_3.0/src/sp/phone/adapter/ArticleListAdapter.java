@@ -10,11 +10,13 @@ import sp.phone.bean.Attachment;
 import sp.phone.bean.ThreadData;
 import sp.phone.bean.ThreadRowInfo;
 import sp.phone.task.AvatarLoadTask;
+import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.ArticleListWebClient;
 import sp.phone.utils.ImageUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -117,16 +119,27 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		public View holder;
 	}
 	
+	@TargetApi(11)
+	void setLayerType(WebView contentTV){
+			contentTV.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);		
+	}
 	private void handleContentTV(WebView contentTV,ThreadRowInfo row,int bgColorId,int bgColor,int fgColor){
 		
 		contentTV.setBackgroundColor(0);
-		//if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB)
-		//	contentTV.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
+		if(ActivityUtil.isGreaterThan_2_3_3() &&
+				ActivityUtil.islessThan_4_1())
+			setLayerType(contentTV);
 		
-		contentTV.setFocusable(false);
+		
+		
 		//contentTV.setClickable(false);
-		contentTV.setLongClickable(false);
 		contentTV.setFocusableInTouchMode(false);
+		contentTV.setFocusable(false);
+		if(ActivityUtil.isGreaterThan_2_2())
+		{
+			
+			contentTV.setLongClickable(false);
+		}
 		
 		bgColor = bgColor & 0xffffff;
 		String bgcolorStr = String.format("%06x",bgColor);
@@ -162,11 +175,9 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		setting.setDefaultFontSize(
 				PhoneConfiguration.getInstance().getWebSize());
 		setting.setJavaScriptEnabled(false);
-		contentTV.setWebViewClient(this.client);
-		//contentTV.setOnLongClickListener(this);
+		contentTV.setWebViewClient(client);
 		contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
-		//contentTV.loadData(ngaHtml, "text/html; charset=utf-8", "UTF-8");
-		
+
 		
 	}
 	

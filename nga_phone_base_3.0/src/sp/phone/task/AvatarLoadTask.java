@@ -2,9 +2,7 @@ package sp.phone.task;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import sp.phone.utils.HttpUtil;
@@ -35,7 +33,7 @@ public class AvatarLoadTask extends AsyncTask<String, Integer, Bitmap> {
 		
 		final String avatarUrl = params[0];
 		final String avatarLocalPath = params[1];
-		final String userId = params[2];
+
 
 		Bitmap bitmap = null;
 		InputStream is = null;
@@ -47,20 +45,7 @@ public class AvatarLoadTask extends AsyncTask<String, Integer, Bitmap> {
 					"avatar:" + avatarLocalPath + " is not cached" );
 		}
 		
-		/*if(bitmap ==null && zipFile != null){
-			String extension = ImageUtil.getImageType(avatarUrl);
-			ZipEntry entry = zipFile.getEntry("avatarImage/" + userId + "."
-					+ extension);
-			if (entry != null) {
-				try {
-					is = zipFile.getInputStream(entry);
-				} catch (IOException e) {
-					Log.d(TAG, "avatar "
-							+ avatarLocalPath + " is not in zip");
-				}
-			}
 
-		}*/
 		
 		if (is == null && downImg) {
 			HttpUtil.downImage(avatarUrl, avatarLocalPath);
