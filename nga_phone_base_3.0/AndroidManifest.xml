@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="gov.pianzong.androidnga" android:versionCode="329"
-	android:versionName="1.3.29" android:installLocation="auto">
+	package="gov.pianzong.androidnga" android:versionCode="330"
+	android:versionName="1.3.30" android:installLocation="auto">
 	
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -21,7 +21,7 @@
 		<activity android:name=".activity.PostActivity" android:launchMode="standard"></activity>
 		<activity android:name=".activity.SettingsActivity"></activity>
 		<activity android:name=".activity.BookmarkActivity"></activity>
-		<activity android:name=".activity.TopicListActivity" android:exported="false" android:theme="@style/AppTheme">
+		<activity android:name=".activity.TopicListActivity" android:exported="true" android:theme="@style/AppTheme">
 		    <intent-filter>
 		        <action android:name="android.intent.action.VIEW" /> 
 		        <category android:name="android.intent.category.DEFAULT" /> 
@@ -40,7 +40,7 @@
                 <data android:scheme="@string/myscheme" android:host="bbs.ngacn.cc" android:path="/thread.php"/>
             </intent-filter>
 		</activity>
-		<activity android:name=".activity.ArticleListActivity" android:exported="false" android:theme="@style/AppTheme">
+		<activity android:name=".activity.ArticleListActivity" android:exported="true" android:theme="@style/AppTheme">
 		    <!-- intent-filter>
 		        <action android:name="android.intent.action.VIEW" /> 
 		        <category android:name="android.intent.category.DEFAULT" /> 
