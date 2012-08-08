@@ -115,7 +115,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 	@Override
 	public Fragment getItem(int position) {
 		//Log.d(TAG, "get framgent:" + position);
-		offset = position/ MAX_TAB * MAX_TAB;
+		//offset = position/ MAX_TAB * MAX_TAB;
 		Log.i(TAG, "getItem "+ position + "current offset=" + offset );
 		Bundle args = new Bundle(arguments);
 		args.putInt("page", position);
