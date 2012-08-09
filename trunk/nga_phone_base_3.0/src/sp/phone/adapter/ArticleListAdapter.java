@@ -3,6 +3,7 @@ package sp.phone.adapter;
 import gov.pianzong.androidnga.R;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -20,6 +21,7 @@ import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -49,6 +51,8 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 	private final SparseArray<View> viewCache;
 	private final Object lock = new Object();
 	private final HashSet<String> urlSet = new HashSet<String>();
+	
+	
 	
 	public ArticleListAdapter(Context activity) {
 		super();
@@ -110,7 +114,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 	static class ViewHolder{
 		TextView nickNameTV;
 		ImageView avatarIV;
-		View contentTV;
+		WebView contentTV;
 		TextView floorTV;
 		TextView postTimeTV;
 		TextView titleTV;
@@ -200,9 +204,10 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 			return;
 		}
 		if(defaultAvatar == null || defaultAvatar.getWidth() != PhoneConfiguration.getInstance().nikeWidth){
-			Drawable defaultAvatarDrawable = avatarIV.getContext().getResources().getDrawable(R.drawable.default_avatar);
-			this.defaultAvatar = ImageUtil.zoomImageByWidth(defaultAvatarDrawable, 
-					PhoneConfiguration.getInstance().nikeWidth);
+			Resources res = avatarIV.getContext().getResources();
+			InputStream is = res.openRawResource(R.drawable.default_avatar);
+			InputStream is2 = res.openRawResource(R.drawable.default_avatar);
+			this.defaultAvatar = ImageUtil.loadAvatarFromStream(is, is2);
 		}
 		
 		
@@ -239,133 +244,66 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		ViewHolder holder = new ViewHolder();
 		holder.nickNameTV =(TextView) view.findViewById(R.id.nickName);
 		holder.avatarIV = (ImageView) view.findViewById(R.id.avatarImage);
-		holder.contentTV = view.findViewById(R.id.content);
+		holder.contentTV = (WebView) view.findViewById(R.id.content);
 		holder.floorTV = (TextView) view.findViewById(R.id.floor);
 		holder.postTimeTV = (TextView)view.findViewById(R.id.postTime);
 		holder.titleTV = (TextView) view.findViewById(R.id.floor_title);
 		return holder;
 	}
 	
-	private boolean isLight(ThreadRowInfo row){
-		if(row == null)
-			return false;
-		String content = row.getContent();
-		
-		if(content != null){
-			if(content.indexOf("[img]") >=0 ||
-					content.indexOf("[IMG]") >=0 ||
-					content.indexOf("[flash]") >=0 ||
-					content.indexOf("[quote]") >=0 
-					//||content.indexOf("[s:") >=0
-				){
-				return false;
-			}
+	public View getView(int position, View view, ViewGroup parent) {
+		if (position == 0) {
+			start = System.currentTimeMillis();
 		}
-		
-		if(row.getAttachs() != null)
-			return false;
-		
-		PhoneConfiguration config = PhoneConfiguration.getInstance();
-		if(config.showSignature){
-			content = row.getSignature();
-			if(content.indexOf("[img]") >=0 ||
-					content.indexOf("[IMG]") >=0
-				){
-				return false;
-			}
-		}
-		
-		return true;
-	}
-	
-	private boolean isLight(View view){
-		if(view == null)
-			return false;
-		ViewHolder holder = (ViewHolder) view.getTag();
-		return holder.contentTV instanceof TextView;
-	}
-	private View createView(int position, View view, ViewGroup parent){
-		ThreadRowInfo row = data.getRowList().get(position);
+
 		ViewHolder holder = null;
-		View ret = null;
+		PhoneConfiguration config = PhoneConfiguration.getInstance();
 		if (viewCache.get(position) != null) {
 			Log.d(TAG, "get view from cache ,floor " + position);
 			return viewCache.get(position);
-		}
-		if(view == null){
-			
-			if(isLight(row))
-				ret = LayoutInflater.from(activity).inflate(
-						R.layout.simple_articlelist, parent,false);
-			else
-				ret = LayoutInflater.from(activity).inflate(
-						R.layout.relative_aritclelist, parent,false);
-			holder = initHolder(ret);
-			ret.setTag(holder);
-			
-			return ret;
-		}
-		
-		holder = (ViewHolder) view.getTag();
-		PhoneConfiguration config = PhoneConfiguration.getInstance();
-		if (isLight(row)) {
-			
-			if(isLight(view))
-				return view;
-			
-			if(config.useViewCache)
-				this.viewCache.put(holder.position, view);
-			ret = LayoutInflater.from(activity).inflate(
-					R.layout.simple_articlelist, parent,false);
-			holder = initHolder(ret);
-			ret.setTag(holder);
-			
-			return ret;
-			
 		} else {
-			if (!isLight(view)) {
-				if (!config.useViewCache && holder.contentTV.getHeight() < 300) {
+			if (view == null || config.useViewCache) {
+				Log.d(TAG, "inflater new view ,floor " + position);
+				view = LayoutInflater.from(activity).inflate(
+						R.layout.relative_aritclelist, parent,false);
+				holder = initHolder(view);
+				view.setTag(holder);
+				if (config.useViewCache)
+					viewCache.put(position, view);
+			} else {
+				holder = (ViewHolder) view.getTag();
+				if (holder.position == position) {
 					return view;
+				}
+				holder.contentTV.stopLoading();
+				if (holder.contentTV.getHeight() > 300) {
+					Log.d(TAG, "skip and store a tall view ,floor " + position);
+					// if (config.useViewCache)
+					viewCache.put(holder.position, view);
+					
+					view = LayoutInflater.from(activity).inflate(
+							R.layout.relative_aritclelist,  parent,false);
+					holder = initHolder(view);
+					view.setTag(holder);
+
 				}
 
 			}
-			if (config.useViewCache)
-				viewCache.put(holder.position, view);
-			
-			ret = LayoutInflater.from(activity).inflate(
-					R.layout.relative_aritclelist, parent, false);
-			holder = initHolder(ret);
-			ret.setTag(holder);
-			return ret;
 
 		}
-			
 
-
-		
-		
-	}
-	public View getView(int position, View view, ViewGroup parent) {
-		
-		ThreadRowInfo row = data.getRowList().get(position);
-
-		View ret = createView(position, view, parent);
-		
-		ViewHolder holder = (ViewHolder) ret.getTag();	
-		if(holder.position == position){
-			return ret;
-		}
 
 
 		holder.position = position;
 		ThemeManager theme = ThemeManager.getInstance();
 		int colorId = theme.getBackgroundColor();
-		ret.setBackgroundResource(colorId);
+		view.setBackgroundResource(colorId);
 
+		ThreadRowInfo row = data.getRowList().get(position);
 		
 		if(row == null){
 			holder.titleTV.setText("´íÎóÂ¥²ã");
-			return ret;
+			return view;
 		}
 
 		handleAvatar(holder.avatarIV, row);
@@ -392,13 +330,8 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 
 		int bgColor = parent.getContext().getResources().getColor(colorId);
 
-		if(!isLight(ret)){
-			WebView contentTV = (WebView) holder.contentTV;
-			handleContentTV(contentTV, row, colorId, bgColor, fgColor);
-		}else{
-			TextView contentText = (TextView) holder.contentTV;
-			handleContentTV(contentText, row, colorId, bgColor, fgColor);
-		}
+		WebView contentTV = holder.contentTV;
+		handleContentTV(contentTV, row, colorId, bgColor, fgColor);
 
 		final int lou = row.getLou();
 		final String floor = String.valueOf(lou);
@@ -410,45 +343,13 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		postTimeTV.setText(row.getPostdate());
 		postTimeTV.setTextColor(fgColor);
 
-
-
-
-		return ret;
-	}
-
-	private void handleContentTV(TextView contentText, ThreadRowInfo row,
-			int colorId, int bgColor, int fgColor) {
-
-
-		
-		contentText.setBackgroundColor(bgColor);
-		
-		bgColor = bgColor & 0xffffff;
-		//String bgcolorStr = String.format("%06x",bgColor);
-		
-		int htmlfgColor = fgColor & 0xffffff;
-		String fgColorStr = String.format("%06x",htmlfgColor);
-		if(row.getContent()== null){
-			row.setContent(row.getSubject());
-			row.setSubject(null);
+		if (position == this.getCount() - 1) {
+			end = System.currentTimeMillis();
+			Log.i(getClass().getSimpleName(), "render cost:" + (end - start));
 		}
-		
-		boolean showImage = PhoneConfiguration.getInstance().isDownImgNoWifi() || isInWifi();
-		String ngaHtml = StringUtil.decodeForumTag(row.getContent(),showImage);
-		if(StringUtil.isEmpty(ngaHtml))
-			ngaHtml = row.getAlterinfo();
-		ngaHtml = ngaHtml + buildComment(row,fgColorStr) + buildAttachment(row,showImage)
-				+ buildSignature(row,showImage);
-		ngaHtml = "<font color='#"+ fgColorStr + "' size='2'>"
-			+ ngaHtml + 
-			"</font>";
 
 
-			
-		
-		contentText.setText(Html.fromHtml(ngaHtml));
-		
-		
+		return view;
 	}
 
 	private String buildAttachment(ThreadRowInfo row,boolean showImage){
@@ -574,8 +475,8 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		}
 		return false;
 	}
-
-
+	
+	
 	private boolean isPending(String url){
 		boolean ret = false;
 		synchronized(lock){
@@ -601,8 +502,6 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		}
 		
 	}
-	
-	
 	
 
 }
