@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.zip.ZipFile;
 
+import sp.phone.interfaces.AvatarLoadCompleteCallBack;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.ImageUtil;
 import android.graphics.Bitmap;
@@ -18,13 +19,15 @@ public class AvatarLoadTask extends AsyncTask<String, Integer, Bitmap> {
 	final ZipFile zipFile;
 	final boolean downImg;
 	final int floor;
-	
-	public AvatarLoadTask(ImageView view,ZipFile zipFile,boolean downImg, int floor) {
+	final AvatarLoadCompleteCallBack callBack;
+	String uri = null;
+	public AvatarLoadTask(ImageView view,ZipFile zipFile,boolean downImg, int floor,AvatarLoadCompleteCallBack callBack) {
 		super();
 		this.view = view;
 		this.zipFile  = zipFile;
 		this.downImg = downImg;
 		this.floor = floor;
+		this.callBack = callBack;
 	}
 
 
@@ -33,8 +36,9 @@ public class AvatarLoadTask extends AsyncTask<String, Integer, Bitmap> {
 		
 		final String avatarUrl = params[0];
 		final String avatarLocalPath = params[1];
-
-
+		uri = avatarUrl;
+		callBack.OnAvatarLoadStart(uri);
+		
 		Bitmap bitmap = null;
 		InputStream is = null;
 
@@ -78,6 +82,20 @@ public class AvatarLoadTask extends AsyncTask<String, Integer, Bitmap> {
 			if(floor == this.floor)
 				view.setImageBitmap(result);
 		}
+		callBack.OnAvatarLoadComplete(uri);
+	}
+
+
+	@Override
+	protected void onCancelled(Bitmap result) {
+		
+		onCancelled();
+	}
+
+
+	@Override
+	protected void onCancelled() {
+		callBack.OnAvatarLoadComplete(uri);
 	}
 	
 	

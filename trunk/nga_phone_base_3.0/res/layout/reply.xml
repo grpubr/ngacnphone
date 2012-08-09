@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:contentDescription="@string/upload"
-            android:src="@drawable/emo_im_money_mouth" />
+            android:src="@drawable/ic_menu_start_conversation" />
 
          <Spinner
              android:id="@+id/user_list"
@@ -75,7 +75,9 @@
         android:layout_alignParentTop="true"
         android:hint="@string/title" 
         android:textColor="@color/black" 
-        android:background="@color/white" android:cursorVisible="true" android:layout_marginLeft="10dp" android:textCursorDrawable="@null" android:layout_marginTop="10dp"/>
+        android:background="@color/white" android:cursorVisible="true" android:layout_marginLeft="10dp" android:textCursorDrawable="@null" android:layout_marginTop="10dp"
+        android:inputType="textNoSuggestions"
+        />
 
     <EditText
         android:id="@+id/reply_body_edittext"
@@ -90,7 +92,7 @@
         android:cursorVisible="true"
         android:gravity="top|left"
         android:imeOptions="actionDone"
-        android:inputType="textMultiLine"
+        android:inputType="textMultiLine|textNoSuggestions"
         android:textColor="@color/black"
         android:textCursorDrawable="@null" >
 
