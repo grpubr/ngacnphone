@@ -343,6 +343,8 @@ public class ImageUtil {
 	static public Bitmap loadAvatarFromStream(InputStream is,InputStream is2){
 		if(is== null)
 			return null;
+		if(is == is2)
+			return null;
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		opts.inJustDecodeBounds = false;
 		Bitmap bitmap = BitmapFactory.decodeStream(is, null,opts);
@@ -354,7 +356,7 @@ public class ImageUtil {
         opts.inJustDecodeBounds = false;
         opts.inInputShareable = true;
         opts.inPurgeable = true;
-        bitmap = BitmapFactory.decodeStream(is, null, opts);
+        bitmap = BitmapFactory.decodeStream(is2, null, opts);
         if(bitmap != null && bitmap.getWidth() < avatarWidth){
         	Bitmap tmp = bitmap;
         	bitmap = zoomImageByWidth(tmp,avatarWidth);
