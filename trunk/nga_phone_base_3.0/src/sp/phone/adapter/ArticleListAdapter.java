@@ -4,11 +4,13 @@ import gov.pianzong.androidnga.R;
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.ref.SoftReference ;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
 import sp.phone.bean.Attachment;
+import sp.phone.bean.AvatarTag;
 import sp.phone.bean.ThreadData;
 import sp.phone.bean.ThreadRowInfo;
 import sp.phone.interfaces.AvatarLoadCompleteCallBack;
@@ -23,11 +25,11 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo.State;
 import android.support.v4.app.FragmentActivity;
-import android.text.Html;
 import android.text.TextPaint;
 import android.util.Log;
 import android.util.SparseArray;
@@ -48,7 +50,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 	private static final  String TAG = ArticleListAdapter.class.getSimpleName();
 	private ThreadData data;
 	private Context activity;
-	private final SparseArray<View> viewCache;
+	private final SparseArray<SoftReference <View>> viewCache;
 	private final Object lock = new Object();
 	private final HashSet<String> urlSet = new HashSet<String>();
 	
@@ -57,7 +59,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 	public ArticleListAdapter(Context activity) {
 		super();
 		this.activity = activity;
-		this.viewCache = new SparseArray<View>();
+		this.viewCache = new SparseArray<SoftReference <View>>();
 		client = new ArticleListWebClient((FragmentActivity) activity);
 	}
 
@@ -189,14 +191,24 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		
 	}
 	
+	private void recycleImageView(ImageView avatarIV){
+		
+		Drawable drawable = avatarIV.getDrawable();
+		if (drawable instanceof BitmapDrawable) {
+		    BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+		    Bitmap bitmap = bitmapDrawable.getBitmap();
+		    bitmap.recycle();
+		}
+	}
+	
 	private final WebViewClient client ; 
 	
 	private Bitmap defaultAvatar = null;
 	private void handleAvatar(ImageView avatarIV, ThreadRowInfo row) {
 
 		final int lou = row.getLou();
-		final String floor = String.valueOf(lou);
-		avatarIV.setTag(floor);// 设置 tag 为楼层
+		//final String floor = String.valueOf(lou);
+		//avatarIV.setTag(floor);// 设置 tag 为楼层
 		final String avatarUrl = parseAvatarUrl(row.getJs_escap_avatar());// 头像
 		final String userId = String.valueOf(row.getAuthorid());
 		if(PhoneConfiguration.getInstance().nikeWidth < 3){
@@ -210,9 +222,21 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 			this.defaultAvatar = ImageUtil.loadAvatarFromStream(is, is2);
 		}
 		
+		Object tagObj =  avatarIV.getTag();
+		if(tagObj instanceof AvatarTag){
+			AvatarTag origTag = (AvatarTag)tagObj;
+			if(origTag.isDefault == false){
+				recycleImageView(avatarIV);
+				Log.d(TAG, "recycle avatar:" + origTag.lou);
+			}else{
+				Log.d(TAG, "default avatar, skip recycle");
+			}
+		}
+
 		
+		AvatarTag tag = new AvatarTag(lou, true);
 		avatarIV.setImageBitmap(defaultAvatar);
-		avatarIV.setTag(lou);
+		avatarIV.setTag(tag);
 		if (!StringUtil.isEmpty(avatarUrl)) {
 			final String avatarPath = ImageUtil.newImage(avatarUrl, userId);
 			if (avatarPath != null) {
@@ -220,8 +244,10 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 				if (f.exists() && ! isPending(avatarUrl)) {
 					
 						Bitmap bitmap = ImageUtil.loadAvatarFromSdcard(avatarPath);
-			            if(bitmap!=null)
+			            if(bitmap!=null){
 			            	avatarIV.setImageBitmap(bitmap);
+			            	tag.isDefault = false;
+			            }
 			            else
 			            	f.delete();
 	
@@ -258,9 +284,16 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 
 		ViewHolder holder = null;
 		PhoneConfiguration config = PhoneConfiguration.getInstance();
-		if (viewCache.get(position) != null) {
+		
+		SoftReference <View> ref = viewCache.get(position);
+		View cachedView = null;
+		if (ref!= null)
+		{
+			cachedView = ref.get();
+		}
+		if (cachedView != null) {
 			Log.d(TAG, "get view from cache ,floor " + position);
-			return viewCache.get(position);
+			return cachedView;
 		} else {
 			if (view == null || config.useViewCache) {
 				Log.d(TAG, "inflater new view ,floor " + position);
@@ -269,7 +302,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 				holder = initHolder(view);
 				view.setTag(holder);
 				if (config.useViewCache)
-					viewCache.put(position, view);
+					viewCache.put(position, new SoftReference <View>(view));
 			} else {
 				holder = (ViewHolder) view.getTag();
 				if (holder.position == position) {
@@ -279,7 +312,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 				if (holder.contentTV.getHeight() > 300) {
 					Log.d(TAG, "skip and store a tall view ,floor " + position);
 					// if (config.useViewCache)
-					viewCache.put(holder.position, view);
+					viewCache.put(holder.position,new SoftReference<View>(view));
 					
 					view = LayoutInflater.from(activity).inflate(
 							R.layout.relative_aritclelist,  parent,false);
@@ -498,7 +531,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 	@Override
 	public void OnAvatarLoadComplete(String url) {
 		synchronized(lock){
-			this.urlSet.add(url);
+			this.urlSet.remove(url);
 		}
 		
 	}
