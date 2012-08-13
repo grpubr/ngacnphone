@@ -19,7 +19,7 @@ import com.alibaba.fastjson.JSON;
 
 public class MyApp extends Application implements PerferenceConstant {
 	final private static String TAG = MyApp.class.getSimpleName();
-	public final static int version = 335;
+	public final static int version = 336;
 	private PhoneConfiguration config = null;
 	boolean newVersion = false;
 	

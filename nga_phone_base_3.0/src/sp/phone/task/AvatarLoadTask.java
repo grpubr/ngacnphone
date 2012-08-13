@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.zip.ZipFile;
 
+import sp.phone.bean.AvatarTag;
 import sp.phone.interfaces.AvatarLoadCompleteCallBack;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.ImageUtil;
@@ -78,9 +79,12 @@ public class AvatarLoadTask extends AsyncTask<String, Integer, Bitmap> {
 	@Override
 	protected void onPostExecute(Bitmap result) {
 		if(result !=null){
-			int floor =(Integer) view.getTag();
+			AvatarTag tag = (AvatarTag) view.getTag();
+			int floor =tag.lou;
 			if(floor == this.floor)
 				view.setImageBitmap(result);
+			else
+				result.recycle();
 		}
 		callBack.OnAvatarLoadComplete(uri);
 	}
