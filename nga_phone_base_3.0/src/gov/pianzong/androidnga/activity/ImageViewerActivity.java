@@ -6,7 +6,6 @@ import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.ThemeManager;
 import android.annotation.TargetApi;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -112,10 +111,11 @@ public class ImageViewerActivity extends  ActionBarActivity {
 			}
 			break;
 		default:
-			Intent MyIntent = new Intent(Intent.ACTION_MAIN);
+			/*Intent MyIntent = new Intent(Intent.ACTION_MAIN);
 			MyIntent.setClass(this, ArticleListActivity.class);
 			MyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(MyIntent);
+			startActivity(MyIntent);*/
+			this.finish();
 				
 		}
 		return super.onOptionsItemSelected(item);
