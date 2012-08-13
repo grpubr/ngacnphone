@@ -133,7 +133,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 	void setLayerType(WebView contentTV){
 			contentTV.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);		
 	}
-	private void handleContentTV(WebView contentTV,ThreadRowInfo row,int bgColorId,int bgColor,int fgColor){
+	private void handleContentTV(final WebView contentTV,ThreadRowInfo row,int bgColorId,int bgColor,int fgColor){
 		
 		contentTV.setBackgroundColor(0);
 		if(ActivityUtil.isGreaterThan_2_3_3() &&
@@ -186,7 +186,17 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 				PhoneConfiguration.getInstance().getWebSize());
 		setting.setJavaScriptEnabled(false);
 		contentTV.setWebViewClient(client);
-		contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
+		final String htmlData = ngaHtml;
+		contentTV.postDelayed(new Runnable(){
+
+			@Override
+			public void run() {
+				contentTV.loadDataWithBaseURL(null,htmlData, "text/html", "utf-8",null);
+				
+			}
+			
+		}, 300);
+		//contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
 
 		
 	}
