@@ -19,7 +19,7 @@ import com.alibaba.fastjson.JSON;
 
 public class MyApp extends Application implements PerferenceConstant {
 	final private static String TAG = MyApp.class.getSimpleName();
-	public final static int version = 337;
+	public final static int version = 338;
 	private PhoneConfiguration config = null;
 	boolean newVersion = false;
 	
@@ -129,7 +129,7 @@ public class MyApp extends Application implements PerferenceConstant {
 		config.setRefreshAfterPost(false);
 		
 		config.showAnimation = share.getBoolean(SHOW_ANIMATION, true);
-		config.useViewCache = share.getBoolean(USE_VIEW_CACHE, false);
+		config.useViewCache = share.getBoolean(USE_VIEW_CACHE, true);
 		config.showSignature = share.getBoolean(SHOW_SIGNATURE, false);
 		
 		//font

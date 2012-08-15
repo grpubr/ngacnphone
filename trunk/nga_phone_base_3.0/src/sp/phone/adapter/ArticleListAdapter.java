@@ -187,17 +187,24 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		setting.setJavaScriptEnabled(false);
 		contentTV.setWebViewClient(client);
 		final String htmlData = ngaHtml;
-		contentTV.postDelayed(new Runnable(){
+		final int lou = row.getLou();
+		//int delay = 100 + lou%20 * 20;
+		Log.d(TAG, "post content for "+ lou);
+		//boolean postResult = true;
+		
+		/*postResult = contentTV.postDelayed(new Runnable(){
 
 			@Override
 			public void run() {
-				contentTV.loadDataWithBaseURL(null,htmlData, "text/html", "utf-8",null);
-				
+				Log.d(TAG, "load content for "+ lou);
+				//contentTV.loadDataWithBaseURL(null,htmlData, "text/html", "utf-8",null);
+				contentTV.in
 			}
 			
-		}, 300);
-		//contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
-
+		}, delay);*/
+		contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
+		//if(!postResult)
+		//	Log.e(TAG, "failed post content for "+ lou);
 		
 	}
 	
@@ -288,10 +295,12 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 	}
 	
 	public View getView(int position, View view, ViewGroup parent) {
-		if (position == 0) {
-			start = System.currentTimeMillis();
-		}
 
+		ThreadRowInfo row = data.getRowList().get(position);
+		
+		int lou = -1;
+		if(row != null)
+			lou = row.getLou();
 		ViewHolder holder = null;
 		PhoneConfiguration config = PhoneConfiguration.getInstance();
 		
@@ -302,11 +311,13 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 			cachedView = ref.get();
 		}
 		if (cachedView != null) {
-			Log.d(TAG, "get view from cache ,floor " + position);
+			Log.d(TAG, "get view from cache ,floor " + lou);
 			return cachedView;
 		} else {
+			if(ref != null)
+				Log.i(TAG, "cached view recycle by system:" + lou);
 			if (view == null || config.useViewCache) {
-				Log.d(TAG, "inflater new view ,floor " + position);
+				Log.d(TAG, "inflater new view ,floor " + lou);
 				view = LayoutInflater.from(activity).inflate(
 						R.layout.relative_aritclelist, parent,false);
 				holder = initHolder(view);
@@ -320,7 +331,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 				}
 				holder.contentTV.stopLoading();
 				if (holder.contentTV.getHeight() > 300) {
-					Log.d(TAG, "skip and store a tall view ,floor " + position);
+					Log.d(TAG, "skip and store a tall view ,floor " + lou);
 					// if (config.useViewCache)
 					viewCache.put(holder.position,new SoftReference<View>(view));
 					
@@ -342,7 +353,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		int colorId = theme.getBackgroundColor();
 		view.setBackgroundResource(colorId);
 
-		ThreadRowInfo row = data.getRowList().get(position);
+		
 		
 		if(row == null){
 			holder.titleTV.setText("´íÎóÂ¥²ã");
@@ -376,7 +387,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		WebView contentTV = holder.contentTV;
 		handleContentTV(contentTV, row, colorId, bgColor, fgColor);
 
-		final int lou = row.getLou();
+
 		final String floor = String.valueOf(lou);
 		TextView floorTV = holder.floorTV;
 		floorTV.setText("[" + floor + " Â¥]");
@@ -386,10 +397,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		postTimeTV.setText(row.getPostdate());
 		postTimeTV.setTextColor(fgColor);
 
-		if (position == this.getCount() - 1) {
-			end = System.currentTimeMillis();
-			Log.i(getClass().getSimpleName(), "render cost:" + (end - start));
-		}
+
 
 
 		return view;
