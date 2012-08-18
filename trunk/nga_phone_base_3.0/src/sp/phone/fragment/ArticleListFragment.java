@@ -409,9 +409,18 @@ public class ArticleListFragment extends Fragment
 					
 			}
 			mention = name;
-			postPrefix.append("[quote][tid=");
-			postPrefix.append(tidStr);
-			postPrefix.append("]Topic[/pid] [b]Post by ");
+			if(row.getLou() == 0){
+				postPrefix.append("[quote][tid=");
+				postPrefix.append(tidStr);
+				postPrefix.append("]");
+				postPrefix.append("Topic");
+			}else{
+				postPrefix.append("[quote][pid=");
+				postPrefix.append(row.getPid());
+				postPrefix.append("]");//Topic
+				postPrefix.append("Reply");
+			}
+			postPrefix.append("[/pid] [b]Post by ");
 			postPrefix.append(name);
 			postPrefix.append(" (");
 			postPrefix.append(postTime);

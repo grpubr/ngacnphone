@@ -13,7 +13,10 @@ import sp.phone.adapter.SpinnerUserListAdapter;
 import sp.phone.bean.User;
 import sp.phone.forumoperation.HttpPostClient;
 import sp.phone.forumoperation.ThreadPostAction;
+import sp.phone.fragment.EmotionCategorySelectFragment;
 import sp.phone.fragment.EmotionDialogFragment;
+import sp.phone.fragment.ExtensionEmotionFragment;
+import sp.phone.interfaces.EmotionCategorySelectedListener;
 import sp.phone.interfaces.OnEmotionPickedListener;
 import sp.phone.task.FileUploadTask;
 import sp.phone.utils.ActivityUtil;
@@ -30,6 +33,7 @@ import android.os.ParcelFileDescriptor;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
@@ -43,9 +47,13 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 public class PostActivity extends FragmentActivity
-	implements FileUploadTask.onFileUploaded,OnEmotionPickedListener{
+	implements FileUploadTask.onFileUploaded,
+	EmotionCategorySelectedListener,
+	OnEmotionPickedListener{
 
 	private final String LOG_TAG = Activity.class.getSimpleName();
+	static private final String EMOTION_CATEGORY_TAG = "emotion_category";
+	static private final String EMOTION_TAG = "emotion";
 	private String prefix;
 	private EditText titleText;
 	private EditText bodyText;
@@ -175,15 +183,14 @@ public class PostActivity extends FragmentActivity
 			@Override
 			public void onClick(View v) {
 				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		        Fragment prev = getSupportFragmentManager().findFragmentByTag("emotion");
-		        if (prev != null) {
+				Fragment prev = getSupportFragmentManager().findFragmentByTag
+						(EMOTION_CATEGORY_TAG);
+				if (prev != null) {
 		            ft.remove(prev);
 		        }
-		        ft.addToBackStack(null);
 
-		        // Create and show the dialog.
-		        DialogFragment newFragment = new EmotionDialogFragment();
-		        newFragment.show(ft, "emotion");
+		        DialogFragment newFragment = new EmotionCategorySelectFragment();
+		        newFragment.show(ft, EMOTION_CATEGORY_TAG);
 				
 			}
 			
@@ -420,6 +427,54 @@ public class PostActivity extends FragmentActivity
 		act.appendAttachments_check_(attachmentsCheck);
 		bodyText.setText( bodyText.getText().toString() + "\n[img]" +picUrl + "[/img]");
 		return 0;
+	}
+
+	@Override
+	public void onEmotionCategorySelected(int category) {
+		final FragmentManager fm =  getSupportFragmentManager();
+		FragmentTransaction ft =fm.beginTransaction();   
+		final Fragment categoryFragment  = getSupportFragmentManager().
+				findFragmentByTag(EMOTION_CATEGORY_TAG);
+		if( categoryFragment != null)
+			ft.remove(categoryFragment);
+		ft.commit();
+		
+		ft =fm.beginTransaction();
+		final Fragment prev = getSupportFragmentManager().
+	    		   findFragmentByTag(EMOTION_TAG);
+			if (prev != null) {
+	            ft.remove(prev);
+	        }
+
+		DialogFragment newFragment = null;
+		switch(category){
+		case CATEGORY_BASIC:
+		        newFragment = new EmotionDialogFragment();
+			break;
+		case CATEGORY_BAOZOU:
+		case CATEGORY_ALI:
+		case CATEGORY_DAYANMAO:
+		case CATEGORY_LUOXIAOHEI:
+		case CATEGORY_ZHAIYIN:
+		case CATEGORY_YANGCONGTOU:
+		case CATEGORY_ACNIANG:
+			Bundle args = new Bundle();
+			args.putInt("index", category-1);
+			newFragment = new ExtensionEmotionFragment();
+			newFragment.setArguments(args);
+			break;
+		default:
+				
+		
+		}
+		//ft.commit();
+		//ft.addToBackStack(null);
+
+		if(newFragment != null){
+			ft.commit();
+			newFragment.show(fm, EMOTION_TAG);
+		}
+
 	}
 
 }
