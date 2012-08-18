@@ -60,5 +60,6 @@
     <string name="image_saved">图片已经保存在</string>
     <string name="invalid_url">链接不合法</string>
     <string name="mkdir_fail">无法创建目录，sd卡未挂载？</string>
+    <string name="select_category">点击选择类别</string>
     
 </resources>

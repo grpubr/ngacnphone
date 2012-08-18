@@ -1,17 +1,16 @@
 package sp.phone.fragment;
 
 
+import gov.pianzong.androidnga.R;
+
 import java.io.IOException;
 import java.io.InputStream;
 
 import sp.phone.interfaces.OnEmotionPickedListener;
 import sp.phone.utils.ImageUtil;
-
-import gov.pianzong.androidnga.R;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,21 +22,9 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 
-public class EmotionDialogFragment extends DialogFragment {
+public class EmotionDialogFragment extends NoframeDialogFragment {
 
 	private GridView gv = null;
-
-	
-	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		//setStyle(DialogFragment.STYLE_NO_INPUT, android.R.style.Theme);
-
-		super.onCreate(savedInstanceState);
-		this.setCancelable(true);
-		this.setStyle(DialogFragment.STYLE_NO_TITLE,0);
-
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,7 +55,6 @@ public class EmotionDialogFragment extends DialogFragment {
 			}
 			
 		});
-		
 		super.onViewCreated(view, savedInstanceState);
 	}
 	
