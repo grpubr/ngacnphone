@@ -1,5 +1,8 @@
 package sp.phone.task;
 
+import gov.pianzong.androidnga.R;
+
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -10,11 +13,16 @@ import java.net.URLEncoder;
 import org.apache.commons.io.IOUtils;
 
 import sp.phone.utils.ActivityUtil;
+import sp.phone.utils.ImageUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.UploadCookieCollector;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
+import android.widget.Toast;
 
 public class FileUploadTask extends
 AsyncTask<String, Integer, String> {
@@ -23,14 +31,18 @@ AsyncTask<String, Integer, String> {
 					"-----------------------------7db1c5232222b";
 	private static final String ATTACHMENT_SERVER = "http://upload.ngacn.cc:8080/attach.php?";
 	private static final String LOG_TAG = FileUploadTask.class.getSimpleName();
-	private InputStream is;
+	
+	/*private InputStream is;*/
 	private long filesize;
 	private Context context;
 	private onFileUploaded notifier;
 	
-	final private String filename ;
-	final private String utfFilename;
-	final private String contentType ;
+	private String filename ;
+	private String utfFilename;
+	private String contentType ;
+	final private Uri uri;
+	
+	private String errorStr = null;
 	
 	static final private String attachmentsStartFlag = "namedItem('attachments').value+='";
 	static final private String attachmentsCheckStartFlag = "namedItem('attachments_check').value+='";
@@ -39,7 +51,7 @@ AsyncTask<String, Integer, String> {
 	static final private String picUrlStartTag = "addUploadedAttach('";
 	static final private String picUrlEndTag = "'";
 	
-	public FileUploadTask(InputStream is, long filesize, Context context, onFileUploaded notifier, String contentType) {
+	/*public FileUploadTask(InputStream is, long filesize, Context context, onFileUploaded notifier, String contentType) {
 		super();
 		this.is = is;
 		this.filesize = filesize;
@@ -48,6 +60,12 @@ AsyncTask<String, Integer, String> {
 		this.contentType = contentType;
 		this.filename = contentType.replace('/', '.');
 		this.utfFilename = filename.substring(1);
+	}*/
+	
+	public FileUploadTask(Context context, onFileUploaded notifier, Uri uri){
+		this.context = context;
+		this.notifier = notifier;
+		this.uri = uri;
 	}
 
 	@Override
@@ -66,6 +84,15 @@ AsyncTask<String, Integer, String> {
 	protected void onCancelled(String result) {
 		ActivityUtil.getInstance().dismiss();
 		super.onCancelled();
+	}
+	
+	
+
+	@Override
+	protected void onProgressUpdate(Integer... values) {
+		if( values[0] == 50){
+			Toast.makeText(context, R.string.image_to_big, Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	@Override
@@ -113,12 +140,51 @@ AsyncTask<String, Integer, String> {
 			String picUrl = result.substring(start, end);
 			notifier.finishUpload(attachments, attachmentsCheck, picUrl);
 		}while(false);
+		if(result == null && errorStr != null){
+			Toast.makeText(context, errorStr, Toast.LENGTH_SHORT).show();
+		}
 		ActivityUtil.getInstance().dismiss();
 		super.onPostExecute(result);
 	}
 
 	@Override
 	protected String doInBackground(String... params) {
+
+		
+		ContentResolver cr = context.getContentResolver();
+		
+		 InputStream is = null;
+		 try {
+			 ParcelFileDescriptor pfd = cr.openFileDescriptor(uri, "r");
+			 contentType = cr.getType(uri);
+			 if(StringUtil.isEmpty(contentType)){
+				 errorStr = context.getResources().getString(R.string.invalid_img_selected);
+				 return null;
+			 }
+			 filesize = pfd.getStatSize();
+			 if(filesize >= 1024*1024)
+			 {
+				 this.publishProgress(50);
+				 byte[] img = ImageUtil.fitImageToUpload(cr.openInputStream(uri),cr.openInputStream(uri));
+				 contentType = "image/png";
+				 filesize = img.length;
+				 is = new ByteArrayInputStream(img);
+				 
+			 }
+
+				 
+			 Log.d(LOG_TAG, "file size =" + filesize);
+			pfd.close();
+			if(is == null)
+				is = cr.openInputStream(uri);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		 
+		 this.filename = contentType.replace('/', '.');
+		 this.utfFilename = filename.substring(1);
+		 
 		final byte header[] = buildHeader().getBytes();
 		final byte tail[] = buildTail().getBytes();
 		

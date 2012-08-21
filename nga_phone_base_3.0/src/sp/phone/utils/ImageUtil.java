@@ -1,13 +1,16 @@
 package sp.phone.utils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.apache.commons.io.FilenameUtils;
 
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -346,7 +349,7 @@ public class ImageUtil {
 		if(is == is2)
 			return null;
 		BitmapFactory.Options opts = new BitmapFactory.Options();
-		opts.inJustDecodeBounds = false;
+		opts.inJustDecodeBounds = true;
 		Bitmap bitmap = BitmapFactory.decodeStream(is, null,opts);
 		final int avatarWidth = PhoneConfiguration.getInstance().getNikeWidth();
 		
@@ -364,6 +367,27 @@ public class ImageUtil {
         }
         
         return bitmap;
+	}
+	
+	static public byte[] fitImageToUpload(InputStream is,InputStream is2){
+		if(is== null)
+			return null;
+		if(is == is2)
+			return null;
+		BitmapFactory.Options opts = new BitmapFactory.Options();
+		opts.inJustDecodeBounds = true;
+		Bitmap bitmap = BitmapFactory.decodeStream(is, null,opts);
+		final int minSideLength = 512;
+		opts.inSampleSize = ImageUtil.computeSampleSize(opts, minSideLength,
+				1024*1024);
+        opts.inJustDecodeBounds = false;
+        opts.inInputShareable = true;
+        opts.inPurgeable = true;
+        bitmap = BitmapFactory.decodeStream(is2, null, opts);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
+        
 	}
 	
 }
