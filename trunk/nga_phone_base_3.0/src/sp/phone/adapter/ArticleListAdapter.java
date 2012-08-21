@@ -15,6 +15,7 @@ import sp.phone.bean.ThreadData;
 import sp.phone.bean.ThreadRowInfo;
 import sp.phone.interfaces.AvatarLoadCompleteCallBack;
 import sp.phone.task.AvatarLoadTask;
+import sp.phone.task.ForumTagDecodTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.ArticleListWebClient;
 import sp.phone.utils.ImageUtil;
@@ -133,7 +134,29 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 	void setLayerType(WebView contentTV){
 			contentTV.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);		
 	}
-	private void handleContentTV(final WebView contentTV,ThreadRowInfo row,int bgColorId,int bgColor,int fgColor){
+	
+	public static String convertToHtmlText(final ThreadRowInfo row,boolean showImage,final String fgColorStr,final String bgcolorStr){
+		String ngaHtml = StringUtil.decodeForumTag(row.getContent(),showImage);
+		if(StringUtil.isEmpty(ngaHtml)){
+			ngaHtml = row.getAlterinfo();
+		}
+		if(StringUtil.isEmpty(ngaHtml)){
+			
+			ngaHtml= "<font color='red'>[вўВи]</font>";
+		}
+		ngaHtml = ngaHtml + buildComment(row,fgColorStr) + buildAttachment(row,showImage)
+				+ buildSignature(row,showImage);
+		ngaHtml = "<HTML> <HEAD><META   http-equiv=Content-Type   content= \"text/html;   charset=utf-8 \">" 
+			+ "<body bgcolor= '#"+ bgcolorStr +"'>"
+			+ "<font color='#"+ fgColorStr + "' size='2'>"
+			+ ngaHtml + 
+			"</font></body>";
+
+		
+		return ngaHtml;
+	}
+	
+	private void handleContentTV(final WebView contentTV,final ThreadRowInfo row,int bgColorId,int bgColor,int fgColor){
 		
 		contentTV.setBackgroundColor(0);
 		if(ActivityUtil.isGreaterThan_2_3_3() &&
@@ -152,26 +175,34 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		}
 		
 		bgColor = bgColor & 0xffffff;
-		String bgcolorStr = String.format("%06x",bgColor);
+		final String bgcolorStr = String.format("%06x",bgColor);
 		
 		int htmlfgColor = fgColor & 0xffffff;
-		String fgColorStr = String.format("%06x",htmlfgColor);
+		final String fgColorStr = String.format("%06x",htmlfgColor);
 		if(row.getContent()== null){
 			row.setContent(row.getSubject());
 			row.setSubject(null);
 		}
 		
-		boolean showImage = PhoneConfiguration.getInstance().isDownImgNoWifi() || isInWifi();
-		String ngaHtml = StringUtil.decodeForumTag(row.getContent(),showImage);
-		if(StringUtil.isEmpty(ngaHtml))
+		final boolean showImage = PhoneConfiguration.getInstance().isDownImgNoWifi() || isInWifi();
+		
+		//String ngaHtml = convertToHtmlText(row, showImage, fgColorStr, bgcolorStr);
+		
+		/*StringUtil.decodeForumTag(row.getContent(),showImage);
+		if(StringUtil.isEmpty(ngaHtml)){
 			ngaHtml = row.getAlterinfo();
+		}
+		if(StringUtil.isEmpty(ngaHtml)){
+			
+			ngaHtml= "<font color='red'>[вўВи]</font>";
+		}
 		ngaHtml = ngaHtml + buildComment(row,fgColorStr) + buildAttachment(row,showImage)
 				+ buildSignature(row,showImage);
 		ngaHtml = "<HTML> <HEAD><META   http-equiv=Content-Type   content= \"text/html;   charset=utf-8 \">" 
 			+ "<body bgcolor= '#"+ bgcolorStr +"'>"
 			+ "<font color='#"+ fgColorStr + "' size='2'>"
 			+ ngaHtml + 
-			"</font></body>";
+			"</font></body>";*/
 
 		
 
@@ -186,10 +217,19 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 				PhoneConfiguration.getInstance().getWebSize());
 		setting.setJavaScriptEnabled(false);
 		contentTV.setWebViewClient(client);
-		final String htmlData = ngaHtml;
+		//final String htmlData = ngaHtml;
 		final int lou = row.getLou();
 		//int delay = 100 + lou%20 * 20;
 		Log.d(TAG, "post content for "+ lou);
+		
+		contentTV.setTag(row.getLou());
+		contentTV.loadDataWithBaseURL(null,"loading", "text/html", "utf-8",null);
+		ForumTagDecodTask task= new ForumTagDecodTask(row, showImage, fgColorStr, bgcolorStr);
+		if(ActivityUtil.isGreaterThan_2_3_3()){
+			excuteOnExcutor(task,contentTV);
+		}else{
+			task.execute(contentTV);
+		}
 		//boolean postResult = true;
 		
 		/*postResult = contentTV.postDelayed(new Runnable(){
@@ -202,10 +242,14 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 			}
 			
 		}, delay);*/
-		contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
-		//if(!postResult)
-		//	Log.e(TAG, "failed post content for "+ lou);
+		//contentTV.loadDataWithBaseURL(null,ngaHtml, "text/html", "utf-8",null);
+
 		
+	}
+	
+	@TargetApi(11)
+	private void excuteOnExcutor(ForumTagDecodTask task, WebView contentTV){
+		task.executeOnExecutor(ForumTagDecodTask.THREAD_POOL_EXECUTOR, contentTV);
 	}
 	
 	private void recycleImageView(ImageView avatarIV){
@@ -403,7 +447,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		return view;
 	}
 
-	private String buildAttachment(ThreadRowInfo row,boolean showImage){
+	private static String buildAttachment(ThreadRowInfo row,boolean showImage){
 		
 		if(row ==null || row.getAttachs() == null || row.getAttachs().size() == 0){
 			return "";
@@ -441,7 +485,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		return ret.toString();
 	}
 
-	private String parseAvatarUrl(String js_escap_avatar){
+	private static String parseAvatarUrl(String js_escap_avatar){
 		//"js_escap_avatar":"{ \"t\":1,\"l\":2,\"0\":{ \"0\":\"http://pic2.178.com/53/533387/month_1109/93ba4788cc8c7d6c75453fa8a74f3da6.jpg\",\"cX\":0.47,\"cY\":0.78},\"1\":{ \"0\":\"http://pic2.178.com/53/533387/month_1108/8851abc8674af3adc622a8edff731213.jpg\",\"cX\":0.49,\"cY\":0.68}}"
 		if(null == js_escap_avatar)
 			return null;
@@ -461,7 +505,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		return ret;
 	}
 	
-	private String buildComment(ThreadRowInfo row, String fgColor){
+	private static String buildComment(ThreadRowInfo row, String fgColor){
 		if(row ==null || row.getComments() == null || row.getComments().size() == 0){
 			return "";
 		}
@@ -496,7 +540,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		return ret.toString();
 	}
 
-	private String buildSignature(ThreadRowInfo row, boolean showImage){
+	private static String buildSignature(ThreadRowInfo row, boolean showImage){
 		if(row ==null || row.getSignature() == null 
 				|| row.getSignature().length() == 0
 				|| !PhoneConfiguration.getInstance().showSignature){
