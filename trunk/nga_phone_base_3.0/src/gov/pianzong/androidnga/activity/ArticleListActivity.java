@@ -265,15 +265,16 @@ implements PagerOwnner,ResetableArticle {
 	}
 
 	@Override
-	public void reset(int pid, int authorid) {
+	public void reset(int pid, int authorid,int floor) {
 		this.pid = pid;
 		this.authorid = authorid;
 		mTabsAdapter.setArgument("pid", pid);
 		mTabsAdapter.setArgument("authorid", authorid);
 		tabhost.getTabWidget().removeAllViews();
-		mTabsAdapter.setCount(1);
-		//mTabsAdapter.notifyDataSetChanged();
+		int page = floor / 20;
+		mTabsAdapter.setCount(page+1);
 		mViewPager.setAdapter(mTabsAdapter);
+		mViewPager.setCurrentItem(page);
 		
 		
 	}

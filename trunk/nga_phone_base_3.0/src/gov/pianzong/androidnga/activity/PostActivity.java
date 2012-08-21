@@ -23,6 +23,8 @@ import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -73,7 +75,7 @@ public class PostActivity extends FragmentActivity
 		+ " " + android.os.Build.MODEL + ",Android "
 		+ android.os.Build.VERSION.RELEASE + "[/url]\n";
 	private boolean loading;
-
+	private FileUploadTask  uploadTask = null;
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -133,8 +135,9 @@ public class PostActivity extends FragmentActivity
 		loading = false;
 		
 		titleText = (EditText) findViewById(R.id.reply_titile_edittext);
-		if(title!=null)
+		if(title!=null){
 			titleText.setText(title);
+		}
 		titleText.setSelected(true);
 		bodyText = (EditText) findViewById(R.id.reply_body_edittext);
 		bodyText.setText(prefix);
@@ -232,36 +235,8 @@ public class PostActivity extends FragmentActivity
 		switch(requestCode)
 		{
 		case REQUEST_CODE_SELECT_PIC :
-				//Toast.makeText(this, "测试阶段，一次一张图", Toast.LENGTH_SHORT).show();
 				Log.i(LOG_TAG, " select file :" + data.getDataString() );
-				ContentResolver cr = this.getContentResolver();
-				
-			try {
-				 ParcelFileDescriptor pfd = cr.openFileDescriptor(data.getData(), "r");
-				 long filesize = pfd.getStatSize();
-				 if(filesize >= 1024*1024)
-				 {
-					 Toast.makeText(this, "限1M一下的图片", Toast.LENGTH_SHORT).show();
-					 break;
-				 }
-				 String contentType = cr.getType(data.getData());
-				 if(StringUtil.isEmpty(contentType)){
-					 Toast.makeText(this, R.string.invalid_img_selected, Toast.LENGTH_LONG).show();
-					 return;
-				 }
-					 
-				 Log.d(LOG_TAG, "file size =" + filesize);
-				 pfd.close();
-				 InputStream is = cr.openInputStream(data.getData());
-				 new FileUploadTask(is,filesize,this, this, contentType).execute();
-			} catch (FileNotFoundException e) {
-				
-				Log.e(LOG_TAG, "file not found:" + Log.getStackTraceString(e));
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				uploadTask = new FileUploadTask(this, this, data.getData());
 				break;
 		default:
 				;
@@ -269,6 +244,30 @@ public class PostActivity extends FragmentActivity
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
+
+
+	@Override
+	protected void onResume() {
+		
+		if(uploadTask != null){
+			FileUploadTask temp = uploadTask;
+			uploadTask = null;
+			if(ActivityUtil.isGreaterThan_2_3_3()){
+				RunParallel(temp);
+			}
+			else
+			{
+				temp.execute();
+			}
+		}
+		super.onResume();
+	}
+
+
+	@TargetApi(11)
+	private void RunParallel(FileUploadTask task){
+		task.executeOnExecutor(FileUploadTask.THREAD_POOL_EXECUTOR);
+	}
 
 
 	class ButtonCommitListener implements OnClickListener{
@@ -425,7 +424,9 @@ public class PostActivity extends FragmentActivity
 			String picUrl) {
 		this.act.appendAttachments_(attachments);
 		act.appendAttachments_check_(attachmentsCheck);
-		bodyText.setText( bodyText.getText().toString() + "\n[img]" +picUrl + "[/img]");
+		String text =  bodyText.getText().toString() + "\n[img]" +picUrl + "[/img]";
+		bodyText.setText( text);
+		bodyText.setSelection(text.length());
 		return 0;
 	}
 
