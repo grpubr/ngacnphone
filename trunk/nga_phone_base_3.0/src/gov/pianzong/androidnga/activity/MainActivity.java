@@ -305,7 +305,8 @@ public class MainActivity extends ActionBarActivity
 		boards.add(new Board(i, "10", "银色黎明裁判所", R.drawable.p10));
 		boards.add(new Board(i, "230", "艾泽拉斯风纪委员会", R.drawable.p230));
 		boards.add(new Board(i, "387", "潘大力亚之迷雾", R.drawable.p387));
-		boards.add(new Board(i, "411", "宠物讨论", R.drawable.p411));
+		boards.add(new Board(i, "414", "游戏综合讨论", R.drawable.p414));
+		boards.add(new Board(i, "305", "305权贵区", R.drawable.pdefault));
 		boards.addCategoryName(i, "综合讨论");
 		i++;
 		
@@ -361,12 +362,15 @@ public class MainActivity extends ActionBarActivity
 		boards.addCategoryName(i, "系统软硬件讨论");
 		i++;
 		
-		
+		boards.add(new Board(i, "414", "游戏综合讨论", R.drawable.p414));
+		boards.add(new Board(i, "412", " 巫师之怒", R.drawable.p412));
 		boards.add(new Board(i, "318", "Diablo III", R.drawable.p318));
 		boards.add(new Board(i, "-46468", "坦克世界", R.drawable.p46468));
 		boards.add(new Board(i, "332", "战锤40K", R.drawable.p332));
 		boards.add(new Board(i, "321", "DotA", R.drawable.p321));
 		boards.add(new Board(i, "353", "纽沃斯英雄传", R.drawable.pdefault));
+		boards.add(new Board(i, "-2371813", "EVE", R.drawable.p2371813));
+		boards.add(new Board(i, "-793427", "斗战神", R.drawable.pdefault));
 		boards.addCategoryName(i, "其他游戏");
 		i++;
 		
