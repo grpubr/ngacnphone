@@ -6,6 +6,8 @@ import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.ThemeManager;
 import android.annotation.TargetApi;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -109,6 +111,13 @@ public class ImageViewerActivity extends  ActionBarActivity {
 			}else{
 				task.execute(path);
 			}
+			break;
+		case R.id.item_share:
+			Intent intent= new Intent(Intent.ACTION_SEND);
+			intent.putExtra(Intent.EXTRA_STREAM,Uri.parse(getPath()) );
+			intent.setType("image/jpeg"); 
+			String text = getResources().getString(R.string.share);
+			startActivity(Intent.createChooser(intent, text));
 			break;
 		default:
 			/*Intent MyIntent = new Intent(Intent.ACTION_MAIN);
