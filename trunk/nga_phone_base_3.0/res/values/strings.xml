@@ -61,5 +61,8 @@
     <string name="invalid_url">链接不合法</string>
     <string name="mkdir_fail">无法创建目录，sd卡未挂载？</string>
     <string name="select_category">点击选择类别</string>
+    <string name="group_search">搜索</string>
+    <string name="share">分享到…</string>
+    <string name="image_to_big">图片超过1M，自动缩小</string>
     
 </resources>

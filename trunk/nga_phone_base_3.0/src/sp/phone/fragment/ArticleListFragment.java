@@ -85,12 +85,12 @@ public class ArticleListFragment extends Fragment
 			Bundle savedInstanceState) {
 		listview = new ListView(this.getActivity());
 		
-		if(PhoneConfiguration.getInstance().showAnimation)
+		/*if(PhoneConfiguration.getInstance().showAnimation)
 		{
 			LayoutAnimationController anim = AnimationUtils.loadLayoutAnimation
 					(getActivity(), R.anim.article_list_anim);
 			listview.setLayoutAnimation(anim);
-		}
+		}*/
 		listview.setBackgroundResource(ThemeManager.getInstance().getBackgroundColor());
 		listview.setDivider(null);
 		
@@ -147,7 +147,6 @@ public class ArticleListFragment extends Fragment
 
 			@Override
 			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 
@@ -193,6 +192,10 @@ public class ArticleListFragment extends Fragment
 	}
 	
 	
+	@TargetApi(11)
+	private void RunParallen(JsonThreadLoadTask task, String url){
+		task.executeOnExecutor(JsonThreadLoadTask.THREAD_POOL_EXECUTOR, url);
+	}
 	
 	private void loadPage(){
 		if(null == this.task){
@@ -212,7 +215,10 @@ public class ArticleListFragment extends Fragment
 			if(authorid !=0){
 				url = url + "&authorid="+ authorid;
 			}
-			task.execute(url);
+			if(ActivityUtil.isGreaterThan_2_3_3())
+				RunParallen(task, url);
+			else
+				task.execute(url);
 		}else{
 			ActivityUtil.getInstance().dismiss();
 		}
@@ -485,7 +491,7 @@ public class ArticleListFragment extends Fragment
 
 			break;
 		case R.id.show_whole_thread:
-			restNotifier.reset(0, 0);
+			restNotifier.reset(0, 0,row.getLou());
 			ActivityUtil.getInstance().noticeSaying(getActivity());
 			break;
 		case R.id.post_comment:
@@ -513,13 +519,19 @@ public class ArticleListFragment extends Fragment
 			if(PhoneConfiguration.getInstance().showAnimation)
 				getActivity().overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
 		
-			
-			
+			break;
+		case R.id.item_share:
+			intent.setAction(Intent.ACTION_SEND);
+			intent.setType("text/plain");
+			intent.putExtra(Intent.EXTRA_TEXT, row.getContent());
+			String text = getResources().getString(R.string.share);
+			getActivity().startActivity(Intent.createChooser(intent, text));
+			break;
 
 			
 			
 		}
-		return super.onContextItemSelected(item);
+		return true;
 	}
 	@Override
 	public void finishLoad(ThreadData data) {
