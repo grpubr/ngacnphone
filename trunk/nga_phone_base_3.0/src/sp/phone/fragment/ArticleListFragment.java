@@ -523,7 +523,7 @@ public class ArticleListFragment extends Fragment
 		case R.id.item_share:
 			intent.setAction(Intent.ACTION_SEND);
 			intent.setType("text/plain");
-			intent.putExtra(Intent.EXTRA_TEXT, row.getContent());
+			intent.putExtra(Intent.EXTRA_TEXT, StringUtil.removeBrTag(content));
 			String text = getResources().getString(R.string.share);
 			getActivity().startActivity(Intent.createChooser(intent, text));
 			break;
