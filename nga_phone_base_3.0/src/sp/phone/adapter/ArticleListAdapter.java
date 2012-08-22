@@ -4,7 +4,7 @@ import gov.pianzong.androidnga.R;
 
 import java.io.File;
 import java.io.InputStream;
-import java.lang.ref.SoftReference ;
+import java.lang.ref.SoftReference;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -26,8 +26,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo.State;
 import android.support.v4.app.FragmentActivity;

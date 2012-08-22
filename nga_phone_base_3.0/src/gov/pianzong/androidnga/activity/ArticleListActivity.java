@@ -3,6 +3,7 @@ package gov.pianzong.androidnga.activity;
 import gov.pianzong.androidnga.R;
 import sp.phone.adapter.TabsAdapter;
 import sp.phone.fragment.ArticleListFragment;
+import sp.phone.fragment.GotoDialogFragment;
 import sp.phone.interfaces.PagerOwnner;
 import sp.phone.interfaces.ResetableArticle;
 import sp.phone.utils.ActivityUtil;
@@ -21,12 +22,18 @@ import android.nfc.NfcEvent;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.TabHost;
 
 import com.example.android.actionbarcompat.ActionBarActivity;
@@ -39,7 +46,8 @@ implements PagerOwnner,ResetableArticle {
     int tid;
     int pid;
     int authorid;
-	private static final String TAG= ArticleListActivity.class.getSimpleName();
+	private static final String TAG= "ArticleListActivity";
+	private static final String GOTO_TAG = "goto";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -191,40 +199,27 @@ implements PagerOwnner,ResetableArticle {
 
 	}
 	
+
+	
+
+
+	
 	private void createGotoDialog(){
-		final AlertDialog.Builder alert = new AlertDialog.Builder(this);  
-        final EditText input = new EditText(this);
-        input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
-        alert.setView(input);  
-		alert.setTitle(R.string.goto_floor);
-		alert.setMessage(R.string.goto_floor_description);
+
+		int count = mTabsAdapter.getCount();
+		Bundle args = new Bundle();
+		args.putInt("count", count);
 		
-		alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {  
-            public void onClick(DialogInterface dialog, int whichButton) { 
-            	if(null == mTabsAdapter)
-            		dialog.dismiss();
-                String value = input.getText().toString().trim(); 
-                int floor = mTabsAdapter.getCount();
-                try{
-                	
-                	floor = Integer.valueOf(value);
-                	if(floor > mTabsAdapter.getCount() || floor <1)
-                		floor = mTabsAdapter.getCount();
-                	
-                }catch(Exception e){
-                	
-                }
-                mViewPager.setCurrentItem(floor-1);
-            }
-		});
+		DialogFragment df = new GotoDialogFragment();
+		df.setArguments(args);
 		
-		alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {  
-            public void onClick(DialogInterface dialog, int whichButton) {  
-                dialog.dismiss();
-            }
-		});
+		FragmentManager fm = getSupportFragmentManager();
 		
-		alert.show();
+		Fragment prev = fm.findFragmentByTag(GOTO_TAG);
+		if(prev != null){
+			fm.beginTransaction().remove(prev).commit();
+		}
+		df.show(fm, GOTO_TAG);
 		
 	}
 
@@ -255,6 +250,11 @@ implements PagerOwnner,ResetableArticle {
 	public int getCurrentPage() {
 		
 		return mViewPager.getCurrentItem() + 1;
+	}
+	
+	@Override
+	public void setCurrentItem(int index){
+		mViewPager.setCurrentItem(index);
 	}
 
 
