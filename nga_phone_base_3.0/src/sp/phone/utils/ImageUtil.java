@@ -15,7 +15,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PixelFormat;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.widget.ImageView;
 
 public class ImageUtil {
 	static final String LOG_TAG = ImageUtil.class.getSimpleName();
@@ -388,6 +390,17 @@ public class ImageUtil {
         bitmap.compress(CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
         
+	}
+	
+	public static void recycleImageView(ImageView avatarIV){
+		
+		Drawable drawable = avatarIV.getDrawable();
+		if (drawable instanceof BitmapDrawable) {
+		    BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+		    Bitmap bitmap = bitmapDrawable.getBitmap();
+		    if(bitmap != null)
+		    	bitmap.recycle();
+		}
 	}
 	
 }

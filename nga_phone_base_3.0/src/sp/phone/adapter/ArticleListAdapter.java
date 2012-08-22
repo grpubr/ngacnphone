@@ -252,15 +252,6 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		task.executeOnExecutor(ForumTagDecodTask.THREAD_POOL_EXECUTOR, contentTV);
 	}
 	
-	private void recycleImageView(ImageView avatarIV){
-		
-		Drawable drawable = avatarIV.getDrawable();
-		if (drawable instanceof BitmapDrawable) {
-		    BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-		    Bitmap bitmap = bitmapDrawable.getBitmap();
-		    bitmap.recycle();
-		}
-	}
 	
 	private final WebViewClient client ; 
 	
@@ -287,7 +278,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		if(tagObj instanceof AvatarTag){
 			AvatarTag origTag = (AvatarTag)tagObj;
 			if(origTag.isDefault == false){
-				recycleImageView(avatarIV);
+				ImageUtil.recycleImageView(avatarIV);
 				Log.d(TAG, "recycle avatar:" + origTag.lou);
 			}else{
 				Log.d(TAG, "default avatar, skip recycle");
