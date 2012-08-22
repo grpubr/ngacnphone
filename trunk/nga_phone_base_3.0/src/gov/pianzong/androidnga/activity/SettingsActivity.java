@@ -440,13 +440,14 @@ public class SettingsActivity extends Activity{
 		public void onProgressChanged(SeekBar seekBar, int progress,
 				boolean fromUser) {
 			
-			if(0==progress)
-				progress = 1;
+			if(2 > progress)
+				progress = 2;
 			Drawable defaultAvatar = getResources().getDrawable(R.drawable.default_avatar);
 			Bitmap bitmap = ImageUtil.zoomImageByWidth(defaultAvatar, 
 					progress);
 			try{
-			avatarImage.setImageBitmap(bitmap);
+				ImageUtil.recycleImageView(avatarImage);
+				avatarImage.setImageBitmap(bitmap);
 			}catch(Exception e){
 				e.printStackTrace();
 			}
@@ -464,8 +465,8 @@ public class SettingsActivity extends Activity{
 		@Override
 		public void onStopTrackingTouch(SeekBar seekBar) {
 			int progress = seekBar.getProgress(); 
-			if(0==progress)
-				progress = 1;
+			if(2 > progress)
+				progress = 2;
 			PhoneConfiguration.getInstance().nikeWidth = progress;
 			SharedPreferences  share = 
 					getSharedPreferences(PERFERENCE, MODE_PRIVATE);
