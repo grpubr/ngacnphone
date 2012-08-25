@@ -362,7 +362,7 @@ public class ImageUtil {
         opts.inInputShareable = true;
         opts.inPurgeable = true;
         bitmap = BitmapFactory.decodeStream(is2, null, opts);
-        if(bitmap != null && bitmap.getWidth() < avatarWidth){
+        if(bitmap != null && bitmap.getWidth() != avatarWidth){
         	Bitmap tmp = bitmap;
         	bitmap = zoomImageByWidth(tmp,avatarWidth);
         	tmp.recycle();
