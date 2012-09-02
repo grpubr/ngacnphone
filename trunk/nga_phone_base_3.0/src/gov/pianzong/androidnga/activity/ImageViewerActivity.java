@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.PluginState;
@@ -23,14 +24,20 @@ public class ImageViewerActivity extends  ActionBarActivity {
 	//private final String IPHONE_UA = "Mozilla/5.0 (iPad; CPU OS 5_1 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9B176 Safari/7534.48.3";
 	@Override
 	protected void onCreate(Bundle arg0) {
-		super.onCreate(arg0);
+		
+		requestWindowFeature(Window.FEATURE_PROGRESS);
 		this.setContentView(R.layout.webview_layout);
 		wv = (WebView) findViewById(R.id.webview);
 		
 		
+		 wv.setWebChromeClient(new WebChromeClient() {  
+             public void onProgressChanged(WebView view, int progress) {  
+
+            	 ImageViewerActivity.this.setProgress(progress * 100);  
+             }  
+		 });
 		
-		
-		
+		 super.onCreate(arg0);
 	}
 
 	@Override
