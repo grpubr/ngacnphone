@@ -410,6 +410,8 @@ public class MainActivity extends ActionBarActivity
 		boards.add(new Board(i, "-7678526", "艾泽拉斯麻将科学院", R.drawable.pdefault));
 		boards.add(new Board(i, "-202020", " 一只IT喵的自我修养", R.drawable.pdefault));
 		boards.add(new Board(i, "-444012", "自行车：我们的骑迹", R.drawable.pdefault));
+		boards.add(new Board(i, "-47218", " 没有刀的漆器", R.drawable.pdefault));
+		boards.add(new Board(i, "-349066", " 开心茶园", R.drawable.pdefault));
 		boards.addCategoryName(i, "个人版面");
 		i++;
 		
