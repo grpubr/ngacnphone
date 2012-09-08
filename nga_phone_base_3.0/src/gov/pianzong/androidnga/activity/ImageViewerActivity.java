@@ -24,12 +24,13 @@ public class ImageViewerActivity extends  ActionBarActivity {
 	//private final String IPHONE_UA = "Mozilla/5.0 (iPad; CPU OS 5_1 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9B176 Safari/7534.48.3";
 	@Override
 	protected void onCreate(Bundle arg0) {
-		
-		requestWindowFeature(Window.FEATURE_PROGRESS);
+		if(ActivityUtil.isGreaterThan_2_3_3())
+			requestWindowFeature(Window.FEATURE_PROGRESS);
+		super.onCreate(arg0); 
 		this.setContentView(R.layout.webview_layout);
 		wv = (WebView) findViewById(R.id.webview);
 		
-		
+		if(ActivityUtil.isGreaterThan_2_3_3())
 		 wv.setWebChromeClient(new WebChromeClient() {  
              public void onProgressChanged(WebView view, int progress) {  
 
@@ -37,7 +38,7 @@ public class ImageViewerActivity extends  ActionBarActivity {
              }  
 		 });
 		
-		 super.onCreate(arg0);
+		 
 	}
 
 	@Override
