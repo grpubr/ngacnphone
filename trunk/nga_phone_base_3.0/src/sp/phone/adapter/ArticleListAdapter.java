@@ -182,8 +182,8 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 			row.setSubject(null);
 		}
 		
-		final boolean showImage = PhoneConfiguration.getInstance().isDownImgNoWifi() || isInWifi();
-		
+		boolean showImage = PhoneConfiguration.getInstance().isDownImgNoWifi() || isInWifi();
+		showImage = showImage || ActivityUtil.isGreaterThan_2_3_3();
 		//String ngaHtml = convertToHtmlText(row, showImage, fgColorStr, bgcolorStr);
 		
 		/*StringUtil.decodeForumTag(row.getContent(),showImage);
@@ -207,7 +207,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 			
 		
 		WebSettings setting = contentTV.getSettings();
-		if(!PhoneConfiguration.getInstance().isDownImgNoWifi() && !isInWifi() )
+		if(!showImage )
 			setting.setBlockNetworkImage(true);
 		else
 			setting.setBlockNetworkImage(false);
@@ -222,6 +222,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		
 		contentTV.setTag(row.getLou());
 		contentTV.loadDataWithBaseURL(null,"loading", "text/html", "utf-8",null);
+
 		ForumTagDecodTask task= new ForumTagDecodTask(row, showImage, fgColorStr, bgcolorStr);
 		if(ActivityUtil.isGreaterThan_2_3_3()){
 			excuteOnExcutor(task,contentTV);
