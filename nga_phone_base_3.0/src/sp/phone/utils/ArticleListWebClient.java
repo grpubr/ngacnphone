@@ -1,13 +1,21 @@
 package sp.phone.utils;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import sp.phone.adapter.ExtensionEmotionAdapter;
 import sp.phone.task.TudouVideoLoadTask;
 import gov.pianzong.androidnga.activity.ArticleListActivity;
 import gov.pianzong.androidnga.activity.ImageViewerActivity;
 import gov.pianzong.androidnga.activity.TopicListActivity;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.net.NetworkInfo.State;
 import android.support.v4.app.FragmentActivity;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -90,6 +98,36 @@ public class ArticleListWebClient extends WebViewClient {
 		
 	}
 
+	@Override
+	@TargetApi(11)	
+	public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+		String path = ExtensionEmotionAdapter.getPathByURI(url);
+		InputStream is= null;
+		boolean showImage = PhoneConfiguration.getInstance().isDownImgNoWifi() || isInWifi(view.getContext());
+		
+		try{
+			if(path == null && !showImage)
+				is = view.getContext().getAssets().open("ic_offline_image.png");
+			if(path != null)
+				is = view.getContext().getAssets().open(path);
+		}catch (IOException e) {
+			
+		}
+		if(is != null){
+			WebResourceResponse ret = new WebResourceResponse("image/*", "utf-8", is);
+			return ret;
+		}
+		return null;
+		
+				
+	}
 
+	private boolean isInWifi(Context activity) {
+		ConnectivityManager conMan = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+		State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+		return wifi == State.CONNECTED;
+	}
+
+	
 
 }

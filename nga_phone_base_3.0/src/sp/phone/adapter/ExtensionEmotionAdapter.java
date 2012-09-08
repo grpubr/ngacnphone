@@ -464,6 +464,25 @@ public class ExtensionEmotionAdapter extends BaseAdapter {
 			}
 	};
 	
+	public static String getPathByURI(String uri){
+		for(int category = 0; category <res.length; category++){
+			for(int index = 0; index < res[category].length; index++){
+				if(res[category][index].equals(uri)){
+					return getFilePath(category, index);
+				}
+			}
+			
+		}
+		return null;
+	}
+	
+	private static String getFilePath(int category,int position){
+		String httpUri = res[category][position];
+		String fileName = dirs[category] + "/"
+				+FilenameUtils.getName(httpUri);
+		return fileName;
+	}
+	
 	final private int index;
 	
 	
@@ -539,5 +558,7 @@ public class ExtensionEmotionAdapter extends BaseAdapter {
 				+FilenameUtils.getName(httpUri);
 		return fileName;
 	}
+	
+
 
 }

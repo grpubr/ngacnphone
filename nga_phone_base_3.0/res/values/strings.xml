@@ -64,5 +64,6 @@
     <string name="group_search">搜索</string>
     <string name="share">分享到…</string>
     <string name="image_to_big">图片超过1M，自动缩小</string>
+    <string name="page">页</string>
     
 </resources>
