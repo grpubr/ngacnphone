@@ -9,6 +9,7 @@ public interface EmotionCategorySelectedListener {
 	public final int CATEGORY_ZHAIYIN = 5;
 	public final int CATEGORY_YANGCONGTOU = 6;
 	public final int CATEGORY_ACNIANG = 7;
+	public final int CATEGORY_BIERDE= 8;
 	
 	void onEmotionCategorySelected(int category);
 }
