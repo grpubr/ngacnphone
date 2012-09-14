@@ -455,6 +455,7 @@ public class PostActivity extends FragmentActivity
 		case CATEGORY_ZHAIYIN:
 		case CATEGORY_YANGCONGTOU:
 		case CATEGORY_ACNIANG:
+		case CATEGORY_BIERDE:
 			Bundle args = new Bundle();
 			args.putInt("index", category-1);
 			newFragment = new ExtensionEmotionFragment();

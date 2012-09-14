@@ -401,17 +401,18 @@ public class MainActivity extends ActionBarActivity
 		boards.add(new Board(i, "-308670", "血库的个人空间", R.drawable.pdefault));
 		boards.add(new Board(i, "-112905", "八圣祠", R.drawable.pdefault));
 		boards.add(new Board(i, "-8725919", "小窗视界", R.drawable.pdefault));
-		boards.add(new Board(i, "-608808", " 弑熊主厨的血腥厨房", R.drawable.pdefault));
-		boards.add(new Board(i, "-469608", " 影视讨论", R.drawable.pdefault));
+		boards.add(new Board(i, "-608808", "弑熊主厨的血腥厨房", R.drawable.pdefault));
+		boards.add(new Board(i, "-469608", "影视讨论", R.drawable.pdefault));
 		boards.add(new Board(i, "-55912", "音乐讨论", R.drawable.pdefault));
 		boards.add(new Board(i, "-353371", "傻乎乎的小宠物", R.drawable.pdefault));
 		boards.add(new Board(i, "-538800", "乙女向二次元", R.drawable.pdefault));
 		boards.add(new Board(i, "-522679", "Battlefield 3讨论版", R.drawable.pdefault));
 		boards.add(new Board(i, "-7678526", "艾泽拉斯麻将科学院", R.drawable.pdefault));
-		boards.add(new Board(i, "-202020", " 一只IT喵的自我修养", R.drawable.pdefault));
+		boards.add(new Board(i, "-202020", "一只IT喵的自我修养", R.drawable.pdefault));
 		boards.add(new Board(i, "-444012", "自行车：我们的骑迹", R.drawable.pdefault));
 		boards.add(new Board(i, "-47218", " 没有刀的漆器", R.drawable.pdefault));
-		boards.add(new Board(i, "-349066", " 开心茶园", R.drawable.pdefault));
+		boards.add(new Board(i, "-349066", "开心茶园", R.drawable.pdefault));
+		boards.add(new Board(i, "-314508", "世界尽头的百货公司", R.drawable.pdefault));		
 		boards.addCategoryName(i, "个人版面");
 		i++;
 		
