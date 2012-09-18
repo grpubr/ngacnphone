@@ -213,6 +213,9 @@ public class ArticleUtil {
 	public static ThreadData parseJsonThreadPage(String js){
 		js = js.replaceAll("\"content\":\\+(\\d+),", "\"content\":\"+$1\",");
 		js = js.replaceAll("\"subject\":\\+(\\d+),", "\"subject\":\"+$1\",");
+		
+		js = js.replaceAll("\"content\":(0\\d+),", "\"content\":\"$1\",");
+		js = js.replaceAll("\"subject\":(0\\d+),", "\"subject\":\"$1\",");
 		js = js.replaceAll("\"author\":(0\\d+),", "\"author\":\"$1\",");
 		final String start = "\"__P\":{\"aid\":";
 		final String end = "\"this_visit_rows\":";
