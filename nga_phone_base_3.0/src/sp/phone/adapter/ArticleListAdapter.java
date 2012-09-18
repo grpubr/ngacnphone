@@ -410,7 +410,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		tp.setFakeBoldText(true);// bold for Chinese character
 
 		TextView titleTV = holder.titleTV;
-		if (!StringUtil.isEmpty(row.getSubject()) && position != 0) {
+		if (!StringUtil.isEmpty(row.getSubject()) /*&& position != 0*/) {
 			titleTV.setText(row.getSubject());
 			titleTV.setTextColor(fgColor);
 
