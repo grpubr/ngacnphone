@@ -570,6 +570,7 @@ public class ExtensionEmotionAdapter extends BaseAdapter {
 		else
 		{
 			view =(ImageView) convertView;
+			ImageUtil.recycleImageView(view);
 		}
 		
 		InputStream is;
