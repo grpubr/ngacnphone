@@ -415,7 +415,7 @@ public class ArticleListFragment extends Fragment
 					
 			}
 			mention = name;
-			if(row.getLou() == 0){
+			if(row.getPid() == 0){
 				postPrefix.append("[quote][tid=");
 				postPrefix.append(tidStr);
 				postPrefix.append("]");
