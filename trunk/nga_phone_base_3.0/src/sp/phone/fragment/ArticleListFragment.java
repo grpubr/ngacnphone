@@ -369,6 +369,10 @@ public class ArticleListFragment extends Fragment
 					+ PagerOwnner.class.getName());
 			return true;
 		}
+		
+		if(father == null)
+			return false;
+		
 		if(father.getCurrentPage() != page){
 			return false;
 		}
