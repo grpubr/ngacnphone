@@ -122,7 +122,7 @@ public class StringUtil {
 	public static String decodeForumTag(String s,boolean showImage) {
 		if(StringUtil.isEmpty(s))
 			return "";
-		s = StringUtil.unEscapeHtml(s);
+		//s = StringUtil.unEscapeHtml(s);
 		String quoteStyle = "<div style='background:#E8E8E8;border:1px solid #888' >";
 		if(ThemeManager.getInstance().getMode() == ThemeManager.MODE_NIGHT)
 			quoteStyle = "<div style='background:#000000;border:1px solid #888' >";
