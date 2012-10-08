@@ -118,7 +118,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		WebView contentTV;
 		TextView floorTV;
 		TextView postTimeTV;
-		TextView titleTV;
+		//TextView titleTV;
 		int position=-1;
 		
 	}
@@ -133,6 +133,14 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 			contentTV.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);		
 	}
 	
+	private static String buildHeader(ThreadRowInfo row){
+		if( row == null || StringUtil.isEmpty(row.getSubject()) )
+			return "";
+		StringBuilder sb = new StringBuilder();
+		sb.append("<h3>").append(row.getSubject()).append("</h3>");
+		return sb.toString();
+	}
+	
 	public static String convertToHtmlText(final ThreadRowInfo row,boolean showImage,final String fgColorStr,final String bgcolorStr){
 		String ngaHtml = StringUtil.decodeForumTag(row.getContent(),showImage);
 		if(StringUtil.isEmpty(ngaHtml)){
@@ -145,6 +153,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		ngaHtml = ngaHtml + buildComment(row,fgColorStr) + buildAttachment(row,showImage)
 				+ buildSignature(row,showImage);
 		ngaHtml = "<HTML> <HEAD><META   http-equiv=Content-Type   content= \"text/html;   charset=utf-8 \">" 
+			+ buildHeader(row)
 			+ "<body bgcolor= '#"+ bgcolorStr +"'>"
 			+ "<font color='#"+ fgColorStr + "' size='2'>"
 			+ ngaHtml + 
@@ -157,9 +166,9 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 	private void handleContentTV(final WebView contentTV,final ThreadRowInfo row,int bgColorId,int bgColor,int fgColor){
 		
 		contentTV.setBackgroundColor(0);
-		if(ActivityUtil.isGreaterThan_2_3_3() &&
+		/*if(ActivityUtil.isGreaterThan_2_3_3() &&
 				ActivityUtil.islessThan_4_1())
-			setLayerType(contentTV);
+			setLayerType(contentTV);*/
 		
 		
 		
@@ -214,6 +223,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		setting.setDefaultFontSize(
 				PhoneConfiguration.getInstance().getWebSize());
 		setting.setJavaScriptEnabled(false);
+		//setting.setPluginState(WebSettings.PluginState.OFF);
 		contentTV.setWebViewClient(client);
 		//final String htmlData = ngaHtml;
 		final int lou = row.getLou();
@@ -324,7 +334,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		holder.contentTV = (WebView) view.findViewById(R.id.content);
 		holder.floorTV = (TextView) view.findViewById(R.id.floor);
 		holder.postTimeTV = (TextView)view.findViewById(R.id.postTime);
-		holder.titleTV = (TextView) view.findViewById(R.id.floor_title);
+		//holder.titleTV = (TextView) view.findViewById(R.id.floor_title);
 		return holder;
 	}
 	
@@ -390,7 +400,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		
 		
 		if(row == null){
-			holder.titleTV.setText("´íÎóÂ¥²ã");
+			//holder.titleTV.setText("´íÎóÂ¥²ã");
 			return view;
 		}
 
@@ -409,12 +419,12 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		TextPaint tp = holder.nickNameTV.getPaint();
 		tp.setFakeBoldText(true);// bold for Chinese character
 
-		TextView titleTV = holder.titleTV;
-		if (!StringUtil.isEmpty(row.getSubject()) /*&& position != 0*/) {
-			titleTV.setText(row.getSubject());
+		/*TextView titleTV = holder.titleTV;
+		if (!StringUtil.isEmpty(row.getSubject()) ) {
+			titleTV.setText(StringUtil.unEscapeHtml(row.getSubject()));
 			titleTV.setTextColor(fgColor);
 
-		} 
+		}*/ 
 
 		int bgColor = parent.getContext().getResources().getColor(colorId);
 
