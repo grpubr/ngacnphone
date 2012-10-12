@@ -34,16 +34,19 @@ public class ThemeManager {
 	}
 
 	public int getBackgroundColor () {
+		return getBackgroundColor(0);
+	}
+	
+	public int getBackgroundColor (int position) {
 		int ret = backgroundColor[mode];
-		synchronized(this){
-			
-			if(MODE_NORMAL==mode && cseq%2 ==1){
-				ret= R.color.shit1;
-			}
-			cseq +=1;
+
+		if(MODE_NORMAL==mode && position%2 ==1){
+			ret= R.color.shit1;
 		}
+
 		return ret;
 	}
+	
 	public static void setInstance(ThemeManager instance) {
 		ThemeManager.instance = instance;
 	}
