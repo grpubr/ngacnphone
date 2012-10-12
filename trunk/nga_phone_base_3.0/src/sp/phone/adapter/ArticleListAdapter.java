@@ -109,8 +109,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
 		return wifi == State.CONNECTED;
 	}
-	long start;
-	long end;
+
 	
 	static class ViewHolder{
 		TextView nickNameTV;
@@ -394,7 +393,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 
 		holder.position = position;
 		ThemeManager theme = ThemeManager.getInstance();
-		int colorId = theme.getBackgroundColor();
+		int colorId = theme.getBackgroundColor(position);
 		view.setBackgroundResource(colorId);
 
 		

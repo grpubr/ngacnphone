@@ -174,7 +174,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 			String time = formatter.format(new Date());
 			String fileName = "crash-" + time + "-" + timestamp + ".log";
 			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-				String path = HttpUtil.PATH_SD + "nga_cache/";
+				String path = HttpUtil.PATH;
 				File dir = new File(path);
 				if (!dir.exists()) {
 					dir.mkdirs();

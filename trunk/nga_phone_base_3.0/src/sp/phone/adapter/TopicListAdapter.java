@@ -55,8 +55,7 @@ public class TopicListAdapter extends BaseAdapter
 	public long getItemId(int arg0) {
 		return arg0;
 	}
-	long start;
-	long end;
+
 	
 	class ViewHolder{
 		public TextView num ;
@@ -66,10 +65,7 @@ public class TopicListAdapter extends BaseAdapter
 		
 	}
 	public View getView(int position, View view, ViewGroup parent) {
-		if(position ==0){
-			start = System.currentTimeMillis();
-		}
-		
+
 		View convertView = view;//m.get(position);
 		ViewHolder holder = null;
 		if (convertView == null ) {
@@ -92,12 +88,12 @@ public class TopicListAdapter extends BaseAdapter
 			holder = (ViewHolder) convertView.getTag();
 			
 		}
-		int colorId = ThemeManager.getInstance().getBackgroundColor();
+		int colorId = ThemeManager.getInstance().getBackgroundColor(position);
 		convertView.setBackgroundResource(colorId);
 
 
-			handleJsonList( holder,position);
-			return convertView;
+		handleJsonList( holder,position);
+		return convertView;
 
 		
 		

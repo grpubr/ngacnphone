@@ -195,7 +195,7 @@ public class ImageUtil {
 			if (fileType.indexOf("?") != -1) {
 				fileType = fileType.split("\\?")[0];
 			}
-			String lf = HttpUtil.PATH + "/" + userId + fileType;
+			String lf = HttpUtil.PATH_AVATAR + "/" + userId + fileType;
 			return lf;
 		} else {
 			return null;
@@ -210,18 +210,18 @@ public class ImageUtil {
 			if (path == null || "".equals(path)) {
 				return null;
 			} else if (extension.length() == 3) {
-				newName = HttpUtil.PATH + "/" + userId + "." + extension;
+				newName = HttpUtil.PATH_AVATAR + "/" + userId + "." + extension;
 				
 			} else if (extension.length() >= 4
 					&& "?".equals(extension.substring(3, 4))) {
-				newName = HttpUtil.PATH + "/" + userId + "."
+				newName = HttpUtil.PATH_AVATAR+ "/" + userId + "."
 						+ extension.substring(0, 3);
 				
 			} else {
-				newName = HttpUtil.PATH + "/" + userId + ".jpg";
+				newName = HttpUtil.PATH_AVATAR + "/" + userId + ".jpg";
 			}
 		} else {
-			newName = HttpUtil.PATH + "/" + userId + ".jpg";
+			newName = HttpUtil.PATH_AVATAR + "/" + userId + ".jpg";
 		}
 		return newName;
 	}
