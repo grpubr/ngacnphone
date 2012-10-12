@@ -58,7 +58,9 @@ public class TopicListFragment extends Fragment
 			listview.setLayoutAnimation(anim);
 		}
 		listview.setDivider(null);
-		listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		
+		//listview.setTextFilterEnabled(true);
+		//listview.setFocusableInTouchMode(true);
 
 		return listview;
 	}
@@ -162,6 +164,8 @@ public class TopicListFragment extends Fragment
 			intent.putExtra("tid",tid );
 			intent.putExtra("pid",pid );
 			intent.putExtra("authorid",authorid );
+			ListView listview = (ListView)parent;
+			listview.setItemChecked(position, true);
 			
 			intent.setClass(getActivity(), ArticleListActivity.class);
 			startActivity(intent);
@@ -184,6 +188,8 @@ public class TopicListFragment extends Fragment
 		
 		adapter.jsonfinishLoad(result);
 		listview.setAdapter(adapter);
+		listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		
 		if(getArguments().getInt("searchpost",0) != 0){
 			int page = 1 + getArguments().getInt("page",0);
 			result.set__ROWS(page);

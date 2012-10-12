@@ -19,16 +19,23 @@ import com.alibaba.fastjson.JSON;
 import sp.phone.bean.ArticlePage;
 
 public class HttpUtil {
-	public final static String PATH = android.os.Environment
+
+	public final static String PATH_OLD = android.os.Environment
 			.getExternalStorageDirectory()
-			+ "/nga_cache/nga_cache";
-	public final static String PATH_SD = android.os.Environment
+			+ "/nga_cache";
+	public static String PATH_AVATAR_OLD = PATH_OLD +
+			 "/nga_cache";
+	public final static String PATH_IMAGES = android.os.Environment
+			.getExternalStorageDirectory().getAbsolutePath();	
+	
+	public static String PATH = android.os.Environment
 			.getExternalStorageDirectory()
-			+ "/";
-	public final static String PATH_ICON = PATH_SD + "nga_cache/icon";
-	public final static String PATH_WEB_CACHE = PATH_SD + "nga_cache/web_cache";
-	public final static String PATH_NOMEDIA = PATH_SD + "nga_cache/.nomedia";
-	public final static String PATH_IMAGES = PATH_SD + "nga_cache/images";
+			+ "/nga_cache";
+	public static String PATH_AVATAR = PATH +
+			 "/nga_cache";
+	public static String PATH_NOMEDIA = PATH + "/.nomedia";
+	
+
 	public static  final String PATH_ZIP = "";
 
 	public static String Server = "http://bbs.ngacn.cc";

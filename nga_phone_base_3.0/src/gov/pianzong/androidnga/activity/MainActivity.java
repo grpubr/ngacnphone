@@ -222,16 +222,12 @@ public class MainActivity extends ActionBarActivity
 			
 		}
 		
+		
+	}
+	
+	
+	
 
-	}
-	
-	
-	
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		// TODO Auto-generated method stub
-		super.onSaveInstanceState(outState);
-	}
 
 
 	private void initDate() {
@@ -242,19 +238,25 @@ public class MainActivity extends ActionBarActivity
 			public void run() {
 
 
-				File file = new File(HttpUtil.PATH);
-				if (!file.exists()) {
+				
+				
+				
+				File filebase = new File(HttpUtil.PATH);
+				if (!filebase.exists()) {
 					delay("创建新的缓存目录");
-					file.mkdirs();
+					filebase.mkdirs();
 				} 
+				if(ActivityUtil.isGreaterThan_2_1())
+				{
+					File f = new File(HttpUtil.PATH_AVATAR_OLD);
+					if(f.exists()){
+						f.renameTo(new File(HttpUtil.PATH_AVATAR));
+						delay("移动头像到新位置");
+					}
+				}
+
 				
-				file = new File(HttpUtil.PATH_WEB_CACHE);
-				if (!file.exists()) {
-					Log.i(getClass().getSimpleName(),"create webcache directory");
-					file.mkdirs();
-				} 
-				
-				file = new File(HttpUtil.PATH_NOMEDIA);
+				File file = new File(HttpUtil.PATH_NOMEDIA);
 				if (!file.exists()) {
 					Log.i(getClass().getSimpleName(),"create .nomedia");
 					try {

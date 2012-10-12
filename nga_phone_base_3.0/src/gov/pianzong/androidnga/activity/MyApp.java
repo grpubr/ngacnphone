@@ -1,14 +1,18 @@
 package gov.pianzong.androidnga.activity;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import sp.phone.bean.Bookmark;
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.bean.User;
+import sp.phone.utils.ActivityUtil;
+import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
+import android.annotation.TargetApi;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -19,7 +23,7 @@ import com.alibaba.fastjson.JSON;
 
 public class MyApp extends Application implements PerferenceConstant {
 	final private static String TAG = MyApp.class.getSimpleName();
-	public final static int version = 361;
+	public final static int version = 364;
 	private PhoneConfiguration config = null;
 	boolean newVersion = false;
 	
@@ -33,7 +37,19 @@ public class MyApp extends Application implements PerferenceConstant {
 			config = PhoneConfiguration.getInstance();
 		initUserInfo();
 		loadConfig();
+		if(ActivityUtil.isGreaterThan_2_1())
+			initPath();
+
 		super.onCreate();
+	}
+	
+	@TargetApi(8)
+	private void initPath(){
+		File baseDir = getExternalCacheDir();
+		HttpUtil.PATH = baseDir.getAbsolutePath();
+		HttpUtil.PATH_AVATAR = HttpUtil.PATH +
+				 "/nga_cache";
+		HttpUtil.PATH_NOMEDIA = HttpUtil.PATH + "/.nomedia";
 	}
 
 	private void initUserInfo() {
