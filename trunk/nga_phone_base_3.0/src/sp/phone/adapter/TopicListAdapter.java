@@ -21,7 +21,7 @@ public class TopicListAdapter extends BaseAdapter
 
 	private LayoutInflater inflater;
 	private TopicListInfo topicListInfo=null;
-
+	private int selected = -1;
 	public TopicListAdapter(Context context) {
 		this.inflater = LayoutInflater.from(context);
 	}
@@ -89,6 +89,10 @@ public class TopicListAdapter extends BaseAdapter
 			
 		}
 		int colorId = ThemeManager.getInstance().getBackgroundColor(position);
+		if(position == this.selected)
+		{
+			colorId = R.color.holo_blue_light;
+		}
 		convertView.setBackgroundResource(colorId);
 
 
@@ -98,6 +102,10 @@ public class TopicListAdapter extends BaseAdapter
 		
 		
 		
+	}
+	
+	public void setSelected(int position){
+		this.selected = position;
 	}
 	
 	private void handleJsonList(ViewHolder holder, int position){
