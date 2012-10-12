@@ -411,13 +411,14 @@ public class ArticleListFragment extends Fragment
 			final String postTime = row.getPostdate();
 			// final String url = map.get("url");
 			
-			if(!content.trim().endsWith("]"))
+			if(!content.trim().endsWith("[/url]"))
 			{
 				if (content.length() > 100) 
 					content = content.substring(0, 99) + ".......";
 				
 					
 			}
+			content = StringUtil.unEscapeHtml(content);
 			mention = name;
 			if(row.getPid() == 0){
 				postPrefix.append("[quote][tid=");
@@ -456,11 +457,11 @@ public class ArticleListFragment extends Fragment
 			break;
 		case R.id.edit :
 			Intent intentModify = new Intent();
-			intentModify.putExtra("prefix", StringUtil.removeBrTag(content) );
+			intentModify.putExtra("prefix", StringUtil.unEscapeHtml(StringUtil.removeBrTag(content)));
 			intentModify.putExtra("tid", tidStr);
 			String pid = String.valueOf(row.getPid());//getPid(map.get("url"));
 			intentModify.putExtra("pid", pid);
-			intentModify.putExtra("title",row.getSubject());
+			intentModify.putExtra("title",StringUtil.unEscapeHtml(row.getSubject()));
 			intentModify.putExtra("action", "modify");	
 			intentModify.setClass(getActivity(), PostActivity.class);
 			startActivity(intentModify);
