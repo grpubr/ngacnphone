@@ -1,9 +1,12 @@
 package gov.pianzong.androidnga.activity;
 
+import gov.pianzong.androidnga.R;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import sp.phone.bean.Board;
 import sp.phone.bean.Bookmark;
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.bean.User;
@@ -23,7 +26,7 @@ import com.alibaba.fastjson.JSON;
 
 public class MyApp extends Application implements PerferenceConstant {
 	final private static String TAG = MyApp.class.getSimpleName();
-	public final static int version = 364;
+	public final static int version = 371;
 	private PhoneConfiguration config = null;
 	boolean newVersion = false;
 	
@@ -132,7 +135,20 @@ public class MyApp extends Application implements PerferenceConstant {
 			Editor editor = share.edit();
 			editor.putInt(VERSION, version);
 			editor.putBoolean(REFRESH_AFTER_POST, false);
-			editor.putString(RECENT_BOARD,"");
+			
+			String recentStr = share.getString(RECENT_BOARD, "");
+			List<Board> recentList = null;
+			if(!StringUtil.isEmpty(recentStr)){
+				recentList = JSON.parseArray(recentStr, Board.class);
+				if(recentList != null){
+					for(int j = 0;j< recentList.size();j++){
+						recentList.get(j).setIcon(R.drawable.pdefault);
+					}
+					recentStr = JSON.toJSONString(recentList);
+					editor.putString(RECENT_BOARD,recentStr);
+				}
+			}
+			
 			editor.commit();
 			
 		}
