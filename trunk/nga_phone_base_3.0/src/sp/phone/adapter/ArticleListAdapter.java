@@ -136,7 +136,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		if( row == null || StringUtil.isEmpty(row.getSubject()) )
 			return "";
 		StringBuilder sb = new StringBuilder();
-		sb.append("<h3>").append(row.getSubject()).append("</h3>");
+		sb.append("<h4>").append(row.getSubject()).append("</h3>");
 		return sb.toString();
 	}
 	
