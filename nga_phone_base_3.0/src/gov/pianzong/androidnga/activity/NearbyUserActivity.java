@@ -11,16 +11,15 @@ import sp.phone.bean.NearbyUser;
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.interfaces.OnNearbyLoadComplete;
 import sp.phone.task.NearbyUserTask;
+import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -28,7 +27,7 @@ import android.widget.ListView;
 
 import com.alibaba.fastjson.JSON;
 
-public class NearbyUserActivity extends Activity
+public class NearbyUserActivity extends FragmentActivity
 implements PerferenceConstant,OnNearbyLoadComplete{
 	ListView lv;
 	@Override
@@ -44,19 +43,9 @@ implements PerferenceConstant,OnNearbyLoadComplete{
 	
 	void initLocation()
 	{
-	    Criteria criteria = new Criteria(); 
-	    criteria.setAccuracy(Criteria.ACCURACY_COARSE); // 设置精度
-	    criteria.setAltitudeRequired(false); // 设置是否需要提供海拔信息
-	    criteria.setBearingRequired(false); // 是否需要方向信息
-	    criteria.setCostAllowed(false); // 设置找到的 Provider 是否允许产生费用
-	    criteria.setPowerRequirement(Criteria.POWER_LOW); // 设置耗电
-	    
-	    LocationManager locationManager = (LocationManager)getSystemService(LOCATION_SERVICE); 
-	    String provider=locationManager.getBestProvider(criteria, true); 
-	    Location location = null;
-	    if(provider != null) { 
-        	location = locationManager.getLastKnownLocation(provider); 
-        } 
+	    ActivityUtil.reflushLocation(this);
+	    Location location = PhoneConfiguration.getInstance().location;
+
 	    SharedPreferences share = getSharedPreferences(
 				PERFERENCE, MODE_PRIVATE);
 		String userName = share.getString(USER_NAME, "");
@@ -67,6 +56,7 @@ implements PerferenceConstant,OnNearbyLoadComplete{
 			e.printStackTrace();
 		}
 	    if(location != null && !StringUtil.isEmpty(userName)){
+	    	ActivityUtil.getInstance().noticeSaying(this);
 			new NearbyUserTask(location.getLatitude(),location.getLongitude(),
 					userName,PhoneConfiguration.getInstance().uid,this).execute();
 
@@ -77,6 +67,7 @@ implements PerferenceConstant,OnNearbyLoadComplete{
 
 	@Override
 	public void OnComplete(String result) {
+		ActivityUtil.getInstance().dismiss();
 		if(StringUtil.isEmpty(result))
 			return;
 		List<NearbyUser> list = null;

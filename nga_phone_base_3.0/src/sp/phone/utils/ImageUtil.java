@@ -201,7 +201,9 @@ public class ImageUtil {
 			return null;
 		}
 	}
-
+	public static String getAvatarById(String extersion, String userId){
+		return HttpUtil.PATH_AVATAR + "/" + userId + "." + extersion;
+	}
 	public static String newImage(String oldImage, String userId) {
 		String extension = FilenameUtils.getExtension(oldImage);
 		String path = FilenameUtils.getPath(oldImage);
@@ -321,17 +323,21 @@ public class ImageUtil {
 	
 	//final static int max_avatar_width = 200;
 	final static  int max_avatar_height = 255;
-	
-	static public Bitmap loadAvatarFromSdcard(String avatarPath){
+	static public Bitmap loadAvatarFromSdcard(String avatarPath)
+	{
+		
+		return loadAvatarFromSdcard(avatarPath,max_avatar_height);
+	}
+	static public Bitmap loadAvatarFromSdcard(String avatarPath,int maxHeight){
 
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		opts.inJustDecodeBounds = true;
 		Bitmap bitmap = BitmapFactory.decodeFile(avatarPath, opts);
 		final int avatarWidth = PhoneConfiguration.getInstance().getNikeWidth();
 
-		final int minSideLength = Math.min(avatarWidth, max_avatar_height);
+		final int minSideLength = Math.min(avatarWidth, maxHeight);
 		opts.inSampleSize = ImageUtil.computeSampleSize(opts, minSideLength,
-				avatarWidth * max_avatar_height);
+				avatarWidth * maxHeight);
         opts.inJustDecodeBounds = false;
         opts.inInputShareable = true;
         opts.inPurgeable = true;
@@ -344,8 +350,11 @@ public class ImageUtil {
         
         return bitmap;
 	}
-	
-	static public Bitmap loadAvatarFromStream(InputStream is,InputStream is2){
+	static public Bitmap loadAvatarFromStream(InputStream is,InputStream is2)
+	{
+		return loadAvatarFromStream(is,is2,max_avatar_height);
+	}
+	static public Bitmap loadAvatarFromStream(InputStream is,InputStream is2,int maxHeight){
 		if(is== null)
 			return null;
 		if(is == is2)
@@ -355,9 +364,9 @@ public class ImageUtil {
 		Bitmap bitmap = BitmapFactory.decodeStream(is, null,opts);
 		final int avatarWidth = PhoneConfiguration.getInstance().getNikeWidth();
 		
-		final int minSideLength = Math.min(avatarWidth, max_avatar_height);
+		final int minSideLength = Math.min(avatarWidth, maxHeight);
 		opts.inSampleSize = ImageUtil.computeSampleSize(opts, minSideLength,
-				avatarWidth * max_avatar_height);
+				avatarWidth * maxHeight);
         opts.inJustDecodeBounds = false;
         opts.inInputShareable = true;
         opts.inPurgeable = true;
