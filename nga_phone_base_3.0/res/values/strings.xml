@@ -13,7 +13,7 @@
     <string name="title">标题</string>
     <string name="commit">提交</string>
     <string name="cancel">取消</string>
-    <string name="nowifi_downimg">没wifi也下载帖子图片</string>
+    <string name="nowifi_downimg">2G/3G时载入帖子图片</string>
     <string name="nightmode">夜间模式</string>
     <string name="refresh">刷新</string>
     <string name="back">返回</string>
@@ -27,7 +27,7 @@
     <string name="thread_load_error">可能遇到了一个广告或者帖子被删除</string>
     <string name="notification_on">启用被喷提示</string>
     <string name="notification_sound">提示声音</string>
-    <string name="download_avatar_nowifi">没wifi也下载头像</string>
+    <string name="download_avatar_nowifi">2G/3G时下载头像(慎用)</string>
     <string name="upload">上传</string>
     <string name="avoidWindfury">防止风怒机制</string>
     <string name="avatar">头像</string>
@@ -65,5 +65,6 @@
     <string name="share">分享到…</string>
     <string name="image_to_big">图片超过1M，自动缩小</string>
     <string name="page">页</string>
+    <string name="search">搜索</string>
     
 </resources>
