@@ -10,6 +10,7 @@ public class PhoneConfiguration {
 	List<Bookmark> bookmarks;// url<-->tilte
 	private float textSize;
 	private int webSize;
+	public String userName;
 	public int nikeWidth = 100;
 	public boolean downAvatarNoWifi;
 	public boolean downImgNoWifi;
