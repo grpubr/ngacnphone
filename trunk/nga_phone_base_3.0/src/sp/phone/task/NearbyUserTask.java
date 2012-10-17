@@ -63,10 +63,18 @@ public 	class NearbyUserTask extends AsyncTask<String,Integer,String>{
 
 	@Override
 	protected void onPostExecute(String result) {
-		if(StringUtil.isEmpty(result)){
-			return;
-		}
 		notifier.OnComplete(result);
 	}
+
+	@Override
+	protected void onCancelled(String result) {
+		notifier.OnComplete(null);
+	}
+
+	@Override
+	protected void onCancelled() {
+		notifier.OnComplete(null);
+	}
+	
 	
 }

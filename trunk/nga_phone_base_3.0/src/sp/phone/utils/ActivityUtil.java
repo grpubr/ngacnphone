@@ -4,6 +4,9 @@ package sp.phone.utils;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -56,7 +59,24 @@ public class ActivityUtil {
 	private ActivityUtil(){
 		
 	}
-
+	
+	public static void reflushLocation(Context context){
+		Criteria criteria = new Criteria(); 
+	    criteria.setAccuracy(Criteria.ACCURACY_COARSE); // 设置精度
+	    criteria.setAltitudeRequired(false); // 设置是否需要提供海拔信息
+	    criteria.setBearingRequired(false); // 是否需要方向信息
+	    criteria.setCostAllowed(false); // 设置找到的 Provider 是否允许产生费用
+	    criteria.setPowerRequirement(Criteria.POWER_LOW); // 设置耗电
+	    
+	    LocationManager locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE); 
+	    String provider=locationManager.getBestProvider(criteria, true); 
+	    Location location = null;
+	    if(provider != null) { 
+        	location = locationManager.getLastKnownLocation(provider); 
+        } 
+	    if(location != null)
+	    	PhoneConfiguration.getInstance().location = location;
+	}
 	private DialogFragment df = null;
 
 	public void noticeSaying(Context context){

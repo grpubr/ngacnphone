@@ -2,6 +2,8 @@ package sp.phone.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import android.location.Location;
 import sp.phone.bean.Bookmark;
 
 public class PhoneConfiguration {
@@ -22,6 +24,7 @@ public class PhoneConfiguration {
 	public boolean showAnimation=false;
 	public boolean showSignature = true;
 	public boolean useViewCache;
+	public Location location = null;
 	
 	
 	
