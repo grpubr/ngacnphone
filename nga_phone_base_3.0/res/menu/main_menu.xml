@@ -3,5 +3,5 @@
   xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:title="@string/menu_login" android:id="@+id/mainmenu_login" android:icon="@drawable/ic_login" android:showAsAction="ifRoom"></item>
     <item android:title="@string/menu_setting" android:id="@+id/mainmenu_setting" android:icon="@drawable/action_settings" android:showAsAction="ifRoom"></item>
-    <item android:title="@string/menu_exit" android:id="@+id/mainmenu_exit" android:icon="@drawable/ic_exit" android:showAsAction="ifRoom"></item>
+    <item android:title="@string/menu_exit" android:id="@+id/mainmenu_exit" android:icon="@drawable/ic_menu_mylocation" android:showAsAction="ifRoom"></item>
 </menu>
