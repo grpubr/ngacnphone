@@ -68,9 +68,8 @@ public class LoginActivity extends Activity
 		
 		String postUrl = "http://account.178.com/q_account.php?_act=login";
 
-		SharedPreferences share = LoginActivity.this.getSharedPreferences(
-				PERFERENCE, MODE_PRIVATE);
-		String userName = share.getString(USER_NAME, "");
+
+		String userName = PhoneConfiguration.getInstance().userName;
 		if (userName != "")
 			userText.setText(userName);
 
@@ -229,6 +228,7 @@ public class LoginActivity extends Activity
 				
 				PhoneConfiguration.getInstance().setUid(uid);
 				PhoneConfiguration.getInstance().setCid(cid);
+				PhoneConfiguration.getInstance().userName = name;
 				
 				startActivity(intent);
 				super.onPostExecute(result);

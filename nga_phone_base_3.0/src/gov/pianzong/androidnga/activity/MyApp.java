@@ -76,8 +76,10 @@ public class MyApp extends Application implements PerferenceConstant {
 				config.setUid(uid);
 				config.setCid(cid);
 				String userListString = share.getString(USER_LIST, "");
+				final String name = share.getString(USER_NAME, "");
+				config.userName = name;
 				if(StringUtil.isEmpty(userListString)){
-					final String name = share.getString(USER_NAME, "");
+					
 					addToUserList(uid,cid,name);
 	
 				}

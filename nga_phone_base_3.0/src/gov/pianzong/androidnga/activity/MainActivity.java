@@ -168,6 +168,16 @@ public class MainActivity extends ActionBarActivity
 		}
 
 	}
+	
+	void jumpToNearby(){
+		Intent intent = new Intent();
+		intent.setClass(MainActivity.this, NearbyUserActivity.class);
+		
+			startActivity(intent);
+			if(PhoneConfiguration.getInstance().showAnimation)
+				overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
+		
+	}
 
 
 	/*
@@ -187,6 +197,8 @@ public class MainActivity extends ActionBarActivity
 		case R.id.mainmenu_exit:
 			//case android.R.id.home: //this is a system id
 			//this.finish();
+			jumpToNearby();
+			break;
 		default:
 			Intent MyIntent = new Intent(Intent.ACTION_MAIN);
 			MyIntent.addCategory(Intent.CATEGORY_HOME);
