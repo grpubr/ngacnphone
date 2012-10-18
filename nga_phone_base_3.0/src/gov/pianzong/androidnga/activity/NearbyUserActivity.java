@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 
@@ -55,7 +56,14 @@ implements PerferenceConstant,OnNearbyLoadComplete{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	    if(location != null && !StringUtil.isEmpty(userName)){
+		if(location == null)
+		{
+			Toast.makeText(this, R.string.fail_to_locate, Toast.LENGTH_SHORT).show();
+		}else if(StringUtil.isEmpty(userName))
+		{
+			Toast.makeText(this, R.string.nearby_no_login, Toast.LENGTH_SHORT).show();
+		}else
+		{
 	    	ActivityUtil.getInstance().noticeSaying(this);
 			new NearbyUserTask(location.getLatitude(),location.getLongitude(),
 					userName,PhoneConfiguration.getInstance().uid,this).execute();
@@ -75,6 +83,9 @@ implements PerferenceConstant,OnNearbyLoadComplete{
 		list = JSON.parseArray(result, NearbyUser.class);
 		}catch(Exception e){
 			return ;
+		}
+		if(list != null && list.size() ==0){
+			Toast.makeText(this, R.string.nearby_no_user, Toast.LENGTH_SHORT).show();
 		}
 		
 		NearbyUsersAdapter adapter = new NearbyUsersAdapter(list);
