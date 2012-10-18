@@ -52,6 +52,13 @@
             android:text="@string/showSignature" />
 
         <CheckBox
+            android:id="@+id/checkBox_upload_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/upload_location" />
+
+        <CheckBox
             android:id="@+id/checkBox_notification"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

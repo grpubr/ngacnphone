@@ -70,5 +70,6 @@
     <string name="nearby_no_login">没登陆不能yoooo</string>
     <string name="fail_to_locate">无法定位</string>
     <string name="nearby_no_user">附近没有其他用户</string>
+    <string name="upload_location">发帖报告我的位置</string>
     
 </resources>

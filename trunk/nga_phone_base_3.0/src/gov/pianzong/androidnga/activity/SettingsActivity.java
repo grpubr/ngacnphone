@@ -38,6 +38,7 @@ public class SettingsActivity extends Activity{
 	private CompoundButton showSignature;
 	private CompoundButton notification;
 	private CompoundButton notificationSound;
+	private CompoundButton uploadLocation;
 	private SeekBar fontSizeBar;
 	private float defaultFontSize;
 	private TextView fontTextView;
@@ -113,6 +114,11 @@ public class SettingsActivity extends Activity{
 		notification.setOnCheckedChangeListener(
 				new NotificationChangedListener(notificationSound));
 		notification.setChecked(PhoneConfiguration.getInstance().notification);
+		
+		
+		uploadLocation = (CompoundButton) findViewById(R.id.checkBox_upload_location);
+		uploadLocation.setChecked(PhoneConfiguration.getInstance().uploadLocation);
+		uploadLocation.setOnCheckedChangeListener(new UploadLocationListener());
 		
 		
 		fontTextView = (TextView)findViewById(R.id.textView_font_size);
@@ -275,6 +281,24 @@ public class SettingsActivity extends Activity{
 
 			Editor editor = share.edit();
 			editor.putBoolean(SHOW_SIGNATURE, isChecked);
+			editor.commit();
+			
+		}
+		
+		
+	}
+	
+	class UploadLocationListener implements OnCheckedChangeListener, PerferenceConstant{
+
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView,
+				boolean isChecked) {
+			PhoneConfiguration.getInstance().uploadLocation = isChecked;
+			SharedPreferences  share = 
+				getSharedPreferences(PERFERENCE, MODE_PRIVATE);
+
+			Editor editor = share.edit();
+			editor.putBoolean(UPLOAD_LOCATION, isChecked);
 			editor.commit();
 			
 		}
