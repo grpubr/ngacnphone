@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:contentDescription="@string/avatar"
         android:src="@drawable/default_avatar" />
-
+
     <TextView
         android:id="@+id/nickname"
         android:layout_width="wrap_content"
@@ -21,6 +21,6 @@
         android:layout_alignBottom="@+id/avatarimg"
         android:layout_toRightOf="@+id/avatarimg"
         android:text="@string/avatar"
-        android:textSize="35dp" />
+        android:textSize="20dp" />
 
 </RelativeLayout>

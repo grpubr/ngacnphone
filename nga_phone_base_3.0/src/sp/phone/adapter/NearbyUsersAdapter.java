@@ -9,7 +9,9 @@ import java.net.URLDecoder;
 import java.util.List;
 
 import sp.phone.bean.NearbyUser;
+import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.ImageUtil;
+import sp.phone.utils.PhoneConfiguration;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,6 +20,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +75,11 @@ public class NearbyUsersAdapter extends BaseAdapter {
 		} catch (UnsupportedEncodingException e) {
 
 		}
+		Location myloc = PhoneConfiguration.getInstance().location;
+
+		text = text +"(" + 
+				ActivityUtil.distanceBetween(myloc, u.getLatitude(), u.getLongitude()) +
+				"รื)";
 		TextView tv = (TextView)ret.findViewById(R.id.nickname);
 		tv.setText(text);
 		ImageView iv = (ImageView)ret.findViewById(R.id.avatarimg);
