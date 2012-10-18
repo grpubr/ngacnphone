@@ -25,6 +25,7 @@ public class PhoneConfiguration {
 	public boolean showSignature = true;
 	public boolean useViewCache;
 	public Location location = null;
+	public boolean uploadLocation = false;
 	
 	
 	
