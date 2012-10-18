@@ -58,7 +58,7 @@ implements PagerOwnner,ResetableArticle {
 		v.setBackgroundColor(bg);*/
 		setContentView(R.layout.pagerview_article_list);
 
-		
+		ActivityUtil.reflushLocation(this);
 		tabhost = (TabHost) findViewById(android.R.id.tabhost);
 		tabhost.setup();
 		mViewPager = (ViewPager)findViewById(R.id.pager);

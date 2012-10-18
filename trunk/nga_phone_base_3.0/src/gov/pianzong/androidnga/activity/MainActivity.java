@@ -4,8 +4,14 @@ import gov.pianzong.androidnga.R;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import sp.phone.adapter.BoardPagerAdapter;
 import sp.phone.bean.Board;
@@ -15,6 +21,7 @@ import sp.phone.bean.PerferenceConstant;
 import sp.phone.interfaces.PageCategoryOwnner;
 import sp.phone.task.AppUpdateCheckTask;
 import sp.phone.utils.ActivityUtil;
+import sp.phone.utils.Des;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
@@ -56,7 +63,7 @@ public class MainActivity extends ActionBarActivity
 	
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		this.setTheme(R.style.AppTheme);
 		Intent intent = getIntent();
@@ -64,7 +71,7 @@ public class MainActivity extends ActionBarActivity
 		loadConfig(intent);
 		initDate();
 		initView();
-	
+
 		task = new AppUpdateCheckTask(this);
 		task.execute("");
 		

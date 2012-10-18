@@ -4,10 +4,18 @@ import gov.pianzong.androidnga.R;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.SoftReference;
+import java.net.URLEncoder;
+import java.security.InvalidKeyException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import sp.phone.bean.Attachment;
 import sp.phone.bean.AvatarTag;
@@ -18,6 +26,7 @@ import sp.phone.task.AvatarLoadTask;
 import sp.phone.task.ForumTagDecodTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.ArticleListWebClient;
+import sp.phone.utils.Des;
 import sp.phone.utils.ImageUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
@@ -140,6 +149,59 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		return sb.toString();
 	}
 	
+	private static String buildLocation(final ThreadRowInfo row){
+		PhoneConfiguration config = PhoneConfiguration.getInstance();
+		
+		String  authorid = Integer.valueOf(row.getAuthorid()).toString();
+		if(config.location == null || config.uploadLocation== false
+				|| authorid.equals(config.uid) || row.getContent()==null)
+		{
+			return "";
+		}
+		if(!row.getContent().endsWith("[/url]"))
+		{
+			return "";
+		}
+		String startTag = "https://play.google.com/store/apps/details?id=gov.pianzong.androidnga&amp;";
+		int start = -1;
+		int end = -1;
+		String endStr = "ffff]----sent from my";
+		start = row.getContent().lastIndexOf(startTag);
+		end = row.getContent().lastIndexOf(endStr);
+		if(start == -1|| end == -1 || start >= end){
+			return "";
+		}
+		String loc = row.getContent().substring(start+startTag.length(), end);
+		try {
+			loc = Des.deCrypto(loc, StringUtil.key);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "";
+		}
+		String locs[] = loc.split(",");
+		if(locs == null ||locs.length !=2)
+		{
+			return "";
+		}
+		String encodedName = "";
+		try {
+			encodedName = URLEncoder.encode(row.getAuthor(),"utf-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		long distance = ActivityUtil.distanceBetween(config.location, 
+				locs[0], locs[1]);
+		StringBuilder sb = new StringBuilder();
+		sb.append("<a href=\"http://ditu.google.cn/maps?q=")
+		.append(loc).append("(")
+		.append(encodedName)
+		.append(")\"").append(" >该用户距离你")
+		.append(Long.valueOf(distance).toString())
+		.append("米</a></br>");
+		return sb.toString();
+	}
 	public static String convertToHtmlText(final ThreadRowInfo row,boolean showImage,final String fgColorStr,final String bgcolorStr){
 		String ngaHtml = StringUtil.decodeForumTag(row.getContent(),showImage);
 		if(StringUtil.isEmpty(ngaHtml)){
@@ -155,6 +217,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 			+ buildHeader(row)
 			+ "<body bgcolor= '#"+ bgcolorStr +"'>"
 			+ "<font color='#"+ fgColorStr + "' size='2'>"
+			+ buildLocation(row)
 			+ ngaHtml + 
 			"</font></body>";
 
