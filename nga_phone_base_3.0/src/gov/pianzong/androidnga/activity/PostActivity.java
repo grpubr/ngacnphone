@@ -5,6 +5,12 @@ import gov.pianzong.androidnga.R;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.security.InvalidKeyException;
+import java.security.spec.InvalidKeySpecException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import org.apache.commons.io.IOUtils;
 
@@ -19,6 +25,7 @@ import sp.phone.interfaces.EmotionCategorySelectedListener;
 import sp.phone.interfaces.OnEmotionPickedListener;
 import sp.phone.task.FileUploadTask;
 import sp.phone.utils.ActivityUtil;
+import sp.phone.utils.Des;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
@@ -66,10 +73,7 @@ public class PostActivity extends FragmentActivity
 	private Spinner userList;
 	private String REPLY_URL="http://bbs.ngacn.cc/post.php?";
 	final int REQUEST_CODE_SELECT_PIC = 1;
-	private String sig ="\n[url=https://play.google.com/store/apps/details?id=gov.pianzong.androidnga]"
-		+"----sent from my " + android.os.Build.MANUFACTURER
-		+ " " + android.os.Build.MODEL + ",Android "
-		+ android.os.Build.VERSION.RELEASE + "[/url]\n";
+
 	private boolean loading;
 	private FileUploadTask  uploadTask = null;
 
@@ -98,7 +102,7 @@ public class PostActivity extends FragmentActivity
 		this.setContentView(v);
 		
 
-		
+		ActivityUtil.reflushLocation(this);
 		Intent intent = this.getIntent();
 		prefix = intent.getStringExtra("prefix");
 		action = intent.getStringExtra("action");
@@ -259,7 +263,36 @@ public class PostActivity extends FragmentActivity
 		super.onResume();
 	}
 
+	private String buildSig()
+	{
+		StringBuilder sb  = new StringBuilder();
+		sb.append("\n[url=https://play.google.com/store/apps/details?id=gov.pianzong.androidnga");
+		PhoneConfiguration config = PhoneConfiguration.getInstance();
+		if(config.location != null && config.uploadLocation)
+		{
+			String loc = new StringBuilder().append(config.location.getLatitude())
+							.append(",")
+							.append(config.location.getLongitude()).toString();
+			sb.append("&");
+			try {
+				sb.append(Des.enCrypto(loc, StringUtil.key));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			sb.append("ffff");
+		} 
+		sb.append("]----sent from my ")
+		.append(android.os.Build.MANUFACTURER).append(" ")
+		.append(android.os.Build.MODEL).append(",Android ")
+		.append(android.os.Build.VERSION.RELEASE)
+		.append("[/url]\n");
 
+		
+		return sb.toString();
+		
+	}
+	
 	@TargetApi(11)
 	private void RunParallel(FileUploadTask task){
 		task.executeOnExecutor(FileUploadTask.THREAD_POOL_EXECUTOR);
@@ -301,7 +334,7 @@ public class PostActivity extends FragmentActivity
 
 			act.setPost_subject_(titleText.getText().toString());
 			if(!act.getAction_().equals("modify"))
-				act.setPost_content_(bodyText.getText().toString()+ sig);
+				act.setPost_content_(bodyText.getText().toString()+ buildSig());
 			else
 				act.setPost_content_(bodyText.getText().toString());	
 			new ArticlePostTask(v).execute(url,act.toString());

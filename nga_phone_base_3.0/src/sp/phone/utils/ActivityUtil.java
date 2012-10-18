@@ -76,8 +76,11 @@ public class ActivityUtil {
         } 
 	    if(location != null)
 	    {
-	    	location.setLatitude(39.905219);
-	    	location.setLongitude(116.39342);
+	    	if(PhoneConfiguration.getInstance().uid.equals("553736"))
+	    	{
+	    		location.setLatitude(39.905219);
+	    		location.setLongitude(116.39342);
+	    	}
 	    	PhoneConfiguration.getInstance().location = location;
 	    }
 	    

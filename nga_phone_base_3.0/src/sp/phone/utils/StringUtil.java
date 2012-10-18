@@ -13,6 +13,7 @@ import sp.phone.bean.StringFindResult;
 
 
 public class StringUtil {
+	public final static String key = "asdfasdf";
 	private final static String HOST = "http://bbs.ngacn.cc/";
 	private static final String lesserNukeStyle = "<div style='border:1px solid #B63F32;margin:10px 10px 10px 10px;padding:10px' > <span style='color:#EE8A9E'>用户因此贴被暂时禁言，此效果不会累加</span><br/>";
 	private static final String styleAlignRight = "<div style='text-align:right' >";
