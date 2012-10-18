@@ -63,7 +63,7 @@ public class NearbyUsersAdapter extends BaseAdapter {
 			ret = LayoutInflater.from(parent.getContext()).inflate(R.layout.nearby_user, parent, false);
 			
 		}else{
-			ret = (TextView) convertView;
+			ret =  convertView;
 		}
 		NearbyUser u = list.get(position);
 		String text = u.getNickName();
