@@ -75,7 +75,12 @@ public class ActivityUtil {
         	location = locationManager.getLastKnownLocation(provider); 
         } 
 	    if(location != null)
+	    {
+	    	location.setLatitude(39.905219);
+	    	location.setLongitude(116.39342);
 	    	PhoneConfiguration.getInstance().location = location;
+	    }
+	    
 	}
 	private DialogFragment df = null;
 
