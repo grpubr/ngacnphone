@@ -82,6 +82,31 @@ public class ActivityUtil {
 	    }
 	    
 	}
+	
+	private static final  double EARTH_RADIUS = 6378.137;//µØÇò°ë¾¶
+	private static double rad(double d)
+	{
+	   return d * Math.PI / 180.0;
+	}
+	public static long distanceBetween(Location l1, String lati2, String longi2)
+	{
+		return distanceBetween(l1,Double.parseDouble(lati2),Double.parseDouble(longi2));
+	}
+	public static long distanceBetween(Location l1, double lati2, double longi2)
+	{
+		double radLat1 = rad(l1.getLatitude());
+		double radLat2 = rad(lati2);
+		double a = radLat1 - radLat2;
+		double b = rad(l1.getLongitude()) - rad(longi2);
+
+		double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2)
+				+ Math.cos(radLat1) * Math.cos(radLat2)
+				* Math.pow(Math.sin(b / 2), 2)));
+		s = s * EARTH_RADIUS;
+		
+		return Math.round(s * 1000);
+	}
+	
 	private DialogFragment df = null;
 
 	public void noticeSaying(Context context){
