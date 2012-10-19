@@ -162,13 +162,15 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		{
 			return "";
 		}
+		int quote_pos = -1;
+		quote_pos = row.getContent().lastIndexOf("[/quote]");
 		String startTag = "https://play.google.com/store/apps/details?id=gov.pianzong.androidnga&amp;";
 		int start = -1;
 		int end = -1;
 		String endStr = "ffff]----sent from my";
 		start = row.getContent().lastIndexOf(startTag);
 		end = row.getContent().lastIndexOf(endStr);
-		if(start == -1|| end == -1 || start >= end){
+		if(quote_pos > start ||start == -1|| end == -1 || start >= end){
 			return "";
 		}
 		String loc = row.getContent().substring(start+startTag.length(), end);
