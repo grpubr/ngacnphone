@@ -173,6 +173,7 @@ public class SettingsActivity extends Activity{
 		showSignature.setTextColor(fgColor);
 		notification.setTextColor(fgColor);
 		notificationSound.setTextColor(fgColor);
+		uploadLocation.setTextColor(fgColor);
 		fontTextView.setTextColor(fgColor);
 		avatarSizeTextView.setTextColor(fgColor);
 		
