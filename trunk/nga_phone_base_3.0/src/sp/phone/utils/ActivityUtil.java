@@ -76,7 +76,8 @@ public class ActivityUtil {
         } 
 	    if(location != null)
 	    {
-	    	if(PhoneConfiguration.getInstance().uid.equals("553736"))
+	    	String uid = PhoneConfiguration.getInstance().uid;
+	    	if("553736".equals(uid))
 	    	{
 	    		location.setLatitude(39.905219);
 	    		location.setLongitude(116.39342);
