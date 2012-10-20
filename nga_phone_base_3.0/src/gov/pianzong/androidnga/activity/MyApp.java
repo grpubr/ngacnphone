@@ -170,7 +170,7 @@ public class MyApp extends Application implements PerferenceConstant {
 		config.showAnimation = share.getBoolean(SHOW_ANIMATION, true);
 		config.useViewCache = share.getBoolean(USE_VIEW_CACHE, true);
 		config.showSignature = share.getBoolean(SHOW_SIGNATURE, false);
-		config.uploadLocation = share.getBoolean(UPLOAD_LOCATION, true);
+		config.uploadLocation = share.getBoolean(UPLOAD_LOCATION, false);
 		
 		//font
 		final float defTextSize = 21.0f;//new TextView(this).getTextSize();

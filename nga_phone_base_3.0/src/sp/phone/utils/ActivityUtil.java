@@ -1,11 +1,13 @@
 package sp.phone.utils;
 
 
+import gov.pianzong.androidnga.R;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -14,6 +16,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.widget.Toast;
 
 public class ActivityUtil {
 
@@ -68,25 +71,36 @@ public class ActivityUtil {
 	    criteria.setCostAllowed(false); // 设置找到的 Provider 是否允许产生费用
 	    criteria.setPowerRequirement(Criteria.POWER_LOW); // 设置耗电
 	    
-	    LocationManager locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE); 
+	    final LocationManager locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE); 
 	    String provider=locationManager.getBestProvider(criteria, true); 
 	    Location location = null;
 	    if(provider != null) { 
         	location = locationManager.getLastKnownLocation(provider); 
         } 
-	    if(location != null)
+	    else{
+	    	Toast.makeText(context, R.string.location_service_disabled, Toast.LENGTH_SHORT).show();
+	    	return;
+	    }
+	    
+	    if( location != null)
 	    {
-	    	String uid = PhoneConfiguration.getInstance().uid;
-	    	if("553736".equals(uid))
-	    	{
-	    		location.setLatitude(39.905219);
-	    		location.setLongitude(116.39342);
-	    	}
-	    	PhoneConfiguration.getInstance().location = location;
+	    	updateLocation(location);
+	    }else{
+	    	Toast.makeText(context, R.string.locating, Toast.LENGTH_SHORT).show();
+	    	LocationListener listener = new LocationUpdater(locationManager,context);
+	    	locationManager.requestLocationUpdates(provider, 0, 0, listener);
 	    }
 	    
 	}
-	
+	public static void updateLocation(Location location){
+    	String uid = PhoneConfiguration.getInstance().uid;
+    	if("553736".equals(uid))
+    	{
+    		location.setLatitude(39.905219);
+    		location.setLongitude(116.39342);
+    	}
+    	PhoneConfiguration.getInstance().location = location;
+	}
 	private static final  double EARTH_RADIUS = 6378.137;//地球半径
 	private static double rad(double d)
 	{
