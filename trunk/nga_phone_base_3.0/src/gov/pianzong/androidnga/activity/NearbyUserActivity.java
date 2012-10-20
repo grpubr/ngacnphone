@@ -9,11 +9,14 @@ import java.util.List;
 import sp.phone.adapter.NearbyUsersAdapter;
 import sp.phone.bean.NearbyUser;
 import sp.phone.bean.PerferenceConstant;
+import sp.phone.fragment.AlertDialogFragment;
 import sp.phone.interfaces.OnNearbyLoadComplete;
 import sp.phone.task.NearbyUserTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -31,20 +34,45 @@ import com.alibaba.fastjson.JSON;
 public class NearbyUserActivity extends FragmentActivity
 implements PerferenceConstant,OnNearbyLoadComplete{
 	ListView lv;
+	final private String ALERT_DIALOG_TAG = "alertdialog";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+
 		super.onCreate(savedInstanceState);
 		//this.setContentView(R.layout.webview_layout);
 		setTheme(R.style.AppTheme);
 		lv = new ListView(this);
 		this.setContentView(lv);
-		initLocation();
+		
+		String alertString = this.getString(R.string.find_nearby_alert_string);
+		AlertDialogFragment f = AlertDialogFragment.create(alertString);
+		f.setOkListener(new OnClickListener(){
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				initLocation();
+				
+			}
+			
+		});
+		f.setCancleListener(new OnClickListener(){
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				finish();
+				
+			}
+			
+		});
+		f.show(getSupportFragmentManager(), ALERT_DIALOG_TAG);
+		//initLocation();
 	}
 	
 	void initLocation()
 	{
-	    ActivityUtil.reflushLocation(this);
+		if(PhoneConfiguration.getInstance().location == null)
+			ActivityUtil.reflushLocation(this);
+		
 	    Location location = PhoneConfiguration.getInstance().location;
 
 	    SharedPreferences share = getSharedPreferences(
@@ -58,7 +86,7 @@ implements PerferenceConstant,OnNearbyLoadComplete{
 		}
 		if(location == null)
 		{
-			Toast.makeText(this, R.string.fail_to_locate, Toast.LENGTH_SHORT).show();
+			//Toast.makeText(this, R.string.fail_to_locate, Toast.LENGTH_SHORT).show();
 		}else if(StringUtil.isEmpty(userName))
 		{
 			Toast.makeText(this, R.string.nearby_no_login, Toast.LENGTH_SHORT).show();

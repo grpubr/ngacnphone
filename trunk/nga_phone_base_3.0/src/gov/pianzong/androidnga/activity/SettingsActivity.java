@@ -1,13 +1,17 @@
 package gov.pianzong.androidnga.activity;
 
+import gov.pianzong.androidnga.R;
 import sp.phone.bean.PerferenceConstant;
+import sp.phone.fragment.AlertDialogFragment;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.ImageUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.ThemeManager;
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -15,6 +19,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,10 +29,9 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import gov.pianzong.androidnga.R;
 
 
-public class SettingsActivity extends Activity{
+public class SettingsActivity extends FragmentActivity{
 
 	private View view;
 	private CompoundButton checkBoxDownimgNowifi;
@@ -290,10 +294,46 @@ public class SettingsActivity extends Activity{
 	}
 	
 	class UploadLocationListener implements OnCheckedChangeListener, PerferenceConstant{
-
+		private final String TAG = "UploadLocationAlert";
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView,
 				boolean isChecked) {
+			if(!isChecked){
+				changeTo(isChecked);
+			}else{
+				
+				final CompoundButton b =buttonView;
+				String alertString = getString(R.string.set_upload_location_alert);
+				AlertDialogFragment f = AlertDialogFragment.create(alertString);
+				f.setOkListener(new OnClickListener(){
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						
+						changeTo(true);
+						
+					}
+					
+				});
+				f.setCancleListener(new OnClickListener(){
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						
+						b.setChecked(false);
+						
+					}
+					
+				});
+
+				FragmentActivity a = (FragmentActivity) buttonView.getContext();
+				f.show(a.getSupportFragmentManager(), TAG);
+			}
+
+			
+		}
+		
+		private void changeTo(boolean isChecked){
 			PhoneConfiguration.getInstance().uploadLocation = isChecked;
 			SharedPreferences  share = 
 				getSharedPreferences(PERFERENCE, MODE_PRIVATE);
@@ -301,7 +341,6 @@ public class SettingsActivity extends Activity{
 			Editor editor = share.edit();
 			editor.putBoolean(UPLOAD_LOCATION, isChecked);
 			editor.commit();
-			
 		}
 		
 		
