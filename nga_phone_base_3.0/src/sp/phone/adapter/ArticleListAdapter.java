@@ -200,10 +200,18 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		.append(loc).append("(")
 		.append(encodedName)
 		.append(")\"").append(" >该用户距离你")
-		.append(Long.valueOf(distance).toString())
-		.append("米</a></br>");
+		.append(distanceString(distance))
+		.append("</a></br>");
 		return sb.toString();
 	}
+	public static String distanceString(long distance){
+		String ret = Long.valueOf(distance).toString() + "米";
+		if(distance >1000){
+			ret = Long.valueOf(distance/1000).toString() + "公里";
+		}
+		return ret;
+	}
+	
 	public static String convertToHtmlText(final ThreadRowInfo row,boolean showImage,final String fgColorStr,final String bgcolorStr){
 		String ngaHtml = StringUtil.decodeForumTag(row.getContent(),showImage);
 		if(StringUtil.isEmpty(ngaHtml)){
