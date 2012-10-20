@@ -71,5 +71,11 @@
     <string name="fail_to_locate">无法定位</string>
     <string name="nearby_no_user">附近没有其他用户</string>
     <string name="upload_location">发帖报告我的位置</string>
+    <string name="find_nearby_alert_string">你在查看附件的用户时也会泄露自己的位置，请确认是否继续</string>
+    <string name="warn">警告</string>
+    <string name="set_upload_location_alert">位置是非常重要的隐私信息，公布后你很可能被骚扰，人肉，抢劫，强奸,请确认是否打开</string>
+    <string name="location_service_disabled">好像没开定位服务</string>
+    <string name="get_location_success">获取位置成功</string>
+    <string name="locating">正在获取位置</string>
     
 </resources>
