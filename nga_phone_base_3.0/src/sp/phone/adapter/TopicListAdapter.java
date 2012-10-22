@@ -88,10 +88,15 @@ public class TopicListAdapter extends BaseAdapter
 			holder = (ViewHolder) convertView.getTag();
 			
 		}
-		int colorId = ThemeManager.getInstance().getBackgroundColor(position);
+		
+		ThemeManager cfg = ThemeManager.getInstance();
+		int colorId = cfg.getBackgroundColor(position);
 		if(position == this.selected)
 		{
-			colorId = R.color.holo_blue_light;
+			if(cfg.mode == ThemeManager.MODE_NIGHT)
+				colorId = R.color.topiclist_selected_color;
+			else
+				colorId = R.color.holo_blue_light;;
 		}
 		convertView.setBackgroundResource(colorId);
 
