@@ -435,7 +435,7 @@ public class StringUtil {
 		}
 		return ret;
 	}
-	final static String tips = "发帖不想暴露自己位置的去设置里关掉";
+	final static String tips = "现在自己的位置是默认关闭的，需要的去设置打开";
 			/*"1.不要用wap\n"
 			+ "2. 4.0很卡的去开发里开启/关闭gpu渲染\n"
 			+ "3. 优库和土豆的视频用外部播放器打开,比如MX播放器,vplayer\n"
