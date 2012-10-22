@@ -7,6 +7,7 @@ import sp.phone.fragment.GotoDialogFragment;
 import sp.phone.interfaces.PagerOwnner;
 import sp.phone.interfaces.ResetableArticle;
 import sp.phone.utils.ActivityUtil;
+import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
@@ -57,8 +58,8 @@ implements PagerOwnner,ResetableArticle {
 				ThemeManager.getInstance().getBackgroundColor());
 		v.setBackgroundColor(bg);*/
 		setContentView(R.layout.pagerview_article_list);
-
-		ActivityUtil.reflushLocation(this);
+		if(PhoneConfiguration.getInstance().uploadLocation)
+			ActivityUtil.reflushLocation(this);
 		tabhost = (TabHost) findViewById(android.R.id.tabhost);
 		tabhost.setup();
 		mViewPager = (ViewPager)findViewById(R.id.pager);

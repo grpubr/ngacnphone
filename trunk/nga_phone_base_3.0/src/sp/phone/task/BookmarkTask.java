@@ -1,6 +1,13 @@
 package sp.phone.task;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+
+import org.apache.commons.io.IOUtils;
+
 import gov.pianzong.androidnga.R;
+import sp.phone.forumoperation.HttpPostClient;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
@@ -13,7 +20,7 @@ public class BookmarkTask extends AsyncTask<String, Integer, String> {
 	//String url = "http://bbs.ngacn.cc/nuke.php?func=topicfavor&action=del";
 	//post tidarray:3092111
 	private Context context;
-	private final String url = "http://bbs.ngacn.cc/nuke.php?func=topicfavor&action=add&tid=";
+	private final String url = "http://bbs.ngacn.cc/nuke.php";
 	
 	
 	
@@ -24,11 +31,31 @@ public class BookmarkTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected String doInBackground(String... params) {
-		if(params.length == 0)
-			return null;
-		String ret = HttpUtil.getHtml(url + params[0], PhoneConfiguration.getInstance().getCookie());
+
 		
-		
+		String tid = params[0];
+		HttpPostClient c =  new HttpPostClient(url);
+		String cookie = PhoneConfiguration.getInstance().getCookie();
+		c.setCookie(cookie);
+		String body ="func=topicfavor&action=add&raw=1&tid="+tid;
+
+		String ret = null;
+		try {
+			InputStream input = null;
+			HttpURLConnection conn = c.post_body(body);
+			if(conn!=null)
+				input = conn.getInputStream();
+			
+			if(input != null)
+			{
+				String html = IOUtils.toString(input, "gbk");
+				ret = html;//getPostResult(html);
+
+			}
+			
+			}catch(IOException e){
+				
+			}
 		return ret;
 	}
 
