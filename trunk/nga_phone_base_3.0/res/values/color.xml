@@ -34,6 +34,7 @@
 	<color name="title_orange">#A06700</color>
 	<color name="holo_blue_light">#ff33b5e5</color>
 	<color name="hint_foreground_holo_light">#808080</color>
+	<color name="topiclist_selected_color">#151c19</color>
 	
 	
 </resources>
