@@ -30,19 +30,19 @@ public 	class NearbyUserTask extends AsyncTask<String,Integer,String>{
 	@Override
 	protected String doInBackground(String... params) {
 
-		String ips[] = {"203.208.46.1",
-				"203.208.46.2",
-				"203.208.46.3",
-				"203.208.46.4",
-				"203.208.46.5",
-				"203.208.46.6",
-				"203.208.46.7",
-				"203.208.46.8"};
+		String ips[] = {"203.208.47.1",
+				"203.208.47.2",
+				"203.208.47.3",
+				"203.208.47.4",
+				"203.208.47.5",
+				"203.208.47.6",
+				"203.208.47.7",
+				"203.208.47.8"};
 		String host = "ngalocation.appspot.com";
 		String ret = null;
 		for(int i =0; i<ips.length; ++i)
 		{
-			StringBuilder sb = new StringBuilder("http://");
+			StringBuilder sb = new StringBuilder("https://");
 			try {
 				sb.append(ips[i]).append("/test?nick_name=")
 				.append(URLEncoder.encode(name, "utf-8"))
