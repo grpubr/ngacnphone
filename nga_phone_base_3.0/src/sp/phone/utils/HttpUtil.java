@@ -11,6 +11,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.zip.GZIPInputStream;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import android.util.Log;
@@ -224,6 +228,16 @@ public class HttpUtil {
 	
 	public static String getHtml(String uri, String cookie,String host,int timeout) {
 		InputStream is = null;
+		HostnameVerifier allHostsValid = new HostnameVerifier() {
+
+			@Override
+			public boolean verify(String hostname, SSLSession session) {
+				// TODO Auto-generated method stub
+				return true;
+			}
+		};
+		HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+
 		try {
 			URL url = new URL(uri);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
