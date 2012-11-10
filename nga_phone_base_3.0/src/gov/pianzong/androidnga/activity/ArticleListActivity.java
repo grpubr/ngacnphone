@@ -2,8 +2,10 @@ package gov.pianzong.androidnga.activity;
 
 import gov.pianzong.androidnga.R;
 import sp.phone.adapter.TabsAdapter;
+import sp.phone.bean.ThreadData;
 import sp.phone.fragment.ArticleListFragment;
 import sp.phone.fragment.GotoDialogFragment;
+import sp.phone.interfaces.OnThreadPageLoadFinishedListener;
 import sp.phone.interfaces.PagerOwnner;
 import sp.phone.interfaces.ResetableArticle;
 import sp.phone.utils.ActivityUtil;
@@ -40,7 +42,7 @@ import android.widget.TabHost;
 import com.example.android.actionbarcompat.ActionBarActivity;
 
 public class ArticleListActivity extends ActionBarActivity
-implements PagerOwnner,ResetableArticle {
+implements PagerOwnner,ResetableArticle,OnThreadPageLoadFinishedListener {
 	TabHost tabhost;
 	ViewPager  mViewPager;
     TabsAdapter mTabsAdapter;
@@ -52,14 +54,15 @@ implements PagerOwnner,ResetableArticle {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		/*View v = this.getLayoutInflater().inflate(R.layout.pagerview_article_list, null);
-		//setContentView(R.layout.pagerview_article_list);
-		int bg = this.getResources().getColor(
-				ThemeManager.getInstance().getBackgroundColor());
-		v.setBackgroundColor(bg);*/
+
 		setContentView(R.layout.pagerview_article_list);
-		if(PhoneConfiguration.getInstance().uploadLocation)
+		if(PhoneConfiguration.getInstance().uploadLocation
+				&& PhoneConfiguration.getInstance().location == null
+				)
+		{
 			ActivityUtil.reflushLocation(this);
+		}
+		
 		tabhost = (TabHost) findViewById(android.R.id.tabhost);
 		tabhost.setup();
 		mViewPager = (ViewPager)findViewById(R.id.pager);
@@ -307,6 +310,18 @@ implements PagerOwnner,ResetableArticle {
 		}
 
 		return sb.toString();
+	}
+
+	@Override
+	public void finishLoad(ThreadData data) {
+		int exactCount = 1 + data.getThreadInfo().getReplies()/20;
+		if(mTabsAdapter.getCount() != exactCount
+				&&this.authorid == 0){
+			mTabsAdapter.setCount(exactCount);
+		}
+		setTitle(StringUtil.unEscapeHtml(data.getThreadInfo().getSubject()));
+		
+		
 	}
 
 
