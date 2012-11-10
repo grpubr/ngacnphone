@@ -40,8 +40,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -85,12 +83,7 @@ public class ArticleListFragment extends Fragment
 			Bundle savedInstanceState) {
 		listview = new ListView(this.getActivity());
 		
-		/*if(PhoneConfiguration.getInstance().showAnimation)
-		{
-			LayoutAnimationController anim = AnimationUtils.loadLayoutAnimation
-					(getActivity(), R.anim.article_list_anim);
-			listview.setLayoutAnimation(anim);
-		}*/
+
 		listview.setBackgroundResource(ThemeManager.getInstance().getBackgroundColor());
 		listview.setDivider(null);
 		
@@ -120,6 +113,7 @@ public class ArticleListFragment extends Fragment
 
 		}
 		listview.setDescendantFocusability(ListView.FOCUS_AFTER_DESCENDANTS);
+		
 		return listview;
 	}
 	
@@ -170,21 +164,22 @@ public class ArticleListFragment extends Fragment
 	@Override
 	public void onResume() {
 		Log.d(TAG, "onResume pid="+pid+"&page="+page);
-		this.setHasOptionsMenu(true);
+		setHasOptionsMenu(true);
 		if (PhoneConfiguration.getInstance().isRefreshAfterPost()) {
 			
 			PagerOwnner father = null;
 			try{
-				 father = (PagerOwnner) getActivity();
+				father = (PagerOwnner) getActivity();
+				if (father.getCurrentPage() == page) {
+					PhoneConfiguration.getInstance().setRefreshAfterPost(false);
+					this.task = null;
+				}
 			}catch(ClassCastException e){
 				Log.e(TAG,"father activity does not implements interface " 
 						+ PagerOwnner.class.getName());
-				return ;
+				
 			}
-			if(father.getCurrentPage() == page){
-				PhoneConfiguration.getInstance().setRefreshAfterPost(false);
-				this.task = null;
-			}
+
 			
 		}
 		this.loadPage();
@@ -541,18 +536,21 @@ public class ArticleListFragment extends Fragment
 	@Override
 	public void finishLoad(ThreadData data) {
 		Log.d(TAG, "finishLoad");
-		ArticleListActivity father = (ArticleListActivity) this.getActivity();
-		if(null != data && father != null){
+		//ArticleListActivity father = (ArticleListActivity) this.getActivity();
+		if(null != data){
 			articleAdpater.setData(data);
-			articleAdpater.notifyDataSetChanged();
+			//articleAdpater.notifyDataSetChanged();
+			articleAdpater.notifyDataSetInvalidated();
 			
-			int exactCount = 1 + data.getThreadInfo().getReplies()/20;
-			if(father.getmTabsAdapter().getCount() != exactCount
-					&&this.authorid == 0){
-				father.getmTabsAdapter().setCount(exactCount);
+			OnThreadPageLoadFinishedListener father = null;
+			try{
+				father = (OnThreadPageLoadFinishedListener)getActivity();
+				if(father != null)
+					father.finishLoad(data);
+			}catch(ClassCastException e){
+				Log.e(TAG, "father activity should implements OnThreadPageLoadFinishedListener");
 			}
-			father.setTitle(StringUtil.unEscapeHtml(data.getThreadInfo().getSubject()));
-			//this.authorid = 0;
+
 		}
 		
 	}

@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 
 import sp.phone.adapter.TopicListAdapter;
 import sp.phone.bean.TopicListInfo;
+import sp.phone.interfaces.EnterJsonArticle;
 import sp.phone.interfaces.OnTopListLoadFinishedListener;
 import sp.phone.task.JsonTopicListLoadTask;
 import sp.phone.utils.ActivityUtil;
@@ -50,7 +51,15 @@ public class TopicListFragment extends Fragment
 			Bundle savedInstanceState) {
 		Log.d(TAG,"onCreateView" + (1+getArguments().getInt("page")) );
 		listview = new ListView(getActivity());
-		listview.setOnItemClickListener(new EnterJsonArticle());
+		try{
+			OnItemClickListener father = (OnItemClickListener)getActivity();
+			listview.setOnItemClickListener(father);
+		}catch(ClassCastException e){
+			Log.i(TAG,  "father activity didn't implement OnItemClickListener, open a new activity");
+			listview.setOnItemClickListener(new EnterJsonArticle(getActivity()));
+		}
+		
+		
 		if(PhoneConfiguration.getInstance().showAnimation)
 		{
 			LayoutAnimationController anim = AnimationUtils.loadLayoutAnimation
@@ -138,46 +147,6 @@ public class TopicListFragment extends Fragment
 		outState.putInt("page", this.getArguments().getInt("page"));
 	}
 
-
-
-	
-
-
-	class EnterJsonArticle implements OnItemClickListener
-	{
-
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-			String guid = (String) parent.getItemAtPosition(position);
-			if(StringUtil.isEmpty(guid))
-				return;
-			
-			guid = guid.trim();
-
-			int pid = StringUtil.getUrlParameter(guid, "pid");
-			int tid = StringUtil.getUrlParameter(guid, "tid");
-			int authorid = StringUtil.getUrlParameter(guid, "authorid");
-			
-			Intent intent = new Intent();
-			intent.putExtra("tab", "1");
-			intent.putExtra("tid",tid );
-			intent.putExtra("pid",pid );
-			intent.putExtra("authorid",authorid );
-			ListView listview = (ListView)parent;
-			TopicListAdapter adapter = (TopicListAdapter)listview.getAdapter();
-			adapter.setSelected(position);
-			listview.setItemChecked(position, true);
-			
-			intent.setClass(getActivity(), ArticleListActivity.class);
-			startActivity(intent);
-			if(PhoneConfiguration.getInstance().showAnimation)
-				getActivity().overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
-		
-			
-		}
-		
-	}
 	
 	
 

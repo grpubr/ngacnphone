@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="gov.pianzong.androidnga" android:versionCode="391"
-	android:versionName="1.3.91" android:installLocation="auto">
+	package="gov.pianzong.androidnga" android:versionCode="392"
+	android:versionName="1.3.92" android:installLocation="auto">
 	
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -72,6 +72,7 @@
 		</activity>
 		<activity android:name=".activity.ImageViewerActivity" android:theme="@style/AppTheme"></activity>
 		<activity android:name=".activity.NearbyUserActivity" android:theme="@style/AppTheme"></activity>
+		<activity android:name=".activity.FlexibleTopicListActivity"></activity>
 	</application>
 
 </manifest> 
