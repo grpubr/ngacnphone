@@ -77,5 +77,7 @@
     <string name="location_service_disabled">好像没开定位服务</string>
     <string name="get_location_success">获取位置成功</string>
     <string name="locating">正在获取位置</string>
+    <string name="fuck_gfw_prefix">方滨兴造墙烂屁眼</string>
+    <string name="fail_to_cross_gfw">又被墙了,草</string>
     
 </resources>

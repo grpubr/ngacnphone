@@ -35,6 +35,7 @@ public class NearbyUserActivity extends FragmentActivity
 implements PerferenceConstant,OnNearbyLoadComplete{
 	ListView lv;
 	final private String ALERT_DIALOG_TAG = "alertdialog";
+	NearbyUserTask task = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -93,8 +94,9 @@ implements PerferenceConstant,OnNearbyLoadComplete{
 		}else
 		{
 	    	ActivityUtil.getInstance().noticeSaying(this);
-			new NearbyUserTask(location.getLatitude(),location.getLongitude(),
-					userName,PhoneConfiguration.getInstance().uid,this).execute();
+	    	task = new NearbyUserTask(location.getLatitude(),location.getLongitude(),
+					userName,PhoneConfiguration.getInstance().uid,this);
+	    	task.execute();
 
 	    }
 	}
@@ -103,6 +105,7 @@ implements PerferenceConstant,OnNearbyLoadComplete{
 
 	@Override
 	public void OnComplete(String result) {
+		task = null;
 		ActivityUtil.getInstance().dismiss();
 		if(StringUtil.isEmpty(result))
 			return;
@@ -138,6 +141,27 @@ implements PerferenceConstant,OnNearbyLoadComplete{
 
 		lv.setAdapter(adapter);
 		
+	}
+
+	@Override
+	public void onProgresUpdate(int progress, int total) {
+		String saying = getString(R.string.fuck_gfw_prefix) +"("+progress+"/"
+				+total+")";
+		if(progress > total)
+		{
+			saying = this.getString(R.string.fail_to_cross_gfw);
+		}
+		ActivityUtil.getInstance().noticeError(saying,this);
+		
+		
+	}
+
+	@Override
+	protected void onStop() {
+		if(task != null){
+			task.cancel(true);
+		}
+		super.onStop();
 	}
 
 }
