@@ -392,10 +392,13 @@ public class MainActivity extends ActionBarActivity
 		boards.add(new Board(i, "353", "纽沃斯英雄传", R.drawable.pdefault));
 		boards.add(new Board(i, "-2371813", "EVE", R.drawable.p2371813));
 		boards.add(new Board(i, "-793427", "斗战神", R.drawable.pdefault));
+		boards.add(new Board(i, "416", "火炬之光2", R.drawable.pdefault));
+		boards.add(new Board(i, "406", "星际争霸2", R.drawable.pdefault));
 		boards.addCategoryName(i, "其他游戏");
 		i++;
 		
 		boards.add(new Board(i, "318", "暗黑破坏神3", R.drawable.p318));
+		boards.add(new Board(i, "409", "HC讨论区", R.drawable.p403));
 		boards.add(new Board(i, "403", "购买/安装/共享", R.drawable.pdefault));
 		boards.add(new Board(i, "351", "装备交易", R.drawable.p401));
 		boards.add(new Board(i, "393", "背景故事与文艺作品", R.drawable.p393));
