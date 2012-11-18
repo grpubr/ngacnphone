@@ -9,7 +9,12 @@ import sp.phone.utils.StringUtil;
 import android.os.AsyncTask;
 
 public 	class NearbyUserTask extends AsyncTask<String,Integer,String>{
-
+	private static final String ips[] = {"74.125.129.141",
+			"74.125.129.142",
+			"74.125.129.143",
+			"74.125.129.144",
+			"74.125.129.145"
+			};
 	
 
 	public NearbyUserTask(double latitude, double longitude, String name,
@@ -30,14 +35,7 @@ public 	class NearbyUserTask extends AsyncTask<String,Integer,String>{
 	@Override
 	protected String doInBackground(String... params) {
 
-		String ips[] = {"203.208.47.1",
-				"203.208.47.2",
-				"203.208.47.3",
-				"203.208.47.4",
-				"203.208.47.5",
-				"203.208.47.6",
-				"203.208.47.7",
-				"203.208.47.8"};
+	
 		String host = "ngalocation.appspot.com";
 		String ret = null;
 		for(int i =0; i<ips.length; ++i)
@@ -53,9 +51,12 @@ public 	class NearbyUserTask extends AsyncTask<String,Integer,String>{
 				// TODO Auto-generated catch block
 				return null;
 			}
-			ret = HttpUtil.getHtml(sb.toString(), "", host, 0);
+			ret = HttpUtil.getHtml(sb.toString(), "", host, 8000);
 			if(!StringUtil.isEmpty(ret))
 				break;
+			else{
+				this.publishProgress(i+1,ips.length);
+			}
 		}
 
 		return ret;
@@ -75,6 +76,12 @@ public 	class NearbyUserTask extends AsyncTask<String,Integer,String>{
 	protected void onCancelled() {
 		notifier.OnComplete(null);
 	}
+
+	@Override
+	protected void onProgressUpdate(Integer... values) {
+		notifier.onProgresUpdate(values[0], values[1]);
+	}
+	
 	
 	
 }
