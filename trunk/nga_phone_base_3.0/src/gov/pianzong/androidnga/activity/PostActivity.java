@@ -333,10 +333,12 @@ public class PostActivity extends FragmentActivity
 
 
 			act.setPost_subject_(titleText.getText().toString());
+			String bodyString = bodyText.getText().toString();
+			bodyString = bodyString.replaceAll("&nbsp;", " ");
 			if(!act.getAction_().equals("modify"))
-				act.setPost_content_(bodyText.getText().toString()+ buildSig());
+				act.setPost_content_(bodyString + buildSig());
 			else
-				act.setPost_content_(bodyText.getText().toString());	
+				act.setPost_content_(bodyString);	
 			new ArticlePostTask(v).execute(url,act.toString());
 
 			
