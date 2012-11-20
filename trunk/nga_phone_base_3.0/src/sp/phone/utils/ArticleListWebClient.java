@@ -2,6 +2,9 @@ package sp.phone.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 
 import sp.phone.adapter.ExtensionEmotionAdapter;
 import sp.phone.task.TudouVideoLoadTask;
@@ -15,6 +18,7 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.NetworkInfo.State;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -39,6 +43,9 @@ public class ArticleListWebClient extends WebViewClient {
 
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String origurl) {
+		if(!origurl.startsWith("http")){
+			return true;
+		}
 		final String url = origurl.toLowerCase();
 		if(url.startsWith(NGACN_BOARD_PREFIX)
 				|| url.startsWith(NGA178_BOARD_PREFIX ) ){
@@ -92,13 +99,21 @@ public class ArticleListWebClient extends WebViewClient {
 		return true;
 	}
 	
+	
 	@TargetApi(11)
 	private void runOnExcutor(TudouVideoLoadTask loader, String id){
 		loader.executeOnExecutor(TudouVideoLoadTask.THREAD_POOL_EXECUTOR, id);
 		
 	}
 
-	@Override
+	private static final String ips[] = {"74.125.129.141",
+		"74.125.129.142",
+		"74.125.129.143",
+		"74.125.129.144",
+		"74.125.129.145"
+		};
+	
+	/*@Override
 	@TargetApi(11)	
 	public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
 		String path = ExtensionEmotionAdapter.getPathByURI(url);
@@ -117,9 +132,49 @@ public class ArticleListWebClient extends WebViewClient {
 			WebResourceResponse ret = new WebResourceResponse("image/*", "utf-8", is);
 			return ret;
 		}
+		if(showImage && !isInWifi(view.getContext()) )
+		{
+			String origUrl = url;
+			url = url.toLowerCase();
+			if(url.endsWith(".gif")||url.endsWith(".jpg")||
+					url.endsWith(".png")||url.endsWith(".jpeg")||
+					url.endsWith(".bmp")
+					){
+				
+				is = getSmallImgStream(origUrl);
+				
+			}
+			
+			if(is != null){
+				WebResourceResponse ret = new WebResourceResponse("image/png", "utf-8", is);
+				return ret;
+			}
+			
+		}
+		
 		return null;
 		
 				
+	}*/
+	
+	private InputStream getSmallImgStream(String url){
+		InputStream is = null;
+		try{
+			
+			String imgUri = "https://" + ips[0]+"/?url="
+					+ URLEncoder.encode(url, "utf-8");
+			URL imUrl = new URL(imgUri);
+			HttpURLConnection conn = (HttpURLConnection) imUrl.openConnection();
+			conn.setConnectTimeout(3000);
+			//conn.setReadTimeout(4000);
+			conn.setRequestProperty("Host", "ngatupian.appspot.com");
+			conn.connect();
+			is = conn.getInputStream();
+			}catch(Exception e){
+				Log.e("ArticleListWebClient", "fail to load small img " + Log.getStackTraceString(e));
+				
+			}
+		return is;
 	}
 
 	private boolean isInWifi(Context activity) {

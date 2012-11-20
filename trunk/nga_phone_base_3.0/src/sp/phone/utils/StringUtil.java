@@ -1,5 +1,6 @@
 package sp.phone.utils;
 
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.util.Log;
+import sp.phone.adapter.ExtensionEmotionAdapter;
 import sp.phone.bean.StringFindResult;
 
 
@@ -219,7 +221,7 @@ public class StringUtil {
 		s = s.replaceAll("\\[/size\\]","</span>");
 		
 		//[img]./ddd.jpg[/img]
-		if(showImage){
+	//	if(showImage){
 			s = s.replaceAll("\\[img\\]\\s*\\.(/[^\\[|\\]]+)\\s*\\[/img\\]", 
 				"<a href='http://img.ngacn.cc/attachments$1'><img src='http://img.ngacn.cc/attachments$1' style= 'max-width:100%' ></a>");
 			s = s.replaceAll("\\[img\\]\\s*(http[^\\[|\\]]+)\\s*\\[/img\\]", 
@@ -228,7 +230,7 @@ public class StringUtil {
 					"<a href='http://img.ngacn.cc/attachments$1'><img src='http://img.ngacn.cc/attachments$1' style= 'max-width:100%' ></a>");
 			s = s.replaceAll("\\[IMG\\]\\s*(http[^\\[|\\]]+)\\s*\\[/IMG\\]", 
 					"<a href='$1'><img src='$1' style= 'max-width:100%' ></a>");
-		}else{
+		/*}else{
 			s = s.replaceAll("\\[img\\]\\s*\\.(/[^\\[|\\]]+)\\s*\\[/img\\]", 
 					"<a href='http://img.ngacn.cc/attachments$1'><img src='file:///android_asset/ic_offline_image.png' style= 'max-width:100%;' ></a>");
 			s = s.replaceAll("\\[img\\]\\s*(http[^\\[|\\]]+)\\s*\\[/img\\]", 
@@ -238,8 +240,36 @@ public class StringUtil {
 			s = s.replaceAll("\\[IMG\\]\\s*(http[^\\[|\\]]+)\\s*\\[/IMG\\]", 
 					"<a href='$1'><img src='file:///android_asset/ic_offline_image.png' style= 'max-width:100%;' ></a>");
 			
-		}
-		
+		}*/
+
+		  Pattern p = Pattern.compile("<img src='(http\\S+)' style= 'max-width:100%' >"); 
+          Matcher m = p.matcher(s); 
+          try{
+          while (m.find()) { 
+              String s0 = m.group(); 
+              String s1 = m.group(1);
+              String path = ExtensionEmotionAdapter.getPathByURI(s1);
+              if(path != null)
+              {
+            	  
+            	  String newImgBlock = "<img src='"+
+            			  "file:///android_asset/"
+            			  + path
+            			  +"' style= 'max-width:100%' >";
+            	  		  s = s.replace(s0, newImgBlock);
+              }else if(!showImage){
+            	  path = "ic_offline_image.png";
+            	  String newImgBlock = "<img src='"+
+            			  "file:///android_asset/"
+            			  + path
+            			  +"' style= 'max-width:100%' >";
+            	  		  s = s.replace(s0, newImgBlock);
+              }
+
+          }
+          }catch(Exception e){
+        	  
+          }
 		
 		
 		

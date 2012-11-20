@@ -264,7 +264,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		}
 		
 		boolean showImage = PhoneConfiguration.getInstance().isDownImgNoWifi() || isInWifi();
-		showImage = showImage || ActivityUtil.isGreaterThan_2_3_3();
+		//showImage = showImage || ActivityUtil.isGreaterThan_2_3_3();
 		//String ngaHtml = convertToHtmlText(row, showImage, fgColorStr, bgcolorStr);
 		
 		/*StringUtil.decodeForumTag(row.getContent(),showImage);
