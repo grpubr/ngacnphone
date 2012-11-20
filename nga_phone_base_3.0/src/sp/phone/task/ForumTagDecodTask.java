@@ -34,6 +34,10 @@ public class ForumTagDecodTask extends AsyncTask<WebView, Integer, String> {
 
 	@Override
 	protected void onPostExecute(String result) {
+		if(result == null)
+		{
+			return;
+		}
 		int tag = (Integer) webview.getTag();
 		final int lou = row.getLou();
 		if(tag == row.getLou()){
