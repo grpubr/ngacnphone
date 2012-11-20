@@ -65,7 +65,7 @@ public class ActivityUtil {
 	
 	public static void reflushLocation(Context context){
 		Criteria criteria = new Criteria(); 
-	    criteria.setAccuracy(Criteria.ACCURACY_COARSE); // 设置精度
+	    criteria.setAccuracy(Criteria.ACCURACY_FINE); // 设置精度
 	    criteria.setAltitudeRequired(false); // 设置是否需要提供海拔信息
 	    criteria.setBearingRequired(false); // 是否需要方向信息
 	    criteria.setCostAllowed(false); // 设置找到的 Provider 是否允许产生费用
@@ -86,9 +86,9 @@ public class ActivityUtil {
 	    {
 	    	updateLocation(location);
 	    }else{
-	    	Toast.makeText(context, R.string.locating, Toast.LENGTH_SHORT).show();
+	    	//Toast.makeText(context, R.string.locating, Toast.LENGTH_SHORT).show();
 	    	LocationListener listener = new LocationUpdater(locationManager,context);
-	    	locationManager.requestLocationUpdates(provider, 0, 0, listener);
+	    	locationManager.requestLocationUpdates(provider, 0, 1000, listener);
 	    }
 	    
 	}
