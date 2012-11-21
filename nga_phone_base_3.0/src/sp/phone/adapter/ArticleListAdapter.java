@@ -196,7 +196,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		long distance = ActivityUtil.distanceBetween(config.location, 
 				locs[0], locs[1]);
 		StringBuilder sb = new StringBuilder();
-		sb.append("<a href=\"http://ditu.google.cn/maps?q=")
+		sb.append("<a href=\"https://maps.google.com.hk/?ie=UTF8&hl=zh-cn&q=")
 		.append(loc).append("(")
 		.append(encodedName)
 		.append(")\"").append(" >∏√”√ªßæ‡¿Îƒ„")

@@ -126,7 +126,7 @@ implements PerferenceConstant,OnNearbyLoadComplete{
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				NearbyUser u = (NearbyUser) parent.getItemAtPosition(position);
-		    	String loc = "http://ditu.google.cn/maps?q="
+		    	String loc = "https://maps.google.com.hk/?ie=UTF8&hl=zh-cn&q="
     			+u.getLatitude() + "," + u.getLongitude()
     			+"(" +u.getNickName()+")";
 		    	Uri mapUri = Uri.parse(loc);  
