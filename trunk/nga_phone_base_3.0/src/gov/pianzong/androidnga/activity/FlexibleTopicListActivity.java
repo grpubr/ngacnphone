@@ -4,8 +4,6 @@ import gov.pianzong.androidnga.R;
 import sp.phone.bean.ThreadData;
 import sp.phone.bean.TopicListInfo;
 import sp.phone.fragment.ArticleContainerFragment;
-import sp.phone.fragment.TestFragment;
-import sp.phone.fragment.TopicListFragment;
 import sp.phone.fragment.TopiclistContainer;
 import sp.phone.interfaces.EnterJsonArticle;
 import sp.phone.interfaces.OnThreadPageLoadFinishedListener;
@@ -37,13 +35,16 @@ implements OnTopListLoadFinishedListener,OnItemClickListener
 		this.setContentView(R.layout.toplist_activity_two_panel);
 		super.onCreate(arg0);
 		Fragment f1 = new TopiclistContainer();
-		Fragment f = ArticleContainerFragment.create(5711207, 0, 0);
+		Bundle args = new Bundle(getIntent().getExtras());
+		args.putString("url", getIntent().getDataString());
+		f1.setArguments(args);
+		
+		//Fragment f = ArticleContainerFragment.create(5769306, 0, 0);
 		if(null == findViewById(R.id.item_detail_container))
 			dualScreen = false;
 		FragmentTransaction ft = getSupportFragmentManager()
 			.beginTransaction()
-			.add(R.id.item_detail_container, f)
-			.add(R.id.item_list, f1);
+			.replace(R.id.item_list, f1);
 			//.add(R.id.item_detail_container, f);
 		ft.commit();
 			
