@@ -13,6 +13,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -165,7 +166,10 @@ public class CheckReplyNotificationTask extends
 		// notification.number = 5;
 
 		 notification.defaults = Notification.DEFAULT_LIGHTS;
-		 if(PhoneConfiguration.getInstance().notificationSound)
+		 AudioManager audioManager = (AudioManager)context.getSystemService(context.AUDIO_SERVICE);
+		 
+		 if(PhoneConfiguration.getInstance().notificationSound
+				 && audioManager.getRingerMode() ==AudioManager.RINGER_MODE_NORMAL )
 			 notification.defaults |=Notification.DEFAULT_SOUND;
 		 notification.flags = Notification.FLAG_AUTO_CANCEL;
 		
