@@ -1,51 +1,90 @@
 package sp.phone.fragment;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import gov.pianzong.androidnga.R;
-import sp.phone.adapter.TabsAdapter;
+import sp.phone.adapter.AppendableTopicAdapter;
+import sp.phone.adapter.TopicListAdapter;
 import sp.phone.bean.TopicListInfo;
 import sp.phone.interfaces.OnTopListLoadFinishedListener;
-import sp.phone.task.CheckReplyNotificationTask;
+import sp.phone.task.JsonTopicListLoadTask;
 import sp.phone.utils.ActivityUtil;
+import sp.phone.utils.HttpUtil;
 import sp.phone.utils.StringUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TabHost;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 public class TopiclistContainer extends Fragment
 implements OnTopListLoadFinishedListener{
 	final String TAG = TopiclistContainer.class.getSimpleName();
 	static final int MESSAGE_SENT = 1;
-	TabHost tabhost;
-	ViewPager mViewPager;
-	TabsAdapter mTabsAdapter=null;
-	
-	private CheckReplyNotificationTask asynTask;
 	int fid;
 	int authorid;
 	int searchpost;
 	int favor;
 	String key;
-	
+	private PullToRefreshListView mPullRefreshListView;
+	AppendableTopicAdapter adapter;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.pagerview_article_list,container,false);
-		tabhost = (TabHost) v.findViewById(android.R.id.tabhost);
-		tabhost.setup();
-		mViewPager = (ViewPager) v.findViewById(R.id.pager);
 		
+		mPullRefreshListView = new PullToRefreshListView(getActivity());
+		adapter = new AppendableTopicAdapter(this.getActivity());
+		mPullRefreshListView.setAdapter(adapter);
+		try{
+			OnItemClickListener listener = (OnItemClickListener) getActivity();
+			mPullRefreshListView.setOnItemClickListener(listener);
+		}catch(ClassCastException e){
+			Log.e(TAG, "father activity should implenent OnItemClickListener");
+		}
+		
+		mPullRefreshListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+			@Override
+			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+				mPullRefreshListView.setLastUpdatedLabel(DateUtils.formatDateTime(getActivity(),
+						System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
+								| DateUtils.FORMAT_ABBREV_ALL));
+
+				// Do work to refresh the list here.
+				//new GetDataTask().execute();
+				refresh();
+			}
+		});
+
+		// Add an end-of-list listener
+		mPullRefreshListView.setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
+
+			@Override
+			public void onLastItemVisible() {
+				//Toast.makeText(PullToRefreshListActivity.this, "End of List!", Toast.LENGTH_SHORT).show();
+				JsonTopicListLoadTask task = new JsonTopicListLoadTask(getActivity(),adapter);
+				task.execute(getUrl(adapter.getNextPage()));
+			}
+		});
+		
+		
+
 		
 		fid = 0;
 		authorid = 0;
 		int pageInUrl = 0;
-		String url = getActivity().getIntent().getDataString();
+		String url = getArguments().getString("url");
 		
 		if(url != null){
 			
@@ -58,24 +97,17 @@ implements OnTopListLoadFinishedListener{
 		}
 		else
 		{
-			fid =  getActivity().getIntent().getIntExtra("fid", 0);
-			authorid =  getActivity().getIntent().getIntExtra("authorid", 0);
-			searchpost =  getActivity().getIntent().getIntExtra("searchpost", 0);
-			favor =  getActivity().getIntent().getIntExtra("favor", 0);
-			key =  getActivity().getIntent().getStringExtra("key");
+			fid =  getArguments().getInt("fid", 0);
+			authorid =  getArguments().getInt("authorid", 0);
+			searchpost =  getArguments().getInt("searchpost", 0);
+			favor =  getArguments().getInt("favor", 0);
+			key =  getArguments().getString("key");
 		}
 		
 		if (null != savedInstanceState)
 			fid = savedInstanceState.getInt("fid");
 
-		mTabsAdapter = new TabsAdapter(this.getActivity(), tabhost, mViewPager,
-				TopicListFragment.class);
-		mTabsAdapter.setArgument("id", fid);
-		mTabsAdapter.setArgument("authorid", authorid);
-		mTabsAdapter.setArgument("searchpost", searchpost);
-		mTabsAdapter.setArgument("favor", favor);
-		mTabsAdapter.setArgument("key", key);
-		//mTabsAdapter.setCount(100);
+
 		
 		if(favor != 0){
 			this.getActivity().setTitle(R.string.bookmark_title);
@@ -87,21 +119,49 @@ implements OnTopListLoadFinishedListener{
 					+ ":"+key;
 			this.getActivity().setTitle(title);
 		}
+		
+		//JsonTopicListLoadTask task = new JsonTopicListLoadTask(getActivity(),this);
+		//task.execute(getUrl(1));
+		
+		this.refresh();
+		
 
-		ActivityUtil.getInstance().noticeSaying(this.getActivity());
 
-		if (savedInstanceState != null) {
-			int currentPageInex = savedInstanceState.getInt("tab");
-			mTabsAdapter.setCount(currentPageInex + 1);
-			mViewPager.setCurrentItem(currentPageInex);
-		}else if(pageInUrl !=0){
-			mViewPager.setCurrentItem(pageInUrl -1);
-		}
 		
 		
-		return v;
+		return mPullRefreshListView;
 	}
 	
+	void refresh(){
+		JsonTopicListLoadTask task = new JsonTopicListLoadTask(getActivity(),this);
+		ActivityUtil.getInstance().noticeSaying(this.getActivity());
+		task.execute(getUrl(1));
+	}
+	
+	String getUrl(int page){
+		
+		String jsonUri = HttpUtil.Server + "/thread.php?";
+		if( 0 != fid)
+			jsonUri +="fid=" + fid + "&";
+		if(0!= authorid)
+			jsonUri +="authorid=" + authorid + "&";
+		if(searchpost !=0)
+			jsonUri +="searchpost=" + searchpost + "&";
+		if(favor !=0)
+			jsonUri +="favor=" + favor + "&";
+		if(!StringUtil.isEmpty(key)){
+			try {
+				jsonUri += "key=" + URLEncoder.encode(key, "GBK") + "&";
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		jsonUri += "page="+ page + "&lite=js&noprefix";
+		
+		return jsonUri;
+	}
 	
 
 	@Override
@@ -117,8 +177,7 @@ implements OnTopListLoadFinishedListener{
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		outState.putInt("tab", mViewPager.getCurrentItem());
-		outState.putInt("fid", fid);
+
 		super.onSaveInstanceState(outState);
 	}
 
@@ -166,9 +225,13 @@ implements OnTopListLoadFinishedListener{
 			if(result.get__T__ROWS() == lines)
 				pageCount++;
 		}
-		
-		if( mTabsAdapter.getCount() != pageCount)
-			mTabsAdapter.setCount(pageCount);
+
+		adapter.clear();
+		adapter.jsonfinishLoad(result);
+		mPullRefreshListView.onRefreshComplete();
+		//mPullRefreshListView.setAdapter(adapter);
+		//adapter.notifyDataSetChanged();
+		//mPullRefreshListView.setAdapter(adapter);
 		
 	}
 

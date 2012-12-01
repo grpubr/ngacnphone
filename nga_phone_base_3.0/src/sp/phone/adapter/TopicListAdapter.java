@@ -22,13 +22,14 @@ public class TopicListAdapter extends BaseAdapter
 	private LayoutInflater inflater;
 	private TopicListInfo topicListInfo=null;
 	private int selected = -1;
+	protected int count = 0;
 	public TopicListAdapter(Context context) {
 		this.inflater = LayoutInflater.from(context);
 	}
 
 	public Object getItem(int arg0) {
-		if(topicListInfo!=null){
-			ThreadPageInfo entry = topicListInfo.getArticleEntryList().get(arg0);
+		
+			ThreadPageInfo entry = getEntry(arg0);
 			if( entry== null ||entry.getTid()==0)
 			{
 				return null;
@@ -40,16 +41,13 @@ public class TopicListAdapter extends BaseAdapter
 			}
 			
 			return ret;
-		}
 		
-		return null;
+		
+
 	}
 
 	public int getCount() {
-		if(topicListInfo!=null)
-			return topicListInfo.get__T__ROWS();
-		
-		return 0;
+		return count;
 	}
 
 	public long getItemId(int arg0) {
@@ -114,7 +112,10 @@ public class TopicListAdapter extends BaseAdapter
 	}
 	
 	private void handleJsonList(ViewHolder holder, int position){
-		ThreadPageInfo entry = this.topicListInfo.getArticleEntryList().get(position);
+		ThreadPageInfo entry = getEntry(position);
+				//this.topicListInfo.getArticleEntryList().get(position);
+		
+		
 		if(entry == null){
 			return;
 		}
@@ -184,9 +185,16 @@ public class TopicListAdapter extends BaseAdapter
 
 
 
+	protected ThreadPageInfo getEntry(int position) {
+		if(topicListInfo != null)
+			return topicListInfo.getArticleEntryList().get(position);
+		return null;
+	}
+
 	@Override
 	public void jsonfinishLoad(TopicListInfo result) {
 		this.topicListInfo = result;
+		count = topicListInfo.get__T__ROWS();
 		this.notifyDataSetChanged();
 		
 	}

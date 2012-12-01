@@ -1,18 +1,15 @@
 package sp.phone.fragment;
 
 import gov.pianzong.androidnga.R;
-import sp.phone.adapter.TabsAdapter;
+import sp.phone.adapter.ThreadFragmentAdapter;
 import sp.phone.bean.ThreadData;
 import sp.phone.interfaces.OnThreadPageLoadFinishedListener;
-import sp.phone.utils.ActivityUtil;
-import sp.phone.utils.PhoneConfiguration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TabHost;
 
 public class ArticleContainerFragment extends Fragment 
 implements OnThreadPageLoadFinishedListener{
@@ -26,13 +23,13 @@ implements OnThreadPageLoadFinishedListener{
 		return f;
 	}
 	
-	private ArticleContainerFragment() {
+	public ArticleContainerFragment() {
 		super();
 	}
 	
-	TabHost tabhost;
+	//TabHost tabhost;
 	ViewPager  mViewPager;
-    TabsAdapter mTabsAdapter;
+	ThreadFragmentAdapter mTabsAdapter;
     int tid;
     int pid;
     int authorid;
@@ -42,7 +39,7 @@ implements OnThreadPageLoadFinishedListener{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.pagerview_article_list, container,false);
+		//View v = inflater.inflate(R.layout.pagerview_article_list, container,false);
 		
 		
 		/*if(PhoneConfiguration.getInstance().uploadLocation
@@ -52,16 +49,21 @@ implements OnThreadPageLoadFinishedListener{
 			ActivityUtil.reflushLocation(getActivity());
 		}*/
 			
-		tabhost = (TabHost) v.findViewById(android.R.id.tabhost);
-		tabhost.setup();
-		mViewPager = (ViewPager)v.findViewById(R.id.pager);
+		//tabhost = (TabHost) v.findViewById(android.R.id.tabhost);
+		//tabhost.setup();
+		View v  = inflater.inflate(R.layout.article_viewpager, container,false);
+
+
+		mViewPager = (ViewPager) v.findViewById(R.id.pager);
+
 		
 		tid = this.getArguments().getInt("tid", 0);		
 		pid = this.getArguments().getInt("pid", 0);
 		authorid = this.getArguments().getInt("authorid", 0);
 		
 		
-		mTabsAdapter = new TabsAdapter(getActivity(), tabhost, mViewPager,ArticleListFragment.class);
+		mTabsAdapter = new ThreadFragmentAdapter(getActivity(), mViewPager,ArticleListFragment.class);
+				//new TabsAdapter(getActivity(), tabhost, mViewPager,ArticleListFragment.class);
 		mTabsAdapter.setArgument("id", tid);
 		mTabsAdapter.setArgument("pid", pid);
 		mTabsAdapter.setArgument("authorid", authorid);
@@ -76,6 +78,8 @@ implements OnThreadPageLoadFinishedListener{
         		mViewPager.setCurrentItem(savedInstanceState.getInt("tab"));
         	}
         	
+        }else{
+        	mTabsAdapter.setCount(1);
         }
 		
 		return v;
