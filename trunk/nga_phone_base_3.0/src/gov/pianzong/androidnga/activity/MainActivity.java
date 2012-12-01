@@ -4,14 +4,8 @@ import gov.pianzong.androidnga.R;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 import sp.phone.adapter.BoardPagerAdapter;
 import sp.phone.bean.Board;
@@ -21,7 +15,6 @@ import sp.phone.bean.PerferenceConstant;
 import sp.phone.interfaces.PageCategoryOwnner;
 import sp.phone.task.AppUpdateCheckTask;
 import sp.phone.utils.ActivityUtil;
-import sp.phone.utils.Des;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
@@ -139,9 +132,10 @@ public class MainActivity extends ActionBarActivity
 					getRequestedOrientation() ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}
+		
+		int width = getResources().getInteger(R.integer.page_category_width);
 		pager.setAdapter(
-				new BoardPagerAdapter( getSupportFragmentManager(),this) );	
-
+				new BoardPagerAdapter( getSupportFragmentManager(),this,width) );	
 		super.onResume();
 	}
 
@@ -320,10 +314,10 @@ public class MainActivity extends ActionBarActivity
 		i++;
 		}
 		
-		boards.add(new Board(i, "7", "艾泽拉斯议事厅", R.drawable.p7));
+		boards.add(new Board(i, "7", "议事厅", R.drawable.p7));
 		boards.add(new Board(i, "323", "台服讨论区", R.drawable.p323));
 		boards.add(new Board(i, "-7", "大漩涡", R.drawable.p354));
-		boards.add(new Board(i, "10", "银色黎明裁判所", R.drawable.p10));
+		boards.add(new Board(i, "10", "银色黎明", R.drawable.p10));
 		boards.add(new Board(i, "230", "艾泽拉斯风纪委员会", R.drawable.p230));
 		boards.add(new Board(i, "387", "潘大力亚之迷雾", R.drawable.p387));
 		boards.add(new Board(i, "414", "游戏综合讨论", R.drawable.p414));
@@ -412,28 +406,28 @@ public class MainActivity extends ActionBarActivity
 		i++;
 		
 		boards.add(new Board(i, "-522474", "综合体育讨论区", R.drawable.pdefault));
-		boards.add(new Board(i, "-152678", "英雄联盟 Let's Gank", R.drawable.p152678));
+		boards.add(new Board(i, "-152678", "英雄联盟", R.drawable.p152678));
 		boards.add(new Board(i, "-1068355", "晴风村", R.drawable.pdefault));
-		boards.add(new Board(i, "-447601", " 二次元国家地理 - NG2", R.drawable.houzi));
+		boards.add(new Board(i, "-447601", " 二次元国家地理", R.drawable.houzi));
 		boards.add(new Board(i, "-343809", "寂寞的车俱乐部", R.drawable.pdefault));
 		boards.add(new Board(i, "-131429", "红茶馆——小说馆", R.drawable.pdefault));
-		boards.add(new Board(i, "-46468", " 洛拉斯的坦克世界", R.drawable.pdefault));
+		boards.add(new Board(i, "-46468", " 坦克世界", R.drawable.pdefault));
 		boards.add(new Board(i, "-2371813", "NGA驻吉他海四办公室", R.drawable.pdefault));
-		boards.add(new Board(i, "-124119", "菠萝方舟·神圣避难所 ", R.drawable.pdefault));
+		boards.add(new Board(i, "-124119", "菠萝方舟 ", R.drawable.pdefault));
 		boards.add(new Board(i, "-84", " 模玩之魂", R.drawable.pdefault));
 		boards.add(new Board(i, "-187579", " 大旋涡历史博物馆", R.drawable.pdefault));
 		boards.add(new Board(i, "-308670", "血库的个人空间", R.drawable.pdefault));
 		boards.add(new Board(i, "-112905", "八圣祠", R.drawable.pdefault));
 		boards.add(new Board(i, "-8725919", "小窗视界", R.drawable.pdefault));
-		boards.add(new Board(i, "-608808", "弑熊主厨的血腥厨房", R.drawable.pdefault));
+		boards.add(new Board(i, "-608808", "血腥厨房", R.drawable.pdefault));
 		boards.add(new Board(i, "-469608", "影视讨论", R.drawable.pdefault));
 		boards.add(new Board(i, "-55912", "音乐讨论", R.drawable.pdefault));
 		boards.add(new Board(i, "-353371", "傻乎乎的小宠物", R.drawable.pdefault));
 		boards.add(new Board(i, "-538800", "乙女向二次元", R.drawable.pdefault));
-		boards.add(new Board(i, "-522679", "Battlefield 3讨论版", R.drawable.pdefault));
-		boards.add(new Board(i, "-7678526", "艾泽拉斯麻将科学院", R.drawable.pdefault));
+		boards.add(new Board(i, "-522679", "Battlefield 3", R.drawable.pdefault));
+		boards.add(new Board(i, "-7678526", "麻将科学院", R.drawable.pdefault));
 		boards.add(new Board(i, "-202020", "一只IT喵的自我修养", R.drawable.pdefault));
-		boards.add(new Board(i, "-444012", "自行车：我们的骑迹", R.drawable.pdefault));
+		boards.add(new Board(i, "-444012", "我们的骑迹", R.drawable.pdefault));
 		boards.add(new Board(i, "-47218", " 没有刀的漆器", R.drawable.pdefault));
 		boards.add(new Board(i, "-349066", "开心茶园", R.drawable.pdefault));
 		boards.add(new Board(i, "-314508", "世界尽头的百货公司", R.drawable.pdefault));		

@@ -9,10 +9,11 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 public class BoardPagerAdapter extends FragmentStatePagerAdapter {
 	
 	private PageCategoryOwnner pageCategoryOwnner;
-	public BoardPagerAdapter(FragmentManager fm, PageCategoryOwnner pageCategoryOwnner) {
+	final private int widthPercentage;
+	public BoardPagerAdapter(FragmentManager fm, PageCategoryOwnner pageCategoryOwnner,int width) {
 		super(fm);
 		this.pageCategoryOwnner =  pageCategoryOwnner;
-	
+		this.widthPercentage = width;
 
 	}
 	@Override
@@ -29,6 +30,10 @@ public class BoardPagerAdapter extends FragmentStatePagerAdapter {
 	public CharSequence getPageTitle(int position) {
 		
 		return pageCategoryOwnner.getCategoryName(position);
+	}
+	@Override
+	public float getPageWidth(int position) {
+		return widthPercentage/100.0f;
 	}
 	
 	
