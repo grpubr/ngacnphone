@@ -27,7 +27,7 @@ public class ActivityUtil {
 		return android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.FROYO;
 	}
 	public static boolean isGreaterThan_2_1(){
-		return android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.ECLAIR;
+		return android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.ECLAIR_MR1;
 	}
 	public static boolean isGreaterThan_1_6(){
 		return android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.DONUT;
@@ -77,10 +77,10 @@ public class ActivityUtil {
 	    if(provider != null) { 
         	location = locationManager.getLastKnownLocation(provider); 
         } 
-	    else{
+	    /*else{
 	    	Toast.makeText(context, R.string.location_service_disabled, Toast.LENGTH_SHORT).show();
 	    	return;
-	    }
+	    }*/
 	    
 	    if( location != null)
 	    {
@@ -88,12 +88,10 @@ public class ActivityUtil {
 	    }else{
 	    	//Toast.makeText(context, R.string.locating, Toast.LENGTH_SHORT).show();
 	    	if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-	    		Toast.makeText(context, "network", Toast.LENGTH_SHORT).show();
 	    		provider = LocationManager.NETWORK_PROVIDER;
 	    	}
 	    	else if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
 	    	{
-	    		Toast.makeText(context, "gps", Toast.LENGTH_SHORT).show();
 	    		provider = LocationManager.GPS_PROVIDER;
 	    		
 	    	}else{
