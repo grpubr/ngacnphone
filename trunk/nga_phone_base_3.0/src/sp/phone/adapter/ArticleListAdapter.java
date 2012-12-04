@@ -383,6 +383,11 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 			            }
 			            else
 			            	f.delete();
+			            long date = f.lastModified();
+			            if(System.currentTimeMillis() - date > 30*24*3600*1000)
+			            {
+			            	f.delete();
+			            }
 	
 
 				} else {
