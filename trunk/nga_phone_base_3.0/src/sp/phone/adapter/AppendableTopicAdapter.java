@@ -6,15 +6,12 @@ import java.util.List;
 import sp.phone.bean.ThreadPageInfo;
 import sp.phone.bean.TopicListInfo;
 import android.content.Context;
-import android.widget.Toast;
 
 public class AppendableTopicAdapter extends TopicListAdapter {
 	final private List<TopicListInfo> infoList;
-	final private Context context;
 	public AppendableTopicAdapter(Context context) {
 		super(context);
 		infoList = new ArrayList<TopicListInfo>();
-		this.context = context;
 
 	}
 
@@ -33,13 +30,22 @@ public class AppendableTopicAdapter extends TopicListAdapter {
 	public void jsonfinishLoad(TopicListInfo result) {
 		infoList.add(result);
 		count += result.get__T__ROWS();
-		this.notifyDataSetChanged();
-		Toast.makeText(context, "finish load page:" + infoList.size(), Toast.LENGTH_SHORT).show();
+		if(count == result.get__T__ROWS())
+		{
+			this.notifyDataSetInvalidated();
+		}
+		else
+		{
+			this.notifyDataSetChanged();
+			
+			//Toast.makeText(context, "finish load page:" + infoList.size(), Toast.LENGTH_SHORT).show();
+		}
 	}
 	
 	public void clear(){
 		count = 0;
 		infoList.clear();
+		setSelected(-1);
 	}
 	
 	public int getNextPage(){

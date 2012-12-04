@@ -218,7 +218,7 @@ public class HttpUtil {
 			return IOUtils.toString(is, encoding);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			IOUtils.closeQuietly(is);
@@ -263,7 +263,7 @@ public class HttpUtil {
 			return IOUtils.toString(is, encoding);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			IOUtils.closeQuietly(is);

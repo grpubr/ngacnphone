@@ -2,7 +2,7 @@ package sp.phone.fragment;
 
 import sp.phone.utils.StringUtil;
 import gov.pianzong.androidnga.R;
-import gov.pianzong.androidnga.activity.TopicListActivity;
+import gov.pianzong.androidnga.activity.FlexibleTopicListActivity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -34,7 +34,7 @@ public class SearchDialogFragment extends DialogFragment {
             	final String inputString = input.getText().toString();
             	if(!StringUtil.isEmpty(inputString))
             	{
-            		Intent intent_search = new Intent(getActivity(), TopicListActivity.class);
+            		Intent intent_search = new Intent(getActivity(), FlexibleTopicListActivity.class);
     				intent_search.putExtra("fid",getArguments().getInt("id",-7));
     				intent_search.putExtra("key", inputString);
     				intent_search.putExtra("authorid", getArguments().getInt("authorid",0));

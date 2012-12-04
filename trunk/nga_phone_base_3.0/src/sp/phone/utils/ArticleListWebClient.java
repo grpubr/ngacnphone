@@ -1,25 +1,23 @@
 package sp.phone.utils;
 
-import java.io.IOException;
+import gov.pianzong.androidnga.activity.ArticleListActivity;
+import gov.pianzong.androidnga.activity.FlexibleTopicListActivity;
+import gov.pianzong.androidnga.activity.ImageViewerActivity;
+
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import sp.phone.adapter.ExtensionEmotionAdapter;
 import sp.phone.task.TudouVideoLoadTask;
-import gov.pianzong.androidnga.activity.ArticleListActivity;
-import gov.pianzong.androidnga.activity.ImageViewerActivity;
-import gov.pianzong.androidnga.activity.TopicListActivity;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.net.NetworkInfo.State;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -51,7 +49,7 @@ public class ArticleListWebClient extends WebViewClient {
 				|| url.startsWith(NGA178_BOARD_PREFIX ) ){
 			Intent intent = new Intent();
 			intent.setData(Uri.parse(origurl));
-			intent.setClass(view.getContext(), TopicListActivity.class);
+			intent.setClass(view.getContext(), FlexibleTopicListActivity.class);
 			view.getContext().startActivity(intent);
 
 		}else if(url.startsWith(NGACN_THREAD_PREFIX)

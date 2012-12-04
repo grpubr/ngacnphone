@@ -1,6 +1,7 @@
 package sp.phone.utils;
 
 
+import sp.phone.bean.BoardHolder;
 import gov.pianzong.androidnga.R;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -44,13 +45,18 @@ public class ActivityUtil {
 	public static boolean islessThan_4_1(){
 		return android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN;
 	}
+	
+	public static boolean isNotLessThan_4_0(){
+		return android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+	}
+	
 	public static boolean isMeizu(){
 		return "Meizu".equalsIgnoreCase(android.os.Build.MANUFACTURER);
 	}
 	
 	static ActivityUtil instance;
 	static final String TAG = ActivityUtil.class.getSimpleName();
-	static final String dialogTag = "saying"; 
+	public static final String dialogTag = "saying"; 
 	static Object lock= new Object();
 	public static ActivityUtil getInstance(){
 		if(instance == null){
@@ -134,6 +140,12 @@ public class ActivityUtil {
 		s = s * EARTH_RADIUS;
 		
 		return Math.round(s * 1000);
+	}
+	
+	public static void appendStaticBoard(BoardHolder boards){
+		if(null == boards)
+			return;
+		
 	}
 	
 	private DialogFragment df = null;
@@ -239,6 +251,20 @@ public class ActivityUtil {
 		}
 	}
 
+	public static void dismissSaying(FragmentActivity fa){
+		if(null == fa)
+			return;
+		FragmentManager fm = fa.getSupportFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
+
+        Fragment prev = fm.findFragmentByTag(ActivityUtil.dialogTag);
+        if (prev != null) {
+            ft.remove(prev);
+            
+        }
+
+        ft.commit();
+	}
 	
 	public static class SayingDialogFragment extends DialogFragment{
 

@@ -36,7 +36,7 @@ import android.widget.TabHost;
 import com.example.android.actionbarcompat.ActionBarActivity;
 
 
-public class TopicListActivity extends ActionBarActivity
+class TopicListActivity extends ActionBarActivity
 	implements OnTopListLoadFinishedListener{
 	static final private String TAG = TopicListActivity.class.getSimpleName();
 	static final int MESSAGE_SENT = 1;

@@ -201,10 +201,10 @@ public class MainActivity extends ActionBarActivity
 			jumpToNearby();
 			break;
 		default:
-			Intent MyIntent = new Intent(Intent.ACTION_MAIN);
+			/*Intent MyIntent = new Intent(Intent.ACTION_MAIN);
 			MyIntent.addCategory(Intent.CATEGORY_HOME);
-			MyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(MyIntent);
+			startActivity(MyIntent);*/
+			finish();
 			break;
 
 		}
@@ -518,8 +518,8 @@ public class MainActivity extends ActionBarActivity
 				Intent intent = new Intent();
 				intent.putExtra("tab", "1");
 				intent.putExtra("fid", fid);
-				//intent.setClass(MainActivity.this, FlexibleTopicListActivity.class);
-				intent.setClass(MainActivity.this, TopicListActivity.class);
+				intent.setClass(MainActivity.this, FlexibleTopicListActivity.class);
+				//intent.setClass(MainActivity.this, TopicListActivity.class);
 				startActivity(intent);
 				if(PhoneConfiguration.getInstance().showAnimation)
 				{
