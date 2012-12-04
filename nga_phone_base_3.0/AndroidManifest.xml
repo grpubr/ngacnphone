@@ -25,7 +25,8 @@
 
 		<activity android:name=".activity.SettingsActivity"></activity>
 		<activity android:name=".activity.BookmarkActivity"></activity>
-		<activity android:name=".activity.TopicListActivity" android:exported="true" android:theme="@style/AppTheme">
+		<activity android:name=".activity.FlexibleTopicListActivity" android:exported="true" android:theme="@style/AppTheme">
+		   <!-- 
 		    <intent-filter>
 		        <action android:name="android.intent.action.VIEW" /> 
 		        <category android:name="android.intent.category.DEFAULT" /> 
@@ -38,6 +39,7 @@
 				<category android:name="android.intent.category.BROWSABLE" />
 				<data android:scheme="@string/myscheme" android:host="nga.178.com" android:path="/thread.php"/>
 			</intent-filter>
+			 -->
 			<intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -50,7 +52,7 @@
 		        <category android:name="android.intent.category.DEFAULT" /> 
 				<category android:name="android.intent.category.BROWSABLE" />
 				<data android:scheme="@string/myscheme" android:host="bbs.ngacn.cc" android:path="/read.php"/>
-			</intent-filter -->
+			</intent-filter 
 			<intent-filter>
 		        <action android:name="android.intent.action.VIEW" /> 
 		        <category android:name="android.intent.category.DEFAULT" /> 
@@ -63,6 +65,7 @@
 				<category android:name="android.intent.category.BROWSABLE" />
 				<data android:scheme="@string/myscheme" android:host="bbs.ngacn.cc" android:path="/read.php"/>
 			</intent-filter>
+			-->
 			<intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -72,7 +75,7 @@
 		</activity>
 		<activity android:name=".activity.ImageViewerActivity" android:theme="@style/AppTheme"></activity>
 		<activity android:name=".activity.NearbyUserActivity" android:theme="@style/AppTheme"></activity>
-		<activity android:name=".activity.FlexibleTopicListActivity"></activity>
+		<activity android:theme="@style/AppTheme" android:name=".activity.FragmentArticleListActivity"></activity>
 	</application>
 
 </manifest> 

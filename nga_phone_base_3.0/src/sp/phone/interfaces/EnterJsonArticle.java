@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -38,7 +39,15 @@ public class EnterJsonArticle implements OnItemClickListener {
 		intent.putExtra("pid",pid );
 		intent.putExtra("authorid",authorid );
 		ListView listview = (ListView)parent;
-		TopicListAdapter adapter = (TopicListAdapter)listview.getAdapter();
+		Object a = parent.getAdapter();
+		TopicListAdapter adapter = null;
+		if(a instanceof TopicListAdapter ){
+			adapter = (TopicListAdapter)a;
+		}else if(a instanceof HeaderViewListAdapter){
+			HeaderViewListAdapter ha = (HeaderViewListAdapter)a;
+			adapter = (TopicListAdapter) ha.getWrappedAdapter();
+			position -= ha.getHeadersCount();
+		}
 		adapter.setSelected(position);
 		listview.setItemChecked(position, true);
 		

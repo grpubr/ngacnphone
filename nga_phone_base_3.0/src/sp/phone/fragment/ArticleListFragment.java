@@ -2,8 +2,8 @@ package sp.phone.fragment;
 
 import gov.pianzong.androidnga.R;
 import gov.pianzong.androidnga.activity.ArticleListActivity;
+import gov.pianzong.androidnga.activity.FlexibleTopicListActivity;
 import gov.pianzong.androidnga.activity.PostActivity;
-import gov.pianzong.androidnga.activity.TopicListActivity;
 import sp.phone.adapter.ArticleListAdapter;
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.bean.ThreadData;
@@ -11,7 +11,6 @@ import sp.phone.bean.ThreadRowInfo;
 import sp.phone.interfaces.OnThreadPageLoadFinishedListener;
 import sp.phone.interfaces.PagerOwnner;
 import sp.phone.interfaces.ResetableArticle;
-import sp.phone.task.BookmarkTask;
 import sp.phone.task.JsonThreadLoadTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
@@ -21,9 +20,6 @@ import sp.phone.utils.ThemeManager;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -33,7 +29,6 @@ import android.view.ActionMode;
 import android.view.ActionMode.Callback;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,7 +38,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -164,7 +158,7 @@ public class ArticleListFragment extends Fragment
 	@Override
 	public void onResume() {
 		Log.d(TAG, "onResume pid="+pid+"&page="+page);
-		setHasOptionsMenu(true);
+		//setHasOptionsMenu(true);
 		if (PhoneConfiguration.getInstance().isRefreshAfterPost()) {
 			
 			PagerOwnner father = null;
@@ -223,112 +217,6 @@ public class ArticleListFragment extends Fragment
 	
 
 	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		
-		Log.d(TAG, "onOptionsItemSelected,tid="
-				+tid+ ",page="+page );
-		
-
-		switch( item.getItemId())
-		{
-			case R.id.article_menuitem_reply:
-				//if(articleAdpater.getData() == null)
-				//	return false;
-				String tid = String.valueOf(this.tid);
-				Intent intent = new Intent();
-				intent.putExtra("prefix", "" );
-				intent.putExtra("tid", tid);
-				intent.putExtra("action", "reply");
-				
-				intent.setClass(getActivity(), PostActivity.class);
-				startActivity(intent);
-				if(PhoneConfiguration.getInstance().showAnimation)
-					getActivity().overridePendingTransition(R.anim.zoom_enter,
-							R.anim.zoom_exit);
-				break;
-			case R.id.article_menuitem_refresh:
-				this.task = null;
-				ActivityUtil.getInstance().noticeSaying(getActivity());
-				this.loadPage();
-				break;
-			case R.id.article_menuitem_addbookmark:				
-				BookmarkTask bt = new BookmarkTask(getActivity());
-				bt.execute(String.valueOf(this.tid));
-				break;
-			case R.id.article_menuitem_lock:
-				
-				handleLockOrientation(item);
-				break;
-			case R.id.article_menuitem_back:
-			default:
-				Intent intent2 = new Intent(this.getActivity(), TopicListActivity.class);
-	            intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            if(articleAdpater.getData() !=null){
-	            	int fid = articleAdpater.getData().getThreadInfo().getFid();
-		            intent2.putExtra("fid", fid);
-	            }
-	            
-	            startActivity(intent2);
-				break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-	
-	private ImageButton getActionItem(int id){
-		View actionbar_compat = getActivity().findViewById(R.id.actionbar_compat);
-		View ret = null;
-		if(actionbar_compat != null)
-		{
-			ret = actionbar_compat.findViewById(id);
-		}
-		return (ImageButton) ret;
-	}
-	
-	private void handleLockOrientation(MenuItem item){
-		int preOrentation = ThemeManager.getInstance().screenOrentation;
-		int newOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
-		ImageButton compat_item = getActionItem(R.id.actionbar_compat_item_lock);
-		
-		if(preOrentation ==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||
-				preOrentation ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
-			//restore
-			//int newOrientation = ActivityInfo.SCREEN_ORIENTATION_USER;
-			ThemeManager.getInstance().screenOrentation = newOrientation;
-			
-			getActivity().setRequestedOrientation(newOrientation);
-			item.setTitle(R.string.lock_orientation);
-			item.setIcon(R.drawable.ic_lock_screen);
-			if(compat_item !=null)
-				compat_item.setImageResource(R.drawable.ic_lock_screen);
-			
-		}else{
-			newOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-			Display dis = getActivity().getWindowManager().getDefaultDisplay();
-			//Point p = new Point();
-			//dis.getSize(p);
-			if(dis.getWidth() < dis.getHeight()){
-				newOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-			}
-			
-			ThemeManager.getInstance().screenOrentation = newOrientation;
-			getActivity().setRequestedOrientation(newOrientation);			
-			item.setTitle(R.string.unlock_orientation);
-			item.setIcon(R.drawable.ic_menu_always_landscape_portrait);
-			if(compat_item !=null)
-				compat_item.setImageResource(R.drawable.ic_menu_always_landscape_portrait);
-		}
-		
-		
-		
-		SharedPreferences share = getActivity().getSharedPreferences(PERFERENCE,
-				Activity.MODE_PRIVATE);
-		Editor editor = share.edit();
-		editor.putInt(SCREEN_ORENTATION, newOrientation);
-		editor.commit();
-		
-	}
-	
 	
 	
 
@@ -355,10 +243,8 @@ public class ArticleListFragment extends Fragment
 		Log.d(TAG, "onContextItemSelected,tid="
 				+tid+ ",page="+page );
 		PagerOwnner father = null;
-		ResetableArticle restNotifier = null;
 		try{
 			 father = (PagerOwnner) getActivity();
-			 restNotifier= (ResetableArticle)getActivity();
 		}catch(ClassCastException e){
 			Log.e(TAG,"father activity does not implements interface " 
 					+ PagerOwnner.class.getName());
@@ -491,6 +377,14 @@ public class ArticleListFragment extends Fragment
 
 			break;
 		case R.id.show_whole_thread:
+			ResetableArticle restNotifier = null;
+			try{
+				 restNotifier= (ResetableArticle)getActivity();
+			}catch(ClassCastException e){
+				Log.e(TAG,"father activity does not implements interface " 
+						+ ResetableArticle.class.getName());
+				return true;
+			}
 			restNotifier.reset(0, 0,row.getLou());
 			ActivityUtil.getInstance().noticeSaying(getActivity());
 			break;
@@ -514,7 +408,7 @@ public class ArticleListFragment extends Fragment
 			intent.putExtra("searchpost", 1);
 		case R.id.search_subject:
 			intent.putExtra("authorid", row.getAuthorid());
-			intent.setClass(getActivity(), TopicListActivity.class);
+			intent.setClass(getActivity(), FlexibleTopicListActivity.class);
 			startActivity(intent);
 			if(PhoneConfiguration.getInstance().showAnimation)
 				getActivity().overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);

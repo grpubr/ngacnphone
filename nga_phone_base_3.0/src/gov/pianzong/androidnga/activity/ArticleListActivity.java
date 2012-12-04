@@ -2,47 +2,49 @@ package gov.pianzong.androidnga.activity;
 
 import gov.pianzong.androidnga.R;
 import sp.phone.adapter.TabsAdapter;
+import sp.phone.bean.PerferenceConstant;
 import sp.phone.bean.ThreadData;
 import sp.phone.fragment.ArticleListFragment;
 import sp.phone.fragment.GotoDialogFragment;
 import sp.phone.interfaces.OnThreadPageLoadFinishedListener;
 import sp.phone.interfaces.PagerOwnner;
 import sp.phone.interfaces.ResetableArticle;
+import sp.phone.task.BookmarkTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.nfc.NfcEvent;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.NumberPicker;
+import android.widget.ImageButton;
 import android.widget.TabHost;
 
 import com.example.android.actionbarcompat.ActionBarActivity;
 
 public class ArticleListActivity extends ActionBarActivity
-implements PagerOwnner,ResetableArticle,OnThreadPageLoadFinishedListener {
+implements PagerOwnner,ResetableArticle,OnThreadPageLoadFinishedListener,
+PerferenceConstant{
 	TabHost tabhost;
 	ViewPager  mViewPager;
     TabsAdapter mTabsAdapter;
@@ -66,7 +68,7 @@ implements PagerOwnner,ResetableArticle,OnThreadPageLoadFinishedListener {
 		tabhost = (TabHost) findViewById(android.R.id.tabhost);
 		tabhost.setup();
 		mViewPager = (ViewPager)findViewById(R.id.pager);
-		if (VERSION.SDK_INT >= VERSION_CODES.ICE_CREAM_SANDWICH) {			
+		if (ActivityUtil.isNotLessThan_4_0()) {			
 			setNfcCallBack();
 		}
 
@@ -193,19 +195,104 @@ implements PagerOwnner,ResetableArticle,OnThreadPageLoadFinishedListener {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == R.id.goto_floor){
-			createGotoDialog();
-			return true;
-		}else
+		switch( item.getItemId())
 		{
-			return super.onOptionsItemSelected(item);
+			case R.id.article_menuitem_reply:
+				//if(articleAdpater.getData() == null)
+				//	return false;
+				String tid = String.valueOf(this.tid);
+				Intent intent = new Intent();
+				intent.putExtra("prefix", "" );
+				intent.putExtra("tid", tid);
+				intent.putExtra("action", "reply");
+				
+				intent.setClass(this, PostActivity.class);
+				startActivity(intent);
+				if(PhoneConfiguration.getInstance().showAnimation)
+					overridePendingTransition(R.anim.zoom_enter,
+							R.anim.zoom_exit);
+				break;
+			case R.id.article_menuitem_refresh:
+				int current = mViewPager.getCurrentItem();
+				ActivityUtil.getInstance().noticeSaying(this);
+				mViewPager.setAdapter(mTabsAdapter);
+				mViewPager.setCurrentItem(current);
+				
+				
+				break;
+			case R.id.article_menuitem_addbookmark:				
+				BookmarkTask bt = new BookmarkTask(this);
+				bt.execute(String.valueOf(this.tid));
+				break;
+			case R.id.article_menuitem_lock:
+				
+				handleLockOrientation(item);
+				break;
+			case R.id.goto_floor:
+				createGotoDialog();
+				break;
+			case R.id.article_menuitem_back:
+			default:
+				finish();
+				break;
 		}
+		return true;
 
 	}
 	
-
+	private void handleLockOrientation(MenuItem item){
+		int preOrentation = ThemeManager.getInstance().screenOrentation;
+		int newOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+		ImageButton compat_item = getActionItem(R.id.actionbar_compat_item_lock);
+		
+		if(preOrentation ==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||
+				preOrentation ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
+			//restore
+			//int newOrientation = ActivityInfo.SCREEN_ORIENTATION_USER;
+			ThemeManager.getInstance().screenOrentation = newOrientation;
+			
+			setRequestedOrientation(newOrientation);
+			item.setTitle(R.string.lock_orientation);
+			item.setIcon(R.drawable.ic_lock_screen);
+			if(compat_item !=null)
+				compat_item.setImageResource(R.drawable.ic_lock_screen);
+			
+		}else{
+			newOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+			Display dis = getWindowManager().getDefaultDisplay();
+			//Point p = new Point();
+			//dis.getSize(p);
+			if(dis.getWidth() < dis.getHeight()){
+				newOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+			}
+			
+			ThemeManager.getInstance().screenOrentation = newOrientation;
+			setRequestedOrientation(newOrientation);			
+			item.setTitle(R.string.unlock_orientation);
+			item.setIcon(R.drawable.ic_menu_always_landscape_portrait);
+			if(compat_item !=null)
+				compat_item.setImageResource(R.drawable.ic_menu_always_landscape_portrait);
+		}
+		
+		
+		
+		SharedPreferences share = getSharedPreferences(PERFERENCE,
+				Activity.MODE_PRIVATE);
+		Editor editor = share.edit();
+		editor.putInt(SCREEN_ORENTATION, newOrientation);
+		editor.commit();
+		
+	}
 	
-
+	private ImageButton getActionItem(int id){
+		View actionbar_compat = findViewById(R.id.actionbar_compat);
+		View ret = null;
+		if(actionbar_compat != null)
+		{
+			ret = actionbar_compat.findViewById(id);
+		}
+		return (ImageButton) ret;
+	}
 
 	
 	private void createGotoDialog(){

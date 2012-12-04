@@ -6,48 +6,112 @@ import sp.phone.bean.TopicListInfo;
 import sp.phone.fragment.ArticleContainerFragment;
 import sp.phone.fragment.TopiclistContainer;
 import sp.phone.interfaces.EnterJsonArticle;
+import sp.phone.interfaces.OnChildFragmentRemovedListener;
 import sp.phone.interfaces.OnThreadPageLoadFinishedListener;
 import sp.phone.interfaces.OnTopListLoadFinishedListener;
+import sp.phone.interfaces.PagerOwnner;
+import sp.phone.task.CheckReplyNotificationTask;
+import sp.phone.utils.ActivityUtil;
+import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
+import android.annotation.TargetApi;
+import android.content.pm.ActivityInfo;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcEvent;
+import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class FlexibleTopicListActivity extends FragmentActivity 
 implements OnTopListLoadFinishedListener,OnItemClickListener
-,OnThreadPageLoadFinishedListener{
+,OnThreadPageLoadFinishedListener,PagerOwnner,
+OnChildFragmentRemovedListener{
 
 	private String TAG = FlexibleTopicListActivity.class.getSimpleName() ;
 	boolean dualScreen = true;
-	
+	private CheckReplyNotificationTask asynTask;
 
 
 	@Override
 	protected void onCreate(Bundle arg0) {
-		this.setContentView(R.layout.toplist_activity_two_panel);
+		this.setContentView(R.layout.topiclist_activity);
 		super.onCreate(arg0);
-		Fragment f1 = new TopiclistContainer();
-		Bundle args = new Bundle(getIntent().getExtras());
-		args.putString("url", getIntent().getDataString());
-		f1.setArguments(args);
+
 		
-		//Fragment f = ArticleContainerFragment.create(5769306, 0, 0);
+		
+		if(ActivityUtil.isNotLessThan_4_0())
+			setNfcCallBack();
+		
 		if(null == findViewById(R.id.item_detail_container))
+		{			
 			dualScreen = false;
-		FragmentTransaction ft = getSupportFragmentManager()
-			.beginTransaction()
-			.replace(R.id.item_list, f1);
+		}
+		FragmentManager fm = getSupportFragmentManager();
+		Fragment f1 = fm.findFragmentById(R.id.item_list);
+		if( f1 == null)
+		{
+			f1 = new TopiclistContainer();
+			Bundle args = new Bundle(getIntent().getExtras());
+			args.putString("url", getIntent().getDataString());
+			f1.setArguments(args);
+			FragmentTransaction ft = fm.beginTransaction()
+			.add(R.id.item_list, f1);
 			//.add(R.id.item_detail_container, f);
-		ft.commit();
+			ft.commit();
+		}
+		Fragment f2 = fm.findFragmentById(R.id.item_detail_container);
+		if(null == f2)
+		{
+			f1.setHasOptionsMenu(true);
+		}
+		else if(!dualScreen){
+			this.setTitle(R.string.app_name);
+			fm.beginTransaction().remove(f2).commit();
+			f1.setHasOptionsMenu(true);
+		}
+		else
+		{
+			f1.setHasOptionsMenu(false);
+			f2.setHasOptionsMenu(true);
+		}
 			
+	}
+	
+	@TargetApi(14)
+	void setNfcCallBack(){
+		NfcAdapter adapter = NfcAdapter.getDefaultAdapter(this);
+		CreateNdefMessageCallback callback = new CreateNdefMessageCallback(){
+
+			@Override
+			public NdefMessage createNdefMessage(NfcEvent event) {
+				FragmentManager fm = getSupportFragmentManager();
+				TopiclistContainer f1 = (TopiclistContainer) fm.findFragmentById(R.id.item_list);
+				final String url = f1.getNfcUrl();
+				NdefMessage msg = new NdefMessage(
+		                new NdefRecord[]{NdefRecord.createUri(url)}
+		                );
+				return msg;
+			}
+			
+		};
+		if (adapter != null) {
+			adapter.setNdefPushMessageCallback(callback, this);
+
+		}
+		
 	}
 
 	@Override
@@ -56,6 +120,44 @@ implements OnTopListLoadFinishedListener,OnItemClickListener
 		ReflectionUtil.actionBar_setDisplayOption(this, flags);
 		return super.onCreateOptionsMenu(menu);
 	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if(item.getItemId() == android.R.id.home){
+			finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onResume() {
+		int orentation = ThemeManager.getInstance().screenOrentation;
+		if(orentation ==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||
+				orentation ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+		{
+			setRequestedOrientation(orentation);
+		}else{
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+		}
+		
+		
+		if(asynTask !=null){
+			asynTask.cancel(true);
+			asynTask = null;
+		}
+		long now = System.currentTimeMillis();
+		PhoneConfiguration config = PhoneConfiguration.getInstance();
+		if(now - config.lastMessageCheck > 60*1000 && config.notification)
+		{
+			Log.d(TAG, "start to check Reply Notification");
+			asynTask = new CheckReplyNotificationTask(this);
+			asynTask.execute(config.getCookie());
+		}
+		super.onResume();
+	}
+	
+
 
 	@Override
 	public void jsonfinishLoad(TopicListInfo result) {
@@ -98,12 +200,13 @@ implements OnTopListLoadFinishedListener,OnItemClickListener
 			int tid = StringUtil.getUrlParameter(guid, "tid");
 			int authorid = StringUtil.getUrlParameter(guid, "authorid");
 			ArticleContainerFragment f = ArticleContainerFragment.create(tid, pid, authorid);
-			//Fragment f = new TopiclistContainer();
-			FragmentTransaction ft = getSupportFragmentManager()
-					.beginTransaction();
+			FragmentManager fm = getSupportFragmentManager();
+			FragmentTransaction ft = fm.beginTransaction();
 			
 			ft.replace(R.id.item_detail_container, f);
-				
+			Fragment f1 = fm.findFragmentById(R.id.item_list);
+			f1.setHasOptionsMenu(false);
+			f.setHasOptionsMenu(true);
 			ft.commit();
 		}
 		
@@ -135,6 +238,52 @@ implements OnTopListLoadFinishedListener,OnItemClickListener
 			Log.e(TAG , "detailContainer should implements OnThreadPageLoadFinishedListener");
 		}
 		
+		
+	}
+
+	@Override
+	public int getCurrentPage() {
+		PagerOwnner child = null;
+		try{
+			
+			 Fragment articleContainer = getSupportFragmentManager()	
+						.findFragmentById(R.id.item_detail_container);
+			 child  = (PagerOwnner) articleContainer;
+			 return child.getCurrentPage();
+		}catch(ClassCastException e){
+			Log.e(TAG,"fragment in R.id.item_detail_container does not implements interface " 
+					+ PagerOwnner.class.getName());
+			return 0;
+		}
+
+	}
+
+	@Override
+	public void setCurrentItem(int index) {
+		PagerOwnner child = null;
+		try{
+			
+			 Fragment articleContainer = getSupportFragmentManager()	
+						.findFragmentById(R.id.item_detail_container);
+			 child  = (PagerOwnner) articleContainer;
+			 child.setCurrentItem(index);
+		}catch(ClassCastException e){
+			Log.e(TAG,"fragment in R.id.item_detail_container does not implements interface " 
+					+ PagerOwnner.class.getName());
+			return ;
+		}
+
+		
+	}
+
+	@Override
+	public void OnChildFragmentRemoved(int id) {
+		if(id == R.id.item_detail_container){
+			FragmentManager fm = getSupportFragmentManager();
+			Fragment f1 = fm.findFragmentById(R.id.item_list);
+			f1.setHasOptionsMenu(true);
+			setTitle(R.string.app_name);
+		}
 		
 	}
 

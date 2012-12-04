@@ -51,12 +51,6 @@ public class ThreadFragmentAdapter extends FragmentStatePagerAdapter {
 		arguments.putString(key, value);
 	}
 
-	@Override
-	public float getPageWidth(int position) {
-		if(pageCount == 1){
-			return 1.0f;
-		}
-		return 0.9f;
-	}
+
 
 }
