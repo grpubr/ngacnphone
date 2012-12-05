@@ -21,11 +21,10 @@ import android.content.pm.ActivityInfo;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
-import android.nfc.NfcEvent;
 import android.nfc.NfcAdapter.CreateNdefMessageCallback;
+import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -35,7 +34,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class FlexibleTopicListActivity extends FragmentActivity 
+import com.example.android.actionbarcompat.ActionBarActivity;
+
+public class FlexibleTopicListActivity extends ActionBarActivity 
 implements OnTopListLoadFinishedListener,OnItemClickListener
 ,OnThreadPageLoadFinishedListener,PagerOwnner,
 OnChildFragmentRemovedListener{
@@ -47,8 +48,9 @@ OnChildFragmentRemovedListener{
 
 	@Override
 	protected void onCreate(Bundle arg0) {
-		this.setContentView(R.layout.topiclist_activity);
 		super.onCreate(arg0);
+		this.setContentView(R.layout.topiclist_activity);
+		
 
 		
 		
