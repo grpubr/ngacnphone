@@ -37,7 +37,7 @@ public class EmotionDialogFragment extends NoframeDialogFragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		gv.setAdapter( new EmotionGridAdaptor());
 
-		gv.setBackgroundColor(0x80ff0000);
+		gv.setBackgroundColor(0x7f000000);
 		gv.setOnItemClickListener(new OnItemClickListener(){
 
 			@Override

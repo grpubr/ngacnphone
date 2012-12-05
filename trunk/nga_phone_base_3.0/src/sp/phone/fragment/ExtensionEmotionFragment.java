@@ -25,6 +25,7 @@ public class ExtensionEmotionFragment extends NoframeDialogFragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		int index = getArguments().getInt("index");
 		gv.setAdapter(new ExtensionEmotionAdapter(index));
+		gv.setBackgroundColor(0x7f000000);
 		gv.setOnItemClickListener(new OnItemClickListener(){
 
 			@Override
