@@ -55,6 +55,7 @@ implements OnTopListLoadFinishedListener{
 		
 		mPullRefreshListView = new PullToRefreshListView(getActivity());
 		mPullRefreshListView.setMode(Mode.BOTH);
+		mPullRefreshListView.getRefreshableView().setDivider(null);
 		
 		adapter = new AppendableTopicAdapter(this.getActivity());
 		mPullRefreshListView.setAdapter(adapter);
