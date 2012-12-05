@@ -304,6 +304,10 @@ implements OnTopListLoadFinishedListener{
 
 	@Override
 	public void jsonfinishLoad(TopicListInfo result) {
+		mPullRefreshListView.onRefreshComplete();
+		if(result == null)
+			return;
+		
 		int lines = 35;
 		if(authorid !=0)
 			lines = 20;
@@ -320,8 +324,7 @@ implements OnTopListLoadFinishedListener{
 		}
 
 		adapter.clear();
-		adapter.jsonfinishLoad(result);
-		mPullRefreshListView.onRefreshComplete();
+		adapter.jsonfinishLoad(result);		
 		if(canDismiss)
 			ActivityUtil.getInstance().dismiss();
 		
@@ -346,9 +349,12 @@ implements OnTopListLoadFinishedListener{
 						@Override
 						public void jsonfinishLoad(
 								TopicListInfo result) {
+							mPullRefreshListView.onRefreshComplete();
+							if(result == null)
+								return;
 							ActivityUtil.getInstance().dismiss();
 							adapter.jsonfinishLoad(result);
-							mPullRefreshListView.onRefreshComplete();
+							
 						}
 				
 			} );
