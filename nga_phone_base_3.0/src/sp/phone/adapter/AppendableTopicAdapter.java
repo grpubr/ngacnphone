@@ -30,11 +30,7 @@ public class AppendableTopicAdapter extends TopicListAdapter {
 	public void jsonfinishLoad(TopicListInfo result) {
 		infoList.add(result);
 		count += result.get__T__ROWS();
-		if(count == result.get__T__ROWS())
-		{
-			this.notifyDataSetInvalidated();
-		}
-		else
+		if(count != result.get__T__ROWS())
 		{
 			this.notifyDataSetChanged();
 			

@@ -193,6 +193,13 @@ implements OnTopListLoadFinishedListener{
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		int menuId= R.menu.threadlist_menu;
 		inflater.inflate(menuId, menu);
+		/*if(ActivityUtil.isLessThan_3_0())
+		{
+			for(int i=0; i< menu.size(); ++i){
+				menu.getItem(i).setVisible(false);
+			}
+		}*/
+
 	}
 
 
@@ -325,7 +332,8 @@ implements OnTopListLoadFinishedListener{
 		}
 
 		adapter.clear();
-		adapter.jsonfinishLoad(result);		
+		adapter.jsonfinishLoad(result);	
+		mPullRefreshListView.setAdapter(adapter);
 		if(canDismiss)
 			ActivityUtil.getInstance().dismiss();
 		

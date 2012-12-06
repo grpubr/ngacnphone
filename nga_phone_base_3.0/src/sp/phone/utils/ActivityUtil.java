@@ -50,6 +50,10 @@ public class ActivityUtil {
 		return android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 	}
 	
+	public static boolean isLessThan_3_0(){
+		return android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB;
+	}
+	
 	public static boolean isMeizu(){
 		return "Meizu".equalsIgnoreCase(android.os.Build.MANUFACTURER);
 	}
