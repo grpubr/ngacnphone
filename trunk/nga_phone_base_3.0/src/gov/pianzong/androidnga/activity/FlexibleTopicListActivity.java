@@ -120,7 +120,7 @@ OnChildFragmentRemovedListener{
 	public boolean onCreateOptionsMenu(Menu menu) {
 		final int flags = ThemeManager.ACTION_BAR_FLAG;
 		ReflectionUtil.actionBar_setDisplayOption(this, flags);
-		return super.onCreateOptionsMenu(menu);
+		return false;//super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -131,6 +131,7 @@ OnChildFragmentRemovedListener{
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
 
 	@Override
 	protected void onResume() {

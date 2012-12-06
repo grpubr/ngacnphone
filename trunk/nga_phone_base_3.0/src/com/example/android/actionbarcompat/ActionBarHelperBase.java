@@ -131,7 +131,9 @@ public class ActionBarHelperBase extends ActionBarHelper {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Hides on-screen action items from the options menu.
         for (Integer id : mActionItemIds) {
-            menu.findItem(id).setVisible(false);
+            MenuItem m = menu.findItem(id);
+            if(m!=null)
+            	m.setVisible(false);
         }
         return true;
     }
@@ -247,6 +249,8 @@ public class ActionBarHelperBase extends ActionBarHelper {
         public void inflate(int menuRes, Menu menu) {
             loadActionBarMetadata(menuRes);
             mInflater.inflate(menuRes, menu);
+            //ActionBarHelperBase.this.
+            onCreateOptionsMenu(menu);
         }
 
         /**
