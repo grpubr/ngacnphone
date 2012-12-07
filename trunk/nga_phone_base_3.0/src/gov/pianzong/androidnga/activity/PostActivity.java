@@ -92,7 +92,7 @@ public class PostActivity extends FragmentActivity
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}
 
-		ThemeManager.SetContextTheme(this);
+		
 		super.onCreate(savedInstanceState);
 		View v = this.getLayoutInflater().inflate(R.layout.reply, null);
 		v.setBackgroundColor(getResources()
@@ -101,8 +101,13 @@ public class PostActivity extends FragmentActivity
 				));
 		this.setContentView(v);
 		
+		if(PhoneConfiguration.getInstance().uploadLocation
+				&& PhoneConfiguration.getInstance().location == null
+				)
+		{
+			ActivityUtil.reflushLocation(this);
+		}
 
-		ActivityUtil.reflushLocation(this);
 		Intent intent = this.getIntent();
 		prefix = intent.getStringExtra("prefix");
 		action = intent.getStringExtra("action");
