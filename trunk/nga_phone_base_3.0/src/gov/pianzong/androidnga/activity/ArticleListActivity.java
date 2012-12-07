@@ -53,6 +53,7 @@ PerferenceConstant{
     int authorid;
 	private static final String TAG= "ArticleListActivity";
 	private static final String GOTO_TAG = "goto";
+	private int fid = 0;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -233,7 +234,16 @@ PerferenceConstant{
 				break;
 			case R.id.article_menuitem_back:
 			default:
-				finish();
+				if(0 == fid)
+				{
+					finish();
+				}else
+				{
+					Intent intent2 = new Intent(this, FlexibleTopicListActivity.class);
+                    intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent2.putExtra("fid", fid);
+					
+				}
 				break;
 		}
 		return true;
@@ -406,6 +416,7 @@ PerferenceConstant{
 				&&this.authorid == 0){
 			mTabsAdapter.setCount(exactCount);
 		}
+		fid = data.getThreadInfo().getFid();
 		setTitle(StringUtil.unEscapeHtml(data.getThreadInfo().getSubject()));
 		
 		
