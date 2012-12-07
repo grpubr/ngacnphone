@@ -339,7 +339,7 @@ public class MainActivity extends ActionBarActivity
 		boards.addCategoryName(i, "职业讨论区");
 		i++;
 		
-		boards.add(new Board(i, "310", "前瞻资讯", R.drawable.p310));
+		boards.add(new Board(i, "310", "精英议会", R.drawable.p310));
 		boards.add(new Board(i, "190", "任务讨论", R.drawable.p190));
 		boards.add(new Board(i, "213", "战争档案", R.drawable.p213));
 		boards.add(new Board(i, "218", "副本专区", R.drawable.p218));
