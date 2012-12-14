@@ -66,7 +66,9 @@ OnChildFragmentRemovedListener{
 		if( f1 == null)
 		{
 			f1 = new TopiclistContainer();
-			Bundle args = new Bundle(getIntent().getExtras());
+			Bundle args = new Bundle();//(getIntent().getExtras());
+			if(null != getIntent().getExtras())
+				args.putAll(getIntent().getExtras());
 			args.putString("url", getIntent().getDataString());
 			f1.setArguments(args);
 			FragmentTransaction ft = fm.beginTransaction()

@@ -242,6 +242,7 @@ PerferenceConstant{
 					Intent intent2 = new Intent(this, FlexibleTopicListActivity.class);
                     intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent2.putExtra("fid", fid);
+                    startActivity(intent2);
 					
 				}
 				break;
