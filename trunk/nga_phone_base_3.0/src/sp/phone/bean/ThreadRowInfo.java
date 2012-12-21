@@ -36,7 +36,7 @@ public class ThreadRowInfo {
 	//private String reputation;
 	//private int groupid;
 	//private String lpic;
-	//private String level;
+	private String level;
 	//private int gp_lesser;
 	//private int yz;
 	//private String js_escap_site;
@@ -44,8 +44,8 @@ public class ThreadRowInfo {
 	private String js_escap_avatar;
 	//private int regdate;
 	//private String mute_time;
-	//private int postnum;
-	//private int aurvrc;
+	private int postnum;
+	private int aurvrc;
 	//private int money;
 	//private int thisvisit;
 	private String signature;
@@ -126,6 +126,24 @@ public class ThreadRowInfo {
 	}
 	public void setComments(List<ThreadRowInfo> comments) {
 		this.comments = comments;
+	}
+	public String getLevel() {
+		return level;
+	}
+	public void setLevel(String level) {
+		this.level = level;
+	}
+	public int getPostnum() {
+		return postnum;
+	}
+	public void setPostnum(int postnum) {
+		this.postnum = postnum;
+	}
+	public int getAurvrc() {
+		return aurvrc;
+	}
+	public void setAurvrc(int aurvrc) {
+		this.aurvrc = aurvrc;
 	}
 
 
