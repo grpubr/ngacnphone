@@ -12,6 +12,7 @@ import sp.phone.bean.Board;
 import sp.phone.bean.BoardCategory;
 import sp.phone.bean.BoardHolder;
 import sp.phone.bean.PerferenceConstant;
+import sp.phone.fragment.LoginFragment;
 import sp.phone.interfaces.PageCategoryOwnner;
 import sp.phone.task.AppUpdateCheckTask;
 import sp.phone.utils.ActivityUtil;
@@ -26,6 +27,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -140,7 +142,12 @@ public class MainActivity extends ActionBarActivity
 	}
 
 	private void jumpToLogin() {
-		Intent intent = new Intent();
+		DialogFragment df = new LoginFragment();
+		
+		df.show(getSupportFragmentManager(), "login");
+
+		
+		/*Intent intent = new Intent();
 		intent.setClass(MainActivity.this, LoginActivity.class);
 		try {
 			startActivity(intent);
@@ -150,8 +157,7 @@ public class MainActivity extends ActionBarActivity
 			}
 		} catch (Exception e) {
 
-			// /System.out.print("123");
-		}
+		}*/
 
 	}
 
@@ -493,7 +499,7 @@ public class MainActivity extends ActionBarActivity
 			}
 			if (fid == 0) {
 				String tip = fidString + "不是合法的板块id";
-				Toast.makeText(app, tip, Toast.LENGTH_LONG);
+				Toast.makeText(app, tip, Toast.LENGTH_LONG).show();
 				return;
 			}
 
@@ -506,9 +512,10 @@ public class MainActivity extends ActionBarActivity
 
 				url = url + "&" + config.getCookie().replace("; ", "&");
 			}else if(fid<0){
-				new AlertDialog.Builder(MainActivity.this).setTitle("提示")
+				/*new AlertDialog.Builder(MainActivity.this).setTitle("提示")
 				.setMessage("个人板块要登录了才能进去")
-				.setPositiveButton("知道了", null).show();
+				.setPositiveButton("知道了", null).show();*/
+				jumpToLogin();
 				return;
 			}
 			
