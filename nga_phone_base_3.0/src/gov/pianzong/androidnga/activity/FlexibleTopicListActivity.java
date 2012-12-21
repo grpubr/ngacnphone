@@ -254,6 +254,8 @@ OnChildFragmentRemovedListener{
 			 Fragment articleContainer = getSupportFragmentManager()	
 						.findFragmentById(R.id.item_detail_container);
 			 child  = (PagerOwnner) articleContainer;
+			 if(null == child)
+				 return 0;
 			 return child.getCurrentPage();
 		}catch(ClassCastException e){
 			Log.e(TAG,"fragment in R.id.item_detail_container does not implements interface " 

@@ -34,7 +34,8 @@ public class GotoDialogFragment extends NoframeDialogFragment {
         					+ PagerOwnner.class.getName());
         			return ;
         		}
-        		father.setCurrentItem(getPageValue()-1);
+        		if(father != null)
+        			father.setCurrentItem(getPageValue()-1);
             	
             }
 		});

@@ -80,5 +80,9 @@
     <string name="fuck_gfw_prefix">方滨兴造墙烂屁眼</string>
     <string name="fail_to_cross_gfw">又被墙了,草</string>
     <string name="close">关闭</string>
+    <string name="floor_one">1楼</string>
+    <string name="sample_post_date">11:11:11</string>
+    <string name="sample_nick_name">骷髅党</string>
+    <string name="sample_user_level">级别:骷髅党</string>
     
 </resources>

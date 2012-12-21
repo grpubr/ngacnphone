@@ -126,7 +126,9 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		WebView contentTV;
 		TextView floorTV;
 		TextView postTimeTV;
-		//TextView titleTV;
+		TextView levelTV;
+		TextView aurvrcTV;
+		TextView postnumTV;
 		int position=-1;
 		
 	}
@@ -141,11 +143,12 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 			contentTV.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);		
 	}
 	
-	private static String buildHeader(ThreadRowInfo row){
+	private static String buildHeader(ThreadRowInfo row, String fgColorStr){
 		if( row == null || StringUtil.isEmpty(row.getSubject()) )
 			return "";
 		StringBuilder sb = new StringBuilder();
-		sb.append("<h4>").append(row.getSubject()).append("</h3>");
+		sb.append("<h4 style='color:").append(fgColorStr).append("' >")
+		.append(row.getSubject()).append("</h3>");
 		return sb.toString();
 	}
 	
@@ -224,7 +227,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		ngaHtml = ngaHtml + buildComment(row,fgColorStr) + buildAttachment(row,showImage)
 				+ buildSignature(row,showImage);
 		ngaHtml = "<HTML> <HEAD><META   http-equiv=Content-Type   content= \"text/html;   charset=utf-8 \">" 
-			+ buildHeader(row)
+			+ buildHeader(row,fgColorStr)
 			+ "<body bgcolor= '#"+ bgcolorStr +"'>"
 			+ "<font color='#"+ fgColorStr + "' size='2'>"
 			+ buildLocation(row)
@@ -411,7 +414,9 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		holder.contentTV = (WebView) view.findViewById(R.id.content);
 		holder.floorTV = (TextView) view.findViewById(R.id.floor);
 		holder.postTimeTV = (TextView)view.findViewById(R.id.postTime);
-		//holder.titleTV = (TextView) view.findViewById(R.id.floor_title);
+		/*holder.levelTV = (TextView) view.findViewById(R.id.level);
+		holder.aurvrcTV= (TextView) view.findViewById(R.id.aurvrc);
+		holder.postnumTV = (TextView) view.findViewById(R.id.postnum);*/
 		return holder;
 	}
 	
@@ -471,10 +476,10 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 
 		holder.position = position;
 		ThemeManager theme = ThemeManager.getInstance();
-		int colorId = theme.getBackgroundColor(position);
+		int colorId = theme.getBackgroundColor(1);
 		view.setBackgroundResource(colorId);
 
-		
+		colorId = theme.getBackgroundColor(2);
 		
 		if(row == null){
 			//holder.titleTV.setText("错误楼层");
@@ -518,8 +523,15 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		postTimeTV.setText(row.getPostdate());
 		postTimeTV.setTextColor(fgColor);
 
-
-
+		/*
+		holder.levelTV.setText("级别:"+row.getLevel());
+		holder.levelTV.setTextColor(fgColor);
+		
+		holder.aurvrcTV.setText("威望:"+row.getAurvrc());
+		holder.aurvrcTV.setTextColor(fgColor);
+		
+		holder.postnumTV.setText("发帖:"+row.getPostnum());
+		holder.postnumTV.setTextColor(fgColor);*/
 
 		return view;
 	}
