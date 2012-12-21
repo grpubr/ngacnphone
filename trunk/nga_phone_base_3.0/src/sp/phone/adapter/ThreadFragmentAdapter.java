@@ -6,8 +6,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.widget.Toast;
 
-public class ThreadFragmentAdapter extends FragmentStatePagerAdapter {
+public class ThreadFragmentAdapter extends FragmentStatePagerAdapter 
+implements OnPageChangeListener {
 
 	private int pageCount=0;
 	private Bundle arguments = new Bundle();
@@ -20,6 +23,7 @@ public class ThreadFragmentAdapter extends FragmentStatePagerAdapter {
 		super(activity.getSupportFragmentManager());
 		mContext = activity;
 		this.clss = FragmentClass;
+		pager.setOnPageChangeListener(this);
 		pager.setAdapter(this);
 	}
 
@@ -49,6 +53,29 @@ public class ThreadFragmentAdapter extends FragmentStatePagerAdapter {
 	
 	public void setArgument(String key, String value){
 		arguments.putString(key, value);
+	}
+
+	@Override
+	public void onPageScrollStateChanged(int arg0) {
+
+		
+	}
+
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+
+		
+	}
+
+	private Toast lastToast = null;
+	@Override
+	public void onPageSelected(int arg0) {
+		if( null != lastToast)
+			lastToast.cancel();
+		lastToast = 
+		Toast.makeText(mContext, ""+ (arg0+1) + "/" + pageCount, Toast.LENGTH_SHORT);
+		lastToast.show();
+		
 	}
 
 
