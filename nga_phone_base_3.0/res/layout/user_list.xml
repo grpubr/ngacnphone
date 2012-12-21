@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
     android:orientation="horizontal" >
 
     <ImageButton
@@ -15,6 +16,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:gravity="fill_vertical"
-        android:text="" />
+        android:text="@string/sample_nick_name" />
 
 </LinearLayout>

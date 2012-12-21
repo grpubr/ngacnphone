@@ -1,5 +1,7 @@
 package sp.phone.adapter;
 
+import java.lang.ref.SoftReference;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -67,14 +69,16 @@ implements OnPageChangeListener {
 		
 	}
 
-	private Toast lastToast = null;
+	private SoftReference<Toast> lastToast = null;
 	@Override
 	public void onPageSelected(int arg0) {
-		if( null != lastToast)
-			lastToast.cancel();
-		lastToast = 
+		Toast t = lastToast.get();
+		if( null != t)
+			t.cancel();
+		t = 
 		Toast.makeText(mContext, ""+ (arg0+1) + "/" + pageCount, Toast.LENGTH_SHORT);
-		lastToast.show();
+		t.show();
+		lastToast = new SoftReference <Toast>(t);
 		
 	}
 
