@@ -180,6 +180,7 @@ AsyncTask<String, Integer, String> {
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+			return null;
 		}
 		 
 		 this.filename = contentType.replace('/', '.');
