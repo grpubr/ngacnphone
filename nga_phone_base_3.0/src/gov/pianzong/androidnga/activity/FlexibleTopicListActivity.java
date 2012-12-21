@@ -1,6 +1,7 @@
 package gov.pianzong.androidnga.activity;
 
 import gov.pianzong.androidnga.R;
+import sp.phone.adapter.TopicListAdapter;
 import sp.phone.bean.ThreadData;
 import sp.phone.bean.TopicListInfo;
 import sp.phone.fragment.ArticleContainerFragment;
@@ -32,6 +33,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.HeaderViewListAdapter;
+import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.example.android.actionbarcompat.ActionBarActivity;
@@ -213,6 +216,21 @@ OnChildFragmentRemovedListener{
 			f1.setHasOptionsMenu(false);
 			f.setHasOptionsMenu(true);
 			ft.commit();
+			
+			ListView listview = (ListView)parent;
+			Object a = parent.getAdapter();
+			TopicListAdapter adapter = null;
+			if(a instanceof TopicListAdapter ){
+				adapter = (TopicListAdapter)a;
+			}else if(a instanceof HeaderViewListAdapter){
+				HeaderViewListAdapter ha = (HeaderViewListAdapter)a;
+				adapter = (TopicListAdapter) ha.getWrappedAdapter();
+				position -= ha.getHeadersCount();
+			}
+			adapter.setSelected(position);
+			listview.setItemChecked(position, true);
+			
+			
 		}
 		
 	}
