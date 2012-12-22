@@ -2,7 +2,19 @@ package sp.phone.task;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.alibaba.fastjson.JSON;
+
 import gov.pianzong.androidnga.R;
+import gov.pianzong.androidnga.activity.ReplyListActivity;
+import sp.phone.bean.NotificationObject;
+import sp.phone.bean.PerferenceConstant;
 import sp.phone.bean.StringFindResult;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
@@ -12,6 +24,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -19,7 +33,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 public class CheckReplyNotificationTask extends
-		AsyncTask<String, Integer, String> {
+		AsyncTask<String, Integer, String> 
+implements PerferenceConstant{
 	final String url = "http://bbs.ngacn.cc/nuke.php?func=noti&__notpl&__nodb&__nolib";
 	final Context context;
 	
@@ -57,6 +72,22 @@ public class CheckReplyNotificationTask extends
 		 * 
 		 */
 		
+		//result = "{0:[{0:8,1:1831521,2:\"片总\",3:\"\",4:\"\",5:\"NGA安卓客户端越来越完善了！点击LZ下面小尾巴下载最新版！付建议！\",9:1329908664,6:4942187,7:84606246},{0:8,1:1831521,2:\"片总\",3:\"\",4:\"\",5:\"NGA安卓客户端越来越完善了！点击LZ下面小尾巴下载最新版！付建议！\",9:1329908695,6:4942187,7:84606274}]}";
+		
+		/*Object o = JSON.parse(result);
+		
+		if( o!= null){
+			JSONObject obj = (JSONObject) o;
+			JSONArray array = obj.getJSONArray("0");
+		}*/
+		try {
+			JSONObject o = new JSONObject(result);
+			JSONArray array = o.getJSONArray("0");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		if(StringUtil.isEmpty(result)){
 			return;
 		}
@@ -69,7 +100,14 @@ public class CheckReplyNotificationTask extends
 			int end = result.indexOf("\",3:",start);
 			String nickName = result.substring(start, end);
 			start = end;*/
-			StringFindResult ret = StringUtil.getStringBetween(result,start, ",2:\"", "\",3:");
+			StringFindResult ret = StringUtil.getStringBetween(result,start, ",1:", ",2");
+			start = ret.position;
+			if(StringUtil.isEmpty(ret.result)||ret.position == -1)
+				break;
+			String authorId = ret.result;
+	
+			
+			ret = StringUtil.getStringBetween(result,start, ":\"", "\",3:");
 			if(StringUtil.isEmpty(ret.result)||ret.position == -1)
 				break;
 			String nickName = ret.result;
@@ -114,16 +152,83 @@ public class CheckReplyNotificationTask extends
 			
 			
 			title = StringUtil.unEscapeHtml(title);
-			showNotification(nickName,tid,pid, title);
+			addNotification(authorId,nickName,tid,pid, title);
+		}
+
+		if(notificationList.size() == 1){
+			NotificationObject o = notificationList.get(0);
+			showNotification(o.getNickName(),String.valueOf(o.getTid())
+					,String.valueOf(o.getPid()), o.getTitle());
+		}
+		else if(notificationList.size() >= 1){
+			showStackedNotification();
 		}
 	}
 
-
-	void showNotification(String nickName, String tid, String pid, String title){
+	List<NotificationObject> notificationList = new ArrayList<NotificationObject>();
+	void addNotification(String authorid,String nickName, String tid, String pid, String title ){
 		if(StringUtil.isEmpty(tid))
 		{
 			return;
 		}
+		
+		NotificationObject o  = new NotificationObject();
+		o.setAuthorId(Integer.parseInt(authorid));
+		o.setNickName(nickName);
+		o.setTid(Integer.parseInt(tid));
+		o.setPid(Integer.parseInt(pid));
+		o.setTitle(title);
+		notificationList.add(o);
+		
+		
+	}
+	
+	void showStackedNotification(){
+		
+		String str = JSON.toJSONString(notificationList);
+		SharedPreferences  share = 
+				context.getSharedPreferences(PERFERENCE, Context.MODE_PRIVATE);
+
+			Editor editor = share.edit();
+			editor.putString(PENDING_REPLYS, str);
+			editor.commit();
+		
+		
+		NotificationManager nm = 
+				(NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+		Intent intent = new Intent();
+		//intent.setFlags(Intent.flag)
+		intent.setClass(context, ReplyListActivity.class);
+		PendingIntent pending=
+				PendingIntent.getActivity(context, 0, intent, 0); 
+		 Notification notification = new Notification(); 
+		 notification.icon = R.drawable.nga_bg;
+		 notification.defaults = Notification.DEFAULT_LIGHTS;
+		 AudioManager audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+		 
+		 if(PhoneConfiguration.getInstance().notificationSound
+				 && audioManager.getRingerMode() ==AudioManager.RINGER_MODE_NORMAL )
+			 notification.defaults |=Notification.DEFAULT_SOUND;
+		 notification.flags = Notification.FLAG_AUTO_CANCEL;
+		 
+	     notification.tickerText = "有" + notificationList.size()
+	    		 +"个人喷你了";
+	     notification.when = System.currentTimeMillis();
+	     
+	     notification.number = notificationList.size();
+	    		 
+	     NotificationObject o  = notificationList.get(0);
+	    notification.setLatestEventInfo(context, o.getNickName(), o.getTitle(), pending);
+	    nm.notify(R.layout.topiclist_activity, notification);
+	}
+	
+	void showNotification(String nickName, String tid, String pid, String title){
+		
+		if(StringUtil.isEmpty(tid))
+		{
+			return;
+		}
+		
 		Log.i(this.getClass().getSimpleName(), "showNotification: pid="+pid +
 				",tid=" + tid);
 		
