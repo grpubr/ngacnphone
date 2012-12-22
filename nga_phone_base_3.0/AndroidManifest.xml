@@ -76,6 +76,7 @@
 		<activity android:name=".activity.ImageViewerActivity" android:theme="@style/AppTheme"></activity>
 		<activity android:name=".activity.NearbyUserActivity" android:theme="@style/AppTheme"></activity>
 		<activity android:theme="@style/AppTheme" android:name=".activity.FragmentArticleListActivity"></activity>
+		<activity android:name=".activity.ReplyListActivity" android:theme="@style/AppTheme"></activity>
 	</application>
 
 </manifest> 

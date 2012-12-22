@@ -24,4 +24,5 @@ public interface PerferenceConstant {
 	final String USE_VIEW_CACHE = "useViewCache";
 	final String USER_LIST = "userList";
 	final String UPLOAD_LOCATION = "uploadLocation";
+	final String PENDING_REPLYS = "pendingReplys";
 }
