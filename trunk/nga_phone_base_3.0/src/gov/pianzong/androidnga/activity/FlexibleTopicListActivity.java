@@ -2,6 +2,7 @@ package gov.pianzong.androidnga.activity;
 
 import gov.pianzong.androidnga.R;
 import sp.phone.adapter.TopicListAdapter;
+import sp.phone.bean.BoardHolder;
 import sp.phone.bean.ThreadData;
 import sp.phone.bean.TopicListInfo;
 import sp.phone.fragment.ArticleContainerFragment;
@@ -18,6 +19,8 @@ import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.annotation.TargetApi;
+import android.app.ActionBar;
+import android.app.ActionBar.OnNavigationListener;
 import android.content.pm.ActivityInfo;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -33,9 +36,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.example.android.actionbarcompat.ActionBarActivity;
 
@@ -47,7 +51,8 @@ OnChildFragmentRemovedListener{
 	private String TAG = FlexibleTopicListActivity.class.getSimpleName() ;
 	boolean dualScreen = true;
 	private CheckReplyNotificationTask asynTask;
-
+	String strs [] = {"","¾«»ª","ÍÆ¼ö"};
+	ArrayAdapter<String> categoryAdapter;
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -55,6 +60,7 @@ OnChildFragmentRemovedListener{
 		this.setContentView(R.layout.topiclist_activity);
 		
 
+		
 		
 		
 		if(ActivityUtil.isNotLessThan_4_0())
@@ -71,7 +77,16 @@ OnChildFragmentRemovedListener{
 			f1 = new TopiclistContainer();
 			Bundle args = new Bundle();//(getIntent().getExtras());
 			if(null != getIntent().getExtras())
+			{
 				args.putAll(getIntent().getExtras());
+				int fid = args.getInt("fid", 0);
+				if(fid != 0){
+					String boardName = BoardHolder.boardNameMap.get(fid);
+					if(null != boardName){
+						strs[0] = boardName;
+					}
+				}
+			}
 			args.putString("url", getIntent().getDataString());
 			f1.setArguments(args);
 			FragmentTransaction ft = fm.beginTransaction()
@@ -94,9 +109,40 @@ OnChildFragmentRemovedListener{
 			f1.setHasOptionsMenu(false);
 			f2.setHasOptionsMenu(true);
 		}
+		
+		setNavigation();
 			
 	}
 	
+	@TargetApi(11)
+	private void setNavigation() {
+		
+		if(!ActivityUtil.isLessThan_3_0())
+		{
+		 ActionBar actionBar = getActionBar();
+		 actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		 
+		 categoryAdapter = new ArrayAdapter<String>(this,
+				 android.R.layout.simple_list_item_1,strs);
+		 OnNavigationListener callback = new OnNavigationListener(){
+
+			@Override
+			public boolean onNavigationItemSelected(int itemPosition,
+					long itemId) {
+				TopiclistContainer f1 = (TopiclistContainer) getSupportFragmentManager()
+						.findFragmentById(R.id.item_list);
+				if( f1 != null)
+				{
+					f1.onCategoryChanged(itemPosition);
+				}
+				return true;
+			}
+			 
+		 };
+		actionBar.setListNavigationCallbacks(categoryAdapter, callback);
+		}
+	}
+
 	@TargetApi(14)
 	void setNfcCallBack(){
 		NfcAdapter adapter = NfcAdapter.getDefaultAdapter(this);
@@ -123,7 +169,7 @@ OnChildFragmentRemovedListener{
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		final int flags = ThemeManager.ACTION_BAR_FLAG;
+		final int flags = 7;//ThemeManager.ACTION_BAR_FLAG;
 		ReflectionUtil.actionBar_setDisplayOption(this, flags);
 		return false;//super.onCreateOptionsMenu(menu);
 	}
@@ -165,6 +211,7 @@ OnChildFragmentRemovedListener{
 		super.onResume();
 	}
 	
+
 
 
 	@Override

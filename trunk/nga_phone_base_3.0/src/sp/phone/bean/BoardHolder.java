@@ -4,6 +4,7 @@ import android.util.SparseArray;
 
 
 public class BoardHolder {
+	public static SparseArray<String> boardNameMap = new SparseArray<String>();
 	private SparseArray<BoardCategory> boardInfo;
 	private SparseArray<String> categoryName;
 	
@@ -86,7 +87,13 @@ public class BoardHolder {
 			boardInfo.put(category, new  BoardCategory());
 		
 		((BoardCategory) boardInfo.get(category)).add(board);
-		
+		try{
+			int fid = Integer.parseInt(board.getUrl());
+			boardNameMap.put(fid, board.getName());
+		}catch(Exception e){
+			
+		}
+
 	}
 
 	/*public void remove(String fid) {
