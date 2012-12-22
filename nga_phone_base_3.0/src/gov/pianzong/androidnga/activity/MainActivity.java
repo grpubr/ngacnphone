@@ -298,7 +298,9 @@ public class MainActivity extends ActionBarActivity
 	}*/
 	private BoardHolder loadDefaultBoard(){
 		
-		BoardHolder boards = new BoardHolder();
+		MyApp app = (MyApp) getApplication();
+		return app.loadDefaultBoard();
+		/*BoardHolder boards = new BoardHolder();
 		
 		int i= 0;
 		
@@ -441,7 +443,7 @@ public class MainActivity extends ActionBarActivity
 		i++;
 		
 		
-		return boards;
+		return boards;*/
 	}
 
 

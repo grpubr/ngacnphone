@@ -49,9 +49,13 @@ implements OnTopListLoadFinishedListener{
 	private PullToRefreshListView mPullRefreshListView;
 	AppendableTopicAdapter adapter;
 	boolean canDismiss = true;
+	int category = 0;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		if(savedInstanceState != null){
+			category = savedInstanceState.getInt("category", 0);
+		}
 		
 		mPullRefreshListView = new PullToRefreshListView(getActivity());
 		mPullRefreshListView.setMode(Mode.BOTH);
@@ -184,6 +188,16 @@ implements OnTopListLoadFinishedListener{
 		}
 		
 		jsonUri += "page="+ page + "&lite=js&noprefix";
+		switch(category){
+			case 2:
+				jsonUri += "&recommend=1&order_by=postdatedesc&admin=1";
+				break;
+			case 1:
+				jsonUri += "&recommend=1&order_by=postdatedesc&user=1";
+				break;
+			case 0:
+			default:
+		}
 		
 		return jsonUri;
 	}
@@ -257,6 +271,7 @@ implements OnTopListLoadFinishedListener{
 	}
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
+		outState.putInt("category", category);
 		canDismiss = false;
 		super.onSaveInstanceState(outState);
 	}
@@ -308,7 +323,13 @@ implements OnTopListLoadFinishedListener{
 		return ret;
 	}
 
-
+	public void onCategoryChanged(int position){
+		if(position != category)
+		{
+			category = position;
+			refresh();
+		}
+	}
 
 	@Override
 	public void jsonfinishLoad(TopicListInfo result) {
