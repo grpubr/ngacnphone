@@ -387,7 +387,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 			            else
 			            	f.delete();
 			            long date = f.lastModified();
-			            if(System.currentTimeMillis() - date > 30*24*3600*1000)
+			            if( (System.currentTimeMillis() - date)/1000 > 30*24*3600)
 			            {
 			            	f.delete();
 			            }
@@ -476,10 +476,10 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 
 		holder.position = position;
 		ThemeManager theme = ThemeManager.getInstance();
-		int colorId = theme.getBackgroundColor(1);
+		int colorId = theme.getBackgroundColor(position);
 		view.setBackgroundResource(colorId);
 
-		colorId = theme.getBackgroundColor(2);
+		//colorId = theme.getBackgroundColor(2);
 		
 		if(row == null){
 			//holder.titleTV.setText("´íÎóÂ¥²ã");
