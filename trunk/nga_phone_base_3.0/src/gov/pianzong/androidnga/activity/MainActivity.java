@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
@@ -141,13 +142,21 @@ public class MainActivity extends ActionBarActivity
 		super.onResume();
 	}
 
+	public boolean isTablet() {
+	    boolean xlarge = ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE);
+	    boolean large = ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
+	    return (xlarge || large);
+	}
 	private void jumpToLogin() {
-		DialogFragment df = new LoginFragment();
-		
-		df.show(getSupportFragmentManager(), "login");
+		if(isTablet())
+		{
+			DialogFragment df = new LoginFragment();
+			df.show(getSupportFragmentManager(), "login");
+			return;
+		}
 
 		
-		/*Intent intent = new Intent();
+		Intent intent = new Intent();
 		intent.setClass(MainActivity.this, LoginActivity.class);
 		try {
 			startActivity(intent);
@@ -157,7 +166,7 @@ public class MainActivity extends ActionBarActivity
 			}
 		} catch (Exception e) {
 
-		}*/
+		}
 
 	}
 
