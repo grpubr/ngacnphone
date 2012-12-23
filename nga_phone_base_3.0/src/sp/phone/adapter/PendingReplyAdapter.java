@@ -3,10 +3,12 @@ package sp.phone.adapter;
 import gov.pianzong.androidnga.R;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 import sp.phone.bean.NotificationObject;
 import sp.phone.utils.ImageUtil;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,6 +85,15 @@ public class PendingReplyAdapter extends BaseAdapter {
 				}
 			}
 			
+		}
+		
+		Resources res = avatarIV.getResources();
+		if(bitmap == null)
+		{
+			
+			InputStream is = res.openRawResource(R.drawable.default_avatar);
+			InputStream is2 = res.openRawResource(R.drawable.default_avatar);
+			bitmap = ImageUtil.loadAvatarFromStream(is, is2, 150);
 		}
 		
 		if( bitmap != null){
