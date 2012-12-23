@@ -417,7 +417,15 @@ public class ArticleListFragment extends Fragment
 		case R.id.item_share:
 			intent.setAction(Intent.ACTION_SEND);
 			intent.setType("text/plain");
-			intent.putExtra(Intent.EXTRA_TEXT, StringUtil.removeBrTag(content));
+			String shareUrl = "http://bbs.ngacn.cc/read.php?";
+			if(row.getPid() != 0){
+				shareUrl = shareUrl + "pid="+row.getPid();
+			}
+			else
+			{
+				shareUrl = shareUrl + "tid="+tid;
+			}
+			intent.putExtra(Intent.EXTRA_TEXT, shareUrl);
 			String text = getResources().getString(R.string.share);
 			getActivity().startActivity(Intent.createChooser(intent, text));
 			break;
