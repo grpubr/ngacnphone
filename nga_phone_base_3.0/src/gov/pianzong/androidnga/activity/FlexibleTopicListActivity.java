@@ -51,7 +51,7 @@ OnChildFragmentRemovedListener{
 	private String TAG = FlexibleTopicListActivity.class.getSimpleName() ;
 	boolean dualScreen = true;
 	private CheckReplyNotificationTask asynTask;
-	String strs [] = {"","精华","推荐"};
+	String strs [] = {"全部","精华","推荐"};
 	ArrayAdapter<String> categoryAdapter;
 
 	@Override
@@ -79,13 +79,6 @@ OnChildFragmentRemovedListener{
 			if(null != getIntent().getExtras())
 			{
 				args.putAll(getIntent().getExtras());
-				int fid = args.getInt("fid", 0);
-				if(fid != 0){
-					String boardName = BoardHolder.boardNameMap.get(fid);
-					if(null != boardName){
-						strs[0] = boardName;
-					}
-				}
 			}
 			args.putString("url", getIntent().getDataString());
 			f1.setArguments(args);
@@ -108,6 +101,15 @@ OnChildFragmentRemovedListener{
 		{
 			f1.setHasOptionsMenu(false);
 			f2.setHasOptionsMenu(true);
+		}
+		
+
+		int fid = getIntent().getIntExtra("fid", 0);
+		if (fid != 0) {
+			String boardName = BoardHolder.boardNameMap.get(fid);
+			if (null != boardName) {
+				strs[0] = boardName;
+			}
 		}
 		
 		setNavigation();
