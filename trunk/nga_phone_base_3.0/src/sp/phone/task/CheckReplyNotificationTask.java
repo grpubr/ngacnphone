@@ -171,6 +171,13 @@ implements PerferenceConstant{
 		{
 			return;
 		}
+		if(notificationList.size() >0){
+			NotificationObject last = notificationList.get(notificationList.size()-1);
+			if(last.getTid() == Integer.parseInt(tid)
+					&& last.getPid() == Integer.parseInt(pid)){
+				return;
+			}
+		}
 		
 		NotificationObject o  = new NotificationObject();
 		o.setAuthorId(Integer.parseInt(authorid));
