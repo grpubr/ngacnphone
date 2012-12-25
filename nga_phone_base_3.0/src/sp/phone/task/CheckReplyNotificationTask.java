@@ -74,19 +74,14 @@ implements PerferenceConstant{
 		
 		//result = "{0:[{0:8,1:1831521,2:\"片总\",3:\"\",4:\"\",5:\"NGA安卓客户端越来越完善了！点击LZ下面小尾巴下载最新版！付建议！\",9:1329908664,6:4942187,7:84606246},{0:8,1:1831521,2:\"片总\",3:\"\",4:\"\",5:\"NGA安卓客户端越来越完善了！点击LZ下面小尾巴下载最新版！付建议！\",9:1329908695,6:4942187,7:84606274}]}";
 		
-		/*Object o = JSON.parse(result);
-		
-		if( o!= null){
-			JSONObject obj = (JSONObject) o;
-			JSONArray array = obj.getJSONArray("0");
-		}*/
+	/*
 		try {
 			JSONObject o = new JSONObject(result);
 			JSONArray array = o.getJSONArray("0");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 
 		if(StringUtil.isEmpty(result)){
 			return;
@@ -183,7 +178,11 @@ implements PerferenceConstant{
 		o.setAuthorId(Integer.parseInt(authorid));
 		o.setNickName(nickName);
 		o.setTid(Integer.parseInt(tid));
-		o.setPid(Integer.parseInt(pid));
+		try{
+			o.setPid(Integer.parseInt(pid));
+		}catch(Exception e){
+			o.setPid(0);
+		}
 		o.setTitle(title);
 		notificationList.add(o);
 		
