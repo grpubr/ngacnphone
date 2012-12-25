@@ -439,6 +439,11 @@ public class PostActivity extends FragmentActivity
 
 		@Override
 		protected void onPostExecute(String result) {
+			String success_result = " ·¢ÌùÍê±Ï ... ";
+			if(!success_result.equals(result)){
+				keepActivity = true;
+			}
+			
 			Toast.makeText(v.getContext(), result,
 					Toast.LENGTH_LONG).show();
 			PhoneConfiguration.getInstance().setRefreshAfterPost(true);
