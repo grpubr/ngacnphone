@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSON;
 import sp.phone.adapter.PendingReplyAdapter;
 import sp.phone.bean.NotificationObject;
 import sp.phone.bean.PerferenceConstant;
+import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
 import android.content.Context;
 import android.content.Intent;
@@ -62,7 +63,7 @@ implements PerferenceConstant{
 				intent.putExtra("pid",no.getPid() );
 				intent.putExtra("authorid",0 );
 				
-				intent.setClass(getActivity(), ArticleListActivity.class);
+				intent.setClass(getActivity(), PhoneConfiguration.getInstance().articleActivityClass);
 				getActivity().startActivity(intent);
 				
 			}

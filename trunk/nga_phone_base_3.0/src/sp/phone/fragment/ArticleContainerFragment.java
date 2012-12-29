@@ -11,6 +11,7 @@ import sp.phone.interfaces.PagerOwnner;
 import sp.phone.task.BookmarkTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.PhoneConfiguration;
+import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.app.Activity;
 import android.content.Intent;
@@ -66,10 +67,20 @@ PagerOwnner{
 
 		mViewPager = (ViewPager) v.findViewById(R.id.pager);
 
-		
-		tid = this.getArguments().getInt("tid", 0);		
-		pid = this.getArguments().getInt("pid", 0);
-		authorid = this.getArguments().getInt("authorid", 0);
+		int pageFromUrl = 0;
+		String url = getArguments().getString("url");
+		if(null != url){
+			tid = this.getUrlParameter(url, "tid");		
+			pid = this.getUrlParameter(url, "pid");		
+			authorid = this.getUrlParameter(url, "authorid");
+			pageFromUrl = this.getUrlParameter(url, "page");
+		}else
+		{
+			tid = this.getArguments().getInt("tid", 0);		
+			pid = this.getArguments().getInt("pid", 0);
+			authorid = this.getArguments().getInt("authorid", 0);
+		}
+
 		
 		
 		mTabsAdapter = new ThreadFragmentAdapter(getActivity(), mViewPager,ArticleListFragment.class);
@@ -88,7 +99,13 @@ PagerOwnner{
         		mViewPager.setCurrentItem(savedInstanceState.getInt("tab"));
         	}
         	
-        }else{
+        }
+        else if(pageFromUrl !=0)
+        {
+        	mTabsAdapter.setCount(pageFromUrl+1);
+        	mViewPager.setCurrentItem(pageFromUrl);
+        }
+        else{
         	mTabsAdapter.setCount(1);
         }
 		
@@ -120,6 +137,31 @@ PagerOwnner{
 		}
 		
 	}
+	
+	private int getUrlParameter(String url, String paraName){
+		if(StringUtil.isEmpty(url))
+		{
+			return 0;
+		}
+		final String pattern = paraName+"=" ;
+		int start = url.indexOf(pattern);
+		if(start == -1)
+			return 0;
+		start +=pattern.length();
+		int end = url.indexOf("&",start);
+		if(end == -1)
+			end = url.length();
+		String value = url.substring(start,end);
+		int ret = 0;
+		try{
+			ret = Integer.parseInt(value);
+		}catch(Exception e){
+			Log.e(TAG, "invalid url:" + url);
+		}
+		
+		return ret;
+	}
+	
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
