@@ -2,6 +2,7 @@ package gov.pianzong.androidnga.activity;
 
 import gov.pianzong.androidnga.R;
 import sp.phone.adapter.TabsAdapter;
+import sp.phone.adapter.ThreadFragmentAdapter;
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.bean.ThreadData;
 import sp.phone.fragment.ArticleListFragment;
@@ -47,18 +48,23 @@ implements PagerOwnner,ResetableArticle,OnThreadPageLoadFinishedListener,
 PerferenceConstant{
 	TabHost tabhost;
 	ViewPager  mViewPager;
-    TabsAdapter mTabsAdapter;
+	ThreadFragmentAdapter mTabsAdapter;
     int tid;
     int pid;
     int authorid;
 	private static final String TAG= "ArticleListActivity";
 	private static final String GOTO_TAG = "goto";
 	private int fid = 0;
+	
+	protected int getViewId(){
+		return R.layout.pagerview_article_list;
+	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.pagerview_article_list);
+		setContentView(getViewId());
+		
 		if(PhoneConfiguration.getInstance().uploadLocation
 				&& PhoneConfiguration.getInstance().location == null
 				)
@@ -66,8 +72,7 @@ PerferenceConstant{
 			ActivityUtil.reflushLocation(this);
 		}
 		
-		tabhost = (TabHost) findViewById(android.R.id.tabhost);
-		tabhost.setup();
+		
 		mViewPager = (ViewPager)findViewById(R.id.pager);
 		if (ActivityUtil.isNotLessThan_4_0()) {			
 			setNfcCallBack();
@@ -88,7 +93,16 @@ PerferenceConstant{
 		authorid = this.getIntent().getIntExtra("authorid", 0);
 		}
 	
-		mTabsAdapter = new TabsAdapter(this, tabhost, mViewPager,ArticleListFragment.class);
+		tabhost = (TabHost) findViewById(android.R.id.tabhost);
+		
+		if(tabhost != null)
+		{
+			tabhost.setup();
+			mTabsAdapter = new TabsAdapter(this, tabhost, mViewPager,ArticleListFragment.class);	
+		}else{
+			mTabsAdapter = new ThreadFragmentAdapter(this,  mViewPager,ArticleListFragment.class);
+		}
+		
 		mTabsAdapter.setArgument("id", tid);
 		mTabsAdapter.setArgument("pid", pid);
 		mTabsAdapter.setArgument("authorid", authorid);
@@ -239,7 +253,7 @@ PerferenceConstant{
 					finish();
 				}else
 				{
-					Intent intent2 = new Intent(this, FlexibleTopicListActivity.class);
+					Intent intent2 = new Intent(this, PhoneConfiguration.getInstance().topicActivityClass);
                     intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent2.putExtra("fid", fid);
                     startActivity(intent2);
@@ -344,9 +358,9 @@ PerferenceConstant{
 		return super.onContextItemSelected(item);
 	}
 
-	public TabsAdapter getmTabsAdapter() {
+	/*public ThreadFragmentAdapter getmTabsAdapter() {
 		return mTabsAdapter;
-	}
+	}*/
 
 	@Override
 	public int getCurrentPage() {

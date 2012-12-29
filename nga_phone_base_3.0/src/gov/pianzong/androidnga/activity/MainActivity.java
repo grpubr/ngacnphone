@@ -536,7 +536,7 @@ public class MainActivity extends ActionBarActivity
 				Intent intent = new Intent();
 				intent.putExtra("tab", "1");
 				intent.putExtra("fid", fid);
-				intent.setClass(MainActivity.this, FlexibleTopicListActivity.class);
+				intent.setClass(MainActivity.this, config.topicActivityClass);
 				//intent.setClass(MainActivity.this, TopicListActivity.class);
 				startActivity(intent);
 				if(PhoneConfiguration.getInstance().showAnimation)

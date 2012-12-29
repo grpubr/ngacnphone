@@ -65,6 +65,7 @@ OnChildFragmentRemovedListener{
 		
 		if(ActivityUtil.isNotLessThan_4_0())
 			setNfcCallBack();
+	
 		
 		if(null == findViewById(R.id.item_detail_container))
 		{			

@@ -12,7 +12,7 @@ import android.widget.Toast;
 public class ThreadFragmentAdapter extends FragmentStatePagerAdapter 
 implements OnPageChangeListener {
 
-	private int pageCount=0;
+	private int pageCount=1;
 	private Bundle arguments = new Bundle();
 	private final Context mContext;
 	private final Class<?> clss;

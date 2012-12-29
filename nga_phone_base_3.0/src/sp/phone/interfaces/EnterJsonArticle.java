@@ -51,7 +51,7 @@ public class EnterJsonArticle implements OnItemClickListener {
 		adapter.setSelected(position);
 		listview.setItemChecked(position, true);
 		
-		intent.setClass(activity, ArticleListActivity.class);
+		intent.setClass(activity, PhoneConfiguration.getInstance().articleActivityClass);
 		activity.startActivity(intent);
 		if(PhoneConfiguration.getInstance().showAnimation)
 			activity.overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);

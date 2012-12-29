@@ -163,7 +163,7 @@ public class BookmarkActivity extends Activity
 		Intent intent = new Intent();
 		intent.putExtra("tab", "1");
 		intent.putExtra("tid",tid);
-		intent.setClass(this, ArticleListActivity.class);
+		intent.setClass(this, PhoneConfiguration.getInstance().articleActivityClass);
 		startActivity(intent);
 		if(PhoneConfiguration.getInstance().showAnimation)
 			overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);

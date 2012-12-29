@@ -1,12 +1,22 @@
 package sp.phone.utils;
 
+import gov.pianzong.androidnga.activity.ArticleListActivity;
+import gov.pianzong.androidnga.activity.FlexibleTopicListActivity;
+import gov.pianzong.androidnga.activity.HaArticleListActivity;
+import gov.pianzong.androidnga.activity.HaFlexibleTopicListActivity;
+import gov.pianzong.androidnga.activity.HaSplitArticleListActivity;
+import gov.pianzong.androidnga.activity.HaSplitFlexibleTopicListActivity;
+import gov.pianzong.androidnga.activity.SplitArticleListActivity;
+import gov.pianzong.androidnga.activity.SplitFlexibleTopicListActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import android.location.Location;
 import sp.phone.bean.Bookmark;
+import sp.phone.bean.PerferenceConstant;
 
-public class PhoneConfiguration {
+public class PhoneConfiguration implements PerferenceConstant{
 	private static PhoneConfiguration instance;
 	private boolean refreshAfterPost;
 	List<Bookmark> bookmarks;// url<-->tilte
@@ -26,8 +36,11 @@ public class PhoneConfiguration {
 	public boolean useViewCache;
 	public Location location = null;
 	public boolean uploadLocation = false;
-	
-	
+	private int uiFlag = 0;
+
+
+	public Class<?> topicActivityClass = FlexibleTopicListActivity.class;
+	public Class<?> articleActivityClass = ArticleListActivity.class;
 	
 	
 	public int getNikeWidth() {
@@ -150,5 +163,32 @@ public class PhoneConfiguration {
 		
 	}
 	
+
+	public int getUiFlag() {
+		return uiFlag;
+	}
+
+	public void setUiFlag(int uiFlag) {
+		this.uiFlag = uiFlag;
+		switch (uiFlag) {
+
+		case UI_FLAG_SPLIT:
+			topicActivityClass = SplitFlexibleTopicListActivity.class;
+			articleActivityClass = SplitArticleListActivity.class;
+			break;
+		case UI_FLAG_HA:
+			topicActivityClass = HaFlexibleTopicListActivity.class;
+			articleActivityClass = HaArticleListActivity.class;
+			break;
+		case (UI_FLAG_SPLIT + UI_FLAG_HA):
+			topicActivityClass = HaSplitFlexibleTopicListActivity.class;
+			articleActivityClass = HaSplitArticleListActivity.class;
+			break;
+		case 0:
+		default:
+			topicActivityClass = FlexibleTopicListActivity.class;
+			articleActivityClass = ArticleListActivity.class;
+		}
+	}
 
 }

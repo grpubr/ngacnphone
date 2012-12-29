@@ -1,5 +1,6 @@
 package sp.phone.fragment;
 
+import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
 import gov.pianzong.androidnga.R;
 import gov.pianzong.androidnga.activity.FlexibleTopicListActivity;
@@ -34,7 +35,7 @@ public class SearchDialogFragment extends DialogFragment {
             	final String inputString = input.getText().toString();
             	if(!StringUtil.isEmpty(inputString))
             	{
-            		Intent intent_search = new Intent(getActivity(), FlexibleTopicListActivity.class);
+            		Intent intent_search = new Intent(getActivity(), PhoneConfiguration.getInstance().topicActivityClass);
     				intent_search.putExtra("fid",getArguments().getInt("id",-7));
     				intent_search.putExtra("key", inputString);
     				intent_search.putExtra("authorid", getArguments().getInt("authorid",0));

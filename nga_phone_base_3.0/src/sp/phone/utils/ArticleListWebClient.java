@@ -44,19 +44,20 @@ public class ArticleListWebClient extends WebViewClient {
 		if(!origurl.startsWith("http")){
 			return true;
 		}
+		PhoneConfiguration conf = PhoneConfiguration.getInstance();
 		final String url = origurl.toLowerCase();
 		if(url.startsWith(NGACN_BOARD_PREFIX)
 				|| url.startsWith(NGA178_BOARD_PREFIX ) ){
 			Intent intent = new Intent();
 			intent.setData(Uri.parse(origurl));
-			intent.setClass(view.getContext(), FlexibleTopicListActivity.class);
+			intent.setClass(view.getContext(), conf.topicActivityClass);
 			view.getContext().startActivity(intent);
 
 		}else if(url.startsWith(NGACN_THREAD_PREFIX)
 				|| url.startsWith(NGA178_THREAD_PREFIX ) ){
 			Intent intent = new Intent();
 			intent.setData(Uri.parse(origurl));
-			intent.setClass(view.getContext(), ArticleListActivity.class);
+			intent.setClass(view.getContext(), conf.articleActivityClass);
 			view.getContext().startActivity(intent);
 
 			

@@ -15,7 +15,7 @@ import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
-public class TabsAdapter extends FragmentStatePagerAdapter implements
+public class TabsAdapter extends ThreadFragmentAdapter implements
 		TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener {
 	static final String TAG = TabsAdapter.class.getSimpleName();
 	static final int MAX_TAB = 5;
@@ -51,7 +51,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements
 
 	public TabsAdapter(FragmentActivity activity, TabHost tabHost,
 			ViewPager pager, Class<?> FragmentClass) {
-		super(activity.getSupportFragmentManager());
+		super(activity,pager,FragmentClass);
 		mContext = activity;
 		mTabHost = tabHost;
 		mViewPager = pager;

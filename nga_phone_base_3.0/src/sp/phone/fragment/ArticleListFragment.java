@@ -367,7 +367,7 @@ public class ArticleListFragment extends Fragment
 			intentThis.putExtra("tid",tid );
 			intentThis.putExtra("authorid",row.getAuthorid() );
 			
-			intentThis.setClass(getActivity(), ArticleListActivity.class);
+			intentThis.setClass(getActivity(), PhoneConfiguration.getInstance().articleActivityClass);
 			startActivity(intentThis);
 			if(PhoneConfiguration.getInstance().showAnimation)
 				getActivity().overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
@@ -408,7 +408,7 @@ public class ArticleListFragment extends Fragment
 			intent.putExtra("searchpost", 1);
 		case R.id.search_subject:
 			intent.putExtra("authorid", row.getAuthorid());
-			intent.setClass(getActivity(), FlexibleTopicListActivity.class);
+			intent.setClass(getActivity(), PhoneConfiguration.getInstance().topicActivityClass);
 			startActivity(intent);
 			if(PhoneConfiguration.getInstance().showAnimation)
 				getActivity().overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
