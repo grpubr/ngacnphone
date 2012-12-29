@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="gov.pianzong.androidnga" android:versionCode="441"
-	android:versionName="1.4.41" android:installLocation="auto">
+	package="gov.pianzong.androidnga" android:versionCode="442"
+	android:versionName="1.4.42" android:installLocation="auto">
 	
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
