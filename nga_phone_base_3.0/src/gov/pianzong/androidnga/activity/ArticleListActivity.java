@@ -386,7 +386,8 @@ PerferenceConstant{
 		this.authorid = authorid;
 		mTabsAdapter.setArgument("pid", pid);
 		mTabsAdapter.setArgument("authorid", authorid);
-		tabhost.getTabWidget().removeAllViews();
+		if(tabhost!=null)
+			tabhost.getTabWidget().removeAllViews();
 		int page = floor / 20;
 		mTabsAdapter.setCount(page+1);
 		mViewPager.setAdapter(mTabsAdapter);
