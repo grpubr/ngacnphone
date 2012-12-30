@@ -127,7 +127,8 @@ public class ExtensionEmotionAdapter extends BaseAdapter {
 					"http://img.ngacn.cc/attachments/mon_201207/30/-7_501674e61bdc7.png",
 					"http://img.ngacn.cc/attachments/mon_201207/30/-7_50167f81bba1c.gif",
 					"http://img.ngacn.cc/attachments/mon_201207/16/-7_5003ceb826aa6.gif",
-					"http://pic2.178.com/132/1324875/month_1207/862cbe0df668b5df0d4a08f20960c810.gif" },
+					"http://pic2.178.com/132/1324875/month_1207/862cbe0df668b5df0d4a08f20960c810.gif",
+					"http://img.ngacn.cc/attachments/mon_201212/24/-1324875_50d8593397258.jpg"},
 
 			// /ali
 			{
@@ -476,7 +477,17 @@ public class ExtensionEmotionAdapter extends BaseAdapter {
 					"http://img.ngacn.cc/attachments/mon_201212/07/-1324875_50c15374cd8f6.png",
 					"http://img.ngacn.cc/attachments/mon_201212/07/-1324875_50c1537cf22c8.png",
 					"http://img.ngacn.cc/attachments/mon_201212/07/-1324875_50c153963eb38.png",
-					"http://img.ngacn.cc/attachments/mon_201212/07/-1324875_50c153ad5bca3.png"
+					"http://img.ngacn.cc/attachments/mon_201212/07/-1324875_50c153ad5bca3.png",
+					"http://img.ngacn.cc/attachments/mon_201212/24/-1324875_50d84199dbdb2.png",
+					"http://img.ngacn.cc/attachments/mon_201212/24/-1324875_50d8419e3e516.png",
+					"http://img.ngacn.cc/attachments/mon_201212/24/-1324875_50d841a1676ab.png",
+					"http://img.ngacn.cc/attachments/mon_201212/24/-1324875_50d841a63a673.png",
+					"http://img.ngacn.cc/attachments/mon_201212/24/-1324875_50d841a969837.png",
+					"http://img.ngacn.cc/attachments/mon_201212/24/-1324875_50d841ae691f0.png",
+					"http://img.ngacn.cc/attachments/mon_201212/24/-1324875_50d841b17b503.png",
+					"http://img.ngacn.cc/attachments/mon_201212/24/-1324875_50d841b488bcd.png",
+					"http://img.ngacn.cc/attachments/mon_201212/24/-1324875_50d841b7282dd.png",
+					"http://img.ngacn.cc/attachments/mon_201212/24/-1324875_50d841ba3efd0.png"
 				},
 			// bierde
 			{
