@@ -53,7 +53,7 @@ OnChildFragmentRemovedListener{
 	private CheckReplyNotificationTask asynTask;
 	String strs [] = {"全部","精华","推荐"};
 	ArrayAdapter<String> categoryAdapter;
-
+	int flags = 7;
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
@@ -112,8 +112,16 @@ OnChildFragmentRemovedListener{
 				strs[0] = boardName;
 			}
 		}
-		
-		setNavigation();
+		int favor = getIntent().getIntExtra("favor", 0);
+		int authorid = getIntent().getIntExtra("authorid", 0);
+		if(favor ==0 && authorid ==0)
+		{
+			setNavigation();
+		}
+		else
+		{
+			flags =  ThemeManager.ACTION_BAR_FLAG;
+		}
 			
 	}
 	
@@ -172,7 +180,7 @@ OnChildFragmentRemovedListener{
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		final int flags = 7;//ThemeManager.ACTION_BAR_FLAG;
+		
 		ReflectionUtil.actionBar_setDisplayOption(this, flags);
 		return false;//super.onCreateOptionsMenu(menu);
 	}
