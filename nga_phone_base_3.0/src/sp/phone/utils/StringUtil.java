@@ -22,7 +22,7 @@ public class StringUtil {
 	private static final String styleAlignCenter = "<div style='text-align:center' >";
 	private static final String styleColor = "<div style='color:$1' >";
 	private static final String collapseStart= "<div style='border:1px solid #888' >";
-	
+	private static final String ignoreCaseTag = "(?i)";
 	private static final String endDiv = "</div>";
 
 	/** 验证是否是邮箱 */
@@ -132,63 +132,63 @@ public class StringUtil {
 		final String styleLeft = "<div style='float:left' >";
 		final String styleRight = "<div style='float:right' >";
 		
-		s = s.replaceAll("\\[l\\]", styleLeft);
-		s = s.replaceAll("\\[/l\\]", endDiv);
-		s = s.replaceAll("\\[L\\]", styleLeft);
-		s = s.replaceAll("\\[/L\\]", endDiv);
+		s = s.replaceAll(ignoreCaseTag +"\\[l\\]", styleLeft);
+		s = s.replaceAll(ignoreCaseTag +"\\[/l\\]", endDiv);
+		//s = s.replaceAll("\\[L\\]", styleLeft);
+		//s = s.replaceAll("\\[/L\\]", endDiv);
 		
-		s = s.replaceAll("\\[r\\]", styleRight);
-		s = s.replaceAll("\\[/r\\]", endDiv);
-		s = s.replaceAll("\\[R\\]", styleRight);
-		s = s.replaceAll("\\[/R\\]", endDiv);
+		s = s.replaceAll(ignoreCaseTag +"\\[r\\]", styleRight);
+		s = s.replaceAll(ignoreCaseTag +"\\[/r\\]", endDiv);
+		//s = s.replaceAll("\\[R\\]", styleRight);
+		//s = s.replaceAll("\\[/R\\]", endDiv);
 		
 		
 		
-		s = s.replaceAll("\\[align=right\\]", styleAlignRight);
-		s = s.replaceAll("\\[align=left\\]", styleAlignLeft);
-		s = s.replaceAll("\\[align=center\\]", styleAlignCenter);
-		s = s.replaceAll("\\[/align\\]", endDiv);
+		s = s.replaceAll(ignoreCaseTag +"\\[align=right\\]", styleAlignRight);
+		s = s.replaceAll(ignoreCaseTag +"\\[align=left\\]", styleAlignLeft);
+		s = s.replaceAll(ignoreCaseTag +"\\[align=center\\]", styleAlignCenter);
+		s = s.replaceAll(ignoreCaseTag +"\\[/align\\]", endDiv);
 		
-		s = s.replaceAll("\\[quote\\]",quoteStyle);
-		s = s.replaceAll("\\[/quote\\]", endDiv);
+		s = s.replaceAll(ignoreCaseTag +"\\[quote\\]",quoteStyle);
+		s = s.replaceAll(ignoreCaseTag +"\\[/quote\\]", endDiv);
 		//reply
 		s = s.replaceAll(
-				"\\[pid=\\d+\\]Reply\\[/pid\\]", "Reply");
+				ignoreCaseTag +"\\[pid=\\d+\\]Reply\\[/pid\\]", "Reply");
 		
 		//topic
 		s = s.replaceAll(
-				"\\[tid=\\d+\\]Topic\\[/pid\\]", "Topic");
+				ignoreCaseTag +"\\[tid=\\d+\\]Topic\\[/pid\\]", "Topic");
 		//reply
 		//s = s.replaceAll("\\[b\\]Reply to \\[pid=\\d+\\]Reply\\[/pid\\] (Post by .+ \\(\\d{4,4}-\\d\\d-\\d\\d \\d\\d:\\d\\d\\))\\[/b\\]"
 		//		, "Reply to Reply <b>$1</b>");
 		// 转换 tag
 		//[b]
-		s = s.replaceAll("\\[b\\]", "<b>");
-		s = s.replaceAll("\\[/b\\]","</b>"/* "</font>"*/);
+		s = s.replaceAll(ignoreCaseTag +"\\[b\\]", "<b>");
+		s = s.replaceAll(ignoreCaseTag +"\\[/b\\]","</b>"/* "</font>"*/);
 		
 		//item
-		s = s.replaceAll("\\[item\\]", "<b>");
-		s = s.replaceAll("\\[/item\\]","</b>");
+		s = s.replaceAll(ignoreCaseTag +"\\[item\\]", "<b>");
+		s = s.replaceAll(ignoreCaseTag +"\\[/item\\]","</b>");
 		
-		s = s.replaceAll("\\[u\\]", "<u>");
-		s = s.replaceAll("\\[/u\\]","</u>");
+		s = s.replaceAll(ignoreCaseTag +"\\[u\\]", "<u>");
+		s = s.replaceAll(ignoreCaseTag +"\\[/u\\]","</u>");
 		
-		s = s.replaceAll("\\[s:(\\d+)\\]", "<img src='file:///android_asset/a$1.gif'>");
-		s = s.replace("<br/><br/>", "<br/>");
+		s = s.replaceAll(ignoreCaseTag +"\\[s:(\\d+)\\]", "<img src='file:///android_asset/a$1.gif'>");
+		s = s.replace(ignoreCaseTag +"<br/><br/>", "<br/>");
 		//[url][/url]
-		s = s.replaceAll("\\[url\\](http[^\\[|\\]]+)\\[/url\\]",
+		s = s.replaceAll(ignoreCaseTag +"\\[url\\](http[^\\[|\\]]+)\\[/url\\]",
 				"<a href=\"$1\">$1</a>");
-		s = s.replaceAll("\\[url=(http[^\\[|\\]]+)\\]\\s*(.+?)\\s*\\[/url\\]"
+		s = s.replaceAll(ignoreCaseTag +"\\[url=(http[^\\[|\\]]+)\\]\\s*(.+?)\\s*\\[/url\\]"
 				,"<a href=\"$1\">$2</a>");
 		//flash
-		s = s.replaceAll("\\[flash\\](http[^\\[|\\]]+)\\[/flash\\]",
+		s = s.replaceAll(ignoreCaseTag +"\\[flash\\](http[^\\[|\\]]+)\\[/flash\\]",
 				"<a href=\"$1\"><img src='file:///android_asset/flash.png' style= 'max-width:100%;' ></a>");
 		//color
 		
 		//s = s.replaceAll("\\[color=([^\\[|\\]]+)\\]\\s*(.+?)\\s*\\[/color\\]"
 		//		,"<b style=\"color:$1\">$2</b>");
-		s=s.replaceAll("\\[color=([^\\[|\\]]+)\\]",styleColor);
-		s = s.replaceAll("\\[/color\\]", endDiv);
+		s=s.replaceAll(ignoreCaseTag +"\\[color=([^\\[|\\]]+)\\]",styleColor);
+		s = s.replaceAll(ignoreCaseTag +"\\[/color\\]", endDiv);
 		
 		
 		//lessernuke
@@ -202,33 +202,34 @@ public class StringUtil {
 		s = s.replaceAll("\\[td\\]", "<td>");
 		s = s.replaceAll("\\[/td\\]","<td>");
 		//[i][/i]
-		s = s.replaceAll("\\[i\\]", "<i style=\"font-style:italic\">");
-		s = s.replaceAll("\\[/i\\]", "</i>");
+		s = s.replaceAll(ignoreCaseTag +"\\[i\\]", "<i style=\"font-style:italic\">");
+		s = s.replaceAll(ignoreCaseTag +"\\[/i\\]", "</i>");
 		//[del][/del]
-		s = s.replaceAll("\\[del\\]", "<del class=\"gray\">");
-		s = s.replaceAll("\\[/del\\]","</del>");
+		s = s.replaceAll(ignoreCaseTag +"\\[del\\]", "<del class=\"gray\">");
+		s = s.replaceAll(ignoreCaseTag +"\\[/del\\]","</del>");
 		
-		s = s.replaceAll("\\[font=([^\\[|\\]]+)\\]","<span style=\"font-family:$1\">");
-		s = s.replaceAll("\\[/font\\]","</span>");
+		s = s.replaceAll(ignoreCaseTag +"\\[font=([^\\[|\\]]+)\\]","<span style=\"font-family:$1\">");
+		s = s.replaceAll(ignoreCaseTag +"\\[/font\\]","</span>");
 		
 		//collapse
-		s = s.replaceAll("\\[collapse([^\\[|\\]])*\\](([\\d|\\D])+?)\\[/collapse\\]",
+		s = s.replaceAll(ignoreCaseTag +"\\[collapse([^\\[|\\]])*\\](([\\d|\\D])+?)\\[/collapse\\]",
 				collapseStart + "$2" + endDiv);
 
 		//size
-		s = s.replaceAll("\\[size=(\\d+)%\\]","<span style=\"font-size:$1%;line-height:$1%\">");
-		s = s.replaceAll("\\[/size\\]","</span>");
+		s = s.replaceAll(ignoreCaseTag +"\\[size=(\\d+)%\\]","<span style=\"font-size:$1%;line-height:$1%\">");
+		s = s.replaceAll(ignoreCaseTag +"\\[/size\\]","</span>");
 		
 		//[img]./ddd.jpg[/img]
 	//	if(showImage){
-			s = s.replaceAll("\\[img\\]\\s*\\.(/[^\\[|\\]]+)\\s*\\[/img\\]", 
+			s = s.replaceAll(ignoreCaseTag +"\\[img\\]\\s*\\.(/[^\\[|\\]]+)\\s*\\[/img\\]", 
 				"<a href='http://img.ngacn.cc/attachments$1'><img src='http://img.ngacn.cc/attachments$1' style= 'max-width:100%' ></a>");
-			s = s.replaceAll("\\[img\\]\\s*(http[^\\[|\\]]+)\\s*\\[/img\\]", 
+			s = s.replaceAll(ignoreCaseTag +"\\[img\\]\\s*(http[^\\[|\\]]+)\\s*\\[/img\\]", 
 				"<a href='$1'><img src='$1' style= 'max-width:100%' ></a>");
-			s = s.replaceAll("\\[IMG\\]\\s*\\.(/[^\\[|\\]]+)\\s*\\[/IMG\\]", 
-					"<a href='http://img.ngacn.cc/attachments$1'><img src='http://img.ngacn.cc/attachments$1' style= 'max-width:100%' ></a>");
-			s = s.replaceAll("\\[IMG\\]\\s*(http[^\\[|\\]]+)\\s*\\[/IMG\\]", 
-					"<a href='$1'><img src='$1' style= 'max-width:100%' ></a>");
+			
+			//s = s.replaceAll(ignoreCaseTag +"\\[IMG\\]\\s*\\.(/[^\\[|\\]]+)\\s*\\[/IMG\\]", 
+			//		"<a href='http://img.ngacn.cc/attachments$1'><img src='http://img.ngacn.cc/attachments$1' style= 'max-width:100%' ></a>");
+			//s = s.replaceAll(ignoreCaseTag +"\\[IMG\\]\\s*(http[^\\[|\\]]+)\\s*\\[/IMG\\]", 
+			//		"<a href='$1'><img src='$1' style= 'max-width:100%' ></a>");
 		/*}else{
 			s = s.replaceAll("\\[img\\]\\s*\\.(/[^\\[|\\]]+)\\s*\\[/img\\]", 
 					"<a href='http://img.ngacn.cc/attachments$1'><img src='file:///android_asset/ic_offline_image.png' style= 'max-width:100%;' ></a>");
