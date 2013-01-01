@@ -147,6 +147,7 @@ public BoardHolder loadDefaultBoard(){
 		boards.add(new Board(i, "-793427", "斗战神", R.drawable.pdefault));
 		boards.add(new Board(i, "416", "火炬之光2", R.drawable.pdefault));
 		boards.add(new Board(i, "406", "星际争霸2", R.drawable.pdefault));
+		boards.add(new Board(i, "-65653", "剑灵", R.drawable.pdefault));		
 		boards.addCategoryName(i, "其他游戏");
 		i++;
 		
@@ -190,6 +191,8 @@ public BoardHolder loadDefaultBoard(){
 		boards.add(new Board(i, "-47218", " 没有刀的漆器", R.drawable.pdefault));
 		boards.add(new Board(i, "-349066", "开心茶园", R.drawable.pdefault));
 		boards.add(new Board(i, "-314508", "世界尽头的百货公司", R.drawable.pdefault));		
+		boards.add(new Board(i, "-2671", "耳机区", R.drawable.pdefault));
+		boards.add(new Board(i, "-168888", "育儿版", R.drawable.pdefault));					
 		boards.addCategoryName(i, "个人版面");
 		i++;
 		
