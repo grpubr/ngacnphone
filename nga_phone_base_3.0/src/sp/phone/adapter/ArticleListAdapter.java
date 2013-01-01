@@ -495,11 +495,7 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		int fgColorId = ThemeManager.getInstance().getForegroundColor();
 		int fgColor = parent.getContext().getResources().getColor(fgColorId);
 		
-		TextView nickNameTV = holder.nickNameTV;
-		nickNameTV.setText(row.getAuthor());
-		nickNameTV.setTextColor(fgColor);
-		TextPaint tp = holder.nickNameTV.getPaint();
-		tp.setFakeBoldText(true);// bold for Chinese character
+		handleNickName(row, fgColor, holder.nickNameTV);
 
 		/*TextView titleTV = holder.titleTV;
 		if (!StringUtil.isEmpty(row.getSubject()) ) {
@@ -534,6 +530,26 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		holder.postnumTV.setTextColor(fgColor);*/
 
 		return view;
+	}
+	
+	private void handleNickName(ThreadRowInfo row,int fgColor, TextView nickNameTV){
+		
+		String nickName = row.getAuthor();
+		int now = 0;
+		if(row.getYz() < 0)//nuked
+		{
+			fgColor = nickNameTV.getResources().getColor(R.color.title_red);
+			nickName += "(VIP)";
+		}
+		else if(row.getMute_time() > now)
+		{
+			fgColor = nickNameTV.getResources().getColor(R.color.title_orange);
+			nickName += "(´«Ëµ)";
+		}
+		nickNameTV.setText(nickName);
+		TextPaint tp = nickNameTV.getPaint();
+		tp.setFakeBoldText(true);// bold for Chinese character
+		nickNameTV.setTextColor(fgColor);
 	}
 
 	private static String buildAttachment(ThreadRowInfo row,boolean showImage){

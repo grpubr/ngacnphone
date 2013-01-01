@@ -11,7 +11,7 @@ public class ThreadRowInfo {
 	 //private String quote_to;
 	// private String icon;
 	// private String titlefont;
-	 private String author;
+	 private String author;//user name
 	 private int authorid;
 	 private String subject;
 	// private int type;
@@ -26,7 +26,7 @@ public class ThreadRowInfo {
 	// private int lastmodify;
 	// private int recommend;
 	private int pid;
-	private String alterinfo;
+	private String alterinfo;// something like "edited by ..."
 	private String content;
 	private int lou;
 	//private int postdatetimestamp;
@@ -38,14 +38,15 @@ public class ThreadRowInfo {
 	//private String lpic;
 	private String level;
 	//private int gp_lesser;
-	//private int yz;
+	private int yz; //negative integer if user is nuked
 	//private String js_escap_site;
 	//private String js_escap_honor;
-	private String js_escap_avatar;
+	private String js_escap_avatar;//avatar url
 	//private int regdate;
 	//private String mute_time;
+	private long  mute_time;
 	private int postnum;
-	private int aurvrc;
+	private int aurvrc;//prestige
 	//private int money;
 	//private int thisvisit;
 	private String signature;
@@ -145,6 +146,19 @@ public class ThreadRowInfo {
 	public void setAurvrc(int aurvrc) {
 		this.aurvrc = aurvrc;
 	}
+	public int getYz() {
+		return yz;
+	}
+	public void setYz(int yz) {
+		this.yz = yz;
+	}
+	public long getMute_time() {
+		return mute_time;
+	}
+	public void setMute_time(long mute_time) {
+		this.mute_time = mute_time;
+	}
+
 
 
 	
