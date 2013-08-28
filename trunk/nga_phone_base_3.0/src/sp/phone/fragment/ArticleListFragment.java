@@ -376,8 +376,9 @@ public class ArticleListFragment extends Fragment
 			intentModify.putExtra("action", "modify");	
 			intentModify.setClass(getActivity(), PostActivity.class);
 			startActivity(intentModify);
-			getActivity().overridePendingTransition(R.anim.zoom_enter,
-					R.anim.zoom_exit);
+            if(PhoneConfiguration.getInstance().showAnimation)
+			    getActivity().overridePendingTransition(R.anim.zoom_enter,
+					    R.anim.zoom_exit);
 			break;
 		case R.id.copy_to_clipboard:	
 			//if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB )
