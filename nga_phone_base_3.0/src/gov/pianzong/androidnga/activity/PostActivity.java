@@ -461,13 +461,13 @@ public class PostActivity extends ActionBarActivity
 
 		@Override
 		protected void onPostExecute(String result) {
-			String success_results[] = {" 发贴完毕 ... ", " @提醒每24小时不能超过50个"};
+			String success_results[] = {"发贴完毕 ...", " @提醒每24小时不能超过50个"};
 			if(keepActivity == false)
 			{
 				boolean success = false;
 				for(int i=0; i< success_results.length; ++i)
 				{
-					if(success_results[i].equals(result)){
+					if(result.contains(success_results[i])){
 						success = true;
 						break;
 					}
