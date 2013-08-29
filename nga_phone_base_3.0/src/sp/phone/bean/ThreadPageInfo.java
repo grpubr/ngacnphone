@@ -22,7 +22,7 @@ public class ThreadPageInfo {
 	//private int digest;
 	//private int ifupload;
 	//private int lastmodify;
-	//private int recommend;
+	private int recommend;
 	//private int view_count;
 	//private String fid_no_match;
 	//private String subject_org;
@@ -117,5 +117,13 @@ public class ThreadPageInfo {
 
     public void setTop_level(String top_level) {
         this.top_level = top_level;
+    }
+
+    public int getRecommend() {
+        return recommend;
+    }
+
+    public void setRecommend(int recommend) {
+        this.recommend = recommend;
     }
 }
