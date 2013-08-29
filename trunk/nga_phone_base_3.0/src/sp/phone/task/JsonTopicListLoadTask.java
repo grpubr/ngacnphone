@@ -122,6 +122,23 @@ public class JsonTopicListLoadTask extends AsyncTask<String, Integer, TopicListI
 				articleEntryList.add(entry);*/
 			}
 		}
+        if(!PhoneConfiguration.getInstance().showStatic){
+
+            int j = articleEntryList.size()-1;
+            while(j >=0){
+                ThreadPageInfo info = articleEntryList.get(j);
+                if(info == null){
+                    break;
+                }
+                if(info.getRecommend() >9){
+                    articleEntryList.remove(j);
+                }else{
+                    break;
+                }
+                --j;
+            }
+
+        }
         ret.set__T__ROWS(articleEntryList.size());
 		ret.setArticleEntryList(articleEntryList);
 		
