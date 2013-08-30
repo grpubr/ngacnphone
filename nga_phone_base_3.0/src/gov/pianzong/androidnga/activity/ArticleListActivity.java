@@ -140,7 +140,7 @@ PerferenceConstant{
         }else if( 0 != getUrlParameter(url, "page"))
         {
         	
-        	mTabsAdapter.setCount(pageFromUrl+1);
+        	mTabsAdapter.setCount(pageFromUrl);
         	mViewPager.setCurrentItem(pageFromUrl);
         }
 		
