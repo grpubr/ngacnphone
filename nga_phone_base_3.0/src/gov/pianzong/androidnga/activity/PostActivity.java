@@ -26,6 +26,8 @@ import android.widget.Toast;
 import com.example.android.actionbarcompat.ActionBarActivity;
 import gov.pianzong.androidnga.R;
 import org.apache.commons.io.IOUtils;
+
+import sp.phone.adapter.ActionBarUserListAdapter;
 import sp.phone.adapter.SpinnerUserListAdapter;
 import sp.phone.bean.User;
 import sp.phone.forumoperation.HttpPostClient;
@@ -185,7 +187,7 @@ public class PostActivity extends ActionBarActivity
 		ActionBar actionBar = getActionBar();
 		 actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		 
-		 final SpinnerUserListAdapter categoryAdapter = new SpinnerUserListAdapter(this);
+		 final SpinnerUserListAdapter categoryAdapter = new ActionBarUserListAdapter(this);
 		 OnNavigationListener callback = new OnNavigationListener(){
 
 			@Override
