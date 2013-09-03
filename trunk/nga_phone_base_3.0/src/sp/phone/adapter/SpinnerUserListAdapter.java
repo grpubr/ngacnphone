@@ -73,7 +73,7 @@ implements PerferenceConstant{
 			convertView = new TextView(context);
 		}
 		((TextView)convertView).setText(userList.get(position).getNickName());
-		((TextView)convertView).setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+		((TextView)convertView).setTextSize(TypedValue.COMPLEX_UNIT_DIP, 30);
 		return convertView;
 	}
 
