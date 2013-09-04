@@ -229,19 +229,19 @@ PagerOwnner{
 	}
 	
 	private ImageButton getActionItem(int id){
-		View actionbar_compat = getActivity().findViewById(R.id.actionbar_compat);
+		//View actionbar_compat = getActivity().findViewById(R.id.actionbar_compat);
 		View ret = null;
-		if(actionbar_compat != null)
+		/*if(actionbar_compat != null)
 		{
 			ret = actionbar_compat.findViewById(id);
-		}
+		}*/
 		return (ImageButton) ret;
 	}
 	
 	private void handleLockOrientation(MenuItem item){
 		int preOrentation = ThemeManager.getInstance().screenOrentation;
 		int newOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
-		ImageButton compat_item = getActionItem(R.id.actionbar_compat_item_lock);
+		ImageButton compat_item = null;//getActionItem(R.id.actionbar_compat_item_lock);
 		
 		if(preOrentation ==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||
 				preOrentation ==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){

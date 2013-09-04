@@ -11,6 +11,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,7 +23,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import gov.pianzong.androidnga.R;
-
 import sp.phone.adapter.UserListAdapter;
 import sp.phone.bean.PerferenceConstant;
 import sp.phone.forumoperation.HttpPostClient;
@@ -30,7 +30,7 @@ import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.ThemeManager;
 
-public class LoginActivity extends Activity
+public class LoginActivity extends ActionBarActivity
 	implements PerferenceConstant{
 
 	EditText userText;

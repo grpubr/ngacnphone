@@ -51,7 +51,7 @@ public abstract class MyAbstractActivity extends Activity {
 					menu.getItem(i), actionNum);
 		}
 		
-		ReflectionUtil.actionBar_setDisplayOption(this, flags);
+		//ReflectionUtil.actionBar_setDisplayOption(this, flags);
 		return super.onCreateOptionsMenu(menu);
 	}
 	@Override

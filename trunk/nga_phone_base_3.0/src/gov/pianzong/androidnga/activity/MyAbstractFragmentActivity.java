@@ -49,7 +49,7 @@ protected View view;
 					menu.getItem(i), actionNum);
 		}
 		
-		ReflectionUtil.actionBar_setDisplayOption(this, flags);
+		//ReflectionUtil.actionBar_setDisplayOption(this, flags);
 		return super.onCreateOptionsMenu(menu);
 	}
 	@Override

@@ -19,8 +19,6 @@ import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
 import android.annotation.TargetApi;
-import android.app.ActionBar;
-import android.app.ActionBar.OnNavigationListener;
 import android.content.pm.ActivityInfo;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -40,7 +38,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
-
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.support.v7.app.ActionBarActivity;
 
 public class FlexibleTopicListActivity extends ActionBarActivity 
@@ -128,9 +127,10 @@ OnChildFragmentRemovedListener{
 	@TargetApi(11)
 	private void setNavigation() {
 		
-		if(!ActivityUtil.isLessThan_3_0())
-		{
-		 ActionBar actionBar = getActionBar();
+		
+		
+
+		 ActionBar actionBar = getSupportActionBar();
 		 actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		 
 		 categoryAdapter = new ArrayAdapter<String>(this,
@@ -151,7 +151,7 @@ OnChildFragmentRemovedListener{
 			 
 		 };
 		actionBar.setListNavigationCallbacks(categoryAdapter, callback);
-		}
+		
 	}
 
 	@TargetApi(14)

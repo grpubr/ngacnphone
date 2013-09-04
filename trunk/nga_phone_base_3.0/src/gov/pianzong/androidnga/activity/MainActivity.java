@@ -112,7 +112,9 @@ public class MainActivity extends ActionBarActivity
 					menu.getItem(i), actionNum);
 		}
 		*/
+		//this.getSupportActionBar().setDisplayOptions(flags);
 		ReflectionUtil.actionBar_setDisplayOption(this, flags);
+		
 
 		return super.onCreateOptionsMenu(menu);
 	}

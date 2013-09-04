@@ -38,7 +38,7 @@ implements PagerOwnner{
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		final int flags = ThemeManager.ACTION_BAR_FLAG;
-		ReflectionUtil.actionBar_setDisplayOption(this, flags);
+		//ReflectionUtil.actionBar_setDisplayOption(this, flags);
 		return super.onCreateOptionsMenu(menu);
 	}
 

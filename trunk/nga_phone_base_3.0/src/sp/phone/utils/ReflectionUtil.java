@@ -3,16 +3,17 @@ package sp.phone.utils;
 import java.lang.reflect.Method;
 
 import android.app.Activity;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class ReflectionUtil {
-	public static boolean actionBar_setDisplayOption(Activity activity,
+	public static boolean actionBar_setDisplayOption(ActionBarActivity activity,
 			int flags){
 		boolean ret = true;
-		 Method setDisplayMethod;
+		 /*Method setDisplayMethod;
 		 Method getActionBarMethod;
 		try {//
 			getActionBarMethod = activity.getClass().
@@ -26,7 +27,8 @@ public class ReflectionUtil {
 		} catch (Exception e){
 			Log.i(activity.getClass().getSimpleName(),"fail to set actionBar");
 			ret = false;
-		}
+		}*/
+		activity.getSupportActionBar().setDisplayOptions(flags);
 		return ret;
 		
 	}

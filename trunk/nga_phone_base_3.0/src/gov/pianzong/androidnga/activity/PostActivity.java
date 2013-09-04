@@ -1,8 +1,6 @@
 package gov.pianzong.androidnga.activity;
 
 import android.annotation.TargetApi;
-import android.app.ActionBar;
-import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -23,8 +21,11 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.support.v7.app.ActionBarActivity;
 import gov.pianzong.androidnga.R;
+
 import org.apache.commons.io.IOUtils;
 
 import sp.phone.adapter.ActionBarUserListAdapter;
@@ -184,7 +185,7 @@ public class PostActivity extends ActionBarActivity
 	
 	@TargetApi(11)
 	private void setNavigation(){
-		ActionBar actionBar = getActionBar();
+		ActionBar actionBar = getSupportActionBar();
 		 actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		 
 		 final SpinnerUserListAdapter categoryAdapter = new ActionBarUserListAdapter(this);
