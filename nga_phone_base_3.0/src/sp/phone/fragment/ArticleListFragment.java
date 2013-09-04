@@ -23,9 +23,10 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
+import android.support.v7.view.ActionMode.Callback;
 import android.util.Log;
-import android.view.ActionMode;
-import android.view.ActionMode.Callback;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -80,9 +81,7 @@ public class ArticleListFragment extends Fragment
 		listview.setBackgroundResource(ThemeManager.getInstance().getBackgroundColor());
 		listview.setDivider(null);
 		
-		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-			this.registerForContextMenu(listview);
-		} else {
+		
 			activeActionMode();
 			listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 			listview.setOnItemLongClickListener(new OnItemLongClickListener() {
@@ -95,7 +94,7 @@ public class ArticleListFragment extends Fragment
 					lv.setItemChecked(position, true);
 					if (mActionModeCallback != null)
 					{
-						getActivity().startActionMode((Callback) mActionModeCallback);
+						((ActionBarActivity) getActivity()).startSupportActionMode((Callback) mActionModeCallback);
 						return true;
 					}
 					return false;
@@ -104,7 +103,7 @@ public class ArticleListFragment extends Fragment
 			});
 			
 
-		}
+	
 		listview.setDescendantFocusability(ListView.FOCUS_AFTER_DESCENDANTS);
 		
 		return listview;

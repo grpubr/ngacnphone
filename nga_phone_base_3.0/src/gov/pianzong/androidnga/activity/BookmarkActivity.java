@@ -71,7 +71,7 @@ public class BookmarkActivity extends Activity
 		flags |= ActionBar.DISPLAY_SHOW_CUSTOM;*/
 		//final ActionBar bar = getActionBar();
 		//bar.setDisplayOptions(flags);
-		ReflectionUtil.actionBar_setDisplayOption(this, flags);
+		//ReflectionUtil.actionBar_setDisplayOption(this, flags);
 		return super.onCreateOptionsMenu(menu);
 	}
 	@Override
