@@ -41,7 +41,7 @@ import android.widget.ArrayAdapter;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 
-import com.example.android.actionbarcompat.ActionBarActivity;
+import android.support.v7.app.ActionBarActivity;
 
 public class FlexibleTopicListActivity extends ActionBarActivity 
 implements OnTopListLoadFinishedListener,OnItemClickListener

@@ -41,7 +41,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TabHost;
 
-import com.example.android.actionbarcompat.ActionBarActivity;
+import android.support.v7.app.ActionBarActivity;
 import com.handmark.pulltorefresh.extras.viewpager.PullToRefreshViewPager;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;

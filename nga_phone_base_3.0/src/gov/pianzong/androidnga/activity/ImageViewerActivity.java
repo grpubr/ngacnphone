@@ -18,7 +18,7 @@ import android.webkit.WebSettings.PluginState;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.example.android.actionbarcompat.ActionBarActivity;
+import android.support.v7.app.ActionBarActivity;
 
 public class ImageViewerActivity extends  ActionBarActivity {
 	private WebView wv;

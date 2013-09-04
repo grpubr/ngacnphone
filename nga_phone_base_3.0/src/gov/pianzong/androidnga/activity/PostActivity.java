@@ -23,7 +23,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-import com.example.android.actionbarcompat.ActionBarActivity;
+import android.support.v7.app.ActionBarActivity;
 import gov.pianzong.androidnga.R;
 import org.apache.commons.io.IOUtils;
 
