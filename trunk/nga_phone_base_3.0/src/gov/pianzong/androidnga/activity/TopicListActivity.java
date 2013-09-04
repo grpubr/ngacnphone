@@ -33,7 +33,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TabHost;
 
-import com.example.android.actionbarcompat.ActionBarActivity;
+import android.support.v7.app.ActionBarActivity;
 
 
 class TopicListActivity extends ActionBarActivity
