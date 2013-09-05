@@ -37,12 +37,9 @@ public class SettingsActivity extends ActionBarActivity implements
 	private CompoundButton checkBoxDownimgNowifi;
 	private CompoundButton checkBoxDownAvatarNowifi;
 	private CompoundButton nightMode;
-	private CompoundButton showAnimation;
-	private CompoundButton useViewCache;
 	private CompoundButton showSignature;
 	private CompoundButton notification;
 	private CompoundButton notificationSound;
-	private CompoundButton uploadLocation;
     private CompoundButton showStatic;
 
 	private CompoundButton split = null;
@@ -100,13 +97,13 @@ public class SettingsActivity extends ActionBarActivity implements
 				.setChecked(ThemeManager.getInstance().getMode() == ThemeManager.MODE_NIGHT);
 		nightMode.setOnCheckedChangeListener(new NightModeListener());
 
-		showAnimation = (CompoundButton) findViewById(R.id.checkBox_show_animation);
+		/*showAnimation = (CompoundButton) findViewById(R.id.checkBox_show_animation);
 		showAnimation.setChecked(config.showAnimation);
 		showAnimation.setOnCheckedChangeListener(new ShowAnimationListener());
 
 		useViewCache = (CompoundButton) findViewById(R.id.checkBox_use_view_cache);
 		useViewCache.setChecked(config.useViewCache);
-		useViewCache.setOnCheckedChangeListener(new UseViewCacheListener());
+		useViewCache.setOnCheckedChangeListener(new UseViewCacheListener());*/
 
 		showSignature = (CompoundButton) findViewById(R.id.checkBox_show_signature);
 		showSignature.setChecked(config.showSignature);
@@ -124,9 +121,9 @@ public class SettingsActivity extends ActionBarActivity implements
 						notificationSound));
 		notification.setChecked(config.notification);
 
-		uploadLocation = (CompoundButton) findViewById(R.id.checkBox_upload_location);
+		/*uploadLocation = (CompoundButton) findViewById(R.id.checkBox_upload_location);
 		uploadLocation.setChecked(config.uploadLocation);
-		uploadLocation.setOnCheckedChangeListener(new UploadLocationListener());
+		uploadLocation.setOnCheckedChangeListener(new UploadLocationListener());*/
 
         showStatic = (CompoundButton) findViewById(R.id.checkBox_show_static);
         showStatic.setChecked(config.showStatic);
@@ -196,12 +193,12 @@ public class SettingsActivity extends ActionBarActivity implements
 		checkBoxDownimgNowifi.setTextColor(fgColor);
 		checkBoxDownAvatarNowifi.setTextColor(fgColor);
 		nightMode.setTextColor(fgColor);
-		showAnimation.setTextColor(fgColor);
-		useViewCache.setTextColor(fgColor);
+		//showAnimation.setTextColor(fgColor);
+		//useViewCache.setTextColor(fgColor);
 		showSignature.setTextColor(fgColor);
 		notification.setTextColor(fgColor);
 		notificationSound.setTextColor(fgColor);
-		uploadLocation.setTextColor(fgColor);
+		//uploadLocation.setTextColor(fgColor);
         showStatic.setTextColor(fgColor);
 		if (split != null)
 			split.setTextColor(fgColor);

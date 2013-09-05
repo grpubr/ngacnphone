@@ -39,32 +39,11 @@
             android:text="@string/nightmode" />
 
         <CheckBox
-            android:id="@+id/checkBox_show_animation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="@string/showAnimation" />
-
-		<CheckBox
-		    android:id="@+id/checkBox_use_view_cache"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_marginTop="15dp"
-		    android:text="@string/use_view_cache" />
-        
-        <CheckBox
             android:id="@+id/checkBox_show_signature"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="@string/showSignature" />
-        
-        <CheckBox
-            android:id="@+id/checkBox_upload_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="@string/upload_location" android:checked="false"/>
 
         <CheckBox
                 android:id="@+id/checkBox_show_static"
