@@ -67,8 +67,8 @@ public class MainActivity extends ActionBarActivity
 		initDate();
 		initView();
 
-		task = new AppUpdateCheckTask(this);
-		task.execute("");
+		//task = new AppUpdateCheckTask(this);
+		//task.execute("");
 
 	}
 
