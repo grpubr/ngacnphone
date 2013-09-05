@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/emotion" android:title="@string/emotion" android:showAsAction="ifRoom|withText" android:icon="@drawable/ic_menu_start_conversation"></item><item android:id="@+id/upload" android:title="@string/upload" android:showAsAction="ifRoom|withText" android:icon="@drawable/ic_menu_upload"></item>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:androidnga="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/emotion" android:title="@string/emotion" androidnga:showAsAction="ifRoom|withText" android:icon="@drawable/ic_menu_start_conversation">
+
+    </item><item android:id="@+id/upload" android:title="@string/upload" androidnga:showAsAction="ifRoom|withText" android:icon="@drawable/ic_menu_upload"></item>
     
-    <item android:id="@+id/send" android:showAsAction="always|withText" android:title="@string/commit" android:icon="@drawable/ic_menu_send"></item>
+    <item android:id="@+id/send" androidnga:showAsAction="always|withText" android:title="@string/commit" android:icon="@drawable/ic_menu_send"></item>
     
 
 </menu>
