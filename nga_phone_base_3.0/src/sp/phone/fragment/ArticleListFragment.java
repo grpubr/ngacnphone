@@ -145,8 +145,8 @@ public class ArticleListFragment extends Fragment
 
 			@Override
 			public void onDestroyActionMode(ActionMode mode) {
-				int position = listview.getCheckedItemPosition();
-				listview.setItemChecked(position, false);
+				//int position = listview.getCheckedItemPosition();
+				//listview.setItemChecked(position, false);
 				
 			}
 			
