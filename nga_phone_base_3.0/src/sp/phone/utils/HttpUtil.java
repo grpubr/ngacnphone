@@ -211,7 +211,10 @@ public class HttpUtil {
 			conn.setConnectTimeout(8000);
 			conn.setReadTimeout(8000);
 			conn.connect();
-			is = conn.getInputStream();
+            if(conn.getResponseCode() == 200)
+			    is = conn.getInputStream();
+            else
+                is = conn.getErrorStream();
 			if( "gzip".equals(conn.getHeaderField("Content-Encoding")) )
 				is = new GZIPInputStream(is);
 			String encoding =  getCharset( conn, "GBK");

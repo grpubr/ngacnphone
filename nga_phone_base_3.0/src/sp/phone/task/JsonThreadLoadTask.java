@@ -74,7 +74,16 @@ public class JsonThreadLoadTask extends AsyncTask<String, Integer, ThreadData> {
 			 o = (JSONObject) o.get("data");
 			 if(o == null)
 					break;
-			 String message =  (String) o.get("__MESSAGE");
+             String message = null;
+             Object tmp =    o.get("__MESSAGE");
+             if(tmp instanceof String ){
+                 message =  (String) o.get("__MESSAGE");
+             }else if (tmp instanceof JSONObject){
+                 o = (JSONObject)tmp;
+                 message = (String)o.get("1");
+             }else {
+                 break;
+             }
 			 if(message == null)
 					break;
 			 
