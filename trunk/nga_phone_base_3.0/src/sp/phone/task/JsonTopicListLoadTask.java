@@ -39,6 +39,11 @@ public class JsonTopicListLoadTask extends AsyncTask<String, Integer, TopicListI
 		Log.d(TAG, "start to load " + params[0]);
 		String uri = params[0];
 		String js = HttpUtil.getHtml(uri, PhoneConfiguration.getInstance().getCookie());
+        boolean filter = false;
+        final  String greatSeaUri = "http://bbs.ngacn.cc/thread.php?fid=-7&page=1&lite=js&noprefix";
+        if(greatSeaUri.equals(uri)){
+            filter = true;
+        }
 		if(js == null){
 			error = context.getResources().getString(R.string.network_error);
 			return null;
@@ -122,7 +127,7 @@ public class JsonTopicListLoadTask extends AsyncTask<String, Integer, TopicListI
 				articleEntryList.add(entry);*/
 			}
 		}
-        if(!PhoneConfiguration.getInstance().showStatic){
+        if(!PhoneConfiguration.getInstance().showStatic && filter){
 
             int j = articleEntryList.size()-1;
             while(j >=0){
