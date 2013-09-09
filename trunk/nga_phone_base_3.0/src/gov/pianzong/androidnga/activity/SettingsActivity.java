@@ -37,6 +37,7 @@ public class SettingsActivity extends ActionBarActivity implements
 	private CompoundButton checkBoxDownimgNowifi;
 	private CompoundButton checkBoxDownAvatarNowifi;
 	private CompoundButton nightMode;
+    private CompoundButton showAnimation;
 	private CompoundButton showSignature;
 	private CompoundButton notification;
 	private CompoundButton notificationSound;
@@ -97,11 +98,11 @@ public class SettingsActivity extends ActionBarActivity implements
 				.setChecked(ThemeManager.getInstance().getMode() == ThemeManager.MODE_NIGHT);
 		nightMode.setOnCheckedChangeListener(new NightModeListener());
 
-		/*showAnimation = (CompoundButton) findViewById(R.id.checkBox_show_animation);
+		showAnimation = (CompoundButton) findViewById(R.id.checkBox_show_animation);
 		showAnimation.setChecked(config.showAnimation);
 		showAnimation.setOnCheckedChangeListener(new ShowAnimationListener());
 
-		useViewCache = (CompoundButton) findViewById(R.id.checkBox_use_view_cache);
+		/*useViewCache = (CompoundButton) findViewById(R.id.checkBox_use_view_cache);
 		useViewCache.setChecked(config.useViewCache);
 		useViewCache.setOnCheckedChangeListener(new UseViewCacheListener());*/
 
@@ -193,7 +194,7 @@ public class SettingsActivity extends ActionBarActivity implements
 		checkBoxDownimgNowifi.setTextColor(fgColor);
 		checkBoxDownAvatarNowifi.setTextColor(fgColor);
 		nightMode.setTextColor(fgColor);
-		//showAnimation.setTextColor(fgColor);
+		showAnimation.setTextColor(fgColor);
 		//useViewCache.setTextColor(fgColor);
 		showSignature.setTextColor(fgColor);
 		notification.setTextColor(fgColor);
