@@ -77,13 +77,18 @@ public class JsonTopicListLoadTask extends AsyncTask<String, Integer, TopicListI
 		else
 		{
 			
-			String message =  (String) o.get("__MESSAGE");
-			 if(message == null)
-			 {
-				 
-				 error = "二哥玩坏了或者你需要重新登录";
-			 }
-			 else{
+			String message =  null;
+            Object tmp =    o.get("__MESSAGE");
+            if(tmp instanceof String ){
+                message =  (String) o.get("__MESSAGE");
+            }else if (tmp instanceof JSONObject){
+                o = (JSONObject)tmp;
+                message = (String)o.get("1");
+            }else {
+                error = "二哥玩坏了或者你需要重新登录";
+            }
+			 if(message !=null)
+             {
 				 int pos = message.indexOf("<a href=");
 				 if(pos >0){
 					 message = message.substring(0, pos);
