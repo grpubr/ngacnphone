@@ -39,6 +39,13 @@
             android:text="@string/nightmode" />
 
         <CheckBox
+                android:id="@+id/checkBox_show_animation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/showAnimation" />
+
+        <CheckBox
             android:id="@+id/checkBox_show_signature"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
