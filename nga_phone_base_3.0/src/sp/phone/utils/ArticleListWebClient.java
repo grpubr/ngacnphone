@@ -91,7 +91,9 @@ public class ArticleListWebClient extends WebViewClient {
 		else{
 			Intent intent = new Intent(Intent.ACTION_VIEW);
 			intent.setData(Uri.parse(origurl));
-			view.getContext().startActivity(intent);
+            boolean isIntentSafe = fa.getPackageManager().queryIntentActivities(intent,0).size() > 0;
+            if(isIntentSafe)
+			    view.getContext().startActivity(intent);
 			//return false;
 		}
 		return true;
