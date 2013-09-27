@@ -1,24 +1,23 @@
 package gov.pianzong.androidnga.activity;
 
-import gov.pianzong.androidnga.R;
-import sp.phone.task.DownloadImageTask;
-import sp.phone.utils.ActivityUtil;
-import sp.phone.utils.ReflectionUtil;
-import sp.phone.utils.ThemeManager;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
-import android.webkit.WebSettings.PluginState;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import android.support.v7.app.ActionBarActivity;
+import gov.pianzong.androidnga.R;
+import sp.phone.task.DownloadImageTask;
+import sp.phone.utils.ActivityUtil;
+import sp.phone.utils.ReflectionUtil;
+import sp.phone.utils.ThemeManager;
 
 public class ImageViewerActivity extends  ActionBarActivity {
 	private WebView wv;
@@ -62,7 +61,7 @@ public class ImageViewerActivity extends  ActionBarActivity {
 				&& ActivityUtil.isGreaterThan_2_1() )//android 2.2
 		{
 			wv.setWebChromeClient(new WebChromeClient());
-			settings.setPluginState(PluginState.ON);
+			//settings.setPluginState(PluginState.ON);
 			wv.loadUrl(uri);
 
 		}else{//images
