@@ -7,15 +7,26 @@ import java.util.Set;
 
 import sp.phone.bean.ThreadPageInfo;
 import sp.phone.bean.TopicListInfo;
+import sp.phone.interfaces.NextJsonTopicListLoader;
+import sp.phone.task.JsonTopicListLoadTask;
+import sp.phone.utils.ActivityUtil;
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshAttacher;
+
 import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
 
 public class AppendableTopicAdapter extends TopicListAdapter {
 	final private List<TopicListInfo> infoList;
+    final private PullToRefreshAttacher attacher;
+    private final NextJsonTopicListLoader loader;
 	Set<Integer> tidSet;
-	public AppendableTopicAdapter(Context context) {
+	public AppendableTopicAdapter(Context context,PullToRefreshAttacher attacher,NextJsonTopicListLoader loader ) {
 		super(context);
 		infoList = new ArrayList<TopicListInfo>();
 		tidSet = new HashSet<Integer>();
+        this.attacher = attacher;
+        this.loader = loader;
 	}
 
 	@Override
@@ -31,6 +42,13 @@ public class AppendableTopicAdapter extends TopicListAdapter {
 
 	@Override
 	public void jsonfinishLoad(TopicListInfo result) {
+        isLoading = false;
+        if(attacher !=null)
+            attacher.setRefreshComplete();
+        if(result == null)
+            return;
+        ActivityUtil.getInstance().dismiss();
+
 		if (count != 0) {
 			List<ThreadPageInfo> threadList = new ArrayList<ThreadPageInfo>();
 			for (int i = 0; i < result.getArticleEntryList().size(); i++) {
@@ -82,4 +100,14 @@ public class AppendableTopicAdapter extends TopicListAdapter {
 		return infoList.size() + 1;
 	}
 
+    @Override
+    public View getView(int position, View view, ViewGroup parent) {
+        View ret = super.getView(position, view, parent);
+        if( position +1 == this.getCount() && !isLoading){
+            isLoading = true;
+            loader.loadNextPage(this);
+        }
+        return  ret;
+    }
+    private boolean isLoading = false;
 }

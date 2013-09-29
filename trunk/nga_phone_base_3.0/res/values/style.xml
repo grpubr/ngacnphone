@@ -18,6 +18,11 @@
 
     <style name="AppTheme" parent="style/Theme.AppCompat" />
 
+    <style name="SwipeBackBaseTheme" parent="AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
 
+    <style name="SwipeBackTheme" parent="SwipeBackBaseTheme">
+    </style>
 
 </resources>

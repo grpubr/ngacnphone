@@ -20,13 +20,14 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="module" module-name="appcompat" />
-    <orderEntry type="module" module-name="library" />
-    <orderEntry type="module" module-name="extra-viewpager" />
     <orderEntry type="library" name="fastjson-1.1.19" level="project" />
     <orderEntry type="library" name="commons-io-2.4" level="project" />
+    <orderEntry type="module" module-name="main" />
     <orderEntry type="library" name="android-support-v7-appcompat" level="project" />
     <orderEntry type="library" name="android-support-v4" level="project" />
+    <orderEntry type="module" module-name="actionbarcompat" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="library" />
   </component>
 </module>
 

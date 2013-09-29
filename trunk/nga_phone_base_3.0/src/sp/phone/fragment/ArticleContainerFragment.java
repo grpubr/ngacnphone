@@ -1,18 +1,5 @@
 package sp.phone.fragment;
 
-import gov.pianzong.androidnga.R;
-import gov.pianzong.androidnga.activity.PostActivity;
-import sp.phone.adapter.ThreadFragmentAdapter;
-import sp.phone.bean.PerferenceConstant;
-import sp.phone.bean.ThreadData;
-import sp.phone.interfaces.OnChildFragmentRemovedListener;
-import sp.phone.interfaces.OnThreadPageLoadFinishedListener;
-import sp.phone.interfaces.PagerOwnner;
-import sp.phone.task.BookmarkTask;
-import sp.phone.utils.ActivityUtil;
-import sp.phone.utils.PhoneConfiguration;
-import sp.phone.utils.StringUtil;
-import sp.phone.utils.ThemeManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,7 +20,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import com.handmark.pulltorefresh.extras.viewpager.PullToRefreshViewPager;
+import gov.pianzong.androidnga.R;
+import gov.pianzong.androidnga.activity.PostActivity;
+import sp.phone.adapter.ThreadFragmentAdapter;
+import sp.phone.bean.PerferenceConstant;
+import sp.phone.bean.ThreadData;
+import sp.phone.interfaces.OnChildFragmentRemovedListener;
+import sp.phone.interfaces.OnThreadPageLoadFinishedListener;
+import sp.phone.interfaces.PagerOwnner;
+import sp.phone.task.BookmarkTask;
+import sp.phone.utils.ActivityUtil;
+import sp.phone.utils.PhoneConfiguration;
+import sp.phone.utils.StringUtil;
+import sp.phone.utils.ThemeManager;
 
 public class ArticleContainerFragment extends Fragment 
 implements OnThreadPageLoadFinishedListener,PerferenceConstant,
@@ -67,11 +66,11 @@ PagerOwnner{
 		View v  = inflater.inflate(R.layout.article_viewpager, container,false);
 
 
-		PullToRefreshViewPager
+		/*PullToRefreshViewPager
 		refreshPager = (PullToRefreshViewPager) v.findViewById(R.id.pull_refresh_viewpager);
 		//refreshPager.setMode(Mode.DISABLED);
-		mViewPager = refreshPager.getRefreshableView();
-		//mViewPager = (ViewPager) v.findViewById(R.id.pager);
+		mViewPager = refreshPager.getRefreshableView();*/
+		mViewPager = (ViewPager) v.findViewById(R.id.pager);
 
 		int pageFromUrl = 0;
 		String url = getArguments().getString("url");

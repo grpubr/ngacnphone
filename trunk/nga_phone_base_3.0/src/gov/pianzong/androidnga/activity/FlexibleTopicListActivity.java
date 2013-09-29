@@ -12,12 +12,15 @@ import sp.phone.interfaces.OnChildFragmentRemovedListener;
 import sp.phone.interfaces.OnThreadPageLoadFinishedListener;
 import sp.phone.interfaces.OnTopListLoadFinishedListener;
 import sp.phone.interfaces.PagerOwnner;
+import sp.phone.interfaces.PullToRefreshAttacherOnwer;
 import sp.phone.task.CheckReplyNotificationTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.ReflectionUtil;
 import sp.phone.utils.StringUtil;
 import sp.phone.utils.ThemeManager;
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshAttacher;
+
 import android.annotation.TargetApi;
 import android.content.pm.ActivityInfo;
 import android.nfc.NdefMessage;
@@ -45,7 +48,7 @@ import android.support.v7.app.ActionBarActivity;
 public class FlexibleTopicListActivity extends ActionBarActivity 
 implements OnTopListLoadFinishedListener,OnItemClickListener
 ,OnThreadPageLoadFinishedListener,PagerOwnner,
-OnChildFragmentRemovedListener{
+OnChildFragmentRemovedListener,PullToRefreshAttacherOnwer {
 
 	private String TAG = FlexibleTopicListActivity.class.getSimpleName() ;
 	boolean dualScreen = true;
@@ -53,11 +56,12 @@ OnChildFragmentRemovedListener{
 	String strs [] = {"全部","精华","推荐"};
 	ArrayAdapter<String> categoryAdapter;
 	int flags = 7;
+    private PullToRefreshAttacher mPullToRefreshAttacher;
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
 		this.setContentView(R.layout.topiclist_activity);
-		
+        mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
 
 		
 		
@@ -370,4 +374,8 @@ OnChildFragmentRemovedListener{
 		
 	}
 
+    @Override
+    public PullToRefreshAttacher getAttacher() {
+        return mPullToRefreshAttacher;
+    }
 }

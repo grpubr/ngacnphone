@@ -9,12 +9,18 @@ import java.net.URLEncoder;
 
 import sp.phone.adapter.AppendableTopicAdapter;
 import sp.phone.bean.TopicListInfo;
+import sp.phone.interfaces.NextJsonTopicListLoader;
 import sp.phone.interfaces.OnTopListLoadFinishedListener;
+import sp.phone.interfaces.PullToRefreshAttacherOnwer;
 import sp.phone.task.JsonTopicListLoadTask;
 import sp.phone.utils.ActivityUtil;
 import sp.phone.utils.HttpUtil;
 import sp.phone.utils.PhoneConfiguration;
 import sp.phone.utils.StringUtil;
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.DefaultHeaderTransformer;
+
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -31,13 +37,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
 
 public class TopiclistContainer extends Fragment
-implements OnTopListLoadFinishedListener{
+implements OnTopListLoadFinishedListener,NextJsonTopicListLoader {
 	final String TAG = TopiclistContainer.class.getSimpleName();
 	static final int MESSAGE_SENT = 1;
 	int fid;
@@ -45,7 +48,9 @@ implements OnTopListLoadFinishedListener{
 	int searchpost;
 	int favor;
 	String key;
-	private PullToRefreshListView mPullRefreshListView;
+
+    PullToRefreshAttacher attacher = null;
+    private ListView listView;
 	AppendableTopicAdapter adapter;
 	boolean canDismiss = true;
 	int category = 0;
@@ -55,22 +60,30 @@ implements OnTopListLoadFinishedListener{
 		if(savedInstanceState != null){
 			category = savedInstanceState.getInt("category", 0);
 		}
-		
-		mPullRefreshListView = new PullToRefreshListView(getActivity());
-		mPullRefreshListView.setMode(Mode.BOTH);
-		mPullRefreshListView.getRefreshableView().setDivider(null);
-		
-		adapter = new AppendableTopicAdapter(this.getActivity());
-		mPullRefreshListView.setAdapter(adapter);
+
+        try{
+            PullToRefreshAttacherOnwer attacherOnwer = (PullToRefreshAttacherOnwer) getActivity();
+            attacher = attacherOnwer.getAttacher();
+
+        }catch(ClassCastException e){
+            Log.e(TAG, "father activity should implement PullToRefreshAttacherOnwer");
+        }
+
+        listView  = new ListView(getActivity());
+        listView.setDivider(null);
+		adapter = new AppendableTopicAdapter(this.getActivity(),attacher,this);
+        listView.setAdapter(adapter);
+		//mPullRefreshListView.setAdapter(adapter);
 		try{
 			OnItemClickListener listener = (OnItemClickListener) getActivity();
-			mPullRefreshListView.setOnItemClickListener(listener);
+			//mPullRefreshListView.setOnItemClickListener(listener);
+            listView.setOnItemClickListener(listener);
 		}catch(ClassCastException e){
 			Log.e(TAG, "father activity should implenent OnItemClickListener");
 		}
-		mPullRefreshListView.setOnRefreshListener(new ListRefreshListener());
-					
-		
+		//mPullRefreshListView.setOnRefreshListener(new ListRefreshListener());\
+        if(attacher != null)
+            attacher.addRefreshableView(listView,new ListRefreshListener());
 		
 		
 		
@@ -121,7 +134,7 @@ implements OnTopListLoadFinishedListener{
 
 		
 		
-		return mPullRefreshListView;
+		return listView;
 	}
 	
 	
@@ -129,16 +142,34 @@ implements OnTopListLoadFinishedListener{
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		canDismiss = true;
-		mPullRefreshListView.getRefreshableView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		this.refresh();
 		super.onViewCreated(view, savedInstanceState);
 	}
 
+    private void  refresh_saying(){
+        DefaultHeaderTransformer transformer = null;
 
+        if(attacher != null)
+        {
+            uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.HeaderTransformer headerTransformer;
+            headerTransformer = attacher.getHeaderTransformer();
+            if(headerTransformer != null && headerTransformer instanceof DefaultHeaderTransformer )
+                transformer = (DefaultHeaderTransformer) headerTransformer;
+        }
+
+        if(transformer == null)
+            ActivityUtil.getInstance().noticeSaying(this.getActivity());
+        else
+            transformer.setRefreshingText(ActivityUtil.getSaying());
+        if(attacher != null)
+            attacher.setRefreshing(true);
+    }
 
 	void refresh(){
 		JsonTopicListLoadTask task = new JsonTopicListLoadTask(getActivity(),this);
-		ActivityUtil.getInstance().noticeSaying(this.getActivity());
+		//ActivityUtil.getInstance().noticeSaying(this.getActivity());
+        refresh_saying();
 		task.execute(getUrl(1));
 	}
 	
@@ -292,7 +323,7 @@ implements OnTopListLoadFinishedListener{
         try{
         	df.show(ft, dialogTag);
 		}catch(Exception e){
-			Log.e(this.getClass().getSimpleName(),Log.getStackTraceString(e));
+			Log.e(TopiclistContainer.class.getSimpleName(),Log.getStackTraceString(e));
 
 		}
 	}
@@ -332,7 +363,10 @@ implements OnTopListLoadFinishedListener{
 
 	@Override
 	public void jsonfinishLoad(TopicListInfo result) {
-		mPullRefreshListView.onRefreshComplete();
+
+        if(attacher != null)
+            attacher.setRefreshComplete();
+
 		if(result == null)
 			return;
 		
@@ -353,15 +387,31 @@ implements OnTopListLoadFinishedListener{
 
 		adapter.clear();
 		adapter.jsonfinishLoad(result);	
-		mPullRefreshListView.setAdapter(adapter);
+		listView.setAdapter(adapter);
 		if(canDismiss)
 			ActivityUtil.getInstance().dismiss();
 		
 	}
 
-	
-	class ListRefreshListener implements OnRefreshListener2<ListView>{
+    @TargetApi(11)
+    private void RunParallen(JsonTopicListLoadTask task)
+    {
+        task.executeOnExecutor(JsonTopicListLoadTask.THREAD_POOL_EXECUTOR,getUrl(adapter.getNextPage()));
+    }
+    @Override
+    public void loadNextPage(OnTopListLoadFinishedListener callback) {
+        JsonTopicListLoadTask task = new JsonTopicListLoadTask(getActivity(),callback);
+        refresh_saying();
+        if(ActivityUtil.isGreaterThan_2_3_3())
+            RunParallen(task);
+        else
+            task.execute(getUrl(adapter.getNextPage()));
+    }
 
+
+    class ListRefreshListener implements PullToRefreshAttacher.OnRefreshListener{
+
+        /*
 		@Override
 		public void onPullDownToRefresh(
 				PullToRefreshBase<ListView> refreshView) {
@@ -391,6 +441,13 @@ implements OnTopListLoadFinishedListener{
 			task.execute(getUrl(adapter.getNextPage()));
 			
 		}
-		
-	}
+		*/
+
+
+        @Override
+        public void onRefreshStarted(View view) {
+
+            refresh();
+        }
+    }
 }

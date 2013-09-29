@@ -1,21 +1,5 @@
 package gov.pianzong.androidnga.activity;
 
-import gov.pianzong.androidnga.R;
-import sp.phone.adapter.TabsAdapter;
-import sp.phone.adapter.ThreadFragmentAdapter;
-import sp.phone.bean.PerferenceConstant;
-import sp.phone.bean.ThreadData;
-import sp.phone.fragment.ArticleListFragment;
-import sp.phone.fragment.GotoDialogFragment;
-import sp.phone.interfaces.OnThreadPageLoadFinishedListener;
-import sp.phone.interfaces.PagerOwnner;
-import sp.phone.interfaces.ResetableArticle;
-import sp.phone.task.BookmarkTask;
-import sp.phone.utils.ActivityUtil;
-import sp.phone.utils.PhoneConfiguration;
-import sp.phone.utils.ReflectionUtil;
-import sp.phone.utils.StringUtil;
-import sp.phone.utils.ThemeManager;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
@@ -32,6 +16,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
@@ -41,13 +26,24 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TabHost;
 
-import android.support.v7.app.ActionBarActivity;
-import com.handmark.pulltorefresh.extras.viewpager.PullToRefreshViewPager;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import gov.pianzong.androidnga.R;
+import sp.phone.adapter.TabsAdapter;
+import sp.phone.adapter.ThreadFragmentAdapter;
+import sp.phone.bean.PerferenceConstant;
+import sp.phone.bean.ThreadData;
+import sp.phone.fragment.ArticleListFragment;
+import sp.phone.fragment.GotoDialogFragment;
+import sp.phone.interfaces.OnThreadPageLoadFinishedListener;
+import sp.phone.interfaces.PagerOwnner;
+import sp.phone.interfaces.ResetableArticle;
+import sp.phone.task.BookmarkTask;
+import sp.phone.utils.ActivityUtil;
+import sp.phone.utils.PhoneConfiguration;
+import sp.phone.utils.ReflectionUtil;
+import sp.phone.utils.StringUtil;
+import sp.phone.utils.ThemeManager;
 
-public class ArticleListActivity extends ActionBarActivity
+public class ArticleListActivity extends SwipeBackAppCompatActivity
 implements PagerOwnner,ResetableArticle,OnThreadPageLoadFinishedListener,
 PerferenceConstant{
 	TabHost tabhost;
@@ -77,7 +73,7 @@ PerferenceConstant{
 			ActivityUtil.reflushLocation(this);
 		}
 		
-		PullToRefreshViewPager
+		/*PullToRefreshViewPager
 		refreshPager = (PullToRefreshViewPager) findViewById(R.id.pull_refresh_viewpager);
 		refreshPager.setMode(Mode.PULL_FROM_START);
 		refreshPager.setOnRefreshListener(new OnRefreshListener<ViewPager>(){
@@ -91,8 +87,9 @@ PerferenceConstant{
 		});
 		
 		mViewPager = refreshPager.getRefreshableView();
-		
-		//mViewPager = (ViewPager)findViewById(R.id.pager);
+		*/
+
+		mViewPager = (ViewPager)findViewById(R.id.pager);
 		if (ActivityUtil.isNotLessThan_4_0()) {			
 			setNfcCallBack();
 		}
