@@ -442,6 +442,8 @@ PerferenceConstant{
 		int exactCount = 1 + data.getThreadInfo().getReplies()/20;
 		if(mTabsAdapter.getCount() != exactCount
 				&&this.authorid == 0){
+            if(this.pid != 0)
+                exactCount =1;
 			mTabsAdapter.setCount(exactCount);
 		}
 		if( tid != data.getThreadInfo().getTid()) // mirror thread
