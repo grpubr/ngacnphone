@@ -61,7 +61,10 @@ OnChildFragmentRemovedListener,PullToRefreshAttacherOnwer {
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
 		this.setContentView(R.layout.topiclist_activity);
-        mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
+        PullToRefreshAttacher.Options options = new PullToRefreshAttacher.Options();
+        options.refreshScrollDistance = 0.3f;
+        options.refreshOnUp = true;
+        mPullToRefreshAttacher = PullToRefreshAttacher.get(this,options );
 
 		
 		
