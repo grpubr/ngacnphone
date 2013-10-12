@@ -3,6 +3,8 @@ import java.io.UnsupportedEncodingException;
 import java.lang.StringBuffer;
 import java.net.URLEncoder;
 
+import sp.phone.utils.StringUtil;
+
 
 public class ThreadPostAction {
 		private int step_;
@@ -115,10 +117,28 @@ public class ThreadPostAction {
 			//&_ff=&attachments=&attachments_check=&force_topic_key=&filter_key=1&post_subject=12345&post_content=nga+%B0%B2%D7%BF%B0%E6%B7%A2%CC%F9%B2%E2%CA%D4&checkkey=1326813478553736"
 		}
 		public void appendAttachments_(String attachments_) {
-			this.attachments_ += attachments_;
-		}
+            if(StringUtil.isEmpty(this.attachments_))
+			    this.attachments_ = attachments_;
+            else
+            {
+                try {
+                    this.attachments_ = this.attachments_ +URLEncoder.encode("\t","GBK")+attachments_;
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 		public void appendAttachments_check_(String attachments_check_) {
-			this.attachments_check_ += attachments_check_;
+            if(StringUtil.isEmpty(this.attachments_check_))
+                this.attachments_check_ = attachments_check_;
+            else
+            {
+                try {
+                    this.attachments_check_ = this.attachments_check_ +URLEncoder.encode("\t","GBK")+attachments_check_;
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 		
 		

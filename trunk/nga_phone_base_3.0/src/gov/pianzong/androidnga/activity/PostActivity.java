@@ -429,7 +429,15 @@ public class PostActivity extends ActionBarActivity
 				InputStream input = null;
 				HttpURLConnection conn = c.post_body(body);
 				if(conn!=null)
-					input = conn.getInputStream();
+                {
+                    if(conn.getResponseCode() == 200)
+                        input = conn.getInputStream();
+                    else
+                    {
+                        input = conn.getErrorStream();
+                        keepActivity = true;
+                    }
+                }
 				else
 					keepActivity = true;
 				
@@ -500,7 +508,7 @@ public class PostActivity extends ActionBarActivity
 			String picUrl) {
 		this.act.appendAttachments_(attachments);
 		act.appendAttachments_check_(attachmentsCheck);
-		String text =  bodyText.getText().toString() + "\n[img]" +picUrl + "[/img]";
+		String text =  bodyText.getText().toString() + "\n[img]./" +picUrl + "[/img]";
 		bodyText.setText( text);
 		bodyText.setSelection(text.length());
 		return 0;

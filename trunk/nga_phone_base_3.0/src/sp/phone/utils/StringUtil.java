@@ -469,8 +469,7 @@ public class StringUtil {
 		return ret;
 	}
 	final static String tips = 
-			"请在酷安或者google play更新\n"
-			+ "发现bug后请先更新到最新版本，如果还有问题请在发帖的时候指明有问题的帖子标题或者链接";
+			"帖子页面从边缘左拉右拉都能返回了";
 	public static String getTips(){
 		
 		return tips;
