@@ -44,11 +44,13 @@ AsyncTask<String, Integer, String> {
 	
 	private String errorStr = null;
 	
-	static final private String attachmentsStartFlag = "namedItem('attachments').value+='";
-	static final private String attachmentsCheckStartFlag = "namedItem('attachments_check').value+='";
-	static final private String attachmentsEndFlag = "\\t";
+	static final private String attachmentsStartFlag = "attachments:'";
+    static final private String attachmentsEndFlag = "'";
+	static final private String attachmentsCheckStartFlag = "attachments_check:'";
+    static final private String attachmentsCheckEndFlag = "'";
+
 	
-	static final private String picUrlStartTag = "addUploadedAttach('";
+	static final private String picUrlStartTag = "url:'";
 	static final private String picUrlEndTag = "'";
 	
 	/*public FileUploadTask(InputStream is, long filesize, Context context, onFileUploaded notifier, String contentType) {
@@ -110,27 +112,27 @@ AsyncTask<String, Integer, String> {
 				break;
 			String attachments = result.substring(start, end);
 			try {
-				attachments = URLEncoder.encode(attachments + "\t","utf-8");
+				attachments = URLEncoder.encode(attachments ,"utf-8");
 			} catch (UnsupportedEncodingException e1) {
 				Log.e(TAG, "invalid attachments string" + attachments);
 			}
 			
-			start = result.indexOf(attachmentsCheckStartFlag);
+			start = result.indexOf(attachmentsCheckStartFlag,start);
 			if(start == -1)
 				break;
 			start = start + attachmentsCheckStartFlag.length();
-			end = result.indexOf(attachmentsEndFlag, start);
+			end = result.indexOf(attachmentsCheckEndFlag, start);
 			if(end == -1)
 				break;
 			String attachmentsCheck = result.substring(start, end);
 			try {
-				attachmentsCheck = URLEncoder.encode(attachmentsCheck + "\t","utf-8");
+				attachmentsCheck = URLEncoder.encode(attachmentsCheck,"utf-8");
 			} catch (UnsupportedEncodingException e) {
 				Log.e(TAG, "invalid attachmentsCheck string" + attachmentsCheck);
 				break;
 			}
 			
-			start = result.indexOf(picUrlStartTag);
+			start = result.indexOf(picUrlStartTag,start);
 			if(start == -1)
 				break;
 			start = start + picUrlStartTag.length();
@@ -209,11 +211,11 @@ AsyncTask<String, Integer, String> {
 		
 		byte[] buf = new byte[1024];  
 	    int len;  
-	    out.write(header); 
+	    out.write(header);
 	    while ((len = is.read(buf)) != -1)  
 	        out.write(buf, 0, len);  
 	  
-	    out.write(tail);  
+	    out.write(tail);
 	  
 	    is.close(); 
 	    InputStream httpInputStream = conn.getInputStream();
@@ -235,10 +237,37 @@ AsyncTask<String, Integer, String> {
 	
 	private String buildHeader(){
 		StringBuilder sb = new StringBuilder();
-		sb.append("--" + BOUNDARY + "\r\n");
-		sb.append("Content-Disposition: form-data; name=\"attachment_file1\"; filename=\"");
+        final String keys[] = {"v2",
+                "attachment_file1_watermark",
+                "attachment_file1_dscp",
+                "attachment_file1_url_utf8_name",
+                "fid",
+                "func",
+                "attachment_file1_img","origin_domain",
+                "lite"};
+        final String values[] = {"1","","",filename,"-7","upload",
+                "1","bbs.ngacn.cc","js"
+        };
+
+        for(int i=0; i< keys.length; ++i)
+        {
+        sb = sb.append("--");
+        sb = sb.append(BOUNDARY);
+        sb = sb.append("\r\n");
+        sb = sb.append("Content-Disposition: form-data; name=\""+ keys[i] + "\"\r\n\r\n");
+        sb = sb.append(values[i]);
+        sb = sb.append("\r\n");
+        }
+
+        sb.append("--" + BOUNDARY + "\r\n");
+        //sb.append("Content-Disposition: form-data; name=\"attachment_file1\"");
+		sb.append("Content-Disposition: form-data; name=\"attachment_file1\"; ");
+        sb.append("filename=\"");
 		sb.append(filename);
-		sb.append("\"\r\nContent-Type: ");
+		sb.append("\"");
+        sb.append("\r\n");
+
+        sb.append("Content-Type: ");
 		sb.append(contentType);
 		sb.append("\r\n\r\n");
 		
@@ -248,14 +277,11 @@ AsyncTask<String, Integer, String> {
 	
 	private String buildTail(){
 		StringBuilder sb = new StringBuilder();
-		sb.append("\r\n");
+		/*sb.append("\r\n");
 		sb.append("--" + BOUNDARY + "\r\n");
 		sb.append("Content-Disposition: form-data;");
 		sb.append(" name=\"attachment_file1_watermark\"\r\n\r\n\r\n");
-		
-		sb.append("--" + BOUNDARY + "\r\n");
-		sb.append("Content-Disposition: form-data;");
-		sb.append(" name=\"attachment_file1_thumb\"\r\n\r\n\r\n");
+
 		
 		sb.append("--" + BOUNDARY + "\r\n");
 		sb.append("Content-Disposition: form-data;");
@@ -272,9 +298,9 @@ AsyncTask<String, Integer, String> {
 		
 		sb.append("--" + BOUNDARY + "\r\n");
 		sb.append("Content-Disposition: form-data;");
-		sb.append(" name=\"fid\"\r\n\r\n-7\r\n");
+		sb.append(" name=\"fid\"\r\n\r\n-7\r\n");*/
 		
-		sb.append("--" + BOUNDARY + "--\r\n");
+		sb.append("\r\n--" + BOUNDARY + "--\r\n");
 		
 		return sb.toString();
 	}
