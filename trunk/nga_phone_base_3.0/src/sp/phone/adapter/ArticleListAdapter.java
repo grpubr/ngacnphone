@@ -202,12 +202,9 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 			return "";
 		}
 		String encodedName = "";
-		try {
-			encodedName = URLEncoder.encode(row.getAuthor(),"utf-8");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+			encodedName =StringUtil.encodeUrl(row.getAuthor(),"utf-8");
+
 		long distance = ActivityUtil.distanceBetween(config.location, 
 				locs[0], locs[1]);
 		StringBuilder sb = new StringBuilder();
@@ -274,7 +271,9 @@ public class ArticleListAdapter extends BaseAdapter implements OnLongClickListen
 		boolean showImage = PhoneConfiguration.getInstance().isDownImgNoWifi() || isInWifi();	
 		
 		WebSettings setting = contentTV.getSettings();
-		setting.setBlockNetworkImage(!showImage);
+		//setting.setBlockNetworkImage(!showImage);
+        // the network image url already replaced by local icon. this should not be called and
+        // webview will not work properly in android 4.4.
 		setting.setDefaultFontSize(
 				PhoneConfiguration.getInstance().getWebSize());
 		setting.setJavaScriptEnabled(false);

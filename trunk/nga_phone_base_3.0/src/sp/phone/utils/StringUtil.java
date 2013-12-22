@@ -1,5 +1,6 @@
 package sp.phone.utils;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -94,7 +95,21 @@ public class StringUtil {
 		return date.getTime();
 	}
 
+    public static String encodeUrl(final  String s, final String charset ){
 
+        /*try {
+            return java.net.URLEncoder.encode(s,charset);
+            // this not work in android 4.4 if a english char is followed
+            //by a Chinese character
+
+        } catch (UnsupportedEncodingException e) {
+
+            return "";
+        }*/
+        String ret = UriEncoderWithCharset.encode(s,null,charset);
+        //Log.i("111111", s+"----->"+ret);
+        return ret;
+    }
 
 	public static String parseHTML(String s) {
 		// ×ª»»×ÖÌå

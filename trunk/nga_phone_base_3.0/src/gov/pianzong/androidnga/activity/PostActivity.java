@@ -45,7 +45,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 
-public class PostActivity extends ActionBarActivity
+public class PostActivity extends SwipeBackAppCompatActivity
 	implements FileUploadTask.onFileUploaded,
 	EmotionCategorySelectedListener,
 	OnEmotionPickedListener{
@@ -290,36 +290,13 @@ public class PostActivity extends ActionBarActivity
 				temp.execute();
 			}
 		}
+        bodyText.requestFocus();
 		super.onResume();
 	}
 
 	private String buildSig()
 	{
-		StringBuilder sb  = new StringBuilder();
-		/*sb.append("\n[url=https://play.google.com/store/apps/details?fuck&id=gov.pianzong.androidnga");
-		PhoneConfiguration config = PhoneConfiguration.getInstance();
-		if(config.location != null && config.uploadLocation)
-		{
-			String loc = new StringBuilder().append(config.location.getLatitude())
-							.append(",")
-							.append(config.location.getLongitude()).toString();
-			sb.append("&");
-			try {
-				sb.append(Des.enCrypto(loc, StringUtil.key));
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			sb.append("ffff");
-		} */
-		sb.append("\n\n[color=blue]----sent from my ")
-		.append(android.os.Build.MANUFACTURER).append(" ")
-		.append(android.os.Build.MODEL).append(",Android ")
-		.append(android.os.Build.VERSION.RELEASE)
-		.append("[/color]\n");
-
-		
-		return sb.toString();
+		return "";
 		
 	}
 	
@@ -368,7 +345,8 @@ public class PostActivity extends ActionBarActivity
 			if(!act.getAction_().equals("modify"))
 				act.setPost_content_(bodyString + buildSig());
 			else
-				act.setPost_content_(bodyString);	
+				act.setPost_content_(bodyString);
+            Log.i("test",act.toString());
 			new ArticlePostTask(PostActivity.this).execute(url,act.toString());
 
 			

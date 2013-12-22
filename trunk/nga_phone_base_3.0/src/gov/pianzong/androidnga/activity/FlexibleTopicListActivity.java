@@ -226,6 +226,9 @@ OnChildFragmentRemovedListener,PullToRefreshAttacherOnwer {
 			asynTask = new CheckReplyNotificationTask(this);
 			asynTask.execute(config.getCookie());
 		}
+        View view = findViewById(R.id.item_list);
+        ActivityUtil.getInstance().setFullScreen(view);
+
 		super.onResume();
 	}
 	

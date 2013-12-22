@@ -53,7 +53,7 @@ public class HttpPostClient {
 			
 			conn.setRequestProperty("User-Agent", HttpUtil.USER_AGENT);
 			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded"); 
-			conn.setRequestProperty("Content-Length", String.valueOf(body.length())); 
+			conn.setRequestProperty("Content-Length", String.valueOf(body.length()));
 			conn.setRequestProperty("Accept-Charset", "GBK");
 			conn.setRequestMethod("POST");
 			conn.setDoOutput(true);
