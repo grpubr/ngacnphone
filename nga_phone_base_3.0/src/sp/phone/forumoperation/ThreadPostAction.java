@@ -1,4 +1,6 @@
 package sp.phone.forumoperation;
+import android.util.Log;
+
 import java.io.UnsupportedEncodingException;
 import java.lang.StringBuffer;
 import java.net.URLEncoder;
@@ -97,22 +99,18 @@ public class ThreadPostAction {
 			sb.append("&attachments_check="); sb.append(attachments_check_);
 			sb.append("&force_topic_key="); sb.append(force_topic_key_);
 			sb.append("&filter_key="); sb.append(filter_key_);
-			sb.append("&post_subject="); 
-			try {
-				sb.append( URLEncoder.encode(post_subject_,"GBK"));
-				sb.append("&post_content="); sb.append( URLEncoder.encode(post_content_,"GBK"));
-				if(mention_.length() !=0){
-					sb.append("&mention="); sb.append( URLEncoder.encode(mention_,"GBK"));
-					
-				}else{
-					sb.append("&mention="); sb.append( URLEncoder.encode("","GBK"));
-				}
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
+            sb.append("&post_subject=");
+            sb.append(StringUtil.encodeUrl(post_subject_,"GBK"));
+            sb.append("&post_content="); sb.append(StringUtil.encodeUrl(post_content_,"GBK"));
+            if(mention_.length() !=0){
+                sb.append("&mention="); sb.append(StringUtil.encodeUrl(mention_,"GBK"));
+
+            }else{
+                sb.append("&mention="); sb.append(StringUtil.encodeUrl("","GBK"));
+            }
 		
 			sb.append("&checkkey="); sb.append(checkkey_);
-			
+
 			return sb.toString();
 			//&_ff=&attachments=&attachments_check=&force_topic_key=&filter_key=1&post_subject=12345&post_content=nga+%B0%B2%D7%BF%B0%E6%B7%A2%CC%F9%B2%E2%CA%D4&checkkey=1326813478553736"
 		}

@@ -19,6 +19,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -65,7 +66,7 @@ PerferenceConstant{
 		super.onCreate(savedInstanceState);
 
 		setContentView(getViewId());
-		
+
 		if(PhoneConfiguration.getInstance().uploadLocation
 				&& PhoneConfiguration.getInstance().location == null
 				)
@@ -367,6 +368,9 @@ PerferenceConstant{
 		}else{
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}
+
+        ActivityUtil.getInstance().setFullScreen(mViewPager);
+
 		super.onResume();
 	}
 
